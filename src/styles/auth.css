@@ -1,0 +1,138 @@
+.authContainer {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+}
+
+.authAsideWelcome {
+  background-color: #000;
+  flex: 5;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 5%;
+  position: relative;
+  overflow: hidden;
+}
+
+.authWelcomeTitle {
+  color: #fff;
+  font-size: 2.8rem;
+  margin: 5rem 0 1rem 0;
+  font-family: "DMSansBold", sans-serif;
+  text-align: center;
+  text-align: left;
+  z-index: 2;
+}
+
+.authWelcomeSubtitle {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.05rem;
+  margin-bottom: 1rem;
+  font-family: "InterExtraRegular", sans-serif;
+  font-weight: 100;
+  text-align: left;
+  z-index: 2;
+}
+
+.authFormContainer {
+  flex: 10;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: var(--gray1);
+  padding-left: 10%;
+}
+
+.authFormTitle {
+  color: #000;
+  font-size: 2rem;
+  margin: 0 0 1rem 0;
+  font-family: "DMSansBold", sans-serif;
+  text-align: center;
+  text-align: left;
+}
+
+.authForm {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.authLabel {
+  color: #16192c;
+  font-family: "DMSansRegular", sans-serif;
+  font-size: 15px;
+}
+
+.authInput {
+  width: 500px;
+  height: 50px;
+  border-radius: 5px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  margin: 1rem 0;
+  font-size: 17px;
+  padding-left: 15px;
+}
+
+.authButton {
+  width: 500px;
+  height: 50px;
+  border-radius: 5px;
+  border: none;
+  background-color: var(--dark-orange);
+  margin: 1rem 0;
+  font-size: 17px;
+  padding-left: 15px;
+  color: white;
+  font-family: "DMSansRegular", sans-serif;
+  font-size: 15px;
+}
+
+.authButton:hover {
+  background-color: var(--dark-hover-orange);
+}
+
+.authCircle {
+  width: 230px;
+  height: 230px;
+  border-radius: 50%;
+  background-color: rgb(255, 140, 0);
+  position: absolute;
+  bottom: -80px;
+  right: 100px;
+}
+
+@media (max-width: 991px) {
+  .authAsideWelcome {
+    display: none;
+  }
+
+  .authForm {
+    width: 100%;
+  }
+
+  .authFormTitle,
+  .authButton,
+  .authInput {
+    width: 100%;
+  }
+
+  .authFormContainer {
+    justify-content: center;
+    align-items: center;
+    padding: 0 20%;
+  }
+}
+
+@media (max-width: 768px) {
+  .authFormTitle {
+    font-size: 1.4rem;
+  }
+  .authFormContainer {
+    justify-content: center;
+    align-items: center;
+    padding: 0 20px;
+  }
+}

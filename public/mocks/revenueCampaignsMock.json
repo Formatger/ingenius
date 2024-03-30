@@ -1,0 +1,25 @@
+{
+  "data": [
+    {
+      "id": 2,
+      "brand_name": "Brand1",
+      "name": "Campaign1.2",
+      "total_projects": 2,
+      "contract_value": 3500.0
+    },
+    {
+      "id": 1,
+      "brand_name": "Brand1",
+      "name": "Campaign1.1",
+      "total_projects": 0,
+      "contract_value": 0
+    },
+    {
+      "id": 3,
+      "brand_name": "Brand1",
+      "name": "Campaign1.3",
+      "total_projects": 0,
+      "contract_value": 0
+    }
+  ]
+}

@@ -1,0 +1,131 @@
+/*
+  INTER FONT
+*/
+@font-face {
+  font-family: "InterThin";
+  src: url("../../public/fonts/Inter/Inter-Thin.ttf") format("truetype");
+  font-weight: 100;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "InterExtraLight";
+  src: url("../../public/fonts/Inter/Inter-ExtraLight.ttf") format("truetype");
+  font-weight: 200;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "InterLight";
+  src: url("../../public/fonts/Inter/Inter-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "InterRegular";
+  src: url("../../public/fonts/Inter/Inter-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "InterMedium";
+  src: url("../../public/fonts/Inter/Inter-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "InterSemiBold";
+  src: url("../../public/fonts/Inter/Inter-SemiBold.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "InterBold";
+  src: url("../../public/fonts/Inter/Inter-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "InterExtraBold";
+  src: url("../../public/fonts/Inter/Inter-ExtraBold.ttf") format("truetype");
+  font-weight: 800;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "InterBlack";
+  src: url("../../public/fonts/Inter/Inter-Black.ttf") format("truetype");
+  font-weight: 900;
+  font-style: normal;
+}
+
+/*
+  DM SANS FONT
+*/
+@font-face {
+  font-family: "DMSansThin";
+  src: url("../../public/fonts/DMSans/DMSans-Thin.ttf") format("truetype");
+  font-weight: 100;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "DMSansExtraLight";
+  src: url("../../public/fonts/DMSans/DMSans-ExtraLight.ttf") format("truetype");
+  font-weight: 200;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "DMSansLight";
+  src: url("../../public/fonts/DMSans/DMSans-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "DMSansRegular";
+  src: url("../../public/fonts/DMSans/DMSans-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "DMSansMedium";
+  src: url("../../public/fonts/DMSans/DMSans-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "DMSansSemiBold";
+  src: url("../../public/fonts/DMSans/DMSans-SemiBold.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "DMSansBold";
+  src: url("../../public/fonts/DMSans/DMSans-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "DMSansExtraBold";
+  src: url("../../public/fonts/DMSans/DMSans-ExtraBold.ttf") format("truetype");
+  font-weight: 800;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "DMSansBlack";
+  src: url("../../public/fonts/DMSans/DMSans-Black.ttf") format("truetype");
+  font-weight: 900;
+  font-style: normal;
+}

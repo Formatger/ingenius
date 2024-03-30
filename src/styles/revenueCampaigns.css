@@ -1,0 +1,128 @@
+.table-container {
+  min-height: fit-content;
+  margin-top: var(--m6);
+}
+
+.revenue-campaigns-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table-header {
+  text-align: left;
+  background-color: white;
+  height: 64px;
+  border-bottom: 1px solid #ddd;
+}
+
+.table-header-content {
+  display: flex;
+  align-items: center;
+}
+
+.table-header-content p {
+  font-family: "DMSansBold", sans-serif;
+  font-size: 14px;
+  padding: 0 0 0 8px;
+  margin: 0;
+}
+
+.table-header-content-center p {
+  font-size: 14px;
+  /* padding: 0 0 0 8px; */
+  margin: 0;
+}
+
+.header-button {
+  border: none;
+  background-color: transparent;
+  width: 24px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  cursor: pointer;
+  /* transform: rotateX(180deg); */
+}
+
+.table-header-content-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.table-row {
+  height: 64px;
+}
+
+.table-row:hover {
+  background-color: var(--soft-orange);
+  cursor: pointer;
+}
+
+.table-row:not(:last-child) {
+  border-bottom: 1px solid #ddd;
+}
+
+.table-cell {
+  text-align: left;
+  font-family: "DMSansRegular", sans-serif;
+  font-size: 14px;
+  width: 25%;
+}
+
+.campaign-cell {
+  background-color: var(--linen);
+  width: fit-content;
+  padding: 4px 12px;
+  border-radius: 20px;
+}
+
+.table-cell-center {
+  text-align: center;
+  font-family: "DMSansRegular", sans-serif;
+  font-size: 14px;
+}
+
+.table-brand-cell {
+  height: 64px;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  font-family: "DMSansRegular", sans-serif;
+  font-size: 14px;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: var(--m6);
+}
+
+.pagination * {
+  font-family: "DMSansMedium", sans-serif;
+  font-size: 16px;
+}
+
+.pagination button {
+  margin: 0 5px;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 50%;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.pagination button:disabled {
+  background-color: transparent;
+  cursor: not-allowed;
+}
+
+.partner-image {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 10px;
+}
