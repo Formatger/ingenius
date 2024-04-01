@@ -1,9 +1,11 @@
+/* Tables */
+
 .table-container {
   min-height: fit-content;
   margin-top: var(--m6);
 }
 
-.revenue-campaigns-table {
+.app-table {
   width: 100%;
   border-collapse: collapse;
 }
@@ -21,7 +23,7 @@
 }
 
 .table-header-content p {
-  font-family: "DMSansBold", sans-serif;
+  font-family: "DMSansRegular", sans-serif;
   font-size: 14px;
   padding: 0 0 0 8px;
   margin: 0;
@@ -67,15 +69,15 @@
   text-align: left;
   font-family: "DMSansRegular", sans-serif;
   font-size: 14px;
-  width: 25%;
+  width: 30%;
 }
 
-.campaign-cell {
+/* .campaign-cell {
   background-color: var(--linen);
   width: fit-content;
   padding: 4px 12px;
   border-radius: 20px;
-}
+} */
 
 .table-cell-center {
   text-align: center;
@@ -83,15 +85,7 @@
   font-size: 14px;
 }
 
-.table-brand-cell {
-  height: 64px;
-  text-align: left;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  font-family: "DMSansRegular", sans-serif;
-  font-size: 14px;
-}
+/* Table Pagination */
 
 .pagination {
   display: flex;
@@ -125,4 +119,46 @@
   border-radius: 50%;
   object-fit: cover;
   margin-right: 10px;
+}
+
+/* Revenue Campagins Table */
+
+.table-brand-cell {
+  height: 64px;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  font-family: "DMSansRegular", sans-serif;
+  font-size: 14px;
+  padding: 0 16px;
+}
+
+/* Dashboard Table */
+
+#dashboard-table .table-row {
+  height: 50px;
+  border: none;
+}
+
+#dashboard-table .table-header {
+  border: none;
+}
+
+#dashboard-table .table-header-content p,
+#dashboard-table .table-header-content-center p {
+  font-family: "InterLight", sans-serif;
+  font-size: 14px;
+  padding: 0;
+  margin: 0;
+  text-transform: uppercase;
+  color: var(--gray4);
+}
+
+.dash-table th {
+  font-weight: 500;
+  color: var(--gray4);
+  font-size: 14px;
+  padding-top: 8px;
+  padding-bottom: 8px;
 }

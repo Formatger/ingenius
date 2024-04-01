@@ -7,8 +7,10 @@ import Img from "@/components/assets/images/image.png";
 import Image from "next/image";
 import { Arrow } from "@/components/assets/svg/Arrow";
 import withAuth from "@/components/common/WithAuth";
+import { useRouter } from "next/router";
 
 const SettingsPage = () => {
+  const router = useRouter();
   const [loader, setLoader] = useState<boolean>(false);
 
   return (
@@ -21,6 +23,11 @@ const SettingsPage = () => {
       ) : (
         <>
           <div className="page-container" id="dashboard">
+          <button className="app-button" onClick={() => {
+          localStorage.clear();
+          router.push('/auth');
+        }} aria-label="Close" type="button">
+          Logout</button>
             <div className="column-wrap">
               <div className="">
                 {/* <Component1 /> */}

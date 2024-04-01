@@ -6,8 +6,9 @@ import Sidepanel from "@/components/common/Sidepanel";
 import Breadcrumbs from "@/components/common/Breadcrumbs";
 import withAuth from "@/components/common/WithAuth";
 import { getCampaignsDetail } from "@/utils/httpCalls";
+import { useWindowSize } from "@/utils/hooks/useWindowSize";
+import { transformDate } from "@/utils/dateManager";
 
-const ITEMS_PER_PAGE = 10;
 
 interface DataInterface {
   id: number;
@@ -22,7 +23,6 @@ interface DataInterface {
   campaign_duration: string;
 }
 
-
 const RevenueCampaignsPage = () => {
   const [loader, setLoader] = useState<boolean>(false);
   const [httpError, setHttpError] = useState({
@@ -32,26 +32,51 @@ const RevenueCampaignsPage = () => {
   });
   const [openSidepanel, setOpenSidepanel] = useState(false);
   const [revenueCampaigns, setRevenueCampaigns] = useState([]);
-  const [noSlicedData, setNoSlicedData] = useState([]);
+  const [noSlicedData, setNoSlicedData] = useState<DataInterface[]>([]);
   const [data, setData] = useState<DataInterface[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedCampaign, setSelectedCampaign] = useState({} as DataInterface);
-  const totalPages = Math.ceil(
-    noSlicedData.length / ITEMS_PER_PAGE
-  );
+  const [itemsPerPage, setItemsPerPage] = useState(10);
 
+  const { height } = useWindowSize();
   const breadcrumbLinks = [
     { label: "Home", link: "/" },
-    { label: "Revenue", link: "/dashboard/revenue" },
+    { label: "Revenue", link: "/dashboard/revenue/campaigns" },
     { label: "Campaigns & Brands", link: "/dashboard/revenue/campaigns", current: true },
   ];
+
+  const totalPages = Math.ceil(
+    noSlicedData.length / itemsPerPage
+  );
+
+  useEffect(() => {
+    // items per page must be an integer value between 0 and 10 depending on the height of the window
+    const calculateItemsPerPage = () => {
+      const minRows = 2;
+      const maxRows = 10;
+      const ratio = height / 96;
+      const itemsPerPage = Math.max(minRows, Math.min(maxRows, Math.floor(ratio)));
+      setItemsPerPage(itemsPerPage);
+
+      const revenueCampaignsCopy = [...revenueCampaigns];
+      setData(revenueCampaignsCopy.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+      ));
+    };
+
+    calculateItemsPerPage();
+  }, [height]);
 
   useEffect(() => {
     setLoader(true);
     getCampaignsDetail((response: any) => {
       setRevenueCampaigns(response);
       setNoSlicedData(response);
-      setData(response);
+      setData(response.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+      ));
     }, (error: any) => {
       setHttpError({
         hasError: true,
@@ -66,8 +91,8 @@ const RevenueCampaignsPage = () => {
     const revenueCampaignsCopy = [...revenueCampaigns];
     setNoSlicedData(revenueCampaignsCopy);
     setData(revenueCampaignsCopy.slice(
-      (currentPage - 1) * ITEMS_PER_PAGE,
-      currentPage * ITEMS_PER_PAGE
+      (currentPage - 1) * itemsPerPage,
+      currentPage * itemsPerPage
     ));
   }, [currentPage]);
 
@@ -115,8 +140,8 @@ const RevenueCampaignsPage = () => {
     setRevenueCampaigns(revenueCampaignsCopy);
     setNoSlicedData(revenueCampaignsCopy);
     setData(revenueCampaignsCopy.slice(
-      (currentPage - 1) * ITEMS_PER_PAGE,
-      currentPage * ITEMS_PER_PAGE
+      (currentPage - 1) * itemsPerPage,
+      currentPage * itemsPerPage
     ));
   };
 
@@ -127,10 +152,73 @@ const RevenueCampaignsPage = () => {
     });
     setNoSlicedData(filteredData);
     setData(filteredData.slice(
-      (currentPage - 1) * ITEMS_PER_PAGE,
-      currentPage * ITEMS_PER_PAGE
+      (currentPage - 1) * itemsPerPage,
+      currentPage * itemsPerPage
     ));
   };
+
+  const filterByDate = (type: string) => {
+    const currentDate = new Date();
+    const endDate = new Date();
+    let filteredData: DataInterface[] = [...revenueCampaigns]
+
+    switch (type) {
+      case "Today":
+        filteredData = filteredData.filter((campaign: DataInterface) => {
+          const [, endDate] = transformDate(campaign.campaign_duration);
+          console.log(endDate)
+          if (endDate.getDate() === currentDate.getDate() &&
+            endDate.getMonth() === currentDate.getMonth() &&
+            endDate.getFullYear() === currentDate.getFullYear()) {
+            return campaign;
+          }
+        });
+        console.log(filteredData)
+        break;
+      case "Yesterday":
+        filteredData = filteredData.filter((campaign: DataInterface) => {
+          const [, endDate] = transformDate(campaign.campaign_duration);
+          endDate.setDate(endDate.getDate() + 1);
+          if (endDate.getDate() === currentDate.getDate() &&
+            endDate.getMonth() === currentDate.getMonth() &&
+            endDate.getFullYear() === currentDate.getFullYear()) {
+            return campaign;
+          }
+        });
+        break;
+      case "Week":
+        filteredData = filteredData.filter((campaign: DataInterface) => {
+          const [, endDate] = transformDate(campaign.campaign_duration);
+          const weekStart = new Date();
+          weekStart.setDate(currentDate.getDate() - 7);
+          weekStart.setHours(0, 0, 0, 0);
+          if (endDate >= weekStart && endDate <= currentDate) {
+            return campaign;
+          }
+        });
+        break;
+      case "Month":
+        filteredData = filteredData.filter((campaign: DataInterface) => {
+          const [, endDate] = transformDate(campaign.campaign_duration);
+          const monthAgo = new Date();
+          monthAgo.setMonth(monthAgo.getMonth() - 1);
+          monthAgo.setHours(0, 0, 0, 0);
+          if (endDate >= monthAgo && endDate <= currentDate) {
+            return campaign;
+          }
+        });
+        break;
+      default:
+        filteredData = [...revenueCampaigns];
+        break;
+    }
+
+    setNoSlicedData(filteredData);
+    setData(filteredData.slice(
+      (currentPage - 1) * itemsPerPage,
+      currentPage * itemsPerPage
+    ));
+  }
 
   const renderTable = () => {
     return (
@@ -141,7 +229,7 @@ const RevenueCampaignsPage = () => {
           </div>
         )
           : (
-            <table className="revenue-campaigns-table">
+            <table className="app-table">
               <thead>
                 <tr className="table-header">
                   <th>
@@ -179,7 +267,7 @@ const RevenueCampaignsPage = () => {
                 </tr>
               </thead>
               <tbody className="table-body">
-                {data.map((campaign) => (
+                {data && data.length > 0 && data?.map((campaign) => (
                   <tr key={campaign.id} className="table-row" onClick={() => handleOpenSidepanel(campaign)}>
                     <td className="table-brand-cell">
                       <img src={campaign.brand_image_url} alt={campaign.brand_name} className="partner-image" />
@@ -200,8 +288,8 @@ const RevenueCampaignsPage = () => {
   const renderPagination = () => {
     return (
       <div className="pagination">
-        <span>{`${(currentPage - 1) * ITEMS_PER_PAGE + 1}-${Math.min(
-          currentPage * ITEMS_PER_PAGE,
+        <span>{`${(currentPage - 1) * itemsPerPage + 1}-${Math.min(
+          currentPage * itemsPerPage,
           noSlicedData.length
         )} of ${noSlicedData.length}`}</span>
         <button onClick={handlePrevious} disabled={currentPage === 1 || data.length === 0}>
@@ -232,7 +320,7 @@ const RevenueCampaignsPage = () => {
             {openSidepanel && (
               <Sidepanel campaignData={selectedCampaign} open={openSidepanel} />
             )}
-            <EasyFilters handleSearch={handleSearch} />
+            <EasyFilters filterByDate={filterByDate} handleSearch={handleSearch} />
             {renderTable()}
             {renderPagination()}
           </div>

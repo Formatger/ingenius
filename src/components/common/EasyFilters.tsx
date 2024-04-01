@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import Search from "@/assets/icons/search.svg";
+import Search from "../assets/icons/search.svg";
+import Image from "next/image";
 
 const DATA_FILTERS = {
   1: "Today",
@@ -10,13 +11,15 @@ const DATA_FILTERS = {
 
 interface EasyFiltersProps {
   handleSearch: (search: string) => void;
+  filterByDate: (type: string) => void;
 }
 
-export default function EasyFilters({ handleSearch }: EasyFiltersProps) {
+export default function EasyFilters({ handleSearch, filterByDate }: EasyFiltersProps) {
   const [selectedFilter, setSelectedFilter] = useState<string | undefined>(undefined);
 
   const handleFilterClick = (filter: string) => {
-    setSelectedFilter(filter === selectedFilter ? undefined : filter);
+    setSelectedFilter(selectedFilter === filter ? undefined : filter);
+    filterByDate(selectedFilter === filter ? "" : filter);
   };
 
   return (
@@ -26,7 +29,7 @@ export default function EasyFilters({ handleSearch }: EasyFiltersProps) {
           value={DATA_FILTERS[1]}
           className={
             selectedFilter === DATA_FILTERS[1]
-              ? "easyfilters-slide"
+              ? "easyfilters-selected"
               : "easyfilters-button"
           }
           onClick={() => handleFilterClick(DATA_FILTERS[1])}
@@ -37,7 +40,7 @@ export default function EasyFilters({ handleSearch }: EasyFiltersProps) {
           value={DATA_FILTERS[2]}
           className={
             selectedFilter === DATA_FILTERS[2]
-              ? "easyfilters-slide"
+              ? "easyfilters-selected"
               : "easyfilters-button"
           }
           onClick={() => handleFilterClick(DATA_FILTERS[2])}
@@ -48,7 +51,7 @@ export default function EasyFilters({ handleSearch }: EasyFiltersProps) {
           value={DATA_FILTERS[3]}
           className={
             selectedFilter === DATA_FILTERS[3]
-              ? "easyfilters-slide"
+              ? "easyfilters-selected"
               : "easyfilters-button"
           }
           onClick={() => handleFilterClick(DATA_FILTERS[3])}
@@ -59,7 +62,7 @@ export default function EasyFilters({ handleSearch }: EasyFiltersProps) {
           value={DATA_FILTERS[4]}
           className={
             selectedFilter === DATA_FILTERS[4]
-              ? "easyfilters-slide"
+              ? "easyfilters-selected"
               : "easyfilters-button"
           }
           onClick={() => handleFilterClick(DATA_FILTERS[4])}
@@ -68,13 +71,11 @@ export default function EasyFilters({ handleSearch }: EasyFiltersProps) {
         </button>
       </div>
       <div>
-        {/* <div>
-          <Image src={Search} alt="Icon" width={20} height={20} />
-        </div> */}
+        <Image className="search-icon" src={Search} alt="Icon" width={20} height={20} />
         <input
           type="text"
           placeholder="Search"
-          className="campaigns-search"
+          className="search-input"
           onChange={(e) => handleSearch(e.target.value)}
         />
       </div>

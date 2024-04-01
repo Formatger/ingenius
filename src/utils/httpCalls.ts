@@ -31,6 +31,36 @@ export const refreshToken = async (errorCallback?: (error: any) => void) => {
 }
 
 /**
+ * HTTP CALL TO GET PROFILE DETAIL
+ * 
+ * @param callback 
+ * @param errorCallback 
+ */
+export const getProfileDetail = async (
+  callback: (data: any) => void,
+  errorCallback?: (error: any) => void
+) => {
+  const url = DEPLOYED_API_BASE_URL + 'creators/';
+
+  try {
+    await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.access_token}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => callback(data))
+      .catch((error) => {
+        errorCallback && errorCallback(error);
+      });
+  } catch (error) {
+    errorCallback && errorCallback(error);
+  }
+}
+
+/**
  * HTTP CALL TO GET CAMPAIGNS DETAIL
  * 
  * @param callback 

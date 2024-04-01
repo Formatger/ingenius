@@ -7,7 +7,8 @@ import Add from "@/components/assets/icons/add.svg";
 import Image from "next/image";
 import DashboardBrands from "@/components/dashboard/DasboardBrands";
 import DashboardStats from "@/components/dashboard/DashboardStats";
-import HelpIcon from "@/components/assets/svg/Help";
+import InvoiceChart from "@/components/dashboard/InvoiceChart";
+import PendingInvoices from "@/components/dashboard/PendingInvoices";
 
 const DashboardPage = () => {
   const [loader, setLoader] = useState<boolean>(false);
@@ -21,19 +22,19 @@ const DashboardPage = () => {
         <MainLoader />
       ) : (
         <>
-          <div className="page-container" id="dashboard">
-            {/* <div className="summary-wrap">
-              <DashboardStats />
+          <div className="page-container">
+            <div className="dashboard-container">
+              <div className="summary-wrap">
+                <DashboardStats />
+              </div>
+              <div className="brands-clients">
+                  <DashboardBrands/>
+                <div className="invoice-stats">
+                  <PendingInvoices/>
+                  <InvoiceChart/>
+                </div>
+              </div>
             </div>
-            <div className="row-group">
-              <div className="">
-                <DashboardBrands/>
-              </div>
-              <div className="column-group">
-                <DashboardBrands/>
-                <DashboardBrands/>
-              </div>
-            </div> */}
           </div>
         </>
       )}
