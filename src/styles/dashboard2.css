@@ -79,7 +79,7 @@
   }
 }
 
-@media (min-width: 1280px) {
+@media (min-width: 1360px) {
   .dash-stats {
    grid-template-columns: 1fr 1fr 1fr 1fr;
   }
