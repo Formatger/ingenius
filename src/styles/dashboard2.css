@@ -12,10 +12,11 @@
 .dash-stats {
   width: 100%;
   height: auto;
-  display: flex;
-  flex-direction: row;
+  display: grid;
+  grid-template-columns: 1fr;
+  /* flex-direction: row;
   justify-content: center;
-  align-items: center;
+  align-items: center; */
   gap: var(--m4);
 }
 
@@ -74,13 +75,14 @@
 
 @media (min-width: 1024px) {
   .dash-stats {
-    flex-direction: row;
-    gap: var(--m3);
+    grid-template-columns: 1fr 1fr;
   }
+}
 
-  /* .dash-stats-box {
-    width: 33.333%;
-  } */
+@media (min-width: 1280px) {
+  .dash-stats {
+   grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
 }
 
 /* PENDING INVOICES*/

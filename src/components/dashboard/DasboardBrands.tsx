@@ -90,6 +90,7 @@ const DashboardBrands = () => {
                   <tr className="table-row" onClick={undefined}>
                     <td className="table-cell">
                       <div className='row-wrap'>
+                        <input className='checkbox' type='checkbox'></input>
                         <p>Yeti Cycles</p>
                       </div>
                     </td>
@@ -101,31 +102,46 @@ const DashboardBrands = () => {
                   <tr className="table-row" onClick={undefined}>
                     <td className="table-cell">
                       <div className='row-wrap'>
-                        <p>Yeti Cycles</p>
+                        <input className='checkbox' type='checkbox'></input>
+                        <p>Warby Parker</p>
                       </div>
                     </td>
                     <td className="table-cell-center">12/30/2023</td>
-                    <td className="table-cell-center">$12,342</td>
+                    <td className="table-cell-center">$13,540</td>
                   </tr>
 
                   <tr className="table-row" onClick={undefined}>
                     <td className="table-cell">
                       <div className='row-wrap'>
-                        <p>Yeti Cycles</p>
+                        <input className='checkbox' type='checkbox'></input>
+                        <p>Allbirds</p>
                       </div>
                     </td>
                     <td className="table-cell-center">12/30/2023</td>
-                    <td className="table-cell-center">$12,342</td>
+                    <td className="table-cell-center">$9,302</td>
                   </tr>
 
                   <tr className="table-row" onClick={undefined}>
                     <td className="table-cell">
                       <div className='row-wrap'>
-                        <p>Yeti Cycles</p>
+                        <input className='checkbox' type='checkbox'></input>
+                        <p>Patagonia</p>
                       </div>
                     </td>
                     <td className="table-cell-center">12/30/2023</td>
-                    <td className="table-cell-center">$12,342</td>
+                    <td className="table-cell-center">$8,812</td>
+                  </tr>
+
+
+                  <tr className="table-row" onClick={undefined}>
+                    <td className="table-cell">
+                      <div className='row-wrap'>
+                        <input className='checkbox' type='checkbox'></input>
+                        <p>Rae Dunn</p>
+                      </div>
+                    </td>
+                    <td className="table-cell-center">12/30/2023</td>
+                    <td className="table-cell-center">$15,500</td>
                   </tr>
 
 

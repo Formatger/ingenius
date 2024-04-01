@@ -83,6 +83,8 @@
   --pink: #f7cfca;
   --cream: #e9d3d0;
 
+
+  --brown2:rgb(238, 95, 0);
   --brown: #bd5e00;
   --dark-hover-orange: #d06901;
   --dark-orange: #e97505;
@@ -745,12 +747,12 @@ input:focus {
 
 .checkbox {
   cursor: pointer;
-  background-color: var(--brown);
-  accent-color: var(--brown);
+  background-color: var(--brown2);
+  accent-color: var(--brown2);
   color: white;
 }
 
 .checkbox:hover {
-  background-color: var(--red);
-  accent-color: var(--red);
+  background-color: var(--brown2);
+  accent-color: var(--brown2);
 }
