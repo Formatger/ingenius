@@ -10,7 +10,9 @@ import Clients from "../assets/icons/clients.svg";
 import Settings from "../assets/icons/settings.svg";
 import Partner from "../assets/icons/partner.svg";
 import Support from "../assets/icons/supportAndHelp.svg";
-import NavDropdown from "./NavDropdown";
+import ClientDropdown from "./ClientDropdown";
+import PartDropdown from "./PartDropdown";
+import Revenue from "../assets/icons/revenue.svg";
 
 interface SidebarProps {
   layout: React.ReactNode;
@@ -49,7 +51,7 @@ const Sidebar: React.FC<SidebarProps> = ({ layout }) => {
 
             <div>
               <div className="nav-title">
-                <p className="small-caps">main</p>
+                <p className="smallcaps-dark">main</p>
               </div>
               <div className="nav-group">
                 <Link href="/dashboard/dashboard"
@@ -60,48 +62,26 @@ const Sidebar: React.FC<SidebarProps> = ({ layout }) => {
                   <div>Dashboard</div>
                 </Link>
 
-                {/* <Link href="/dashboard/revenue/campaigns"
-                  // className={`navlink-wrap ${router.pathname == "/dashboard/revenue/campaigns" ? "active-link" : ""}`}>
-                    className="navlink-wrap drop-navlink active-link">
-                  <div>
-                    <Image src={Revenue} alt="Icon" width={20} height={20} className="image" />
-                  </div>
-                  <div>Revenue</div>
-                </Link> */}
-
-                <NavDropdown />
               </div>
             </div>
 
             <div>
               <div className="nav-title">
-                <p className="small-caps">manage</p>
+                <p className="smallcaps-dark">manage</p>
               </div>
+  
               <div className="nav-group">
-                <Link href="/dashboard/clients/brands"
-                  className={`navlink-wrap ${router.pathname == "/dashboard/clients/brands" ? "active-link" : ""}`}>
-                  <div>
-                    <Image src={Clients} alt="Icon" width={20} height={20} className="image" />
-                  </div>
-                  <div>Clients</div>
-                </Link>
 
-                <Link href="/dashboard/partnerships/campaigns"
-                  className={`navlink-wrap ${router.pathname == "/dashboard/partnerships/campaigns" ? "active-link" : ""}`}>
-                  <div>
-                    <Image src={Partner} alt="Icon" width={20} height={20} className="image" />
-                  </div>
-                  <div>Partnerships</div>
-                </Link>
+                <ClientDropdown />
 
-                {/* <NavDropdown /> */}
+                <PartDropdown />
 
               </div>
             </div>
 
             <div>
               <div className="nav-title">
-                <p className="small-caps">settings</p>
+                <p className="smallcaps-dark">settings</p>
               </div>
               <div className="nav-group">
                 <Link href="/dashboard/support"

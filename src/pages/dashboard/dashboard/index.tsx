@@ -2,21 +2,26 @@ import React, { useEffect, useState } from "react";
 import withAuth from "@/components/common/WithAuth";
 import MainLoader from "@/components/common/Loader";
 import Sidebar from "@/components/navigation/Sidebar";
-import Breadcrumbs from "@/components/common/Breadcrumbs";
+import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import Add from "@/components/assets/icons/add.svg";
 import Image from "next/image";
-import DashboardBrands from "@/components/dashboard/DasboardBrands";
-import DashboardStats from "@/components/dashboard/DashboardStats";
-import InvoiceChart from "@/components/dashboard/InvoiceChart";
-import PendingInvoices from "@/components/dashboard/PendingInvoices";
+import DashboardBrands from "@/components/dashboard/dashboard/DasboardBrands";
+import DashboardStats from "@/components/dashboard/dashboard/DashboardStats";
+import InvoiceChart from "@/components/dashboard/dashboard/InvoiceChart";
+import PendingInvoices from "@/components/dashboard/dashboard/PendingInvoices";
 
 const DashboardPage = () => {
   const [loader, setLoader] = useState<boolean>(false);
 
+  const breadcrumbLinks = [
+    { label: "Home", link: "/" },
+    { label: "Dashboard", link: "/dashboard/dashboard" },
+  ];
+
   return (
     <div className="main-container">
       <div className="fixed-heading">
-        {/* <Breadcrumbs items={items} /> */}
+        <Breadcrumbs items={breadcrumbLinks} />
       </div>
       {loader ? (
         <MainLoader />
@@ -30,8 +35,8 @@ const DashboardPage = () => {
               <div className="brands-clients">
                   <DashboardBrands/>
                 <div className="invoice-stats">
-                  <PendingInvoices/>
-                  <InvoiceChart/>
+                <PendingInvoices/>
+                <InvoiceChart/>
                 </div>
               </div>
             </div>

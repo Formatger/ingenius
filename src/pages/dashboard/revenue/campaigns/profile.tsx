@@ -3,17 +3,17 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import withAuth from "@/components/common/WithAuth";
 import Sidebar from "@/components/navigation/Sidebar";
-import { CampaignsDetails, CampaignsInvoice } from "@/components/revenue/campaigns/campaigns";
+import { CampaignDetails, CampaignInvoice } from "@/components/dashboard/profile/CampaignProfile";
 import { Arrow } from "@/components/assets/svg/Arrow";
 import { getCampaignsDetail } from "@/utils/httpCalls";
 
-const RevenueCampaignsPage = () => {
+const CampaignProfilePage = () => {
   const router = useRouter()
   const { campaignId } = router.query;
 
   const [loader, setLoader] = useState<boolean>(false);
   // const [invoiceData, setInvoiceData] = useState(null);
-  const [campaignData, setCampaignData] = useState({});
+  const [campaignsData, setCampaignsData] = useState({});
 
   useEffect(() => { fetchData() }, [router]);
 
@@ -23,7 +23,7 @@ const RevenueCampaignsPage = () => {
       getCampaignsDetail(
         (response: any) => {
           const campaign = response.find((campaign: any) => campaign.id === parseInt(campaignId as string))
-          setCampaignData(campaign);
+          setCampaignsData(campaign);
         },
         (error: any) => {
           console.error('Error fetching invoice data:', error);
@@ -50,10 +50,10 @@ const RevenueCampaignsPage = () => {
           <div className="page-container" id="">
             <div className="profile-container">
               <div>
-                <CampaignsDetails campaignData={campaignData} />
+                <CampaignDetails campaignsData={campaignsData} />
               </div>
               <div>
-                <CampaignsInvoice campaignData={campaignData} />
+                <CampaignInvoice campaignsData={campaignsData} />
               </div>
             </div>
           </div>
@@ -63,8 +63,8 @@ const RevenueCampaignsPage = () => {
   );
 };
 
-const RevenueCampaigns = () => {
-  return <Sidebar layout={<RevenueCampaignsPage />} />;
+const CampaignProfile = () => {
+  return <Sidebar layout={<CampaignProfilePage />} />;
 };
 
-export default withAuth(RevenueCampaigns);
+export default withAuth(CampaignProfile);

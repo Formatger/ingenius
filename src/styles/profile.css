@@ -1,9 +1,6 @@
-/* PROJECTS STYLES */
+/* PROFILES  */
 
-
-/* * {
-  border: 1px solid var(--gray3);
-} */
+/* Profile Page */
 
 .profile-container {
   width: 100%;
@@ -12,7 +9,7 @@
   gap: var(--m4);
   justify-content: center;
   align-items: center;
-  padding-top: var(--m8);
+  padding-bottom: 50px;
 }
 
 @media (min-width: 1200px) {
@@ -22,6 +19,8 @@
     padding-top: 0;
   }
 }
+
+/* ProfileDetails Card */
 
 .card-container {
   padding: var(--m3);
@@ -49,24 +48,23 @@
 }
 
 .profile-info-image {
+  width: 160px;
+  height: 160px;
+  overflow: hidden;
   display: flex;
-  width: 100%;
+  justify-content: center;
   align-items: center;
-  object-fit: cover;
-}
-
-.profile-image {
-  width: 150px !important;
+  border-radius: 50%; 
 }
 
 .profile-info-image img {
-  border-radius: var(--round);
-  /* border: 3px solid var(--orange); */
-  width: 160px;
-  height: auto;
+  min-width: 100%; 
+  min-height: 100%; 
+  object-fit: cover; 
 }
 
-.profile-info-text {
+
+.profile-info-box {
   padding: 5px;
   width: 100%;
   height: 100%;
@@ -74,80 +72,28 @@
   flex-direction: column;
 }
 
-.profile-info-name {
-  background-color: var(--gray2);
+.profile-info-wrap {
+  margin-bottom: 11px;
   width: 100%;
   height: 100%;
   display: flex;
-  align-items: center;
-  justify-content: left;
+  align-items: left;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
-.profile-info-web {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: left;
-}
-
-.profile-info-location {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: row;
-}
-
-.profile-info-home {
-  width: 65%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: left;
-  flex-direction: row;
-}
-
-.profile-info-home img {
-  margin-right: 5px;
-}
-
-.profile-info-home-icon {
-  width: 35%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: left;
-  flex-direction: row;
-}
-
-.profile-info-home-icon img {
-  margin: 5px;
-}
+/* 
+Changed to .smallcaps at core.css
 
 .profile-subtitle {
   font-family: "InterRegular";
   color: var(--gray5);
-  font-size: 10px;
+  font-size: 11px;
   text-transform: uppercase;
-}
+} */
 
-.profile-button1 {
-  width: 100%;
-  margin-bottom: 10px;
-  height: 45px;
-}
-
-.profile-button2 {
-  width: 100%;
-  height: 45px;
-  margin-bottom: 10px;
-  background-color: var(--stone);
-}
-
-.two-buttons {
-  display: flex;
-  flex-direction: row;
-  width: 100%;
+.profile-text {
+  font-family: "DMSansMedium";
 }
 
 .card-text {
@@ -165,14 +111,6 @@
   max-width: 400px;
   justify-content: center;
   border-radius: 10px;
-}
-
-.head-card-invoice {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 170px;
-  background-color: white;
 }
 
 .history-invoice {
@@ -193,14 +131,6 @@
   display: flex;
   flex-direction: column;
   flex: 1;
-}
-
-.invoice-subtitle {
-  font-family: "InterRegular";
-  color: #6C758A;
-  font-size: 11px;
-  margin-bottom: 10px;
-  text-transform: uppercase;
 }
 
 .invoice-data {
@@ -257,56 +187,14 @@
   background-color: var(--linen);
 }
 
-/*Campaigns*/
-
-.profile-campaigns-text {
-  font-family: "DMSansMedium";
-}
-
-.profile-campaigns-text-bold {
-  font-family: "DMSansBold";
-}
-
-.profile-info-text-campaigns {
-  padding: 5px;
-  width: 100%;
-  height: 100%;
+.send-contract {
   display: flex;
-  flex-direction: column;
-}
-
-.profile-info-campaigns {
-  margin-bottom: 11px;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: left;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.profile-subtitle-campaigns {
-  color: #6C758A;
-  font-size: 11px;
-}
-
-.profile-info-tag {
-  display: flex;
+  justify-content: center;
   align-items: center;
-  justify-content: left;
-  flex-direction: row;
 }
 
-.profile-info-tag img {
-  margin-right: var(--m3);
-  display: flex;
-  align-items: center;
-  justify-content: left;
-  flex-direction: row;
-  justify-content: space-between;
-}
 
-.card-container-invoice-campaigns {
+/* .card-container-invoice-campaigns {
   flex: 1;
   padding: var(--m3);
   width: 100%;
@@ -316,14 +204,137 @@
   justify-content: center;
   align-items: center;
   border-radius: 10px;
-}
+} */
 
-.send-contract {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.profile-campaigns-link {
+/* .profile-campaigns-link {
   color: black
+} */
+
+/*
+.profile-button1 {
+  width: 100%;
+  margin-bottom: 10px;
+  height: 45px;
 }
+
+.profile-button2 {
+  width: 100%;
+  height: 45px;
+  margin-bottom: 10px;
+  background-color: var(--stone);
+}
+
+.two-buttons {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+*/
+
+/* .profile-subtitle-campaigns {
+  color: #6C758A;
+  font-size: 11px;
+} */
+
+/*
+.profile-info-tag {
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  flex-direction: row;
+}
+*/
+
+
+/*
+.profile-campaigns-text-bold {
+  font-family: "DMSansBold";
+}*/
+
+
+/* .invoice-subtitle {
+  font-family: "InterRegular";
+  color: #6C758A;
+  font-size: 11px;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+} */
+
+/*
+.head-card-invoice {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 170px;
+  background-color: white;
+}
+*/
+
+/* .profile-info-text {
+  padding: 5px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+} */
+
+/* .profile-info-name {
+  background-color: var(--gray2);
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: left;
+} 
+
+.profile-info-web {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: left;
+}
+
+.profile-info-location {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+.profile-info-home {
+  width: 65%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  flex-direction: row;
+}
+
+.profile-info-home img {
+  margin-right: 5px;
+}
+
+.profile-info-home-icon {
+  width: 35%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  flex-direction: row;
+}
+
+.profile-info-home-icon img {
+  margin: 5px;
+}
+*/
+
+
+/* .profile-info-tag img {
+  margin-right: var(--m3);
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  flex-direction: row;
+  justify-content: space-between;
+} */

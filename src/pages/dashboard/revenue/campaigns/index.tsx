@@ -1,27 +1,15 @@
 import React, { useEffect, useState } from "react";
 import Sidebar from "@/components/navigation/Sidebar";
-import { Arrow } from "@/components/assets/svg/Arrow";
 import EasyFilters from "@/components/common/EasyFilters";
-import Sidepanel from "@/components/common/Sidepanel";
-import Breadcrumbs from "@/components/common/Breadcrumbs";
+import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import withAuth from "@/components/common/WithAuth";
 import { getCampaignsDetail } from "@/utils/httpCalls";
 import { useWindowSize } from "@/utils/hooks/useWindowSize";
 import { transformDate } from "@/utils/dateManager";
-
-
-interface DataInterface {
-  id: number;
-  brand_name: string;
-  campaign_name: string;
-  total_projects: number;
-  contract_value: number;
-  brand_image_url: string;
-  representative: string;
-  invoice_number: string;
-  invoice_date: string;
-  campaign_duration: string;
-}
+import CampaignsTable from "@/components/dashboard/table/CampaignTable";
+import Pagination from "@/components/dashboard/table/Pagination";
+import { CampaignInterface } from "@/interfaces/interfaces";
+import SidepanelCampaign from "@/components/dashboard/profile/CampaignSidepanel";
 
 const RevenueCampaignsPage = () => {
   const [loader, setLoader] = useState<boolean>(false);
@@ -32,13 +20,14 @@ const RevenueCampaignsPage = () => {
   });
   const [openSidepanel, setOpenSidepanel] = useState(false);
   const [revenueCampaigns, setRevenueCampaigns] = useState([]);
-  const [noSlicedData, setNoSlicedData] = useState<DataInterface[]>([]);
-  const [data, setData] = useState<DataInterface[]>([]);
+  const [noSlicedData, setNoSlicedData] = useState<CampaignInterface[]>([]);
+  const [data, setData] = useState<CampaignInterface[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedCampaign, setSelectedCampaign] = useState({} as DataInterface);
+  const [selectedCampaign, setSelectedCampaign] = useState({} as CampaignInterface);
   const [itemsPerPage, setItemsPerPage] = useState(10);
 
   const { height } = useWindowSize();
+  
   const breadcrumbLinks = [
     { label: "Home", link: "/" },
     { label: "Revenue", link: "/dashboard/revenue/campaigns" },
@@ -102,23 +91,19 @@ const RevenueCampaignsPage = () => {
   };
 
   const handleCloseSidepanel = () => {
-    setSelectedCampaign({} as DataInterface);
+    setSelectedCampaign({} as CampaignInterface);
     setOpenSidepanel(false);
   }
 
   const handlePrevious = () => setCurrentPage((oldPage) => Math.max(oldPage - 1, 1));
 
-
   const handleNext = () => setCurrentPage((oldPage) => Math.min(oldPage + 1, totalPages));
 
   /**
    * Sort the table by the specified field
-   * 
    * It toggles between ascending and descending order
-   * 
    * totalProjects and contractValue are treated as numbers, 
    * while the rest are treated as strings
-   * 
    * @param field - Field to sort by
    */
   const sortBy = (field: keyof typeof revenueCampaigns[0]) => {
@@ -146,7 +131,7 @@ const RevenueCampaignsPage = () => {
   };
 
   const handleSearch = (search: string) => {
-    const filteredData = revenueCampaigns.filter((campaign: DataInterface) => {
+    const filteredData = revenueCampaigns.filter((campaign: CampaignInterface) => {
       return campaign.brand_name.toLowerCase().includes(search.toLowerCase()) ||
         campaign.campaign_name.toLowerCase().includes(search.toLowerCase());
     });
@@ -160,11 +145,11 @@ const RevenueCampaignsPage = () => {
   const filterByDate = (type: string) => {
     const currentDate = new Date();
     const endDate = new Date();
-    let filteredData: DataInterface[] = [...revenueCampaigns]
+    let filteredData: CampaignInterface[] = [...revenueCampaigns]
 
     switch (type) {
       case "Today":
-        filteredData = filteredData.filter((campaign: DataInterface) => {
+        filteredData = filteredData.filter((campaign: CampaignInterface) => {
           const [, endDate] = transformDate(campaign.campaign_duration);
           console.log(endDate)
           if (endDate.getDate() === currentDate.getDate() &&
@@ -176,7 +161,7 @@ const RevenueCampaignsPage = () => {
         console.log(filteredData)
         break;
       case "Yesterday":
-        filteredData = filteredData.filter((campaign: DataInterface) => {
+        filteredData = filteredData.filter((campaign: CampaignInterface) => {
           const [, endDate] = transformDate(campaign.campaign_duration);
           endDate.setDate(endDate.getDate() + 1);
           if (endDate.getDate() === currentDate.getDate() &&
@@ -187,7 +172,7 @@ const RevenueCampaignsPage = () => {
         });
         break;
       case "Week":
-        filteredData = filteredData.filter((campaign: DataInterface) => {
+        filteredData = filteredData.filter((campaign: CampaignInterface) => {
           const [, endDate] = transformDate(campaign.campaign_duration);
           const weekStart = new Date();
           weekStart.setDate(currentDate.getDate() - 7);
@@ -198,7 +183,7 @@ const RevenueCampaignsPage = () => {
         });
         break;
       case "Month":
-        filteredData = filteredData.filter((campaign: DataInterface) => {
+        filteredData = filteredData.filter((campaign: CampaignInterface) => {
           const [, endDate] = transformDate(campaign.campaign_duration);
           const monthAgo = new Date();
           monthAgo.setMonth(monthAgo.getMonth() - 1);
@@ -220,92 +205,6 @@ const RevenueCampaignsPage = () => {
     ));
   }
 
-  const renderTable = () => {
-    return (
-      <div className="table-container">
-        {httpError.hasError ? (
-          <div className="error-message">
-            Error: {httpError.status} - {httpError.message}
-          </div>
-        )
-          : (
-            <table className="app-table">
-              <thead>
-                <tr className="table-header">
-                  <th>
-                    <div className="table-header-content">
-                      <button className="header-button" onClick={() => sortBy("brand_name")}>
-                        <Arrow className="arrow-down" />
-                      </button>
-                      <p>Partner</p>
-                    </div>
-                  </th>
-                  <th>
-                    <div className="table-header-content" onClick={() => sortBy("campaign_name")}>
-                      <button className="header-button">
-                        <Arrow className="arrow-down" />
-                      </button>
-                      <p>Campaign</p>
-                    </div>
-                  </th>
-                  <th>
-                    <div className="table-header-content-center" onClick={() => sortBy("total_projects")}>
-                      <button className="header-button">
-                        <Arrow className="arrow-down" />
-                      </button>
-                      <p>Total Projects</p>
-                    </div>
-                  </th>
-                  <th>
-                    <div className="table-header-content-center" onClick={() => sortBy("contract_value")}>
-                      <button className="header-button">
-                        <Arrow className="arrow-down" />
-                      </button>
-                      <p>Contract Value</p>
-                    </div>
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="table-body">
-                {data && data.length > 0 && data?.map((campaign) => (
-                  <tr key={campaign.id} className="table-row" onClick={() => handleOpenSidepanel(campaign)}>
-                    <td className="table-brand-cell">
-                      <img src={campaign.brand_image_url} alt={campaign.brand_name} className="partner-image" />
-                      {campaign.brand_name}
-                    </td>
-                    <td className="table-cell"><span className="round-tag linen">{campaign.campaign_name}</span> </td>
-                    <td className="table-cell-center">{campaign.total_projects}</td>
-                    <td className="table-cell-center">{`$${campaign.contract_value}`}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
-      </div >
-    );
-  };
-
-  const renderPagination = () => {
-    return (
-      <div className="pagination">
-        <span>{`${(currentPage - 1) * itemsPerPage + 1}-${Math.min(
-          currentPage * itemsPerPage,
-          noSlicedData.length
-        )} of ${noSlicedData.length}`}</span>
-        <button onClick={handlePrevious} disabled={currentPage === 1 || data.length === 0}>
-          &lt;
-        </button>
-        <span>{currentPage}</span>
-        <button
-          onClick={handleNext}
-          disabled={currentPage === totalPages || data.length === 0}
-        >
-          &gt;
-        </button>
-      </div>
-    )
-  }
-
   return (
     <div className="main-container">
       <div className="breadcrumb-nav"><Breadcrumbs items={breadcrumbLinks} /></div>
@@ -316,13 +215,30 @@ const RevenueCampaignsPage = () => {
       ) : (
         <>
           <div className="page-container" id="revenueCampaigns">
-            {openSidepanel && <button className="overlayer" onClick={handleCloseSidepanel} />}
             {openSidepanel && (
-              <Sidepanel campaignData={selectedCampaign} open={openSidepanel} />
+              <SidepanelCampaign
+                campaignsData={selectedCampaign}
+                open={openSidepanel}
+                setOpenSidepanel={setOpenSidepanel}
+                setSelectedCampaign={setSelectedCampaign}
+              />
             )}
             <EasyFilters filterByDate={filterByDate} handleSearch={handleSearch} />
-            {renderTable()}
-            {renderPagination()}
+            <CampaignsTable
+              httpError={httpError}
+              data={data}
+              sortBy={sortBy}
+              handleOpenSidepanel={handleOpenSidepanel}
+            />
+            <Pagination
+              currentPage={currentPage}
+              itemsPerPage={itemsPerPage}
+              noSlicedData={noSlicedData}
+              data={data}
+              handlePrevious={handlePrevious}
+              handleNext={handleNext}
+              totalPages={totalPages}
+            />
           </div>
 
         </>

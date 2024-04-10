@@ -3,7 +3,10 @@ import { DEPLOYED_API_BASE_URL } from './apiConfig';
 
 
 const api = axios.create({
-  baseURL: `${DEPLOYED_API_BASE_URL}`
+  baseURL: `${DEPLOYED_API_BASE_URL}`,
+  // headers: {
+  //   'Content-Type': 'application/json',
+  // }
 });
 
 // GET request
@@ -21,7 +24,7 @@ export const httpGET = (endpoint: string, callback: Function, errorCallback: Fun
   });
 }
 
-// POST request
+// LOGIN POST request
 export const httpLoginPOST = (endpoint: string, data: any, callback: any, errorCallback: any) => {
   api.post(endpoint, data, {
     headers: {
@@ -58,6 +61,7 @@ export const httpPOST = (endpoint: string, data: any, callback: any, errorCallba
     errorCallback && errorCallback(error)
   });
 }
+
 
 // PUT request
 export const httpPUT = (endpoint: string, data: any, callback: Function, errorCallback: Function) => {

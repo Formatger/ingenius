@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
+import Arrow from "../assets/svg/Arrow";
 
 const timeframes = [
   { id: "tf-1", value: "Last 7 Days" },
   { id: "tf-2", value: "This Month" },
   { id: "tf-3", value: "This Year" },
-  { id: "tf-4", value: "Custom" },
+  // { id: "tf-4", value: "Custom" },
 ];
 function Dropdown() {
   const [isTimeframeOpen, setIsTimeframeOpen] = useState(false);
@@ -25,7 +26,7 @@ function Dropdown() {
   const handleOpenFilter = (type: string) => {
     switch (type) {
       case "people":
-        setIsPeopleOpen(!isPeopleOpen);
+        /* setIsPeopleOpen(!isPeopleOpen); */
         setIsTimeframeOpen(false);
         break;
       case "niche": {
@@ -47,10 +48,12 @@ function Dropdown() {
           className={isTimeframeOpen ? "dropdownButtonOpen" : "dropdownButton"}
           onClick={() => handleOpenFilter("timeframe")}
         >
-          {`Timeframe: ${selectedTimeframe.value}`}
+          <p>{`Timeframe: ${selectedTimeframe.value}`}</p>
+          <Arrow className={`${isTimeframeOpen ? "" : "arrow-down"}`} />
         </button>
         {isTimeframeOpen && (
           <ul className="dropdownListStick">
+            <div className="hr-line"></div>
             {timeframes.map((tf) => (
               <li className="dropdownListItem" key={tf.id}>
                 <button
@@ -74,7 +77,7 @@ function Dropdown() {
           className={"dropdownButton"}
           onClick={() => handleOpenFilter("people")}
         >
-          {`People: All`}
+          {`Partner: All`}
         </button>
         {isPeopleOpen && (
           <div className="dropdownListSeparated">

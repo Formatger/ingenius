@@ -1,72 +1,3 @@
-*,
-html,
-body {
-  scroll-behavior: smooth !important;
-}
-
-html:focus-within {
-  scroll-behavior: smooth !important;
-}
-
-body,
-html {
-  margin: 0;
-  padding: 0;
-  overflow-x: hidden;
-}
-
-* {
-  box-sizing: border-box;
-}
-
-body {
-  font-family: "DMSansRegular", sans-serif;
-  font-size: 16px;
-  outline: none;
-  color: #161b22;
-}
-
-a,
-link {
-  color: #161b22;
-  text-decoration: none;
-  cursor: pointer;
-  outline: none;
-}
-
-/* main {
-  background: var(--white); 
-  scrollbar-width: auto;
-  scrollbar-color: var(--dark) var(--dark);
-  overflow-y: auto;
-  overflow-x: hidden;
-} */
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-hr,
-dl,
-dd,
-figure,
-p,
-pre {
-  margin: 0;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-size: inherit;
-  font-weight: inherit;
-}
-
 /* Main Container */
 
 .main-container {
@@ -76,9 +7,6 @@ h6 {
   margin-top: var(--toolbar-h);
   display: flex;
   align-items: flex-end;
-  /* border: 1px solid red; */
-  /*  overflow: hidden;
- */
 }
 
 .page-container {
@@ -89,15 +17,9 @@ h6 {
 
 
 @media (min-width: 1024px) {
-
   .fixed-heading {
     left: var(--sidebar-w);
   }
-
-  /* .page-container {
-    padding: var(--m7);
-  } */
-
 }
 
 /* Sidebar */
@@ -112,7 +34,7 @@ h6 {
   width: var(--sidebar-w);
   background: rgb(0, 0, 0);
   color: white;
-  border-top-right-radius: var(--r6);
+  border-top-right-radius: var(--r7);
   border-bottom-right-radius: var(--r5);
 }
 
@@ -217,6 +139,24 @@ h6 {
 .dropdown-menu {
   display: flex;
   padding: var(--m4) var(--m5);
+}
+
+.dropdown-menu {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+}
+
+.dropdown-menu.open {
+  max-height: 1000px;
+  overflow: visible;
+}
+
+.dropline-box {
+  /* width: 2px; */
+  margin-left: 24px;
+  margin-top: 6px;
+  border-left: 2px solid var(--main);
 }
 
 .drop-line {

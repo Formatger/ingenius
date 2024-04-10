@@ -1,0 +1,302 @@
+/* ELEMENTS */
+
+/* Button Group */
+
+.button-group {
+  display: flex;
+  align-items: center;
+  gap: var(--m3);
+}
+
+/* Button */
+
+button {
+  outline: none !important;
+  border: none;
+  background: transparent;
+}
+
+button:active,
+button:hover,
+button:focus,
+a:active,
+a:focus,
+a:hover {
+  cursor: pointer;
+}
+
+button[disabled] {
+  cursor: auto;
+}
+
+/* Button Extensions */
+
+.center-btn {
+  display: flex;
+}
+
+.w-50 {
+  width: 50%;
+}
+
+/* Primary Button */
+
+.app-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: max-content;
+  max-width: fit-content;
+  height: 46px;
+  padding: 0 var(--m5);
+  border-radius: var(--r6);
+  gap: var(--m2);
+  background: var(--red);
+  font-family: "InterMedium";
+  font-size: 14px;
+  color: var(--white);
+}
+.app-button:hover {
+  filter: brightness(150%);
+}
+
+/* .app-button button{
+  min-width: 140px;
+} */
+
+.app-button.small {
+  height: 28px;
+}
+
+.app-button.cream {
+  background-color: var(--cream);
+}
+.app-button.cream:hover {
+  filter: brightness(105%);
+}
+
+/* Secondary Button */
+
+.sec-button,
+.sec-tag {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  border-radius: var(--r4);
+  color: black;
+  min-height: var(--btn-h);
+  font-family: "DMSansMedium";
+  font-size: 16px;
+  gap: var(--m2);
+}
+
+.sec-button:active img {
+  filter: invert();
+}
+
+.sec-button.linen:hover {
+  background-color: var(--light-orange);
+}
+
+.sec-button.linen:active {
+  background-color: var(--pink);
+  color: white;
+}
+
+/* Submit Button */
+
+/* 
+.button-loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.main-loader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: var(--m14);
+}
+
+.sub-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  border-radius: var(--r4);
+  color: black;
+  min-height: var(--btn-h);
+  font-family: "DMSansMedium";
+  font-size: 16px;
+}
+
+.sub-button:hover[disabled],
+button[disabled] {
+  opacity: 0.4;
+  filter: saturate(80%);
+  filter: hue-rotate(-8deg);
+} */
+
+
+/* Tags */
+
+.square-tag {
+  font-family: "InterRegular";
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  padding: var(--m2) var(--m4);
+  font-size: 13px;
+  border-radius: var(--r4);
+  gap: var(--m1);
+}
+
+/* background-color extensions: 
+green, blue, light-blue, ivory, pink */
+
+.round-tag {
+  font-family: "InterRegular";
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  padding: var(--m2) var(--m4);
+  font-size: 13px;
+  border-radius: var(--r5);
+  gap: var(--m1);
+}
+
+/* background-color extensions: 
+green, blue, light-blue, ivory, pink */
+
+.status-tag {
+  font-family: "DMSansRegular";
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  padding: var(--m2) var(--m3);
+  font-size: 14px;
+  border-radius: var(--r5);
+  padding: var(--m1) var(--m3);
+  width: 100px;
+}
+
+/* Color extensions */
+.status-tag.green {
+  background-color: var(--green);
+  color: var(--darkgreen)
+}
+.status-tag.pink {
+  background-color: var(--pink);
+  color: var(--darkred);
+}
+
+/* Input */
+
+input:focus {
+  outline: none;
+}
+
+.app-input {
+  width: 100%;
+  min-height: 38px;
+  padding: var(--m2) var(--m3);
+  background-color: var(--white);
+  border-radius: var(--r2);
+  border: 1px solid;
+  border: 1px solid var(--gray2);
+  font-family: "InterRegular";
+}
+
+.app-input.disabled {
+  background: var(--grey);
+}
+
+/* Search Input */
+
+.search-input {
+  width: 320px;
+  height: 46px;
+  padding: 0 38px;
+  background-color: var(--gray);
+  border-radius: 10px;
+  border: 1px solid var(--gray1);
+}
+
+.search-icon {
+  position: relative;
+  top: 4px;
+  left: 30px;
+  width: 14px;
+}
+
+/* Radio Button */
+
+.radiobutton {
+  cursor: pointer;
+  accent-color: var(--main);
+  width: 16px;
+  height: auto;
+}
+
+.axis-label {
+  letter-spacing: 0.24px !important;
+}
+
+/* Chechbox */
+
+.checkbox {
+  cursor: pointer;
+  background-color: var(--brown2);
+  accent-color: var(--brown2);
+  color: white;
+}
+
+.checkbox:hover {
+  background-color: var(--brown2);
+  accent-color: var(--brown2);
+}
+
+/* CopyClip */
+
+.copy-clip {
+  background: var(--grey1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.copy-clip button {
+  background: var(--grey1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 10px;
+}
+
+.copy-clip img {
+  width: 16px;
+  height: 16px;
+}
+
+/* Icons */
+
+.logo-wrap {
+  display: flex;
+}
+
+.logo {
+  width: auto;
+  height: 36px;
+  margin-right: var(--m2);
+}
+
+.logo-text {
+  width: auto;
+  height: 36px;
+  margin-top: var(--m1);
+}

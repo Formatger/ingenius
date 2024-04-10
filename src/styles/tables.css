@@ -134,36 +134,3 @@
   padding: 0 16px;
 }
 
-/* Dashboard Table */
-
-#dashboard-table .table-row {
-  height: 42px;
-  border: none;
-}
-
-#dashboard-table .table-header {
-  border: none;
-}
-
-#dashboard-table .table-header-content p,
-#dashboard-table .table-header-content-center p {
-  font-family: "InterLight", sans-serif;
-  font-size: 12px;
-  padding: 0;
-  margin: 0;
-  text-transform: uppercase;
-  color: var(--gray4);
-}
-
-.dash-table th {
-  font-weight: 500;
-  color: var(--gray4);
-  font-size: 14px;
-  padding-top: 8px;
-  padding-bottom: 8px;
-}
-
-.table-row:hover {
-  background-color: transparent;
-  cursor: pointer;
-}

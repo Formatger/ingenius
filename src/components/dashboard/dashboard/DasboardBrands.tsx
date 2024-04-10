@@ -3,7 +3,7 @@ import icon from '@/components/assets/icons/icon.svg';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Arrow } from "@/components/assets/svg/Arrow";
-import HelpIcon from '../assets/svg/Help';
+import HelpIcon from '../../assets/svg/Help';
 import Add from "@/components/assets/icons/add.svg";
 
 // const sortBy = (field: keyof typeof revenueCampaigns[0]) => {
@@ -34,7 +34,7 @@ const DashboardBrands = () => {
   return (
       <div className="dashboard-box">
         <div className="row-between">
-          <h2 className="dashboard-brands-title">Brands & Clients</h2>
+          <h2 className="dashboard-title">Brands & Clients</h2>
           <HelpIcon />
         </div>
 
@@ -51,6 +51,14 @@ const DashboardBrands = () => {
                   </th>
                   <th>
                     <div className="table-header-content-center" onClick={undefined}>
+                      <p>Status</p>
+                      <button className="header-button">
+                        <Arrow className="gray-fill arrow-down" />
+                      </button>
+                    </div>
+                  </th>
+                  <th>
+                    <div className="table-header-content-center" onClick={undefined}>
                       <p>Earliest Due</p>
                       <button className="header-button">
                         <Arrow className="gray-fill arrow-down" />
@@ -59,12 +67,17 @@ const DashboardBrands = () => {
                   </th>
                   <th>
                     <div className="table-header-content-center" onClick={undefined}>
-                      <p>Unpaid</p>
+                      <p>Amount</p>
                       <button className="header-button">
                         <Arrow className="gray-fill arrow-down" />
                       </button>
                     </div>
                   </th>
+                  {/* <th>
+                    <div className="table-header-content-center" onClick={undefined}>
+                      <p></p>
+                    </div>
+                  </th> */}
                 </tr>
               </thead>
               {/* <tbody className="table-body">
@@ -73,7 +86,7 @@ const DashboardBrands = () => {
                   key={brands.id} 
                   >
                     <td className="table-cell">
-                      <div className='row-wrap'>
+                      <div className='row-wrap-1'>
                         <input type="checkbox" className='checkbox'></input>
                         <p>Yeti Cycles</p>
                       </div>
@@ -89,44 +102,65 @@ const DashboardBrands = () => {
 
                   <tr className="table-row" onClick={undefined}>
                     <td className="table-cell">
-                      <div className='row-wrap'>
-                        <input className='checkbox' type='checkbox'></input>
+                      <div className='row-wrap-1'>
+                        {/* <input className='checkbox' type='checkbox'></input> */}
                         <p>Yeti Cycles</p>
                       </div>
+                    </td>
+                    <td className="table-cell-center-full">
+                      <span className="status-tag green">Paid</span>
                     </td>
                     <td className="table-cell-center">12/30/2023</td>
                     <td className="table-cell-center">$12,342</td>
                   </tr>
 
-
                   <tr className="table-row" onClick={undefined}>
                     <td className="table-cell">
-                      <div className='row-wrap'>
-                        <input className='checkbox' type='checkbox'></input>
+                      <div className='row-wrap-1'>
+                        {/* <input className='checkbox' type='checkbox'></input> */}
                         <p>Warby Parker</p>
                       </div>
                     </td>
+                    <td className="table-cell-center-full">
+                      <span className="status-tag small pink">Unpaid</span>
+                    </td>
                     <td className="table-cell-center">12/30/2023</td>
                     <td className="table-cell-center">$13,540</td>
+                    {/* <td className="table-cell">
+                      <button className="app-button small" onClick={undefined}>
+                        <p>Remind Brand</p>
+                      </button>
+                    </td> */}
                   </tr>
 
                   <tr className="table-row" onClick={undefined}>
                     <td className="table-cell">
-                      <div className='row-wrap'>
-                        <input className='checkbox' type='checkbox'></input>
+                      <div className='row-wrap-1'>
+                        {/* <input className='checkbox' type='checkbox'></input> */}
                         <p>Allbirds</p>
                       </div>
                     </td>
+                    <td className="table-cell-center-full">
+                      <span className="status-tag small pink">Unpaid</span>
+                    </td>
                     <td className="table-cell-center">12/30/2023</td>
                     <td className="table-cell-center">$9,302</td>
+                    {/* <td className="table-cell">
+                      <button className="app-button small" onClick={undefined}>
+                        <p>Remind Brand</p>
+                      </button>
+                    </td> */}
                   </tr>
 
                   <tr className="table-row" onClick={undefined}>
                     <td className="table-cell">
-                      <div className='row-wrap'>
-                        <input className='checkbox' type='checkbox'></input>
+                      <div className='row-wrap-1'>
+                        {/* <input className='checkbox' type='checkbox'></input> */}
                         <p>Patagonia</p>
                       </div>
+                    </td>
+                    <td className="table-cell-center-full">
+                      <span className="status-tag green">Paid</span>
                     </td>
                     <td className="table-cell-center">12/30/2023</td>
                     <td className="table-cell-center">$8,812</td>
@@ -135,23 +169,51 @@ const DashboardBrands = () => {
 
                   <tr className="table-row" onClick={undefined}>
                     <td className="table-cell">
-                      <div className='row-wrap'>
-                        <input className='checkbox' type='checkbox'></input>
+                      <div className='row-wrap-1'>
+                        {/* <input className='checkbox' type='checkbox'></input> */}
                         <p>Rae Dunn</p>
                       </div>
+                    </td>
+                    <td className="table-cell-center-full">
+                      <span className="status-tag pink">Unpaid</span>
                     </td>
                     <td className="table-cell-center">12/30/2023</td>
                     <td className="table-cell-center">$15,500</td>
                   </tr>
 
+                  <tr className="table-row" onClick={undefined}>
+                    <td className="table-cell">
+                      <div className='row-wrap-1'>
+                        {/* <input className='checkbox' type='checkbox'></input> */}
+                        <p>John Doe</p>
+                      </div>
+                    </td>
+                    <td className="table-cell-center-full">
+                      <span className="status-tag pink">Unpaid</span>
+                    </td>
+                    <td className="table-cell-center">12/30/2023</td>
+                    <td className="table-cell-center">$15,500</td>
+                  </tr>
 
-
+                  <tr className="table-row" onClick={undefined}>
+                    <td className="table-cell">
+                      <div className='row-wrap-1'>
+                        {/* <input className='checkbox' type='checkbox'></input> */}
+                        <p>Nike</p>
+                      </div>
+                    </td>
+                    <td className="table-cell-center-full">
+                      <span className="status-tag green">Paid</span>
+                    </td>
+                    <td className="table-cell-center">12/30/2023</td>
+                    <td className="table-cell-center">$15,500</td>
+                  </tr>
 
               </tbody>
               
             </table>
 
-        <button className="app-button" onClick={undefined}>
+        <button className="app-button mt-3" onClick={undefined}>
           <Image src={Add} alt="Icon" width={20} height={20} />
           <p>Add New</p>
         </button>
