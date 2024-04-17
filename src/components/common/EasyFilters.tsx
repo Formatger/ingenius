@@ -24,7 +24,7 @@ export default function EasyFilters({ handleSearch, filterByDate }: EasyFiltersP
 
   return (
     <div className="campaigns-filters-container">
-      {/* <div className="easyfilters-container">
+      <div className="easyfilters-container">
         <button
           value={DATA_FILTERS[1]}
           className={
@@ -69,7 +69,7 @@ export default function EasyFilters({ handleSearch, filterByDate }: EasyFiltersP
         >
           Month
         </button>
-      </div> */}
+      </div>
       <div>
         <Image className="search-icon" src={Search} alt="Icon" width={20} height={20} />
         <input

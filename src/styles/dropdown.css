@@ -38,7 +38,7 @@
   height: 45px;
   border-radius: 15px 15px 0 0;
   cursor: pointer;
-  background-color:white;
+  background-color: white;
   border: 1px solid var(--gray2);
   border-bottom: none;
   z-index: 3;
@@ -97,6 +97,35 @@
   background-color: var(--light-orange);
 }
 
+.suggestionDropdown {
+  width: 100%;
+  padding: 0;
+  margin: 5px 0 0 0;
+}
+
+.chip {
+  height: 29px;
+  width: fit-content;
+  padding: 0 10px;
+  border-radius: 15px;
+  background-color: #F0F0F0;
+  font-size: 14px;
+  font-family: "InterSemiBold", sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 10px 0;
+
+}
+
+.chipClose {
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
 .dropdownListSeparated {
   position: absolute;
   margin: 0;
@@ -107,11 +136,12 @@
   background-color: white;
   border-radius: 15px;
   overflow: hidden;
-  /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   display: flex;
   align-items: flex-start;
   flex-direction: column;
   padding: var(--m4);
+  z-index: 200;
 }
 
 .dropdownSection {
@@ -120,9 +150,68 @@
 }
 
 .dropdownSectionTitle {
-  font-size: 18px;
-  font-weight: bold;
+  font-size: 12px;
+  font-family: "InterSemiBold", sans-serif;
   margin-bottom: 10px;
+  color: #9098A3;
+  text-transform: uppercase;
+}
+
+.peopleFiltersSection {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  padding: var(--m4);
+}
+
+.searchContainer {
+  width: 100%;
+  padding: 10px;
+  border-radius: 15px;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.dropdownSearchRow {
+  width: 100%;
+  background-color: transparent;
+  min-height: 34px;
+  border-radius: 8px;
+  list-style: none;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.dropdownSearchItem {
+  font-family: "InterMedium", sans-serif;
+  color: black;
+  font-size: 12px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  text-align: left;
+}
+
+.dropdownSearchRow:hover {
+  background-color: #F6F6F6;
+}
+
+.searchInput {
+  width: 100%;
+  height: 34px;
+  padding: 10px;
+  border-radius: 15px;
+  border: 1px solid #D8DADC;
+  outline: none;
 }
 
 .dropdownInput {
@@ -214,10 +303,10 @@
 /*/ SEARCH DROPDOWN STYLES//*/
 
 .dropdown-container {
-    position: relative;
-    width: 300px;
-    width: 100%;
-    font-family: "InterRegular";
+  position: relative;
+  width: 300px;
+  width: 100%;
+  font-family: "InterRegular";
 }
 
 .dropdown-header {
@@ -248,26 +337,61 @@
 }
 
 .dropdown-list {
-    position: absolute;
-    top: 8px;
-    width: 100%;
-    background: var(--gray);
-    z-index: 1000;
-    position: relative;
-    border-radius: 12px;
-    font-size: 12px;
-    color: var(--gray4);
-    padding: 8px;
+  position: absolute;
+  top: 8px;
+  width: 100%;
+  background: var(--gray);
+  z-index: 1000;
+  position: relative;
+  border-radius: 12px;
+  font-size: 12px;
+  color: var(--gray4);
+  padding: 8px;
 }
 
 .dropdown-item {
-    padding: 8px;
-    cursor: pointer;
+  padding: 8px;
+  cursor: pointer;
 }
 
 .dropdown-item:hover {
-    background-color: var(--gray2);
-    border-radius: 6px;
-    color: var(--gray7);
+  background-color: var(--gray2);
+  border-radius: 6px;
+  color: var(--gray7);
 
+}
+
+
+/* SELECT STYLES */
+
+.styled-select {
+  width: 100%;
+  height: 40px;
+  padding: 5px 10px;
+  font-size: 16px;
+  color: #333;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  -webkit-appearance: none; /* Removes default styling by the browser for Webkit browsers */
+  -moz-appearance: none;    /* Removes default styling for Firefox browsers */
+  appearance: none;        /* Removes default styling for modern browsers */
+}
+
+.styled-select:hover {
+  background-color: orange;
+  color: white;
+}
+
+.styled-select:focus {
+  border-color: orange;
+  outline: none;
+}
+
+/* Style for arrow icon with CSS */
+.styled-select {
+  background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path fill="%23333" d="M6.5 7.5l3.5 3.5 3.5-3.5h-7z"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 10px 10px;
 }

@@ -77,7 +77,7 @@ const CampaignTable = ({ httpError, data, sortBy, handleOpenSidepanel }: Campaig
                   <td className="table-cell-center">{campaign.total_projects}</td>
                   <td className="table-cell-center">{`$${campaign.contract_value}`}</td>
                   <td className="table-cell-center">
-                    <span className='round-tag green'>{campaign.campaign_stage}</span>
+                    <span className='round-tag green'>{campaign.campaign_stage_name}</span>
                   </td>
 
                 </tr>

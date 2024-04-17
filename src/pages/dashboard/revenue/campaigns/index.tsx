@@ -27,7 +27,7 @@ const RevenueCampaignsPage = () => {
   const [itemsPerPage, setItemsPerPage] = useState(10);
 
   const { height } = useWindowSize();
-  
+
   const breadcrumbLinks = [
     { label: "Home", link: "/" },
     { label: "Revenue", link: "/dashboard/revenue/campaigns" },
@@ -131,7 +131,7 @@ const RevenueCampaignsPage = () => {
   };
 
   const handleSearch = (search: string) => {
-    const filteredData = revenueCampaigns.filter((campaign: CampaignInterface) => {
+    const filteredData = revenueCampaigns.filter((campaign: any) => {
       return campaign.brand_name.toLowerCase().includes(search.toLowerCase()) ||
         campaign.campaign_name.toLowerCase().includes(search.toLowerCase());
     });

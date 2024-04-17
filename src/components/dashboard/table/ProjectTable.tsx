@@ -9,12 +9,12 @@ interface ProjectTableProps {
     message: string;
   };
   data: any[];
-  creatorsData: any[];
   sortBy: (type: string) => void;
-  handleOpenSidepanel: (campaign: object) => void;
+  handleOpenSidepanel: (project: object) => void;
 }
 
-const ProjectTable = ({ httpError, data, sortBy, handleOpenSidepanel, creatorsData }: ProjectTableProps) => {
+const ProjectTable = ({ httpError, data, sortBy, handleOpenSidepanel }: ProjectTableProps) => {
+  console.log("table data",data)
   return (
     <div className="table-container">
       {httpError.hasError ? (
@@ -99,7 +99,7 @@ const ProjectTable = ({ httpError, data, sortBy, handleOpenSidepanel, creatorsDa
                   </td>
                   <td className="table-cell-center">{`$${project.contract_value}`}</td>
                   <td className="table-cell-center">
-                    <span className='round-tag green'>{project.project_stage}</span>
+                    <span className='round-tag green'>{project.project_stage_name}</span>
                   </td>
 
                 </tr>

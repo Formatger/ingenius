@@ -41,14 +41,16 @@ const CreatorSidepanel: React.FC<SidepanelProps> = ({
           {`Creator Profile`}
         </Link> */}
         <div className='button-group'>
-          <button className='sidepanel-button'>
-            <HelpIcon />
-            Get help
-          </button>
-          <button className='sidepanel-button'>
+           <Link href="/dashboard/support" passHref>
+              <button className="sidepanel-button-style">
+                <HelpIcon />
+                Get help
+              </button>
+            </Link>
+          {/* <button className='sidepanel-button'>
             <Image src={Edit} alt='' width={16} height={16} />
             Edit
-          </button>
+          </button> */}
         </div>
       </div>
       <div className='sidepanel-wrap-space'>

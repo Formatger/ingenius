@@ -33,18 +33,42 @@ const CampaignSidepanel: React.FC<SidepanelProps> = ({
           {`Campaign Profile`}
         </Link>
         <div className='button-group'>
-          <button className='sidepanel-button'>
-            <HelpIcon />
-            Get help
-          </button>
-          <button className='sidepanel-button'>
+           <Link href="/dashboard/support" passHref>
+              <button className="sidepanel-button-style">
+                <HelpIcon />
+                Get help
+              </button>
+            </Link>
+          {/* <button className='sidepanel-button'>
             <Image src={Edit} alt='' width={16} height={16} />
             Edit
-          </button>
+          </button> */}
         </div>
       </div>
       <div className='sidepanel-wrap-space'>
-        <CampaignDetails campaignsData={campaignsData} />
+        <CampaignDetails campaignsData={campaignsData} 
+        />
+          <div className="card-container">
+            <p className="smallcaps">MANAGE CAMPAIGN</p>
+            <div className="button-group">
+              <button className="sec-button linen" onClick={undefined}>
+              {/* <button className="sec-button linen" onClick={() => setEditProject(true)}> */}
+                <p>Edit</p>
+              </button>
+              <button className="sec-button stone" onClick={undefined}>
+              {/* <button className="sec-button stone" onClick={() => setModalOpen(true)}> */}
+                <p>Delete</p>
+              </button>
+            </div>
+{/*             
+            <ConfirmModal
+              isOpen={isModalOpen}
+              onClose={() => setModalOpen(false)}
+              title="Delete Project"
+              onConfirm={handleDelete}
+              message="Are you sure you want to delete this project?"
+            /> */}
+          </div>
       </div>
     </Sidepanel>
   );

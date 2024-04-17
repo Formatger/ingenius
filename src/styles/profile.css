@@ -106,7 +106,7 @@ Changed to .smallcaps at core.css
 .card-container-invoice {
   /* min-height: 612.833px; */
   padding: var(--m3);
-  width: 25%;
+  width: 100%;
   min-width: 400px;
   max-width: 400px;
   justify-content: center;
@@ -193,6 +193,13 @@ Changed to .smallcaps at core.css
   align-items: center;
 }
 
+.description {
+  padding: 10px;
+  font-size: 14px;
+  font-family: "InterRegular";
+  max-height: 200px;
+  overflow-x: auto;
+}
 
 /* .card-container-invoice-campaigns {
   flex: 1;

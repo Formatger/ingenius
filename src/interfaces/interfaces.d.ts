@@ -1,66 +1,90 @@
 export interface CampaignInterface {
-  filter(arg0: (campaign: { name: string; }) => boolean): unknown;
+  // filter(arg0: (campaign: { name: string; }) => boolean): unknown;
   id: number;
+  name: string;
+  start_date: Date | null;
+  deadline: Date | null;
+  contract_value: number | null;
   description: string;
-  brand_name: string;
-  campaign_name: string;
   total_projects: number;
-  contract_value: number;
+  invoice_paid: boolean;
+  deal: string | null;
+  campaign_stage: string | null; 
+
+  brand_name: string;
   brand_image_url: string;
   representative: string;
   invoice_number: string;
   invoice_date: string;
   campaign_duration: string;
-  campaign_stage: string;
 }
 
 export interface ProjectInterface {
-  id: string;
-  name: string,
-  description: string,
-  campaign: string,
-  campaign_name: string
-  creator: string,
-  creator_name: string;
-  deadline: string,
-  contract_value: number,
-  invoice_paid: boolean,
-  project_stage: string,
-  created_at: any;
-  start_date: any;
-  project_duration: any;
+  start_date: Date | null;
+  deadline: Date | null;
+  name: string;
+  contract_value: number | null;
+  invoice_paid: boolean;
+  description: string;
+  campaign: string | null;
+  creator: string | null;
+  project_stage: string | null;
+
+  invoice_number: string;
+  invoice_date: string;
+  campaign_duration: string;
+  brand_name: string;
+  brand_image_url: string;
+  representative: string;
 }
 
 export interface DealInterface {
-  id: string;
-  name: string,
-  description: string,
-  campaigns: string,
-  deadline: string,
-  contract_value: number,
-  invoice_paid: boolean,
-  deal: string,
-  created_at: any;
-  start_date: any;
-  description: string,
+  name: string;
+  contract_value: number | null;
+  invoice_paid?: boolean;
+  description?: string;
+  start_date: Date | null;
+  deadline: Date | null;
+  brand: string | null;
+  deal_stage: string | null;
+  campaigns?: string[]; 
+
+  invoice_number: string;
+  invoice_date: string;
+  campaign_duration: string;
+  brand_name: string;
+  brand_image_url: string;
+  representative: string;
+
+  id?: number; // optional
+  user?: string; // optional, read-only
+  brand_image_url?: string; // optional, read-only
+  brand_name?: string; // optional, read-only
+  brand_email?: string; // optional, read-only
+  brand_website?: string; // optional, read-only
+  representative?: string; // optional, read-only
+  total_campaigns?: number; // optional, read-only
+  invoice_number?: string; // optional, read-only
+  invoice_date?: Date | null; // optional, read-only, expecting Date or null if not set
+  deal_duration?: string; // optional, read-only
+  deal_stage_name?: string; // optional, read-only
+  deal_stage_order?: number; // optional, read-only
+  created_at?: Date; // optional, read-only
 }
 
 export interface BrandInterface {
-  campaign_name: any;
-  name: number;
+  name: string;
   website: string;
-  representative: number;
+  representative: string;
   email: string;
   niche: string;
-  profile_picture: string;
+  profile_picture: string | null;
 }
 
 export interface CreatorInterface {
-  campaign_name: any;
-  name: number;
-  website: string;
-  representative: number;
+  name: string;
   email: string;
+  internal: boolean;
   niche: string;
-  profile_picture: string;
+  profile_picture: string | null;
 }

@@ -1,6 +1,5 @@
 import React, { Fragment, useEffect, useState } from "react";
-import { v4 as uuidv4 } from 'uuid';
-// import styles from "@/styles/partnershipsCampaigns.module.css";
+import { useRouter } from "next/router";
 import withAuth from "@/components/common/WithAuth";
 import MainLoader from "@/components/common/Loader";
 import Sidebar from "@/components/navigation/Sidebar";
@@ -16,27 +15,12 @@ import Pagination from "@/components/dashboard/table/Pagination";
 import { useWindowSize } from "@/utils/hooks/useWindowSize";
 import { transformDate } from "@/utils/dateManager";
 
-import { CampaignInterface } from "@/interfaces/interfaces";
 import { DealInterface } from "@/interfaces/interfaces";
-import { getBrands, getCampaigns, getCreators, getDealStages, getDeals, getDealsDetail } from "@/utils/httpCalls";
+import { getDealStages, getDeals, getDealsDetail } from "@/utils/httpCalls";
 import DealTable from "@/components/dashboard/table/DealTable";
-// import DealSidepanel from "@/components/dashboard/profile/DealSidepanel";
-import CampaignKanban from "@/components/dashboard/kanban/CampaignKanban";
-// import DealsKanban from "@/components/dashboard/kanban/DealsKanban";
-
-// import DealForm from "@/components/dashboard/form/DealForm";
-import { useRouter } from "next/router";
-
-interface Creators {
-  id: string;
-  name: string;
-  profile_picture_url: string;
-  email: string,
-  internal: boolean,
-  active_campaigns: number,
-  active_projects: number,
-  active_projects_value: number,
-}
+import DealSidepanel from "@/components/dashboard/profile/DealSidepanel";
+import DealsKanban from "@/components/dashboard/kanban/DealsKanban";
+import DealForm from "@/components/dashboard/form/DealForm";
 
 interface HttpError {
   hasError: boolean;
@@ -45,8 +29,7 @@ interface HttpError {
 
 const DealsPage = () => {
   const router = useRouter()
-  // const { profileID } = router.query;
-  // const [invoiceData, setInvoiceData] = useState(null);
+  const [invoiceData, setInvoiceData] = useState(null);
   const [loader, setLoader] = useState<boolean>(false);
   const [httpError, setHttpError] = useState({ hasError: false, status: 0, message: "", });
   const [tableRows, setTableRows] = useState<boolean>(true);
@@ -57,8 +40,8 @@ const DealsPage = () => {
   const { height } = useWindowSize();
   const [openSidepanel, setOpenSidepanel] = useState(false);
   const [openFormSidepanel, setOpenFormSidepanel] = useState(false);
-  const [brandsData, setBrandsData] = useState<Creators[]>([]);
-  const [campaignsData, setCampaignsData] = useState<any>([]);
+  // const [brandsData, setBrandsData] = useState<Creators[]>([]);
+  // const [campaignsData, setCampaignsData] = useState<any>([]);
   const [dealsData, setDealsData] = useState<any>([]);
   const [selectedDeal, setSelectedDeal] = useState({} as any);
   const [dealStage, setDealStage] = useState<any>([]);
@@ -68,46 +51,6 @@ const DealsPage = () => {
     { label: "Partnerships", link: "/dashboard/partnerships/deals" },
     { label: "Deals", link: "/dashboard/partnerships/deals", current: true },
   ];
-
-  /* BRANDS API CALL */
-
-  useEffect(() => { fetchBrands() }, [router]);
-
-  const fetchBrands = () => {
-    setLoader(true);
-    getBrands(
-      (response: any) => {
-        
-        setBrandsData(response || []);
-      },
-      (error: any) => {
-        console.error('Error fetching profile data:', error);
-        setBrandsData([]); 
-      }
-    ).finally(() => {
-      setLoader(false);
-    });
-  };
-
-    /* CAMPAIGNS API CALL */
-
-    useEffect(() => { fetchCampaigns() }, [router]);
-
-    const fetchCampaigns = () => {
-      setLoader(true);
-      getCampaigns(
-        (response: any) => {
-          
-          setCampaignsData(response || []);
-        },
-        (error: any) => {
-          console.error('Error fetching profile data:', error);
-          setCampaignsData([]); 
-        }
-      ).finally(() => {
-        setLoader(false);
-      });
-    };
 
   /* DEAL-STAGE API CALL  */
 
@@ -124,7 +67,7 @@ const DealsPage = () => {
       },
       (error: any) => {
         console.error('Error fetching profile data:', error);
-        setDealStage([]); 
+        setDealStage([]);
       }
     ).finally(() => {
       setLoader(false);
@@ -242,17 +185,18 @@ const DealsPage = () => {
 
   /* SEARCH LOGIC - modify to deals data */
 
-  // const handleSearch = (search: string) => {
-  //   const filteredData = dealsData.filter((deal: DealInterface) => {
-  //     return deal.name.toLowerCase().includes(search.toLowerCase()) ||
-  //     deal.deal_name.toLowerCase().includes(search.toLowerCase());
-  //   });
-  //   setNoSlicedData(filteredData);
-  //   setData(filteredData.slice(
-  //     (currentPage - 1) * itemsPerPage,
-  //     currentPage * itemsPerPage
-  //   ));
-  // };
+  const handleSearch = (search: string) => {
+    const filteredData = dealsData.filter((deal: DealInterface) => {
+      return deal.name.toLowerCase().includes(search.toLowerCase())
+      // ||
+      // deal.deal_name.toLowerCase().includes(search.toLowerCase());
+    });
+    setNoSlicedData(filteredData);
+    setData(filteredData.slice(
+      (currentPage - 1) * itemsPerPage,
+      currentPage * itemsPerPage
+    ));
+  };
 
   /* SIDEPANEL */
 
@@ -282,24 +226,24 @@ const DealsPage = () => {
       ) : (
         <>
           <div className="page-container" id="dealsData">
-            {/* {openSidepanel && (
+            {openSidepanel && (
               <DealSidepanel
                 open={openSidepanel}
                 setOpenSidepanel={setOpenSidepanel}
                 dealsData={selectedDeal}
                 setSelectedDeal={setSelectedDeal}
               />
-            )} */}
+            )}
             {/* {openFormSidepanel && (
-              <DealForm 
-                creatorsData={creatorsData}
-                campaignsData={campaignsData}
+              <DealForm
+                // creatorsData={creatorsData}
+                // campaignsData={campaignsData}
                 dealStage={dealStage}
-                handleCloseFormSidepanel={handleCloseFormSidepanel} 
+                handleCloseFormSidepanel={handleCloseFormSidepanel}
               />
             )} */}
             <div className="filtersContainer">
-              <Dropdown />
+              <Dropdown data={data} setData={setData} origin="deals" noSlicedData={noSlicedData} />
               <div className="button-group">
                 <button className="app-button cream" onClick={undefined}>
                   CSV Upload
@@ -321,12 +265,11 @@ const DealsPage = () => {
             {tableRows ? (
               <Fragment>
                 <DealTable
-                    httpError={httpError}
-                    sortBy={sortBy}
-                    handleOpenSidepanel={handleOpenSidepanel}
-                    data={data}
-                    brandsData={brandsData} 
-                  />
+                  httpError={httpError}
+                  sortBy={sortBy}
+                  handleOpenSidepanel={handleOpenSidepanel}
+                  data={data}
+                />
                 <Pagination
                   currentPage={currentPage}
                   itemsPerPage={itemsPerPage}
@@ -339,7 +282,6 @@ const DealsPage = () => {
               </Fragment>
             ) : (
               <>
-            
                 {/* <DealsKanban
                   httpError={httpError}
                   dealsData={dealsData}
@@ -347,7 +289,7 @@ const DealsPage = () => {
                 /> */}
               </>
             )}
-  
+
           </div>
 
         </>

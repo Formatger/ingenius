@@ -76,7 +76,7 @@ const BrandTable = ({ httpError, data, sortBy, handleOpenSidepanel }: BrandTable
                   <td className="table-cell-center">{brand.website}</td>
                   <td className="table-cell-center">{brand.email}</td>
                   <td className="table-cell-center">{brand.active_campaigns}</td>
-                  <td className="table-cell-center">{brand.active_campaigns_value}</td>
+                  <td className="table-cell-center">${brand.active_campaigns_value}</td>
 
                 </tr>
               ))}

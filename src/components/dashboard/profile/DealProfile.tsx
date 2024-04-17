@@ -6,40 +6,41 @@ import Export from "@/components/assets/icons/export.svg";
 import Plus from "@/components/assets/icons/plus.svg";
 import Message from "@/components/assets/icons/message.svg";
 import Send from "@/components/assets/icons/send.svg";
+import { DealInterface } from "@/interfaces/interfaces";
 
-interface CampaignDetailsProps {
-  campaignsData: any;
+interface DealDetailsProps {
+  dealsData: any;
 }
 
-interface CampaignInvoiceProps {
-  campaignsData: any;
+interface DealInvoiceProps {
+  dealsData: any;
 }
 
-const CampaignDetails = ({ campaignsData }: CampaignDetailsProps) => {
+const DealDetails = ({ dealsData }: DealDetailsProps) => {
   return (
     <div className="card-container">
       <div className="head-card mb-1" >
         <div className="profile-info">
           <div className="profile-info-image">
-            <img src={campaignsData?.brand_image_url} alt="Brand" className="profile-image" loading="lazy" />
+            <img src={dealsData?.brand_image_url} alt="Brand" className="profile-image" loading="lazy" />
           </div>
         </div>
         <div className="profile-info">
           <div className="profile-info-box">
             <div className="profile-info-wrap">
               <p className="smallcaps">BRAND</p>
-              <p className="profile-text ml-2">{campaignsData?.brand_name}</p>
+              <p className="profile-text ml-2">{dealsData?.brand_name}</p>
             </div>
             <div className="profile-info-wrap">
               <p className="smallcaps">CONTACT</p>
-              <p className="profile-text ml-2 text-14">{campaignsData?.brand_email}</p>
+              <p className="profile-text ml-2 text-14">{dealsData?.brand_email}</p>
             </div>
             <div className="profile-info-wrap">
               <p className="smallcaps">WEBSITE</p>
               <div className="row-wrap-2 ml-2">
                 <Image src={Export} alt="Icon" width={12} height={12} />
                 <a
-                  href={campaignsData?.brand_website}
+                  href={dealsData?.brand_website}
                   className="profile-text text-12"
                   target="_blank"
                 >View Website</a>
@@ -50,26 +51,26 @@ const CampaignDetails = ({ campaignsData }: CampaignDetailsProps) => {
       </div>
       <div className="card-text">
         <div>
-          <p className="smallcaps mb-2">CAMPAIGN</p>
+          <p className="smallcaps mb-2">DEAL</p>
           <span className="sec-button gray1" onClick={undefined}>
-            <p className="text-20 bold">{campaignsData.campaign_name || campaignsData.name}</p>
+            <p className="text-20 bold">{dealsData.name}</p>
           </span>
         </div>
         <div>
           <p className="smallcaps mb-2">CONTRACT VALUE</p>
           <span className="sec-button gray1" onClick={undefined}>
-            <p className="text-20 bold">${campaignsData.contract_value}</p>
+            <p className="text-20 bold">${dealsData.contract_value}</p>
           </span>
         </div>
         {/* <div>
           <p className="smallcaps">CAMPAIGN STAGE</p>
           <span className="sec-button gray1" onClick={undefined}>
-            <p className="text-20 bold">{campaignsData?.campaign_stage}</p>
+            <p className="text-20 bold">{dealsData?.campaign_stage}</p>
           </span>
         </div> */}
 
       {/* INVOICE/CONTRACT SECTION - Hidden on Sidepanel */}
-        <div className="sidepanel-hidden">
+      <div className="sidepanel-hidden">
           <p className="smallcaps mb-2">MANAGE CONTRACTS</p>
           <div className="button-group">
             <button className="sec-button linen" onClick={undefined}>
@@ -99,7 +100,7 @@ const CampaignDetails = ({ campaignsData }: CampaignDetailsProps) => {
       {/* INVOICE/CONTRACT SECTION - Hidden on Sidepanel */}
 
         {/* <div>
-          <p className="smallcaps mb-2">MANAGE CAMPAIGN</p>
+          <p className="smallcaps mb-2">MANAGE DEAL</p>
           <div className="button-group">
             <button className="sec-button linen" onClick={undefined}>
               <Image src={Message} alt="Icon" width={15} height={15} />
@@ -116,7 +117,7 @@ const CampaignDetails = ({ campaignsData }: CampaignDetailsProps) => {
   );
 };
 
-const CampaignInvoice = ({ campaignsData }: CampaignInvoiceProps) => {
+const DealInvoice = ({ dealsData }: DealInvoiceProps) => {
   return (
     <div className="card-container">
       <div className="agency-invoice">
@@ -127,19 +128,19 @@ const CampaignInvoice = ({ campaignsData }: CampaignInvoiceProps) => {
           <ul>
             <li className="invoice-data-list">
               <p>Invoice number</p>
-              <span className="invoice-tag">{campaignsData.invoice_number}</span>
+              <span className="invoice-tag">{dealsData.invoice_number}</span>
             </li>
             <li className="invoice-data-list">
               <p>Invoice date</p>
-              <span className="invoice-tag">{campaignsData.invoice_date}</span>
+              <span className="invoice-tag">{dealsData.invoice_date}</span>
             </li>
             <li className="invoice-data-list">
               <p>Brand</p>
-              <span className="invoice-tag">{campaignsData.brand_name}</span>
+              <span className="invoice-tag">{dealsData.brand_name}</span>
             </li>
             <li className="invoice-data-list">
-              <p>Campaign Duration</p>
-              <span className="invoice-tag">{campaignsData.campaign_duration}</span>
+              <p>Deal Duration</p>
+              <span className="invoice-tag">{dealsData.campaign_duration}</span>
             </li>
             <li className="invoice-data-list">
               <p className="mr-8">Deliverables</p>
@@ -152,11 +153,11 @@ const CampaignInvoice = ({ campaignsData }: CampaignInvoiceProps) => {
             </li>
             <li className="invoice-data-list">
               <p>Representative</p>
-              <span className="invoice-tag">{campaignsData.representative}</span>
+              <span className="invoice-tag">{dealsData.representative}</span>
             </li>
             <li className="invoice-data-list">
               <p>Total Amount</p>
-              <span className="invoice-tag">${campaignsData.contract_value}</span>
+              <span className="invoice-tag">${dealsData.contract_value}</span>
             </li>
           </ul>
         </div>
@@ -171,4 +172,4 @@ const CampaignInvoice = ({ campaignsData }: CampaignInvoiceProps) => {
   );
 };
 
-export { CampaignDetails, CampaignInvoice };
+export { DealDetails, DealInvoice };

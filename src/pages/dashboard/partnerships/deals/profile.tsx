@@ -3,27 +3,27 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import withAuth from "@/components/common/WithAuth";
 import Sidebar from "@/components/navigation/Sidebar";
-import { ProjectDetails, ProjectInvoice, ProjectContract } from "@/components/dashboard/profile/ProjectProfile";
+import { DealDetails, DealInvoice } from "@/components/dashboard/profile/DealProfile";
 import { Arrow } from "@/components/assets/svg/Arrow";
-import { getProjects, getProjectsDetail } from "@/utils/httpCalls";
+import { getDealsDetail } from "@/utils/httpCalls";
 
-const ProjectProfilePage = () => {
+const DealProfilePage = () => {
   const router = useRouter()
-  const { projectId } = router.query;
+  const { dealId } = router.query;
 
   const [loader, setLoader] = useState<boolean>(false);
   // const [invoiceData, setInvoiceData] = useState(null);
-  const [projectsData, setProjectsData] = useState({});
+  const [dealsData, setDealsData] = useState({});
 
-  useEffect(() => { fetchData() }, [router]);
+  useEffect(() => { fetchDealsData() }, [router]);
 
-  const fetchData = () => {
+  const fetchDealsData = () => {
     setLoader(true);
     Promise.all([
-      getProjectsDetail(
+      getDealsDetail(
         (response: any) => {
-          const project = response.find((project: any) => project.id === parseInt(projectId as string))
-          setProjectsData(project);
+          const deal = response.find((deal: any) => deal.id === parseInt(dealId as string))
+          setDealsData(deal);
         },
         (error: any) => {
           console.error('Error fetching invoice data:', error);
@@ -36,9 +36,9 @@ const ProjectProfilePage = () => {
   return (
     <div className="main-container">
       <div className="breadcrumb-nav profile">
-        <Link className="row-wrap-2 text-brown" href={{ pathname: '/dashboard/partnerships/projects/' }}>
+        <Link className="row-wrap-2 text-brown" href={{ pathname: '/dashboard/partnerships/deals/' }}>
           <Arrow className="arrow-left orange-fill" />
-          {`Projects`}
+          {`Deals`}
         </Link>
       </div>
       {loader ? (
@@ -50,13 +50,10 @@ const ProjectProfilePage = () => {
           <div className="page-container" id="">
             <div className="profile-container">
               <div>
-              <ProjectDetails projectsData={projectsData} /> 
+                <DealDetails dealsData={dealsData} />
               </div>
               <div>
-                <ProjectInvoice projectsData={projectsData} />
-              </div>
-              <div>
-                <ProjectContract projectsData={projectsData} />
+                <DealInvoice dealsData={dealsData} />
               </div>
             </div>
           </div>
@@ -66,8 +63,8 @@ const ProjectProfilePage = () => {
   );
 };
 
-const ProjectProfile = () => {
-  return <Sidebar layout={<ProjectProfilePage />} />;
+const DealProfile = () => {
+  return <Sidebar layout={<DealProfilePage />} />;
 };
 
-export default withAuth(ProjectProfile);
+export default withAuth(DealProfile);

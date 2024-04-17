@@ -110,14 +110,15 @@ const Sidepanelproject: React.FC<SidepanelprojectProps> = ({ profileData, onSave
                             {`Add Project`}
                         </Link>
                         <div className='sidepanel-button'>
+
                             <button className='sidepanel-button-style'>
                                 <HelpIcon />
                                 Get help
                             </button>
-                            <button className='sidepanel-button-style'>
+                            {/* <button className='sidepanel-button-style'>
                                 <Image src={Edit} alt='' width={16} height={16} />
                                 Edit
-                            </button>
+                            </button> */}
                         </div>
                     </div>
                     <div>

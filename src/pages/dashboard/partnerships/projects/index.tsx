@@ -1,6 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
-import { v4 as uuidv4 } from 'uuid';
-// import styles from "@/styles/partnershipsCampaigns.module.css";
+import React, { Fragment, useEffect, useState, createContext } from "react";
 import withAuth from "@/components/common/WithAuth";
 import MainLoader from "@/components/common/Loader";
 import Sidebar from "@/components/navigation/Sidebar";
@@ -13,12 +11,10 @@ import Dropdown from "@/components/common/Dropdown";
 import Pagination from "@/components/dashboard/table/Pagination";
 import { useWindowSize } from "@/utils/hooks/useWindowSize";
 import { transformDate } from "@/utils/dateManager";
-import { CampaignInterface } from "@/interfaces/interfaces";
 import { ProjectInterface } from "@/interfaces/interfaces";
-import { getCampaigns, getCreators, getProjectStages, getProjects, getProjectsDetail } from "@/utils/httpCalls";
+import { getProjectStages, getProjects, getProjectsDetail } from "@/utils/httpCalls";
 import ProjectTable from "@/components/dashboard/table/ProjectTable";
 import ProjectSidepanel from "@/components/dashboard/profile/ProjectSidepanel";
-import CampaignKanban from "@/components/dashboard/kanban/CampaignKanban";
 import ProjectsKanban from "@/components/dashboard/kanban/ProjectsKanban";
 
 import ProjectForm from "@/components/dashboard/form/ProjectForm";
@@ -54,11 +50,10 @@ const ProjectsPage = () => {
   const { height } = useWindowSize();
   const [openSidepanel, setOpenSidepanel] = useState(false);
   const [openFormSidepanel, setOpenFormSidepanel] = useState(false);
-  const [creatorsData, setCreatorsData] = useState<Creators[]>([]);
-  const [campaignsData, setCampaignsData] = useState<any>([]);
   const [projectsData, setProjectsData] = useState<any>([]);
   const [selectedProject, setSelectedProject] = useState({} as any);
   const [projectStage, setProjectStage] = useState<any>([]);
+  const [updateProject, setUpdateProject] = useState(false);
 
   const breadcrumbLinks = [
     // { label: "Home", link: "/" },
@@ -66,62 +61,45 @@ const ProjectsPage = () => {
     { label: "Projects", link: "/dashboard/partnerships/projects", current: true },
   ];
 
-  /* CREATORS API CALL */
+  /* ACTUALIZAR EL RENDERIZADO API */
 
-  useEffect(() => { fetchCreators() }, [router]);
+  useEffect(() => {
+    const projectsDataCopy = [...projectsData];
+    setNoSlicedData(projectsDataCopy);
+    setData(projectsDataCopy.slice(
+      (currentPage - 1) * itemsPerPage,
+      currentPage * itemsPerPage
+    ));
+  }, [currentPage, updateProject, tableRows]);
 
-  const fetchCreators = () => {
-    setLoader(true);
-    getCreators(
-      (response: any) => {
-        
-        setCreatorsData(response || []);
-      },
-      (error: any) => {
-        console.error('Error fetching profile data:', error);
-        setCreatorsData([]); 
-      }
-    ).finally(() => {
-      setLoader(false);
-    });
+  const updateProjectData = () => {
+    setUpdateProject(prevState => !prevState);
   };
-
-    /* CAMPAIGNS API CALL */
-
-    useEffect(() => { fetchCampaigns() }, [router]);
-
-    const fetchCampaigns = () => {
-      setLoader(true);
-      getCampaigns(
-        (response: any) => {
-          
-          setCampaignsData(response || []);
-        },
-        (error: any) => {
-          console.error('Error fetching profile data:', error);
-          setCampaignsData([]); 
-        }
-      ).finally(() => {
-        setLoader(false);
-      });
-    };
+  console.log("UPDATE STAGE", updateProject)
 
   /* PROJECT-STAGE API CALL  */
 
-  useEffect(() => { fetchProjectStages() }, [router]);
+  useEffect(() => { fetchProjectStages() }, [router, updateProject, tableRows]);
 
   const fetchProjectStages = () => {
     setLoader(true);
     getProjectStages(
       (response: any) => {
-        console.log('Project Stages:', projectStage);
+        console.log('Project Stages:', response);
 
-        setProjectStage(response || []);
-
+        setProjectStage(response.map((stage: any) => ({
+          stageID: stage.id,
+          stageName: stage.name,
+          stageIndex: stage.order,
+          stageUser: stage.user
+        })))
+        setUpdateProject(false);
+        console.log(projectStage)
       },
+
       (error: any) => {
         console.error('Error fetching profile data:', error);
-        setProjectStage([]); 
+        setProjectStage([]);
       }
     ).finally(() => {
       setLoader(false);
@@ -134,7 +112,7 @@ const ProjectsPage = () => {
     let provisionalProjectsData: any[] = [];
     let provisionalProjectsDetailData: any[] = [];
 
-    setLoader(true);
+    // setLoader(true);
     Promise.all([
       getProjects((response) => {
         provisionalProjectsData = response;
@@ -172,7 +150,9 @@ const ProjectsPage = () => {
 
       setLoader(false);
     });
-  }, []);
+  }, [updateProject, tableRows]);
+
+
 
   /* TABLE ROW DISPLAY - modify to projects data */
 
@@ -198,6 +178,14 @@ const ProjectsPage = () => {
 
     calculateItemsPerPage();
   }, [height]);
+
+  useEffect(() => {
+    const minRows = 2;
+    const maxRows = 10;
+    const ratio = height / 96;
+    const itemsPerPage = Math.max(minRows, Math.min(maxRows, Math.floor(ratio)));
+    setItemsPerPage(itemsPerPage);
+  }, [data]);
 
   useEffect(() => {
     const projectsDataCopy = [...projectsData];
@@ -241,8 +229,9 @@ const ProjectsPage = () => {
 
   const handleSearch = (search: string) => {
     const filteredData = projectsData.filter((project: ProjectInterface) => {
-      return project.name.toLowerCase().includes(search.toLowerCase()) ||
-      project.campaign_name.toLowerCase().includes(search.toLowerCase());
+      return project.name.toLowerCase().includes(search.toLowerCase())
+      // ||
+      // project.campaign_name.toLowerCase().includes(search.toLowerCase());
     });
     setNoSlicedData(filteredData);
     setData(filteredData.slice(
@@ -271,6 +260,9 @@ const ProjectsPage = () => {
     setOpenFormSidepanel(false);
   };
 
+  console.log("TABLE ROW", tableRows)
+
+
   return (
     <div className="main-container">
       <div className="breadcrumb-nav"><Breadcrumbs items={breadcrumbLinks} /></div>
@@ -285,18 +277,21 @@ const ProjectsPage = () => {
                 setOpenSidepanel={setOpenSidepanel}
                 projectsData={selectedProject}
                 setSelectedProject={setSelectedProject}
+                updateProjectData={updateProjectData}
               />
             )}
             {openFormSidepanel && (
-              <ProjectForm 
-                creatorsData={creatorsData}
-                campaignsData={campaignsData}
+              <ProjectForm
+                projectsData={data}
                 projectStage={projectStage}
-                handleCloseFormSidepanel={handleCloseFormSidepanel} 
+                isEditing={false}
+                closeEdit={handleCloseFormSidepanel}
+                handleCloseFormSidepanel={handleCloseFormSidepanel}
+                updateProjectData={updateProjectData}
               />
             )}
             <div className="filtersContainer">
-              <Dropdown />
+              <Dropdown data={data} setData={setData} origin="projects" noSlicedData={noSlicedData} />
               <div className="button-group">
                 <button className="app-button cream" onClick={undefined}>
                   CSV Upload
@@ -315,15 +310,15 @@ const ProjectsPage = () => {
                 </button>
               </div>
             </div>
+
             {tableRows ? (
               <Fragment>
                 <ProjectTable
-                    httpError={httpError}
-                    sortBy={sortBy}
-                    handleOpenSidepanel={handleOpenSidepanel}
-                    data={data}
-                    creatorsData={creatorsData} 
-                  />
+                  httpError={httpError}
+                  sortBy={sortBy}
+                  handleOpenSidepanel={handleOpenSidepanel}
+                  data={data}
+                />
                 <Pagination
                   currentPage={currentPage}
                   itemsPerPage={itemsPerPage}
@@ -342,10 +337,11 @@ const ProjectsPage = () => {
                   data={data}
                   handleOpenSidepanel={handleOpenSidepanel}
                   projectStage={projectStage}
+                  updateProjectData={updateProjectData}
                 />
               </>
             )}
-  
+
           </div>
 
         </>
@@ -359,69 +355,3 @@ const Projects = () => {
 };
 
 export default withAuth(Projects);
-
-  // SAVE FORM & GENERATE CARD
-
-  // const [savedData, setSavedData] = useState<FormData | null>(null);
-  // const [savedDataList, setSavedDataList] = useState<FormData[]>([]);
-  // const [creatorSavedData, setCreatorSavedData] = useState<ProfileData | null>(null);
-  // const [cardId, setCardId] = useState<string>(uuidv4());
-
-  // // console.log("=============================")
-  // // console.log(savedDataList)
-  // // console.log("=============================")
-
-  // // Save Form Data
-  // const handleSaveFormData = (data: FormData) => {
-  //   console.log("Data from form:", data);
-  //   setSavedData(data);
-  //   setOpenSidepanel(false);
-  //   setSavedDataList(currentList => [...currentList, data]);
-  // };
-
-  // // Save Creator Data
-  // const handleSaveCreatorData = (profile: any) => {
-  //   console.log("Data from form:", profile);
-  //   setCreatorSavedData(profile)
-  // };
-
-  // // Generate Card
-  // const generateCardId = () => {
-  //   setCardId(uuidv4());
-  // };
-
-  {/* 
-            {savedDataList.map((item) => (
-              <ProjectCard
-                key={item.id}
-                generateCard={item}
-                creatorSavedData={creatorSavedData}
-                createdDate={new Date()} />
-            ))} */}
-
-
-
-            /* OLD PROJECTS API CALL  */
-
-  // useEffect(() => { fetchProjects() }, [router]);
-
-  // const fetchProjects = () => {
-  //   setLoader(true);
-  //   getProjects(
-  //     (response: any) => {
-  //       // Assuming the response is either an array or nothing
-  //       setProjectData(response || []);
-  //       console.log("HELLO:", response)
-  //     },
-  //     (error: any) => {
-  //       console.error('Error fetching profile data:', error);
-  //       setProjectData([]); // Set as empty array if there's an error
-  //     }
-  //   ).finally(() => {
-  //     setLoader(false);
-  //   });
-  // };
-
-  // console.log("=======================")
-  // console.log(projectsData)
-  // console.log("=======================")

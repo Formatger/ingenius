@@ -5,12 +5,17 @@
   justify-content: space-between;
   padding-right: 40px;
   margin-top: 30px;
+  overflow-x: auto;
+  min-height: 100vh;
 }
 
 .kanban-column {
-  width: 30%;
+  width: 100%;
+  min-width: 300px;
+  max-width: 450px;
   border: none;
   background-color: white;
+  padding: 6px;
 }
 
 .kanban-header {
@@ -83,3 +88,18 @@
 .color-yellow { background-color: var(--yellow); }
 .color-orange { background-color: var(--light-orange); }
 .color-red { background-color: var(--salmon); }
+
+
+.drag-over-column {
+  background-color: rgba(203, 203, 203, 0.1); /* Fondo amarillo claro, por ejemplo */
+  border: 1px dashed rgb(211, 211, 211); /* Un borde punteado amarillo */
+  border-radius: 8px;
+}
+
+.kanban-card {
+  cursor: grab;  /* Changes the cursor to a grabbing hand when hovering */
+}
+
+.kanban-card:active {
+  cursor: grabbing;  /* Changes the cursor to a grabbing hand when the card is being clicked and held */
+}

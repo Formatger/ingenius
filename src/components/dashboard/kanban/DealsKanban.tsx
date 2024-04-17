@@ -3,11 +3,16 @@ import Image from 'next/image';
 import Plus from "@/components/assets/icons/plus.svg";
 import Edit from "@/components/assets/icons/edit.svg";
 import AddFieldModal from "@/components/dashboard/kanban/AddFieldModal";
-import { putProject } from "@/utils/httpCalls";
+import { putProject, getProjectStages } from "@/utils/httpCalls";
 
+// interface Stages2 {
+//   id: number;
+//   name: string;
+//   order: number;
+//   user?: string;
+// }
 
-
-interface ProjectsKanbanProps {
+interface DealsKanbanProps {
   httpError: {
     hasError: boolean;
     status: number;
@@ -20,13 +25,12 @@ interface ProjectsKanbanProps {
   updateProjectData: () => void;
 }
 
-const ProjectsKanban = ({ projectsData, data, httpError, handleOpenSidepanel, projectStage, updateProjectData }: ProjectsKanbanProps) => {
+const DealsKanban = ({ projectsData, data, httpError, handleOpenSidepanel, projectStage, updateProjectData }: DealsKanbanProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [projectsColumn, setProjectsColumn] = useState<any[]>([]);
   const [draggedOverStageIndex, setDraggedOverStageIndex] = useState<string | null>(null); // Estado para almacenar el ID de la columna sobre la que se arrastra
   const [stages, setStages] = useState<any[]>([]);
-  const colors = ['pink', 'linen', 'green', 'blue', 'yellow', 'orange', 'red'];
 
   console.log(projectStage)
 
@@ -55,87 +59,51 @@ const ProjectsKanban = ({ projectsData, data, httpError, handleOpenSidepanel, pr
 
   /* DRAG DROP */
 
-  //   const handleDragStartColumn = (e: any, stageIndex: any) => {
-  //     e.dataTransfer.setData('column', JSON.stringify({ stageIndex }));
-  // };
-
-  // const handleDropColumn = (e: React.DragEvent<HTMLDivElement>, targetStageIndex: any) => {
-  //     setDraggedOverStageIndex(null);
-  //     try {
-  //         const sourceColumn = JSON.parse(e.dataTransfer.getData('column'));
-  //         const sourceStageIndex = sourceColumn.stageIndex;
-
-  //         // Comparar el stageIndex de la columna arrastrada con el targetStageIndex
-  //         if (sourceStageIndex !== targetStageIndex) {
-  //             console.log(`La columna se está moviendo desde el stageIndex ${sourceStageIndex} al stageIndex ${targetStageIndex}`);
-
-  //             // Aquí puedes realizar las acciones necesarias, como actualizar el estado o enviar datos al servidor.
-  //         } else {
-  //             console.log("La columna se soltó en la misma posición");
-  //         }
-  //     } catch (error) {
-  //         console.error('Error al procesar la solicitud:', error);
-  //     }
-  // };
-
-
-  const handleDragStart = (e: any, projects: any, stages: any) => {
-    e.dataTransfer.setData('projects', JSON.stringify({ ...projects, stages }));
-    console.log("START DATA", projects, stages)
+  const handleDragStart = (e: any, projects: any, stageID: any, stageIndex?: any) => {
+    e.dataTransfer.setData('projects', JSON.stringify({ ...projects, stageID }));
+    e.dataTransfer.setData('stageOrder', stageIndex); // Establecer el ID de la columna en dataTransfer
   };
 
-  const handleDragOver = (e: React.DragEvent<HTMLDivElement>, stageID: any) => {
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>, stageID: string, stageIndex: any) => {
     e.preventDefault(); // Prevenir el comportamiento predeterminado del navegador
     setDraggedOverStageIndex(stageID); // Actualizar el estado para iluminar la columna
-    setDraggedOverStageIndex(stageID);
+    setDraggedOverStageIndex(stageIndex);
   };
 
   const handleDragLeave = () => {
     setDraggedOverStageIndex(null); // Resetea el estado cuando el drag sale de la columna
   };
 
-  const handleDrop = (e: React.DragEvent<HTMLDivElement>, stageID: any) => {
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>, stageID: string, stageIndex: any) => {
     setDraggedOverStageIndex(null);
     console.log('Valor de stageID:', stageID);
     try {
       const project = JSON.parse(e.dataTransfer.getData('projects'));
 
-      // Verificar si project_stage es diferente a stageID
+      // Verificar si project_stage es diferente a columnId
       if (project.project_stage !== stageID) {
         putProject(project.id, { ...project, project_stage: stageID },
           () => {
             // Actualizar el estado para reflejar el cambio sin recargar
-            setStages((currentStages) => {
-              return currentStages.map((stage) => {
-                // Si la columna es la original, eliminar el proyecto
-                if (stage.stageID === project.project_stage) {
+            setStages((currentColumns) => {
+              console.log("current columns", currentColumns);
+              return currentColumns.map((col) => {
+                // Remover el proyecto de su columna original
+                if (col.stageID === project.stageID) {
                   return {
-                    ...stage,
-                    projects: stage.projects.filter((p: any) => p.id !== project.id),
+                    ...col,
+                    projects: col.projects.filter((p: any) => p.id !== project.id),
                   };
                 }
-                // Si la columna es la de destino, añadir el proyecto
-                if (stage.stageID === stageID) {
-                  // Verificar si el proyecto ya existe en la columna de destino
-                  const existingProjectIndex = stage.projects.findIndex((p: any) => p.id === project.id);
-                  if (existingProjectIndex === -1) {
-                    return {
-                      ...stage,
-                      projects: [...stage.projects, { ...project, project_stage: stageID }],
-                    };
-                  } else {
-                    // Si el proyecto ya existe, solo actualizar su posición
-                    const updatedProjects = [...stage.projects];
-                    updatedProjects.splice(existingProjectIndex, 1);
-                    updatedProjects.push({ ...project, project_stage: stageID });
-                    return {
-                      ...stage,
-                      projects: updatedProjects,
-                    };
-                  }
+                // Añadir el proyecto a la columna destino
+                if (col.stageID === stageID) {
+                  return {
+                    ...col,
+                    projects: [...col.projects, { ...project, project_stage: stageID }],
+                  };
                 }
                 // Para las columnas que no están involucradas, se retornan sin cambios
-                return stage;
+                return col;
               });
             });
           },
@@ -147,6 +115,22 @@ const ProjectsKanban = ({ projectsData, data, httpError, handleOpenSidepanel, pr
     } catch (error) {
       console.error('Error al procesar la solicitud PUT:', error);
     }
+    try {
+      const stage = JSON.parse(e.dataTransfer.getData('stageorder'));
+      console.log('Valor de stageIndex:', stage.stageIndex);
+      if (stage.stageIndex !== stageIndex) {
+        putProject(stage.stageIndex, { ...stage, order: stageIndex },
+          () => {
+            // Aquí puedes realizar acciones adicionales si es necesario
+          },
+          (error) => {
+            console.error('Error al actualizar el índice de la columna:', error);
+          }
+        );
+      }
+    } catch (error) {
+      console.error('Error al procesar la solicitud PUT para el índice de la columna:', error);
+    }
   };
   return (
     <div className="kanban-container">
@@ -155,18 +139,14 @@ const ProjectsKanban = ({ projectsData, data, httpError, handleOpenSidepanel, pr
         .map((projectCol) => (
           <div
             className={`kanban-column ${draggedOverStageIndex === projectCol.stageIndex ? 'drag-over-column' : ''}`}
-            onDrop={(e) => handleDrop(e, projectCol.stageID)}
-            onDragOver={(e) => handleDragOver(e, projectCol.stageID)}
+            onDrop={(e) => handleDrop(e, projectCol.stageID, projectCol.stageIndex)}
+            onDragOver={(e) => handleDragOver(e, projectCol.stageID, projectCol.stageIndex)}
             onDragLeave={handleDragLeave}
             key={projectCol.stageIndex}
             draggable
           >
             <div className="kanban-header">
-              <span className={`round-tag stone
-              ${projectCol.color}`}
-              >
-                {projectCol.stageName}
-              </span>
+              <span className={`round-tag ${projectCol.color}`}>{projectCol.stageName}</span>
             </div>
 
             {projectCol.projects?.map((projectCard: any) => (
@@ -206,10 +186,9 @@ const ProjectsKanban = ({ projectsData, data, httpError, handleOpenSidepanel, pr
           title="Add Field"
           updateProjectData={updateProjectData}
         />
-
       </div>
     </div>
   );
 };
 
-export default ProjectsKanban;
+export default DealsKanban;

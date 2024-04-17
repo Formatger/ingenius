@@ -1,19 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import Image from "next/image";
 import Link from "next/link";
 import HelpIcon from "@/components/assets/svg/Help";
-import Edit from "@/components/assets/icons/edit.svg";
-import { Arrow } from "@/components/assets/svg/Arrow";
 import SearchDropdown from "./SearchDropdown";
-import { profile } from "console";
-import { v4 as uuidv4 } from "uuid";
 import { useForm } from "react-hook-form";
 import FormSidepanel from "@/components/common/ProfileSidepanel";
 import { CampaignInterface, BrandInterface, DealInterface } from "@/interfaces/interfaces";
-import { getBrands, getCampaigns, getDeals, postCampaigns } from "@/utils/httpCalls";
+import { getBrands, getCampaigns, postCampaigns, postDeals } from "@/utils/httpCalls";
 import DateInput from "@/components/common/DateInput";
-import axios from "axios";
-import { useRouter } from "next/router";
+import { useRouter } from 'next/router';
 
 interface Stages {
   id: number;
@@ -30,48 +25,48 @@ interface FormData {
   brand_email?: string;
   brand_website?: string;
   representative?: string;
-  total_projects?:number;
+  total_campaigns?:number;
   invoice_number?: string;
   invoice_date?: string;
-  campaign_duration?: string;
+  deal_duration?: string;
   start_date: Date;
   deadline: Date;
   name: string;
   contract_value: number;
   invoice_paid?: boolean;
   description?: string;
-  created_at?: string;
-  deal?: string;
-  campaign_stage?: string;
+  created_at?: Date;
+  campaigns?: string;
+  campaign?: string[];
+  deal_stage?: string;
+  brand?:string;
 }
 
-interface CampaignFormProps {
-  // brandsData: BrandInterface[];
-  // dealsData: DealInterface[];  
-  campaignStage: Stages[];
+interface DealFormProps {
+  // brandsData: BrandInterface[];  // This should be an array of BrandInterface
+  // dealsData: DealInterface[];   // This should be an array of DealInterface
+  dealStage: Stages[];
   handleCloseFormSidepanel: () => void;
 }
 
-const  CampaignForm: React.FC< CampaignFormProps> = ({
+const  DealForm: React.FC< DealFormProps> = ({
   // brandsData,
   // dealsData,
-  campaignStage,
+  dealStage,
   handleCloseFormSidepanel,
 }) => {
-  const router = useRouter()
   const { register, handleSubmit, reset, setValue } = useForm<FormData>();
   const [selectedStage, setSelectedStage] = useState('');
-  // const [brandsData, setBrandsData] = useState<any>([]);
-  const [dealsData, setDealsData] = useState<any>([]);
+  const router = useRouter()
+  const [brandsData, setBrandsData] = useState<any>([]);
+  const [campaignsData, setCampaignsData] = useState<any>([]);
 
-  
-  /* SELECT STAGE DROPDOWN */
 
   const handleSelectStage = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedId = event.target.value;
     setSelectedStage(selectedId);
-    setValue("campaign_stage", selectedId);
-    console.log("Selected Campaign Stage ID:", selectedId);
+    setValue("deal_stage", selectedId);
+    console.log("Selected Deal Stage ID:", selectedId);
   };
 
   /* SEARCH DROPDOWN */
@@ -86,58 +81,58 @@ const  CampaignForm: React.FC< CampaignFormProps> = ({
     handleCloseFormSidepanel();
   };
 
-  /* GET BRANDS API CALL */
+  /* BRANDS API CALL */
 
-  // useEffect(() => { fetchBrands() }, [router]);
+  useEffect(() => { fetchBrands() }, [router]);
 
-  // const fetchBrands = () => {
-  //   getBrands(
-  //     (response: any) => {
-  //       console.log("fetch brands", response)
-
-  //       setBrandsData(response || []);
-  //     },
-  //     (error: any) => {
-  //       console.error('Error fetching profile data:', error);
-  //       setBrandsData([]); 
-  //     }
-  //   ).finally(() => {
-  //   });
-  // };
-
-  /* GET DEALS API CALL */
-
-  useEffect(() => { fetchDeals() }, [router]);
-
-  const fetchDeals = () => {
-    getDeals(
+  const fetchBrands = () => {
+    // setLoader(true);
+    getBrands(
       (response: any) => {
-        console.log("fetch deals", response)
-
-        setDealsData(response || []);
+        
+        setBrandsData(response || []);
       },
       (error: any) => {
         console.error('Error fetching profile data:', error);
-        setDealsData([]); 
+        setBrandsData([]); 
       }
     ).finally(() => {
+      // setLoader(false);
     });
   };
 
-  /* SUBMIT FORM - POST CAMPAIGNS API CALL */
+      /* GET CAMPAIGNS API CALL */
+
+      useEffect(() => { fetchCampaigns() }, [router]);
+
+      const fetchCampaigns = () => {
+        getCampaigns(
+          (response: any) => {
+            
+            setCampaignsData(response || []);
+          },
+          (error: any) => {
+            console.error('Error fetching profile data:', error);
+            setCampaignsData([]); 
+          }
+        ).finally(() => {
+        });
+      };
+
+  /* SUBMIT FORM - DEALS API */
 
   const onSubmit = async (data: FormData) => {
     console.log("Form Data:", data);
     try {
-      await postCampaigns(
+      await postDeals(
         data,
         (response) => {
-          console.log("Campaign created successfully:", response);
+          console.log("Deal created successfully:", response);
           reset();
           handleCloseFormSidepanel();
         },
         (error) => {
-          console.error("Error creating campaign:", error);
+          console.error("Error creating deal:", error);
         }
       );
     } catch (error) {
@@ -147,7 +142,7 @@ const  CampaignForm: React.FC< CampaignFormProps> = ({
     handleCloseFormSidepanel();
   };
 
-
+  
   return (
     <FormSidepanel handleClose={handleClose}>
           <div className="sidepanel-header">
@@ -156,7 +151,7 @@ const  CampaignForm: React.FC< CampaignFormProps> = ({
               // href={{ pathname: "dashboard/partnerships/projects" }}
             >
               {/* <Arrow className="arrow-left orange-fill" /> */}
-              {`Add Campaign`}
+              {`Add Deal`}
             </p>
             <div className="sidepanel-button">
             <Link href="/dashboard/support" passHref>
@@ -169,8 +164,34 @@ const  CampaignForm: React.FC< CampaignFormProps> = ({
           </div>
           <div className="sidepanel-wrap">
             <form className="sidepanel-form" onSubmit={handleSubmit(onSubmit)}>
+              {/* <div className="form-box">
+                <span className="smallcaps">SELECT BRAND*</span>
+                <SearchDropdown
+                  data={brandsData}
+                  onSelect={(selectedItem) => {
+                    setValue("deal", selectedItem.id); 
+                  }}
+                  placeholder="Select Deal"
+                  handleSearch={handleSearchChange}
+                  displayKey="name"
+                />
+              </div> */}
+
+              {/* <div className="form-box">
+                <span className="smallcaps">SELECT CAMPAIGN*</span>
+                <SearchDropdown
+                  data={campaignsData}
+                  onSelect={(selectedItem) => {
+                    setValue("campaign", selectedItem.id); 
+                  }}
+                  placeholder="Select Campaign"
+                  handleSearch={handleSearchChange}
+                  displayKey="name"
+                />
+              </div> */}
+
               <div className="form-box">
-                <span className="smallcaps">CAMPAIGN NAME*</span>
+                <span className="smallcaps">DEAL NAME*</span>
                 <input
                   {...register("name", { required: true })}
                   className="form-input"
@@ -187,29 +208,17 @@ const  CampaignForm: React.FC< CampaignFormProps> = ({
                 />
               </div>
               <div className="form-box">
-                <span className="smallcaps">SELECT DEAL*</span>
-                <SearchDropdown
-                  data={dealsData}
-                  onSelect={(selectedItem) => {
-                    setValue("deal", selectedItem.id); 
-                  }}
-                  placeholder="Select Deal"
-                  handleSearch={handleSearchChange}
-                  displayKey="name"
-                />
-              </div>
-              {/* <div className="form-box">
                 <span className="smallcaps">SELECT PARTNER*</span>
                 <SearchDropdown
                   data={brandsData}
                   onSelect={(selectedItem) => {
-                    setValue("brand_name", selectedItem.id);
+                    setValue("brand", selectedItem.id);
                   }}
                   placeholder="Select Brand"
                   handleSearch={handleSearchChange}
                   displayKey="name"
                 />
-              </div> */}
+              </div>
               <div className="form-box">
                 <span className="smallcaps">CONTRACT VALUE</span>
                 <input
@@ -237,33 +246,17 @@ const  CampaignForm: React.FC< CampaignFormProps> = ({
                   placeholder="YYYY-MM-DD"
                 />
               </div>
-              {/* <DateInput
-                name="deadline"
-                onChange={handleDateChange}
-              /> */}
-              {/* <div className='form-box'>
-                  <span className='smallcaps'>PROJECT STAGE</span>
-                  <SearchDropdown
-                    data={projectStage}
-                    onSelect={(selectedItem) => {
-                      console.log("Selected Project Stage:", selectedItem);
-                      setValue("name", selectedItem.name);
-                    }}
-                    placeholder="Select Stage"
-                    handleSearch={handleSearchChange}
-                    displayKey="name"
-                  />
-              </div> */}
               <div className='form-box'>
                   <span className='smallcaps'>SELECT STAGE*</span>
                   <select
-                      {...register("campaign_stage")}
+                      {...register("deal_stage")}
                       onChange={handleSelectStage}
                       value={selectedStage}
                       className="form-input"
                     >
-                      <option value="">Select Stage</option> {/* Default option */}
-                      {Array.isArray(campaignStage) && campaignStage.map((stage) => (                        <option key={stage.id} value={stage.id}>
+                      <option value="">Select Stage</option>
+                      {Array.isArray(dealStage) && dealStage.map((stage) => (                        
+                      <option key={stage.id} value={stage.id}>
                           {stage.name}
                         </option>
                       ))}
@@ -281,4 +274,4 @@ const  CampaignForm: React.FC< CampaignFormProps> = ({
   );
 };
 
-export default  CampaignForm;
+export default DealForm;

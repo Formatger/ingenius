@@ -31,7 +31,7 @@ const Pagination = ({
       <span>{currentPage}</span>
       <button
         onClick={handleNext}
-        disabled={currentPage === totalPages || data.length === 0}
+        disabled={currentPage === totalPages || data.length === 0 || data.length < itemsPerPage}
       >
         &gt;
       </button>

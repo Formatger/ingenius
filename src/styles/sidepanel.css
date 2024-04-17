@@ -66,7 +66,7 @@
   gap: var(--m2);
 }
 
-.sidepanel-container .invoice-section {
+.sidepanel-container .sidepanel-hidden {
   display: none;
 }
 

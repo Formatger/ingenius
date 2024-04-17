@@ -8,12 +8,11 @@ interface DealTableProps {
     message: string;
   };
   data: any[];
-  brandsData: any;
   sortBy: (type: string) => void;
   handleOpenSidepanel: (campaign: object) => void;
 }
 
-const DealTable = ({ httpError, data, brandsData, sortBy, handleOpenSidepanel }: DealTableProps) => {
+const DealTable = ({ httpError, data, sortBy, handleOpenSidepanel }: DealTableProps) => {
   return (
     <div className="table-container">
       {httpError.hasError ? (
@@ -54,7 +53,7 @@ const DealTable = ({ httpError, data, brandsData, sortBy, handleOpenSidepanel }:
                     <button className="header-button">
                       <Arrow className="arrow-down" />
                     </button>
-                    <p>Deals</p>
+                    <p>Projects</p>
                   </div>
                 </th>
                 <th>
@@ -81,33 +80,24 @@ const DealTable = ({ httpError, data, brandsData, sortBy, handleOpenSidepanel }:
                 <tr key={deal.id} className="table-row" onClick={() => handleOpenSidepanel(deal)}>
                   
                   <td className="table-brand-cell">
-                  {brandsData && brandsData.length > 0 &&
-                      brandsData.find((brand: { name: any; }) => brand.name === deal.brand_name) ? (
-                        <>
-                          <img
-                            src={brandsData.find((brand: { name: any; }) => brand.name === deal.brand_name).profile_picture}
-                            alt={deal.brand_name}
-                            className="partner-image"
-                            width={40} height={40}
-                          />
-                          {deal.brand_name}
-                        </>
-                      ) : (
-                        // Fallback if no brand is found
-                        <span>(To be added)</span>
-                      )
-                    }
+                    <img
+                      src={deal.brand_image_url}
+                      alt={deal.brand_name}
+                      className="partner-image"
+                      width={40} height={40}
+                    />
+                    {deal.brand_name}
                   </td>
 
                   <td className="table-cell-center">{deal.name}</td>
                   {/* canviar per total campaigns dins del deal */}
-                  <td className="table-cell-center">{deal.campaigns}</td>
+                  <td className="table-cell-center">{deal.total_campaigns}</td>
                   {/* canviar per total projects dins del deal */}
                   <td className="table-cell-center">0</td>
                   {/* canviar per deal contract value */}
                   <td className="table-cell-center">{`$${deal.contract_value}`}</td>
                   <td className="table-cell-center">
-                    <span className='round-tag green'>{deal.deal_stage}</span>
+                    <span className='round-tag green'>{deal.deal_stage_name}</span>
                   </td>
 
                 </tr>

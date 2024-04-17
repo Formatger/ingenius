@@ -40,7 +40,7 @@ interface HttpError {
 const CampaignsPage = () => {
   const router = useRouter()
   const [loader, setLoader] = useState<boolean>(false);
-  const [httpError, setHttpError] = useState({ hasError: false, status: 0, message: "",});
+  const [httpError, setHttpError] = useState({ hasError: false, status: 0, message: "", });
   const [tableRows, setTableRows] = useState<boolean>(true);
   const [noSlicedData, setNoSlicedData] = useState<any[]>([]);
   const [data, setData] = useState<any[]>([]);
@@ -48,15 +48,14 @@ const CampaignsPage = () => {
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const { height } = useWindowSize();
   const [campaignsData, setCampaignsData] = useState<any>([]);
-  const [brandsData, setBrandsData] = useState<any>([]);
-  const [dealsData, setDealsData] = useState<any>([]);
+  // const [brandsData, setBrandsData] = useState<any>([]);
+  // const [dealsData, setDealsData] = useState<any>([]);
   const [selectedCampaign, setSelectedCampaign] = useState({} as any);
   const [campaignStage, setCampaignStage] = useState<any>([]);
 
   const [openSidepanel, setOpenSidepanel] = useState(false);
   const [openFormSidepanel, setOpenFormSidepanel] = useState(false);
-  const [cards, setCards] = useState<FormData[]>([]);
-  
+
 
   const breadcrumbLinks = [
     // { label: "Home", link: "/" },
@@ -64,69 +63,29 @@ const CampaignsPage = () => {
     { label: "Campaigns", link: "/dashboard/partnerships/campaigns", current: true },
   ];
 
-  /* BRANDS API CALL */
-
-  useEffect(() => { fetchBrands() }, [router]);
-
-  const fetchBrands = () => {
-    setLoader(true);
-    getBrands(
-      (response: any) => {
-        
-        setBrandsData(response || []);
-      },
-      (error: any) => {
-        console.error('Error fetching profile data:', error);
-        setBrandsData([]); 
-      }
-    ).finally(() => {
-      setLoader(false);
-    });
-  };
-
-  /* DEALS API CALL */
-
-  useEffect(() => { fetchDeals() }, [router]);
-
-  const fetchDeals = () => {
-    setLoader(true);
-    getDeals(
-      (response: any) => {
-        
-        setDealsData(response || []);
-      },
-      (error: any) => {
-        console.error('Error fetching profile data:', error);
-        setDealsData([]); 
-      }
-    ).finally(() => {
-      setLoader(false);
-    });
-  };
-
   /* CAMPAIGN-STAGE API CALL  */
 
-    useEffect(() => { fetchCampaignStages() }, [router]);
+  useEffect(() => { fetchCampaignStages() }, [router]);
 
-    const fetchCampaignStages = () => {
-      setLoader(true);
-      getCampaignStages(
-        (response: any) => {
-          console.log('Project Stages:', campaignStage);
-  
-          setCampaignStage(response || []);
-  
-        },
-        (error: any) => {
-          console.error('Error fetching profile data:', error);
-          setCampaignStage([]); 
-        }
-      ).finally(() => {
-        setLoader(false);
-      });
-    };
+  const fetchCampaignStages = () => {
+    setLoader(true);
+    getCampaignStages(
+      (response: any) => {
+        console.log('Campaign Stages:', campaignStage);
 
- /* CAMPAIGNS API CALL */
+        setCampaignStage(response || []);
+
+      },
+      (error: any) => {
+        console.error('Error fetching profile data:', error);
+        setCampaignStage([]);
+      }
+    ).finally(() => {
+      setLoader(false);
+    });
+  };
+
+  /* CAMPAIGNS API CALL */
 
   useEffect(() => {
     let provisionalCampaignsData: any[] = [];
@@ -156,7 +115,7 @@ const CampaignsPage = () => {
         status: error.status,
         message: error.message,
       });
-      
+
     })]).finally(() => {
 
       const campaignsFullData = provisionalCampaignsData.map(item => {
@@ -168,7 +127,7 @@ const CampaignsPage = () => {
               result[key] = item2[key];
             }
             return result;
-            
+
           }, {})
         };
       });
@@ -220,7 +179,7 @@ const CampaignsPage = () => {
   const handlePrevious = () => setCurrentPage((oldPage) => Math.max(oldPage - 1, 1));
   const handleNext = () => setCurrentPage((oldPage) => Math.min(oldPage + 1, totalPages));
 
-/* TABLE SORT LOGIC */
+  /* TABLE SORT LOGIC */
 
   /*
    * Sort the table by the specified field - ascending and descending order
@@ -252,12 +211,13 @@ const CampaignsPage = () => {
     ));
   };
 
-/* SEARCH LOGIC */
+  /* SEARCH LOGIC */
 
   const handleSearch = (search: string) => {
     const filteredData = campaignsData.filter((campaign: CampaignInterface) => {
-      return campaign.brand_name.toLowerCase().includes(search.toLowerCase()) ||
-        campaign.campaign_name.toLowerCase().includes(search.toLowerCase());
+      // return campaign.brand_name.toLowerCase().includes(search.toLowerCase()) 
+      // ||
+      //   campaign.campaign_name.toLowerCase().includes(search.toLowerCase());
     });
     setNoSlicedData(filteredData);
     setData(filteredData.slice(
@@ -266,25 +226,25 @@ const CampaignsPage = () => {
     ));
   };
 
-/* SIDEPANEL LOGIC */
+  /* SIDEPANEL LOGIC */
 
-const handleOpenSidepanel = (campaign: any) => {
-  setSelectedCampaign(campaign)
-  setOpenSidepanel(!openSidepanel);
-};
+  const handleOpenSidepanel = (campaign: any) => {
+    setSelectedCampaign(campaign)
+    setOpenSidepanel(!openSidepanel);
+  };
 
-const handleCloseSidepanel = (): void => {
-  setOpenSidepanel(false);
-  setSelectedCampaign(null);
-};
+  const handleCloseSidepanel = (): void => {
+    setOpenSidepanel(false);
+    setSelectedCampaign(null);
+  };
 
-const handleOpenFormSidepanel = (): void => {
-  setOpenFormSidepanel(true);
-};
+  const handleOpenFormSidepanel = (): void => {
+    setOpenFormSidepanel(true);
+  };
 
-const handleCloseFormSidepanel = (): void => {
-  setOpenFormSidepanel(false);
-};
+  const handleCloseFormSidepanel = (): void => {
+    setOpenFormSidepanel(false);
+  };
 
   return (
     <div className="main-container">
@@ -303,15 +263,15 @@ const handleCloseFormSidepanel = (): void => {
               />
             )}
             {openFormSidepanel && (
-              <CampaignForm 
-                brandsData={brandsData}
-                dealsData={dealsData}
+              <CampaignForm
+                // brandsData={brandsData}
+                // dealsData={dealsData}
                 campaignStage={campaignStage}
-                handleCloseFormSidepanel={handleCloseFormSidepanel} 
+                handleCloseFormSidepanel={handleCloseFormSidepanel}
               />
             )}
             <div className="filtersContainer">
-              <Dropdown />
+              <Dropdown data={data} setData={setData} origin="campaigns" noSlicedData={noSlicedData} />
               <div className="button-group">
                 <button className="app-button cream" onClick={undefined}>
                   CSV Upload
@@ -349,9 +309,9 @@ const handleCloseFormSidepanel = (): void => {
                 />
               </Fragment>
             ) : (
-              <CampaignKanban 
-                httpError={httpError} 
-                data={data} 
+              <CampaignKanban
+                httpError={httpError}
+                data={data}
                 handleOpenSidepanel={handleOpenSidepanel}
                 campaignStage={campaignStage}
               />
@@ -372,24 +332,24 @@ const Campaigns = () => {
 export default withAuth(Campaigns);
 
 
-  // const handleOpenFormSidepanel = () => {
-  //   if (openSidepanel) setOpenSidepanel(false);
-  //   setOpenSidepanelForm(true);
-  // };
-  
-  // const handleOpenSidepanel = (campaign: any) => {
-  //   if (openSidepanelForm) setOpenSidepanelForm(false);
-  //   setSelectedCampaign(campaign);
-  //   setOpenSidepanel(true);
-  // };
+// const handleOpenFormSidepanel = () => {
+//   if (openSidepanel) setOpenSidepanel(false);
+//   setOpenSidepanelForm(true);
+// };
 
-  // const handleOpenSidepanel = (campaign: CampaignInterface): void => {
-  //   setSelectedCampaign(campaign);
-  //   setOpenSidepanel(true);
-  // };
+// const handleOpenSidepanel = (campaign: any) => {
+//   if (openSidepanelForm) setOpenSidepanelForm(false);
+//   setSelectedCampaign(campaign);
+//   setOpenSidepanel(true);
+// };
+
+// const handleOpenSidepanel = (campaign: CampaignInterface): void => {
+//   setSelectedCampaign(campaign);
+//   setOpenSidepanel(true);
+// };
 
 
-              {/* {savedDataList.map((item) => (
+{/* {savedDataList.map((item) => (
                 <ProjectCard 
                 key={item.id} 
                 generateCard={item} 
@@ -401,7 +361,7 @@ export default withAuth(Campaigns);
 
 //  const [savedData, setSavedData] = useState<FormData | null>(null);
 //  const [savedDataList, setSavedDataList] = useState<FormData[]>([]);
-// //  const [creatorSavedData, setCreatorSavedData] = useState<profileData | null>(null); 
+// //  const [creatorSavedData, setCreatorSavedData] = useState<profileData | null>(null);
 //  const [cardId, setCardId] = useState<string>(uuidv4());
 
 //  // Save Form Data

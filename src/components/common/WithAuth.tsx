@@ -19,7 +19,7 @@ export default function withAuth(WrappedComponent: React.FunctionComponent) {
       } else {
         const decodedToken: any = jwt.decode(accessToken);
         const currentTime = Date.now().valueOf() / 10000;
-        if (decodedToken.exp < currentTime) {
+        if (decodedToken && decodedToken?.exp < currentTime) {
           if (localStorage.refresh_token) {
             refreshTokenCall();
           } else {

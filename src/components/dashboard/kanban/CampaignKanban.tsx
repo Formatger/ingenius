@@ -38,32 +38,32 @@ const CampaignKanban = ({ data, campaignStage, httpError, handleOpenSidepanel }:
 
 /* FETCH COLUMN STAGES */
 
-  // useEffect(() => {
-  //   const loadStagesWithColors = () => {
-  //     const savedStages = localStorage.getItem('stagesWithColors');
-  //     if (savedStages) {
-  //       return JSON.parse(savedStages);
-  //     }
-  //     const newStages = campaignStage.map(stage => ({
-  //       ...stage,
-  //       colorClass: `color-${colors[Math.floor(Math.random() * colors.length)]}`
-  //     }));
-  //     localStorage.setItem('stagesWithColors', JSON.stringify(newStages));
-  //     return newStages;
-  //   };
+  useEffect(() => {
+    const loadStagesWithColors = () => {
+      const savedStages = localStorage.getItem('stagesWithColors');
+      if (savedStages) {
+        return JSON.parse(savedStages);
+      }
+      const newStages = campaignStage.map(stage => ({
+        ...stage,
+        colorClass: `color-${colors[Math.floor(Math.random() * colors.length)]}`
+      }));
+      localStorage.setItem('stagesWithColors', JSON.stringify(newStages));
+      return newStages;
+    };
 
-  //   const coloredStages = loadStagesWithColors();
-  //   setStagesWithColors(coloredStages);
+    const coloredStages = loadStagesWithColors();
+    setStagesWithColors(coloredStages);
 
-  //   const stagesColumns = coloredStages.map((stage: { id: any; name: any; colorClass: any; }) => ({
-  //     columnId: `col-${stage.id}`,
-  //     columnName: stage.name,
-  //     color: stage.colorClass,
-  //     campaigns: data.filter(campaign => campaign.stageId === stage.id)
-  //   }));
+    const stagesColumns = coloredStages.map((stage: { id: any; name: any; colorClass: any; }) => ({
+      columnId: `col-${stage.id}`,
+      columnName: stage.name,
+      color: stage.colorClass,
+      campaigns: data.filter(campaign => campaign.stageId === stage.id)
+    }));
 
-  //   setCampaignsData(stagesColumns);
-  // }, [campaignStage, data]);
+    setCampaignsData(stagesColumns);
+  }, [campaignStage, data]);
 
 /* DRAG & DROP */
 
@@ -151,7 +151,7 @@ const CampaignKanban = ({ data, campaignStage, httpError, handleOpenSidepanel }:
 
   return (
     <div className="kanban-container">
-      {campaignsData.map((column) => (
+      {/* {campaignsData.map((column) => (
         <div
           className="kanban-column"
           onDrop={(e) => handleDrop(e, column.columnId)}
@@ -189,11 +189,15 @@ const CampaignKanban = ({ data, campaignStage, httpError, handleOpenSidepanel }:
             </button>
           </div>
 
-          <AddFieldModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} 
-            title="Add Field">
+          <AddFieldModal 
+            isOpen={isModalOpen} 
+            onClose={() => setIsModalOpen(false)} 
+            title="Add Field"
+            updateProjectData={() => {}}
+          >
           </AddFieldModal>
 
-        </div>
+        </div> */}
     </div>
   );
 };
