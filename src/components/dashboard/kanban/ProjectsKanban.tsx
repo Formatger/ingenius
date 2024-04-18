@@ -3,7 +3,7 @@ import Image from 'next/image';
 import Plus from "@/components/assets/icons/plus.svg";
 import Edit from "@/components/assets/icons/edit.svg";
 import AddFieldModal from "@/components/dashboard/kanban/AddFieldModal";
-import { putProject } from "@/utils/httpCalls";
+import { putProject, putNewOrder } from "@/utils/httpCalls";
 
 
 
@@ -48,35 +48,115 @@ const ProjectsKanban = ({ projectsData, data, httpError, handleOpenSidepanel, pr
     }, [projectsData, projectStage]);
 
     setStages(stagesWithProjects);
-  }, [projectsData, projectStage]);
+  }, [projectsData, projectStage,]);
 
   console.log("Projects column", stages);
 
 
   /* DRAG DROP */
 
-  //   const handleDragStartColumn = (e: any, stageIndex: any) => {
-  //     e.dataTransfer.setData('column', JSON.stringify({ stageIndex }));
-  // };
-
-  // const handleDropColumn = (e: React.DragEvent<HTMLDivElement>, targetStageIndex: any) => {
-  //     setDraggedOverStageIndex(null);
+  const handleDragStartColumn = (e: any, stage: any) => {
+    // e.dataTransfer.setData('text/plain', stage.stageIndex);  // Guardar el índice de la columna basado en `stageIndex`
+    e.dataTransfer.setData('stage', JSON.stringify({stage}));
+    console.log("START DATA STAGES", stage)
+  };
+  
+  // const handleDropColumn = async (e: any, newColumn: any) => {
+  //   e.preventDefault();
+  //   const oldIndex = parseInt(e.dataTransfer.getData('text/plain'));
+  
+  //   if (oldIndex !== newColumn.stageIndex) {
+  //     const newStages = [...stages];  // Clonamos el array para evitar mutaciones directas
+  //     const sourceStage = newStages.find(stage => stage.stageIndex === oldIndex);
+  //     const targetIndex = newStages.findIndex(stage => stage.stageIndex === newColumn.stageIndex);
+  
+  //     if (!sourceStage) return;
+  
+  //     // Remover el elemento arrastrado y insertarlo en la nueva posición
+  //     newStages.splice(newStages.indexOf(sourceStage), 1);
+  //     newStages.splice(targetIndex, 0, sourceStage);
+  
+  //     // Reasignar stageIndex para reflejar el nuevo orden
+  //     newStages.forEach((stage, index) => {
+  //       stage.stageIndex = index + 1;
+  //     });
+  
+  //     setStages(newStages);  // Actualizar el estado de forma local
+  
+  //     // Llamada al API para actualizar el servidor
   //     try {
-  //         const sourceColumn = JSON.parse(e.dataTransfer.getData('column'));
-  //         const sourceStageIndex = sourceColumn.stageIndex;
-
-  //         // Comparar el stageIndex de la columna arrastrada con el targetStageIndex
-  //         if (sourceStageIndex !== targetStageIndex) {
-  //             console.log(`La columna se está moviendo desde el stageIndex ${sourceStageIndex} al stageIndex ${targetStageIndex}`);
-
-  //             // Aquí puedes realizar las acciones necesarias, como actualizar el estado o enviar datos al servidor.
-  //         } else {
-  //             console.log("La columna se soltó en la misma posición");
-  //         }
+  //       await updateStagesOrder(newStages);
+  //       console.log('Orden actualizado con éxito en el servidor');
   //     } catch (error) {
-  //         console.error('Error al procesar la solicitud:', error);
+  //       console.error('Error al actualizar el orden:', error);
+  //       // Opcional: Revertir al orden anterior si la actualización falla
+  //       setStages(stages);
   //     }
+  //   }
   // };
+  
+  // const updateStagesOrder = async (stages) => {
+  //   const updates = stages.map(stage => ({
+  //     stageID: stage.stageID,
+  //     newOrder: stage.stageIndex
+  //   }));
+  //   // Realiza la llamada PUT aquí, usando fetch o Axios, según lo que estés usando
+  //   // Ejemplo usando fetch:
+  //   const response = await fetch('/api/stages/updateOrder', {
+  //     method: 'PUT',
+  //     headers: {
+  //       'Content-Type': 'application/json'
+  //     },
+  //     body: JSON.stringify(updates)
+  //   });
+  //   if (!response.ok) throw new Error('Failed to update stage order');
+  //   return response.json();
+  // };
+
+ 
+  const handleDropColumn = async (e, newColumn) => {
+    e.preventDefault();
+    const oldColumn = JSON.parse(e.dataTransfer.getData('stage'));
+    console.log('Valor de OLD COLUMN:', oldColumn);
+    console.log('Valor de NEW COLUMN:', newColumn);
+
+    if (oldColumn.stageIndex !== newColumn.stageIndex) {
+        setStages((currentStages) => {
+            return currentStages.map((stage) => {
+                // Si la columna es la original, actualizar el índice de la etapa
+                if (stage.stageID === oldColumn.stageID) {
+                    return {
+                        ...stage,
+                        stageIndex: newColumn.stageIndex // Actualiza el índice de la etapa
+                    };
+                }
+                // Si la columna es la de destino, insertarla en la nueva posición
+                if (stage.stageID === newColumn.stageID) {
+                    return {
+                        ...stage,
+                        stageIndex: oldColumn.stageIndex // Actualiza el índice de la etapa antigua
+                    };
+                }
+                // Devolver todas las demás columnas sin cambios
+                return stage;
+            });
+        })
+    }
+
+    // Aquí puedes realizar la llamada a la API para actualizar el orden de las columnas en el servidor
+    // Asegúrate de enviar los datos actualizados al servidor según sea necesario
+    // putNewOrder(newColumn.stageID, { stages: updatedData }, 
+    //   (data) => {
+    //     console.log('Orden de columnas actualizada con éxito:', data);
+    //   },
+    //   (error) => {
+    //     console.error('Error al actualizar el orden de columnas:', error);
+    //     // Opcional: Revertir al orden anterior si la actualización falla
+    //     setStages(stages);
+    //   }
+    // );
+};
+
 
 
   const handleDragStart = (e: any, projects: any, stages: any) => {
@@ -155,9 +235,10 @@ const ProjectsKanban = ({ projectsData, data, httpError, handleOpenSidepanel, pr
         .map((projectCol) => (
           <div
             className={`kanban-column ${draggedOverStageIndex === projectCol.stageIndex ? 'drag-over-column' : ''}`}
-            onDrop={(e) => handleDrop(e, projectCol.stageID)}
+            onDrop={(e) => {handleDrop(e, projectCol.stageID); handleDropColumn(e, projectCol);}}
             onDragOver={(e) => handleDragOver(e, projectCol.stageID)}
             onDragLeave={handleDragLeave}
+            onDragStart={(e) => handleDragStartColumn(e, projectCol)}
             key={projectCol.stageIndex}
             draggable
           >
