@@ -3,7 +3,7 @@ import Image from 'next/image';
 import Plus from "@/components/assets/icons/plus.svg";
 import Edit from "@/components/assets/icons/edit.svg";
 import AddFieldModal from "@/components/dashboard/kanban/AddFieldModal";
-import { putProject } from "@/utils/httpCalls";
+import { putProject, putNewOrder } from "@/utils/httpCalls";
 
 
 
@@ -48,35 +48,47 @@ const ProjectsKanban = ({ projectsData, data, httpError, handleOpenSidepanel, pr
     }, [projectsData, projectStage]);
 
     setStages(stagesWithProjects);
-  }, [projectsData, projectStage]);
+  }, [projectsData, projectStage,]);
 
   console.log("Projects column", stages);
 
 
   /* DRAG DROP */
 
-  //   const handleDragStartColumn = (e: any, stageIndex: any) => {
-  //     e.dataTransfer.setData('column', JSON.stringify({ stageIndex }));
-  // };
+  const handleDragStartColumn = (e: any, stage: any) => {
+    // e.dataTransfer.setData('text/plain', stage.stageIndex);  // Guardar el índice de la columna basado en `stageIndex`
+    e.dataTransfer.setData('stage', JSON.stringify({stage}));
+    console.log("START DATA STAGES", stage)
+  };
+  
 
-  // const handleDropColumn = (e: React.DragEvent<HTMLDivElement>, targetStageIndex: any) => {
-  //     setDraggedOverStageIndex(null);
-  //     try {
-  //         const sourceColumn = JSON.parse(e.dataTransfer.getData('column'));
-  //         const sourceStageIndex = sourceColumn.stageIndex;
-
-  //         // Comparar el stageIndex de la columna arrastrada con el targetStageIndex
-  //         if (sourceStageIndex !== targetStageIndex) {
-  //             console.log(`La columna se está moviendo desde el stageIndex ${sourceStageIndex} al stageIndex ${targetStageIndex}`);
-
-  //             // Aquí puedes realizar las acciones necesarias, como actualizar el estado o enviar datos al servidor.
-  //         } else {
-  //             console.log("La columna se soltó en la misma posición");
-  //         }
-  //     } catch (error) {
-  //         console.error('Error al procesar la solicitud:', error);
-  //     }
-  // };
+ 
+  const handleDropColumn = async (e, newColumn) => {
+    e.preventDefault();
+    const oldColumn = JSON.parse(e.dataTransfer.getData('stage'));
+    console.log('Valor de OLD COLUMN:', oldColumn);
+    console.log('Valor de NEW COLUMN:', newColumn);
+  
+    // Intercambiar los valores de stageIndex entre oldColumn y newColumn
+    const tempIndex = oldColumn.stageIndex;
+    oldColumn.stageIndex = newColumn.stageIndex;
+    newColumn.stageIndex = tempIndex;
+  
+    // Actualizar el estado de las columnas con los nuevos valores de stageIndex
+    setStages((currentStages) => {
+      const updatedStages = currentStages.map((stage) => {
+        if (stage.stageID === oldColumn.stageID) {
+          return { ...newColumn }; // Actualizar la columna original con el stageIndex de la columna de destino
+        }
+        if (stage.stageID === newColumn.stageID) {
+          return { ...oldColumn }; // Actualizar la columna de destino con el stageIndex de la columna original
+        }
+        // Devolver todas las demás columnas sin cambios
+        return stage;
+      });
+      return updatedStages;
+    });
+  };
 
 
   const handleDragStart = (e: any, projects: any, stages: any) => {
@@ -155,9 +167,10 @@ const ProjectsKanban = ({ projectsData, data, httpError, handleOpenSidepanel, pr
         .map((projectCol) => (
           <div
             className={`kanban-column ${draggedOverStageIndex === projectCol.stageIndex ? 'drag-over-column' : ''}`}
-            onDrop={(e) => handleDrop(e, projectCol.stageID)}
+            onDrop={(e) => {handleDrop(e, projectCol.stageID); handleDropColumn(e, projectCol);}}
             onDragOver={(e) => handleDragOver(e, projectCol.stageID)}
             onDragLeave={handleDragLeave}
+            onDragStart={(e) => handleDragStartColumn(e, projectCol)}
             key={projectCol.stageIndex}
             draggable
           >
