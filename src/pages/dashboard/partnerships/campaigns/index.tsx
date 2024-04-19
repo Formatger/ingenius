@@ -52,7 +52,7 @@ const CampaignsPage = () => {
   // const [dealsData, setDealsData] = useState<any>([]);
   const [selectedCampaign, setSelectedCampaign] = useState({} as any);
   const [campaignStage, setCampaignStage] = useState<any>([]);
-
+  const [updateCampaign, setUpdateCampaign] = useState(false);
   const [openSidepanel, setOpenSidepanel] = useState(false);
   const [openFormSidepanel, setOpenFormSidepanel] = useState(false);
 
@@ -63,19 +63,42 @@ const CampaignsPage = () => {
     { label: "Campaigns", link: "/dashboard/partnerships/campaigns", current: true },
   ];
 
+  /* ACTUALIZAR EL RENDERIZADO API */
+
+  useEffect(() => {
+    const projectsDataCopy = [...campaignsData];
+    setNoSlicedData(projectsDataCopy);
+    setData(projectsDataCopy.slice(
+      (currentPage - 1) * itemsPerPage,
+      currentPage * itemsPerPage
+    ));
+  }, [currentPage, updateCampaign, tableRows]);
+
+  const updateCampaignData = () => {
+    setUpdateCampaign(prevState => !prevState);
+  };
+  console.log("UPDATE STAGE", updateCampaign)
+
   /* CAMPAIGN-STAGE API CALL  */
 
-  useEffect(() => { fetchCampaignStages() }, [router]);
+  useEffect(() => { fetchCampaignStages() }, [router, updateCampaign, tableRows]);
 
   const fetchCampaignStages = () => {
     setLoader(true);
     getCampaignStages(
       (response: any) => {
         console.log('Campaign Stages:', campaignStage);
+        setCampaignStage(response.map((stage: any) => ({
+          stageID: stage.id,
+          stageName: stage.name,
+          stageIndex: stage.order,
+          stageUser: stage.user
+        })))
 
-        setCampaignStage(response || []);
-
+        setUpdateCampaign(false);
+        console.log(campaignStage)
       },
+
       (error: any) => {
         console.error('Error fetching profile data:', error);
         setCampaignStage([]);
@@ -104,7 +127,7 @@ const CampaignsPage = () => {
         message: error.message,
       });
 
-    }), getCampaigns((response: any) => {
+    }), getCampaigns((response: any[]) => {
       provisionalCampaignsData = response;
       console.log("===========================")
       console.log("segon", response)
@@ -141,7 +164,7 @@ const CampaignsPage = () => {
 
       setLoader(false);
     })
-  }, []);
+  }, [updateCampaign, tableRows]);
 
   /* TABLE ROW DISPLAY */
 
@@ -260,14 +283,19 @@ const CampaignsPage = () => {
                 open={openSidepanel}
                 setSelectedCampaign={setSelectedCampaign}
                 setOpenSidepanel={setOpenSidepanel}
+                updateProjectData={updateProjectData}
               />
             )}
             {openFormSidepanel && (
               <CampaignForm
+                campaignsData={data}
+                campaignStage={campaignStage}
+                isEditing={false}
+                closeEdit={handleCloseFormSidepanel}
+                handleCloseFormSidepanel={handleCloseFormSidepanel}
+                updateCampaignData={updateCampaignData}
                 // brandsData={brandsData}
                 // dealsData={dealsData}
-                campaignStage={campaignStage}
-                handleCloseFormSidepanel={handleCloseFormSidepanel}
               />
             )}
             <div className="filtersContainer">

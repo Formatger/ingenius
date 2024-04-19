@@ -15,14 +15,14 @@ import DateInput from "@/components/common/DateInput";
 import axios from "axios";
 import { useRouter } from "next/router";
 
-interface Stages {
-  id: number;
-  name: string;
-  order: number;
-  user: string;
-}
+// interface Stages {
+//   id: number;
+//   name: string;
+//   order: number;
+//   user: string;
+// }
 
-interface FormData {
+interface campaignData {
   id?: number;
   user?: string;
   brand_image_url?: string;
@@ -36,6 +36,8 @@ interface FormData {
   campaign_duration?: string;
   start_date: Date;
   deadline: Date;
+  campaign_stage_name: string;
+  campaing_stage_order: string;
   name: string;
   contract_value: number;
   invoice_paid?: boolean;
@@ -50,6 +52,10 @@ interface CampaignFormProps {
   // dealsData: DealInterface[];  
   campaignStage: Stages[];
   handleCloseFormSidepanel: () => void;
+  updateCampaignData: () => void;
+  campaignData: campaignData[];
+  closeEdit: () => void;
+  isEditing: boolean; 
 }
 
 const  CampaignForm: React.FC< CampaignFormProps> = ({
@@ -57,6 +63,10 @@ const  CampaignForm: React.FC< CampaignFormProps> = ({
   // dealsData,
   campaignStage,
   handleCloseFormSidepanel,
+  updateCampaignData,
+  campaignData,
+  isEditing,
+  closeEdit,
 }) => {
   const router = useRouter()
   const { register, handleSubmit, reset, setValue } = useForm<FormData>();
@@ -129,22 +139,47 @@ const  CampaignForm: React.FC< CampaignFormProps> = ({
   const onSubmit = async (data: FormData) => {
     console.log("Form Data:", data);
     try {
-      await postCampaigns(
-        data,
-        (response) => {
-          console.log("Campaign created successfully:", response);
-          reset();
-          handleCloseFormSidepanel();
-        },
-        (error) => {
-          console.error("Error creating campaign:", error);
-        }
-      );
+      if (isEditing) {
+        const projectId = campaignData.id;
+
+        // Fusionamos los datos del formulario con los datos originales del proyecto
+        const updatedData: FormData = {
+          ...campaignData, // Datos originales del proyecto
+          ...data, // Datos del formulario
+        };
+
+        // Realizamos una solicitud PUT con los datos fusionados
+        await putCampaign(
+          projectId,
+          updatedData,
+          (response) => {
+            console.log("Project updated successfully:", response);
+            reset();
+            closeEdit();
+            updateCampaignData();
+          },
+          (error) => {
+            console.error("Error updating project:", error);
+          }
+        );
+      } else {
+        // Si no se está editando, realizamos una solicitud POST
+        await postCampaigns(
+          data,
+          (response) => {
+            console.log("Project created successfully:", response);
+            reset();
+            handleClose();
+            updateCampaignData();
+          },
+          (error) => {
+            console.error("Error creating project:", error);
+          }
+        );
+      }
     } catch (error) {
       console.error("ERROR", error);
     }
-    reset();  
-    handleCloseFormSidepanel();
   };
 
 
@@ -263,15 +298,16 @@ const  CampaignForm: React.FC< CampaignFormProps> = ({
                       className="form-input"
                     >
                       <option value="">Select Stage</option> {/* Default option */}
-                      {Array.isArray(campaignStage) && campaignStage.map((stage) => (                        <option key={stage.id} value={stage.id}>
-                          {stage.name}
+                      {Array.isArray(campaignStage) && campaignStage.map((stage) => {
+                      
+                      return (                        
+                      <option key={stage.stageID} value={stage.stageID}>
+                          {stage.stageName}
                         </option>
-                      ))}
+                      );
+                      })}
                     </select>
               </div>
-
-              {/* SELECT CREATOR DROPDOWN */}
-
               <button className="sec-button linen" type="submit">
                 <p>SAVE</p>
               </button>

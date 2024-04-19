@@ -23,12 +23,7 @@ interface CampaignKanbanProps {
   handleOpenSidepanel: (campaign: object) => void;
 }
 
-/* HARDCODED COLUMN DATA */
-// const initialData = [
-//   { columnId: "col-1-not-started", columnName: "Not started", color: "pink", campaigns: [] as any[] },
-//   { columnId: "col-2-in-progress", columnName: "In Progress", color: "ivory", campaigns: [] as any[] },
-//   { columnId: "col-3-completed", columnName: "Completed", color: "green", campaigns: [] as any[] }
-// ];
+
 
 const CampaignKanban = ({ data, campaignStage, httpError, handleOpenSidepanel }: CampaignKanbanProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
