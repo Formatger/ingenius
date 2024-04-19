@@ -283,12 +283,12 @@ const CampaignsPage = () => {
                 open={openSidepanel}
                 setSelectedCampaign={setSelectedCampaign}
                 setOpenSidepanel={setOpenSidepanel}
-                updateProjectData={updateProjectData}
+                updateCampaignData={updateCampaignData}
               />
             )}
             {openFormSidepanel && (
               <CampaignForm
-                campaignsData={data}
+                campaignData={data}
                 campaignStage={campaignStage}
                 isEditing={false}
                 closeEdit={handleCloseFormSidepanel}

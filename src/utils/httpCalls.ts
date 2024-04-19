@@ -102,13 +102,14 @@ export const putProject = async (
 /* PUT CAMPAIGN */
 
 export const putCampaign = async (
-  campaignId: string,
+  campaignId: number,
   updatedData: any,
   callback: (data: any) => void,
   errorCallback?: (error: any) => void
 ) => {
-  console.log("PUT successful",campaignId)
-  const url = `${DEPLOYED_API_BASE_URL}campaigns/${campaignId}/`; 
+  console.log("CAMAPIGN ID",campaignId)
+  console.log("PUT successful",updatedData)
+  const url = `${DEPLOYED_API_BASE_URL}campaigns/${campaignId}/`;
 
   try {
     const response = await fetch(url, {
@@ -231,6 +232,34 @@ export const putCreator = async (
 /***************************  DELETE CALLS  ***************************/
 ////////////////////////////////////////////////////////////////////////
 
+
+/*DELETE CAMPAIGN*/
+
+export const deleteCampaign = async (
+  campaignId: number,
+  callback: () => void, // No data parameter
+  errorCallback: (error: any) => void
+) => {
+  const url = `${DEPLOYED_API_BASE_URL}projects/${campaignId}/`;
+
+  try {
+    const response = await fetch(url, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    callback(); // Call callback directly without data
+  } catch (error) {
+    errorCallback(error);
+  }
+};
 
 /* DELETE PROJECT */
 

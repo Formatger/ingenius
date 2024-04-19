@@ -201,7 +201,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
         <div className="sidepanel-wrap">
           <form className="sidepanel-form" onSubmit={handleSubmit(onSubmit)}>
             <div className="form-box">
-              <span className="smallcaps">ESTOY EDITANDO*</span>
+              <span className="smallcaps">PROJECT NAME*</span>
               <input
                 {...register("name", { required: true })}
                 className="form-input"

@@ -10,7 +10,7 @@ import { v4 as uuidv4 } from "uuid";
 import { useForm } from "react-hook-form";
 import FormSidepanel from "@/components/common/ProfileSidepanel";
 import { CampaignInterface, BrandInterface, DealInterface } from "@/interfaces/interfaces";
-import { getBrands, getCampaigns, getDeals, postCampaigns } from "@/utils/httpCalls";
+import { getBrands, putCampaign, getDeals, postCampaigns } from "@/utils/httpCalls";
 import DateInput from "@/components/common/DateInput";
 import axios from "axios";
 import { useRouter } from "next/router";
@@ -53,7 +53,7 @@ interface CampaignFormProps {
   campaignStage: Stages[];
   handleCloseFormSidepanel: () => void;
   updateCampaignData: () => void;
-  campaignData: campaignData[];
+  campaignData: campaignData;
   closeEdit: () => void;
   isEditing: boolean; 
 }
@@ -140,7 +140,7 @@ const  CampaignForm: React.FC< CampaignFormProps> = ({
     console.log("Form Data:", data);
     try {
       if (isEditing) {
-        const projectId = campaignData.id;
+        const campaignId = campaignData.id;
 
         // Fusionamos los datos del formulario con los datos originales del proyecto
         const updatedData: FormData = {
@@ -150,7 +150,7 @@ const  CampaignForm: React.FC< CampaignFormProps> = ({
 
         // Realizamos una solicitud PUT con los datos fusionados
         await putCampaign(
-          projectId,
+          campaignId,
           updatedData,
           (response) => {
             console.log("Project updated successfully:", response);
@@ -202,119 +202,181 @@ const  CampaignForm: React.FC< CampaignFormProps> = ({
             </Link>
             </div>
           </div>
-          <div className="sidepanel-wrap">
-            <form className="sidepanel-form" onSubmit={handleSubmit(onSubmit)}>
-              <div className="form-box">
-                <span className="smallcaps">CAMPAIGN NAME*</span>
-                <input
-                  {...register("name", { required: true })}
-                  className="form-input"
-                  type="text"
-                  placeholder="Enter a name"
-                />
-              </div>
-              <div className="form-box">
-                <span className="smallcaps">DESCRIPTION</span>
-                <textarea
-                  {...register("description")}
-                  className="form-textarea"
-                  placeholder="Add a description"
-                />
-              </div>
-              <div className="form-box">
-                <span className="smallcaps">SELECT DEAL*</span>
-                <SearchDropdown
-                  data={dealsData}
-                  onSelect={(selectedItem) => {
-                    setValue("deal", selectedItem.id); 
-                  }}
-                  placeholder="Select Deal"
-                  handleSearch={handleSearchChange}
-                  displayKey="name"
-                />
-              </div>
-              {/* <div className="form-box">
-                <span className="smallcaps">SELECT PARTNER*</span>
-                <SearchDropdown
-                  data={brandsData}
-                  onSelect={(selectedItem) => {
-                    setValue("brand_name", selectedItem.id);
-                  }}
-                  placeholder="Select Brand"
-                  handleSearch={handleSearchChange}
-                  displayKey="name"
-                />
-              </div> */}
-              <div className="form-box">
-                <span className="smallcaps">CONTRACT VALUE</span>
-                <input
-                  {...register("contract_value", { required: true })}
-                  className="form-input"
-                  type="text"
-                  placeholder="Add contract Value"
-                />
-              </div>
-              <div className="form-box">
-                <span className="smallcaps">START DATE</span>
-                <input
-                  {...register("start_date", { required: true })}
-                  className="form-input"
-                  type="date"
-                  placeholder="YYYY-MM-DD"
-                />
-              </div>
-              <div className="form-box">
-                <span className="smallcaps">END DATE</span>
-                <input
-                  {...register("deadline", { required: true })}
-                  className="form-input"
-                  type="date"
-                  placeholder="YYYY-MM-DD"
-                />
-              </div>
-              {/* <DateInput
-                name="deadline"
-                onChange={handleDateChange}
-              /> */}
-              {/* <div className='form-box'>
-                  <span className='smallcaps'>PROJECT STAGE</span>
-                  <SearchDropdown
-                    data={projectStage}
-                    onSelect={(selectedItem) => {
-                      console.log("Selected Project Stage:", selectedItem);
-                      setValue("name", selectedItem.name);
-                    }}
-                    placeholder="Select Stage"
-                    handleSearch={handleSearchChange}
-                    displayKey="name"
-                  />
-              </div> */}
-              <div className='form-box'>
-                  <span className='smallcaps'>SELECT STAGE*</span>
-                  <select
-                      {...register("campaign_stage")}
-                      onChange={handleSelectStage}
-                      value={selectedStage}
-                      className="form-input"
-                    >
-                      <option value="">Select Stage</option> {/* Default option */}
-                      {Array.isArray(campaignStage) && campaignStage.map((stage) => {
-                      
-                      return (                        
-                      <option key={stage.stageID} value={stage.stageID}>
-                          {stage.stageName}
-                        </option>
-                      );
-                      })}
-                    </select>
-              </div>
-              <button className="sec-button linen" type="submit">
-                <p>SAVE</p>
+          {isEditing ? (
+        <div className="sidepanel-wrap">
+          <form className="sidepanel-form" onSubmit={handleSubmit(onSubmit)}>
+            <div className="form-box">
+              <span className="smallcaps">CAMPAIGN NAME*</span>
+              <input
+                {...register("name", { required: true })}
+                className="form-input"
+                type="text"
+                defaultValue={campaignData.name}
+                onChange={(e) => setValue("name", e.target.value)}
+              />
+            </div>
+            <div className="form-box">
+              <span className="smallcaps">DESCRIPTION</span>
+              <textarea
+                {...register("description")}
+                className="form-textarea"
+                defaultValue={campaignData.description}
+                onChange={(e) => setValue("description", e.target.value)}
+              />
+            </div>
+            <div className="form-box">
+              <span className="smallcaps">SELECT DEAL*</span>
+              <SearchDropdown
+                data={dealsData}
+                onSelect={(selectedItem) => {
+                  setValue("campaign", selectedItem.id);
+                }}
+                placeholder={campaignData.name}
+                handleSearch={handleSearchChange}
+                displayKey="name"
+              />
+            </div>
+            <div className="form-box">
+              <span className="smallcaps">CONTRACT VALUE</span>
+              <input
+                {...register("contract_value", { required: false })}
+                className="form-input"
+                type="text"
+                defaultValue={campaignData.contract_value}
+              />
+            </div>
+            <div className="form-box">
+              <span className="smallcaps">START DATE</span>
+              <input
+                {...register("start_date", { required: true })}
+                className="form-input"
+                type="date"
+                defaultValue={campaignData.start_date}
+              />
+            </div>
+            <div className="form-box">
+              <span className="smallcaps">END DATE</span>
+              <input
+                {...register("deadline", { required: true })}
+                className="form-input"
+                type="date"
+                defaultValue={campaignData.deadline}
+              />
+            </div>
+            <div className="button-group">
+              <button className="sec-button stone" type="button" onClick={handleClose}>
+                <p>Cancel</p>
               </button>
-            </form>
-          </div>
+              <button className="sec-button linen" type="submit">
+                <p>Save</p>
+              </button>
+            </div>
+          </form>
+        </div>
+
+      ) : (
+
+        <div className="sidepanel-wrap">
+<form className="sidepanel-form" onSubmit={handleSubmit(onSubmit)}>
+  <div className="form-box">
+    <span className="smallcaps">CAMPAIGN NAME*</span>
+    <input
+      {...register("name", { required: true })}
+      className="form-input"
+      type="text"
+      placeholder="Enter a name"
+    />
+  </div>
+  <div className="form-box">
+    <span className="smallcaps">DESCRIPTION</span>
+    <textarea
+      {...register("description")}
+      className="form-textarea"
+      placeholder="Add a description"
+    />
+  </div>
+  <div className="form-box">
+    <span className="smallcaps">SELECT DEAL*</span>
+    <SearchDropdown
+      data={dealsData}
+      onSelect={(selectedItem) => {
+        setValue("deal", selectedItem.id); 
+      }}
+      placeholder="Select Deal"
+      handleSearch={handleSearchChange}
+      displayKey="name"
+    />
+  </div>
+  {/* <div className="form-box">
+    <span className="smallcaps">SELECT PARTNER*</span>
+    <SearchDropdown
+      data={brandsData}
+      onSelect={(selectedItem) => {
+        setValue("brand_name", selectedItem.id);
+      }}
+      placeholder="Select Brand"
+      handleSearch={handleSearchChange}
+      displayKey="name"
+    />
+  </div> */}
+  <div className="form-box">
+    <span className="smallcaps">CONTRACT VALUE</span>
+    <input
+      {...register("contract_value", { required: true })}
+      className="form-input"
+      type="text"
+      placeholder="Add contract Value"
+    />
+  </div>
+  <div className="form-box">
+    <span className="smallcaps">START DATE</span>
+    <input
+      {...register("start_date", { required: true })}
+      className="form-input"
+      type="date"
+      placeholder="YYYY-MM-DD"
+    />
+  </div>
+  <div className="form-box">
+    <span className="smallcaps">END DATE</span>
+    <input
+      {...register("deadline", { required: true })}
+      className="form-input"
+      type="date"
+      placeholder="YYYY-MM-DD"
+    />
+  </div>
+  <div className='form-box'>
+      <span className='smallcaps'>SELECT STAGE*</span>
+      <select
+          {...register("campaign_stage")}
+          onChange={handleSelectStage}
+          value={selectedStage}
+          className="form-input"
+        >
+          <option value="">Select Stage</option> {/* Default option */}
+          {Array.isArray(campaignStage) && campaignStage.map((stage) => {
+          
+          return (                        
+          <option key={stage.stageID} value={stage.stageID}>
+              {stage.stageName}
+            </option>
+          );
+          })}
+        </select>
+  </div>
+
+            <button className="sec-button linen" type="submit">
+              <p>SAVE</p>
+            </button>
+          </form>
+        </div>
+
+      )}
+
     </FormSidepanel>
   );
 };
+          
 
 export default  CampaignForm;
