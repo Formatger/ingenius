@@ -365,6 +365,37 @@ export const postProjects = async (
   }
 };
 
+
+/* POST CAMPAIGN-STAGE */
+
+export const postCampaignStage = async (
+  requestData: any,
+  callback: (data: any) => void,
+  errorCallback?: (error: any) => void
+) => {
+  const url = DEPLOYED_API_BASE_URL + 'campaign-stages/';
+
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.access_token}`,
+      },
+      body: JSON.stringify(requestData),
+    });
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    const data = await response.json();
+    callback(data);
+  } catch (error) {
+    errorCallback && errorCallback(error);
+  }
+};
+
 /* POST PROJECT-STAGE */
 
 export const postProjectStage = async (

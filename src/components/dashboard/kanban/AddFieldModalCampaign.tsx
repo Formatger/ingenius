@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { postProjectStage, getProjectStages } from "@/utils/httpCalls";
+import { getCampaignStages,postCampaignStage } from "@/utils/httpCalls";
 
-interface AddFieldModalProps {
+interface AddFieldModalCampaignProps {
   isOpen: boolean;
   onClose: () => void;
   title?: string;
-  updateProjectData: () => void;
   updateCampaignData: () => void;
 }
 
-const AddFieldModal: React.FC<AddFieldModalProps> = ({ isOpen, onClose, title, updateProjectData }) => {
+const AddFieldModalCampaign: React.FC<AddFieldModalCampaignProps> = ({ isOpen, onClose, title, updateCampaignData }) => {
   if (!isOpen) return null;
 
   const [newLabel, setNewLabel] = useState<{
@@ -19,22 +18,23 @@ const AddFieldModal: React.FC<AddFieldModalProps> = ({ isOpen, onClose, title, u
   console.log(newLabel)
 
   useEffect(() => {
-    const fetchMaxOrder = async () => {
+    const fetchMaxOrderCampaign = async () => {
       try {
-        await getProjectStages(
+        await getCampaignStages(
           (response) => {
+            console.log("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",response)
             const maxOrder = Math.max(...response.map((stage: any) => stage.order));
             setNewLabel(prevLabel => ({ ...prevLabel, order: maxOrder + 1 }));
           },
           (error) => {
-            console.error("Error fetching project stages:", error);
+            console.error("Error fetching campaign stages:", error);
           }
         );
       } catch (error) {
-        console.error("Error fetching project stages:", error);
+        console.error("Error fetching campaign stages:", error);
       }
     };
-    fetchMaxOrder();
+    fetchMaxOrderCampaign();
   }, []);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -42,17 +42,17 @@ const AddFieldModal: React.FC<AddFieldModalProps> = ({ isOpen, onClose, title, u
     setNewLabel(prevLabel => ({ ...prevLabel, name: newName }));
   };
 
-  const addProjectStage = async () => {
+  const addCampaignStage = async () => {
     try {
-      await postProjectStage(
+      await postCampaignStage(
         newLabel,
         (response) => {
-          console.log("Project stage ADD successfully:", response);
+          console.log("Campaign stage ADD successfully:", response);
           onClose();
-          updateProjectData();
+          updateCampaignData();
         },
         (error) => {
-          console.error("Error creating project:", error);
+          console.error("Error creating campaign:", error);
         }
       );
     } catch (error) {
@@ -84,7 +84,7 @@ const AddFieldModal: React.FC<AddFieldModalProps> = ({ isOpen, onClose, title, u
             onChange={handleInputChange}
           />
           <div className='column-center'>
-            <button className="app-button mt-4" type="submit" onClick={addProjectStage}>
+            <button className="app-button mt-4" type="submit" onClick={addCampaignStage}>
               Save
             </button>
           </div>
@@ -94,4 +94,4 @@ const AddFieldModal: React.FC<AddFieldModalProps> = ({ isOpen, onClose, title, u
   );
 };
 
-export default AddFieldModal;
+export default AddFieldModalCampaign;

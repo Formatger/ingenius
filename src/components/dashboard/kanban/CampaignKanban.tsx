@@ -2,15 +2,10 @@ import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Plus from "@/components/assets/icons/plus.svg";
 import Edit from "@/components/assets/icons/edit.svg";
-import AddFieldModal from "@/components/dashboard/kanban/AddFieldModal";
+import AddFieldModalCampaign from "@/components/dashboard/kanban/AddFieldModal";
 import { putCampaign } from '@/utils/httpCalls';
 
-interface Stages {
-  id: number;
-  name: string;
-  order: number;
-  user?: string;
-}
+
 
 interface CampaignKanbanProps {
   httpError: {
@@ -19,265 +14,221 @@ interface CampaignKanbanProps {
     message: string;
   };
   data: any[];
-  campaignStage: Stages[];
+  campaignStage: any;
+  campaignData: any;
   handleOpenSidepanel: (campaign: object) => void;
+  updateCampaignData: () => void;
 }
 
 
 
-const CampaignKanban = ({ data, campaignStage, httpError, handleOpenSidepanel }: CampaignKanbanProps) => {
+const CampaignKanban = ({ campaignData, campaignStage, httpError, handleOpenSidepanel,updateCampaignData }: CampaignKanbanProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [campaignsData, setCampaignsData] = useState<any[]>([]);
   const [stagesWithColors, setStagesWithColors] = useState<any[]>([]);
+  const [draggedOverStageIndex, setDraggedOverStageIndex] = useState<string | null>(null); // Estado para almacenar el ID de la columna sobre la que se arrastra
+  const [stages, setStages] = useState<any[]>([]);
   const colors = ['pink', 'linen', 'green', 'blue', 'yellow', 'orange', 'red'];
+
+  console.log(campaignStage)
+  console.log(campaignData)
 
 /* FETCH COLUMN STAGES */
 
-  useEffect(() => {
-    const loadStagesWithColors = () => {
-      const savedStages = localStorage.getItem('stagesWithColors');
-      if (savedStages) {
-        return JSON.parse(savedStages);
-      }
-      const newStages = campaignStage.map(stage => ({
-        ...stage,
-        colorClass: `color-${colors[Math.floor(Math.random() * colors.length)]}`
-      }));
-      localStorage.setItem('stagesWithColors', JSON.stringify(newStages));
-      return newStages;
-    };
+useEffect(() => {
+  if (campaignStage.length === 0) return; // Evitar procesamiento si campaignStage está vacío
 
-    const coloredStages = loadStagesWithColors();
-    setStagesWithColors(coloredStages);
+  const stagesWithCampaigns = campaignStage.map((stage: any) => {
+    const stageCampaigns = campaignData.filter((campaign: any) => {
+      console.log("CAMPAIGN CAMPAIGN_STAGE", campaign.campaign_stage); // Agregado console.log para campaign.campaign_stage
+      return campaign.campaign_stage === stage.stageID;
+    });
+    console.log("STAGE CAMPAIGNS", stageCampaigns);
+    console.log("STAGE ID:", stage.stageID);
 
-    const stagesColumns = coloredStages.map((stage: { id: any; name: any; colorClass: any; }) => ({
-      columnId: `col-${stage.id}`,
-      columnName: stage.name,
-      color: stage.colorClass,
-      campaigns: data.filter(campaign => campaign.stageId === stage.id)
-    }));
+    return { ...stage, campaigns: stageCampaigns };
+    }, [campaignData, campaignStage]);
 
-    setCampaignsData(stagesColumns);
-  }, [campaignStage, data]);
+
+  setStages(stagesWithCampaigns);
+}, [campaignData, campaignStage]); // Ahora la lista de dependencias se pasa correctamente al useEffect
+
+console.log("Campaigns column", stages);
+
+
 
 /* DRAG & DROP */
 
-  const handleDragStart = (e: any, campaign: any, columnId: string) => {
-    e.dataTransfer.setData('campaign', JSON.stringify({ ...campaign, originColumnId: columnId }));
-  };
+  /* DRAG DROP */
 
-  // const handleDrop = (e: any, newColumnId: any) => {
+  // const handleDragStartColumn = (e: any, stage: any) => {
+  //   // e.dataTransfer.setData('text/plain', stage.stageIndex);  // Guardar el índice de la columna basado en `stageIndex`
+  //   e.dataTransfer.setData('stage', JSON.stringify({stage}));
+  //   console.log("START DATA STAGES", stage)
+  // };
+  
+
+ 
+  // const handleDropColumn = async (e, newColumn) => {
   //   e.preventDefault();
-  //   const { originColumnId, ...campaign } = JSON.parse(e.dataTransfer.getData('campaign'));
-
-  //   if (originColumnId !== newColumnId) {
-  //     setCampaignsData(prevData => prevData.map(column => {
-  //       if (column.columnId === originColumnId) {
-  //         // Remove the campaign from the origin column
-  //         return {...column, campaigns: column.campaigns.filter((c: { id: any; }) => c.id !== campaign.id)};
-  //       } else if (column.columnId === newColumnId) {
-  //         // Add the campaign to the target column
-  //         return {...column, campaigns: [...column.campaigns, campaign]};
+  //   const oldColumn = JSON.parse(e.dataTransfer.getData('stage'));
+  //   console.log('Valor de OLD COLUMN:', oldColumn);
+  //   console.log('Valor de NEW COLUMN:', newColumn);
+  
+  //   // Intercambiar los valores de stageIndex entre oldColumn y newColumn
+  //   const tempIndex = oldColumn.stageIndex;
+  //   oldColumn.stageIndex = newColumn.stageIndex;
+  //   newColumn.stageIndex = tempIndex;
+  
+  //   // Actualizar el estado de las columnas con los nuevos valores de stageIndex
+  //   setStages((currentStages) => {
+  //     const updatedStages = currentStages.map((stage) => {
+  //       if (stage.stageID === oldColumn.stageID) {
+  //         return { ...newColumn }; // Actualizar la columna original con el stageIndex de la columna de destino
   //       }
-  //       return column;
-  //     }));
-  //   }
+  //       if (stage.stageID === newColumn.stageID) {
+  //         return { ...oldColumn }; // Actualizar la columna de destino con el stageIndex de la columna original
+  //       }
+  //       // Devolver todas las demás columnas sin cambios
+  //       return stage;
+  //     });
+  //     return updatedStages;
+  //   });
   // };
 
-  const handleDrop = (e: any, newColumnId: any) => {
-    e.preventDefault();
-    const { originColumnId, ...campaign } = JSON.parse(e.dataTransfer.getData('campaign'));
+  const handleDragStart = (e: any, campaigns : any, stages: any) => {
+    e.dataTransfer.setData('campaigns', JSON.stringify({ ...campaigns, stages }));
+    console.log("CAMPAIGNS START DATA", campaigns, stages)
+  };
 
-    if (originColumnId !== newColumnId) {
-      setCampaignsData(prevData => {
-        return prevData.map(column => {
-          if (column.columnId === originColumnId) {
-            // Remove the campaign from the origin column
-            return {...column, campaigns: column.campaigns.filter((c: any) => c.id !== campaign.id)};
-          } else if (column.columnId === newColumnId) {
-            // Add the campaign to the target column
-            return {...column, campaigns: [...column.campaigns, campaign]};
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>, stageID: any) => {
+    e.preventDefault(); // Prevenir el comportamiento predeterminado del navegador
+    setDraggedOverStageIndex(stageID); // Actualizar el estado para iluminar la columna
+    setDraggedOverStageIndex(stageID);
+  };
+
+  const handleDragLeave = () => {
+    setDraggedOverStageIndex(null); // Resetea el estado cuando el drag sale de la columna
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>, stageID: any) => {
+    setDraggedOverStageIndex(null);
+    console.log('Valor de stageID:', stageID);
+    try {
+      const campaign = JSON.parse(e.dataTransfer.getData('campaigns'));
+
+      // Verificar si campaign_stage es diferente a stageID
+      if (campaign.campaign_stage !== stageID) {
+        putCampaign(campaign.id, { ...campaign, campaign_stage: stageID },
+          () => {
+            // Actualizar el estado para reflejar el cambio sin recargar
+            setStages((currentStages) => {
+              return currentStages.map((stage) => {
+                // Si la columna es la original, eliminar el proyecto
+                if (stage.stageID === campaign.campaign_stage) {
+                  return {
+                    ...stage,
+                    campaigns: stage.campaigns.filter((p: any) => p.id !== campaign.id),
+                  };
+                }
+                // Si la columna es la de destino, añadir el proyecto
+                if (stage.stageID === stageID) {
+                  // Verificar si el proyecto ya existe en la columna de destino
+                  const existingProjectIndex = stage.campaigns.findIndex((p: any) => p.id === campaign.id);
+                  if (existingProjectIndex === -1) {
+                    return {
+                      ...stage,
+                      campaigns: [...stage.campaigns, { ...campaign, campaign_stage: stageID }],
+                    };
+                  } else {
+                    // Si el proyecto ya existe, solo actualizar su posición
+                    const updatedCampaign = [...stage.campaigns];
+                    updatedCampaign.splice(existingProjectIndex, 1);
+                    updatedCampaign.push({ ...campaign, campaign_stage: stageID });
+                    return {
+                      ...stage,
+                      campaigns: updatedCampaign,
+                    };
+                  }
+                }
+                // Para las columnas que no están involucradas, se retornan sin cambios
+                return stage;
+              });
+            });
+          },
+          (error) => {
+            console.error('Error al actualizar el proyecto:', error);
           }
-          return column;
-        });
-      });
+        );
+      }
+    } catch (error) {
+      console.error('Error al procesar la solicitud PUT:', error);
     }
   };
-
-
-  // useEffect(() => {
-  //   const notStarted = data.filter((campaign: any) => campaign.stage?.toLowerCase() === "not started");
-  //   const inProgress = data.filter((campaign: any) => campaign.stage?.toLowerCase() === "in progress");
-  //   const completed = data.filter((campaign: any) => campaign.stage?.toLowerCase() === "completed");
-
-  //   console.log(notStarted, inProgress, completed)
-
-  //   setCampaignsData([
-  //     { ...campaignsData[0], campaigns: notStarted },
-  //     { ...campaignsData[1], campaigns: inProgress },
-  //     { ...campaignsData[2], campaigns: completed }
-  //   ]);
-  // }, []);
-
   
-
-  // const handleDrop = (e: any, columnId: any, ) => {
-  //   try {
-  //     const campaign = JSON.parse(e.dataTransfer.getData('campaigns'));
-  //     console.log("LEAVE",columnId)
-  
-
-  //     console.log("project stage", campaign.campaign_stage);
-  //     if (campaign.campaign_stage !== columnId) {
-  //       putCampaign(campaign.id, { ...campaign, campaign_stage: columnId }, 
-  //         (data) => {
-  //           console.log('Success', data);
-  //         }, 
-  //         (error) => {
-  //           console.error('Error', error);
-  //         }
-  //       );
-  //     }
-  //   } catch (error) {
-  //     console.error('Error PUT:', error);
-  //   }
-  // };
-
-
   return (
     <div className="kanban-container">
-      {/* {campaignsData.map((column) => (
-        <div
-          className="kanban-column"
-          onDrop={(e) => handleDrop(e, column.columnId)}
-          onDragOver={(e) => e.preventDefault()}
-          key={column.columnId}
-        >
-          <div className="kanban-header">
-            <span className={`round-tag ${column.color}`}>{column.columnName}</span>
-          </div>
-
-          {column.campaigns?.map((campaign: any) => (
+      {stages
+        .sort((a, b) => a.stageIndex - b.stageIndex)
+        .map((campaignCol) => {
+          console.log("Datos de la columna de campaña:", campaignCol); // Agregar este console.log para verificar los datos de campaignCol
+          return (
             <div
-              className="kanban-card"
-              key={campaign.id}
+              className={`kanban-column ${draggedOverStageIndex === campaignCol.stageIndex ? 'drag-over-column' : ''}`}
+              onDrop={(e) => {handleDrop(e, campaignCol.stageID); handleDropColumn(e, campaignCol);}}
+              onDragOver={(e) => handleDragOver(e, campaignCol.stageID)}
+              onDragLeave={handleDragLeave}
+              onDragStart={(e) => handleDragStartColumn(e, campaignCol)}
+              key={campaignCol.stageIndex}
               draggable
-              onDragStart={(e) => handleDragStart(e, campaign, column.columnId)}
             >
-              <div className="kanban-card-header">
-                <img src={campaign.brand_image_url} alt={campaign.brand_name} className="brandImage" />
-                <p className="brandTitle">{campaign.brand_name}</p>
+              <div className="kanban-header">
+                <span className={`round-tag stone ${campaignCol.color}`}>
+                  {campaignCol.stageName}
+                </span>
               </div>
-              <p className="campaignName">{campaign.name}</p>
-              <p className="campaignDescription">{campaign.description}</p>
+              {campaignCol.campaigns?.map((campaignCard: any) => {
+                console.log("Datos de la tarjeta de campaña:", campaignCol.campaigns); // Agregar este console.log para verificar los datos de campaignCard
+                return (
+                  <div
+                    className="kanban-card"
+                    key={campaignCard.id}
+                    draggable
+                    onDragStart={(e) => handleDragStart(e, campaignCard, campaignCol.stageID)}
+                    onClick={() => handleOpenSidepanel(campaignCard)}
+                  >
+                    <div className="kanban-card-header">
+                      <img src={campaignCard.brand_image_url} alt={campaignCard.brand_name} className="brandImage" />
+                      <p className="brandTitle">{campaignCard.brand_name}</p>
+                    </div>
+                    <p className="campaignName">{campaignCard.name}</p>
+                    <p className="campaignDescription">{campaignCard.description}</p>
+                    <div className="card-tags mt-4">
+                      <span className="square-tag green">Due: {campaignCard.deadline}</span>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
-          ))}
+          );
+        })}
+      <div className='addtags-wrap'>
+        <div className='row-wrap-2'>
+          <button onClick={() => setIsModalOpen(true)}>
+            <Image src={Plus} alt="Icon" width={15} height={15} />
+          </button>
+          <button>
+            <Image src={Edit} alt="Icon" width={15} height={15} />
+          </button>
         </div>
-      ))}
-        <div className='addtags-wrap'>
-          <div className='row-wrap-2'>
-            <button onClick={() => setIsModalOpen(true)}>
-                <Image src={Plus} alt="Icon" width={15} height={15} />
-            </button>
-            <button>
-                <Image src={Edit} alt="Icon" width={15} height={15} />
-            </button>
-          </div>
-
-          <AddFieldModal 
-            isOpen={isModalOpen} 
-            onClose={() => setIsModalOpen(false)} 
-            title="Add Field"
-            updateProjectData={() => {}}
-          >
-          </AddFieldModal>
-
-        </div> */}
+        <AddFieldModalCampaign
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          title="Add Field"
+          updateCampaignData={updateCampaignData}
+        />
+      </div>
     </div>
   );
 };
 
 export default CampaignKanban;
-
-  // const handleDragStart = (e: any, campaign: any, columnId: any) => {
-  //   e.dataTransfer.setData('campaign', JSON.stringify({ ...campaign, columnId }));
-  // };
-
-  // const handleDrop = (e: any, columnId: any) => {
-  //   const campaign = JSON.parse(e.dataTransfer.getData('campaign'));
-
-  //   setCampaignsData(prevData => {
-  //     const newData = prevData.map(column => {
-  //       if (column.columnId === campaign.columnId) { // Use campaign's columnId to find the old column
-  //         const oldColumn = [...column.campaigns];
-  //         const campaignIndex = oldColumn.findIndex(oldCampaign => oldCampaign.id === campaign.id);
-  //         if (campaignIndex !== -1) {
-  //           oldColumn.splice(campaignIndex, 1);
-  //           return { ...column, campaigns: oldColumn };
-  //         }
-  //       } else if (column.columnId === columnId) { // Use dropped columnId to add the campaign
-  //         const newColumn = [...column.campaigns, campaign];
-  //         return { ...column, campaigns: newColumn };
-  //       }
-  //       return column;
-  //     });
-
-  //     return newData;
-  //   });
-  // };
-
-
-
-
-
-
-
-
-
-// const initialData = [
-//   { columnId: "col-1-not-started", columnName: "Not started", color: "pink", campaigns: [] as any[] },
-//   { columnId: "col-2-in-progress", columnName: "In Progress", color: "ivory", campaigns: [] as any[] },
-//   { columnId: "col-3-completed", columnName: "Completed", color: "green", campaigns: [] as any[] }
-// ];
-
-  // useEffect(() => {
-  //   const notStarted = data.filter((campaign: any) => campaign.stage?.toLowerCase() === "not started");
-  //   const inProgress = data.filter((campaign: any) => campaign.stage?.toLowerCase() === "in progress");
-  //   const completed = data.filter((campaign: any) => campaign.stage?.toLowerCase() === "completed");
-
-  //   console.log(notStarted, inProgress, completed)
-
-  //   setCampaignsData([
-  //     { ...campaignsData[0], campaigns: notStarted },
-  //     { ...campaignsData[1], campaigns: inProgress },
-  //     { ...campaignsData[2], campaigns: completed }
-  //   ]);
-  // }, []);
-
-
-
-  // useEffect(() => {
-  //   let savedStages = localStorage.getItem('stagesWithColors');
-  //   if (savedStages) {
-  //     setStagesWithColors(JSON.parse(savedStages));
-  //   } else {
-  //     const coloredStages = campaignStage.map(stage => {
-  //       const colorClass = `color-${colors[Math.floor(Math.random() * colors.length)]}`;
-  //       return { ...stage, colorClass };
-  //     });
-  //     localStorage.setItem('stagesWithColors', JSON.stringify(coloredStages));
-  //     setStagesWithColors(coloredStages);
-  //   }
-  // }, [campaignStage]);
-
-  // useEffect(() => {
-  //   // Transform campaignStage into usable column data
-  //   const stagesColumns = campaignStage.map(stage => ({
-  //     columnId: `col-${stage.id}`, 
-  //     columnName: stage.name,
-  //     color: getRandomColor(),
-  //     campaigns: data.filter(campaign => campaign.stageId === stage.id) // Match stages with campaigns
-  //   }));
-    
-  //   setCampaignsData(stagesColumns);
-  // }, [campaignStage, data]);

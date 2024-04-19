@@ -55,40 +55,40 @@ const ProjectsKanban = ({ projectsData, data, httpError, handleOpenSidepanel, pr
 
   /* DRAG DROP */
 
-  const handleDragStartColumn = (e: any, stage: any) => {
-    // e.dataTransfer.setData('text/plain', stage.stageIndex);  // Guardar el índice de la columna basado en `stageIndex`
-    e.dataTransfer.setData('stage', JSON.stringify({stage}));
-    console.log("START DATA STAGES", stage)
-  };
+  // const handleDragStartColumn = (e: any, stage: any) => {
+  //   // e.dataTransfer.setData('text/plain', stage.stageIndex);  // Guardar el índice de la columna basado en `stageIndex`
+  //   e.dataTransfer.setData('stage', JSON.stringify({stage}));
+  //   console.log("START DATA STAGES", stage)
+  // };
   
 
  
-  const handleDropColumn = async (e, newColumn) => {
-    e.preventDefault();
-    const oldColumn = JSON.parse(e.dataTransfer.getData('stage'));
-    console.log('Valor de OLD COLUMN:', oldColumn);
-    console.log('Valor de NEW COLUMN:', newColumn);
+  // const handleDropColumn = async (e, newColumn) => {
+  //   e.preventDefault();
+  //   const oldColumn = JSON.parse(e.dataTransfer.getData('stage'));
+  //   console.log('Valor de OLD COLUMN:', oldColumn);
+  //   console.log('Valor de NEW COLUMN:', newColumn);
   
-    // Intercambiar los valores de stageIndex entre oldColumn y newColumn
-    const tempIndex = oldColumn.stageIndex;
-    oldColumn.stageIndex = newColumn.stageIndex;
-    newColumn.stageIndex = tempIndex;
+  //   // Intercambiar los valores de stageIndex entre oldColumn y newColumn
+  //   const tempIndex = oldColumn.stageIndex;
+  //   oldColumn.stageIndex = newColumn.stageIndex;
+  //   newColumn.stageIndex = tempIndex;
   
-    // Actualizar el estado de las columnas con los nuevos valores de stageIndex
-    setStages((currentStages) => {
-      const updatedStages = currentStages.map((stage) => {
-        if (stage.stageID === oldColumn.stageID) {
-          return { ...newColumn }; // Actualizar la columna original con el stageIndex de la columna de destino
-        }
-        if (stage.stageID === newColumn.stageID) {
-          return { ...oldColumn }; // Actualizar la columna de destino con el stageIndex de la columna original
-        }
-        // Devolver todas las demás columnas sin cambios
-        return stage;
-      });
-      return updatedStages;
-    });
-  };
+  //   // Actualizar el estado de las columnas con los nuevos valores de stageIndex
+  //   setStages((currentStages) => {
+  //     const updatedStages = currentStages.map((stage) => {
+  //       if (stage.stageID === oldColumn.stageID) {
+  //         return { ...newColumn }; // Actualizar la columna original con el stageIndex de la columna de destino
+  //       }
+  //       if (stage.stageID === newColumn.stageID) {
+  //         return { ...oldColumn }; // Actualizar la columna de destino con el stageIndex de la columna original
+  //       }
+  //       // Devolver todas las demás columnas sin cambios
+  //       return stage;
+  //     });
+  //     return updatedStages;
+  //   });
+  // };
 
 
   const handleDragStart = (e: any, projects: any, stages: any) => {

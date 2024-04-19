@@ -340,8 +340,10 @@ const CampaignsPage = () => {
               <CampaignKanban
                 httpError={httpError}
                 data={data}
+                campaignData={campaignsData}
                 handleOpenSidepanel={handleOpenSidepanel}
                 campaignStage={campaignStage}
+                updateCampaignData={updateCampaignData}
               />
             )}
 
