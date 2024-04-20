@@ -1,33 +1,34 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/router";
 import withAuth from "@/components/common/WithAuth";
 import Sidebar from "@/components/navigation/Sidebar";
-import { DealDetails, DealInvoice } from "@/components/dashboard/profile/DealProfile";
 import { Arrow } from "@/components/assets/svg/Arrow";
-import { getDealsDetail } from "@/utils/httpCalls";
+import { getBrandsDetail } from "@/utils/httpCalls";
+import Folder from "@/components/assets/icons/folder.svg";
+import { BrandDetails } from "@/components/dashboard/profile/BrandProfile";
 import MainLoader from "@/components/common/Loader";
 
-const DealProfilePage = () => {
+const BrandProfilePage = () => {
   const router = useRouter()
-  const { dealId } = router.query;
+  const { brandId } = router.query;
 
   const [loader, setLoader] = useState<boolean>(false);
-  // const [invoiceData, setInvoiceData] = useState(null);
-  const [dealsData, setDealsData] = useState({});
+  const [brandsData, setBrandsData] = useState({});
 
-  useEffect(() => { fetchDealsData() }, [router]);
+  useEffect(() => { fetchData() }, [router]);
 
-  const fetchDealsData = () => {
+  const fetchData = () => {
     setLoader(true);
     Promise.all([
-      getDealsDetail(
+      getBrandsDetail(
         (response: any) => {
-          const deal = response.find((deal: any) => deal.id === parseInt(dealId as string))
-          setDealsData(deal);
+          const brand = response.find((brand: any) => brand.id === parseInt(brandId as string))
+          setBrandsData(brand);
         },
         (error: any) => {
-          console.error('Error fetching invoice data:', error);
+          console.error('Error fetching data:', error);
         }
       )]).finally(() => {
         setLoader(false)
@@ -37,9 +38,9 @@ const DealProfilePage = () => {
   return (
     <div className="main-container">
       <div className="breadcrumb-nav profile">
-        <Link className="row-wrap-2 text-brown" href={{ pathname: '/dashboard/partnerships/deals/' }}>
+        <Link className="row-wrap-2 text-brown" href={{ pathname: '/dashboard/clients/brands/' }}>
           <Arrow className="arrow-left orange-fill" />
-          {`Deals`}
+          {`View Brands`}
         </Link>
       </div>
       {loader ? (
@@ -49,12 +50,10 @@ const DealProfilePage = () => {
           <div className="page-container" id="">
             <div className="profile-container">
               <div>
-                <DealDetails dealsData={dealsData} />
-              </div>
-              <div>
-                <DealInvoice dealsData={dealsData} />
-              </div>
+               <BrandDetails brandsData={brandsData} />
+
             </div>
+           </div>
           </div>
         </>
       )}
@@ -62,8 +61,8 @@ const DealProfilePage = () => {
   );
 };
 
-const DealProfile = () => {
-  return <Sidebar layout={<DealProfilePage />} />;
+const BrandProfile = () => {
+  return <Sidebar layout={<BrandProfilePage />} />;
 };
 
-export default withAuth(DealProfile);
+export default withAuth(BrandProfile);

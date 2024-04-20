@@ -1,30 +1,31 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/router";
 import withAuth from "@/components/common/WithAuth";
 import Sidebar from "@/components/navigation/Sidebar";
-import { DealDetails, DealInvoice } from "@/components/dashboard/profile/DealProfile";
 import { Arrow } from "@/components/assets/svg/Arrow";
-import { getDealsDetail } from "@/utils/httpCalls";
+import { getCreatorsDetail } from "@/utils/httpCalls";
+import Folder from "@/components/assets/icons/folder.svg";
+import { CreatorDetails } from "@/components/dashboard/profile/CreatorProfile";
 import MainLoader from "@/components/common/Loader";
 
-const DealProfilePage = () => {
+const CreatorProfilePage = () => {
   const router = useRouter()
-  const { dealId } = router.query;
+  const { creatorId } = router.query;
 
   const [loader, setLoader] = useState<boolean>(false);
-  // const [invoiceData, setInvoiceData] = useState(null);
-  const [dealsData, setDealsData] = useState({});
+  const [creatorsData, setCreatorsData] = useState({});
 
-  useEffect(() => { fetchDealsData() }, [router]);
+  useEffect(() => { fetchData() }, [router]);
 
-  const fetchDealsData = () => {
+  const fetchData = () => {
     setLoader(true);
     Promise.all([
-      getDealsDetail(
+      getCreatorsDetail(
         (response: any) => {
-          const deal = response.find((deal: any) => deal.id === parseInt(dealId as string))
-          setDealsData(deal);
+          const creator = response.find((creator: any) => creator.id === parseInt(creatorId as string))
+          setCreatorsData(creator);
         },
         (error: any) => {
           console.error('Error fetching invoice data:', error);
@@ -37,9 +38,9 @@ const DealProfilePage = () => {
   return (
     <div className="main-container">
       <div className="breadcrumb-nav profile">
-        <Link className="row-wrap-2 text-brown" href={{ pathname: '/dashboard/partnerships/deals/' }}>
+        <Link className="row-wrap-2 text-brown" href={{ pathname: '/dashboard/clients/creators/' }}>
           <Arrow className="arrow-left orange-fill" />
-          {`Deals`}
+          {`View Creators`}
         </Link>
       </div>
       {loader ? (
@@ -49,12 +50,10 @@ const DealProfilePage = () => {
           <div className="page-container" id="">
             <div className="profile-container">
               <div>
-                <DealDetails dealsData={dealsData} />
-              </div>
-              <div>
-                <DealInvoice dealsData={dealsData} />
-              </div>
+               <CreatorDetails creatorsData={creatorsData} />
+
             </div>
+           </div>
           </div>
         </>
       )}
@@ -62,8 +61,8 @@ const DealProfilePage = () => {
   );
 };
 
-const DealProfile = () => {
-  return <Sidebar layout={<DealProfilePage />} />;
+const CreatorProfile = () => {
+  return <Sidebar layout={<CreatorProfilePage />} />;
 };
 
-export default withAuth(DealProfile);
+export default withAuth(CreatorProfile);

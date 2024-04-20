@@ -25,8 +25,8 @@
 .card-container {
   padding: var(--m3);
   width: 100%;
-  min-width: 430px;
-  max-width: 430px;
+  min-width: 450px;
+  max-width: 450px;
   border-radius: 10px;
 }
 
@@ -46,6 +46,7 @@
   height: 160px;
   flex-direction: row;
 }
+
 
 .profile-info-image {
   width: 160px;
@@ -82,15 +83,13 @@
   justify-content: space-between;
 }
 
-/* 
-Changed to .smallcaps at core.css
-
-.profile-subtitle {
-  font-family: "InterRegular";
-  color: var(--gray5);
-  font-size: 11px;
-  text-transform: uppercase;
-} */
+.viewprofile-wrap {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--m2);
+}
 
 .profile-text {
   font-family: "DMSansMedium";
@@ -99,18 +98,8 @@ Changed to .smallcaps at core.css
 .card-text {
   display: flex;
   flex-direction: column;
-  gap: var(--m5);
+  gap: var(--m4);
   height: auto;
-}
-
-.card-container-invoice {
-  /* min-height: 612.833px; */
-  padding: var(--m3);
-  width: 100%;
-  min-width: 400px;
-  max-width: 400px;
-  justify-content: center;
-  border-radius: 10px;
 }
 
 .history-invoice {
@@ -133,6 +122,35 @@ Changed to .smallcaps at core.css
   flex: 1;
 }
 
+.agency-contract {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.contract-parties {
+  display: flex;
+}
+
+.invoice-data.contract {
+  padding: 27px;
+  height: auto;
+  background-color: var(--gray1);
+  border-radius: 10px;
+  display: flex;
+  gap: var(--m3);
+  flex-direction: column;
+}
+
+.card-container-contract {
+  padding: var(--m3);
+  width: 100%;
+  min-width: 650px;
+  max-width: 650px;
+  justify-content: center;
+  border-radius: 10px;
+}
+
 .invoice-data {
   padding: 27px;
   height: auto;
@@ -147,6 +165,7 @@ Changed to .smallcaps at core.css
   border-radius: var(--r3);
   background-color: white;
   overflow-y: auto;
+  width: 100%;
 }
 
 .invoice-data li {
@@ -177,6 +196,19 @@ Changed to .smallcaps at core.css
   background-color: #F6F6F6;
 }
 
+.invoice-textarea {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  width: fit-content;
+  font-size: 12px;
+  border-radius: var(--r5);
+  padding: 0 var(--m4);
+  height: 32px;
+  background-color: #F6F6F6;
+
+}
+
 .invoice-tag-small {
   display: flex;
   align-items: center;
@@ -200,6 +232,25 @@ Changed to .smallcaps at core.css
   max-height: 200px;
   overflow-x: auto;
 }
+
+.deliverable-wrap {
+  display: flex;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+}
+
+.deliverables {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.deliverables span{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
 
 /* .card-container-invoice-campaigns {
   flex: 1;

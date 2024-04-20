@@ -228,47 +228,117 @@ export const deleteProject = async (
   }
 };
 
+/* DELETE CAMPAGIN */
 
-// export const deleteProject = async (
-//   projectId: number,
-//   callback: (data?: any) => void,
-//   errorCallback: (error: any) => void
-// ) => {
-//   const url = `${DEPLOYED_API_BASE_URL}projects/${projectId}/`;
+export const deleteCampaign = async (
+  campaignId: number,
+  callback: () => void, 
+  errorCallback: (error: any) => void
+) => {
+  const url = `${DEPLOYED_API_BASE_URL}campaigns/${campaignId}/`;
 
-//   try {
-//     const response = await fetch(url, {
-//       method: 'DELETE',
-//       headers: {
-//         'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
-//         'Content-Type': 'application/json',
-//       },
-//     });
+  try {
+    const response = await fetch(url, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+        'Content-Type': 'application/json',
+      },
+    });
 
-//     if (!response.ok) {
-//       throw new Error(`HTTP error! status: ${response.status}`);
-//     }
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
 
-//     if (response.status === 204) {
-//       callback();
-//       return;
-//     }
+    callback(); 
+  } catch (error) {
+    errorCallback(error);
+  }
+};
 
-//     // Assuming some data might still be returned
-//     const data = await response.text(); // Use .text() in case it's not JSON
-//     if (data) {
-//       callback(data);
-//     } else {
-//       callback();
-//     }
-//   } catch (error) {
-//     errorCallback(error);
-//   }
-// };
+/* DELETE DEAL */
 
+export const deleteDeal = async (
+  dealId: number,
+  callback: () => void, 
+  errorCallback: (error: any) => void
+) => {
+  const url = `${DEPLOYED_API_BASE_URL}deals/${dealId}/`;
 
+  try {
+    const response = await fetch(url, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+        'Content-Type': 'application/json',
+      },
+    });
 
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
 
+    callback(); 
+  } catch (error) {
+    errorCallback(error);
+  }
+};
+
+/* DELETE CREATOR */
+
+export const deleteCreator = async (
+  creatorId: number,
+  callback: () => void, // No data parameter
+  errorCallback: (error: any) => void
+) => {
+  const url = `${DEPLOYED_API_BASE_URL}creators/${creatorId}/`;
+
+  try {
+    const response = await fetch(url, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    callback(); // Call callback directly without data
+  } catch (error) {
+    errorCallback(error);
+  }
+};
+
+/* DELETE BRAND */
+
+export const deleteBrand = async (
+  brandId: number,
+  callback: () => void, // No data parameter
+  errorCallback: (error: any) => void
+) => {
+  const url = `${DEPLOYED_API_BASE_URL}brands/${brandId}/`;
+
+  try {
+    const response = await fetch(url, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    callback(); // Call callback directly without data
+  } catch (error) {
+    errorCallback(error);
+  }
+};
 
 ////////////////////////////////////////////////////////////////////////
 /******************************  POST CALLS  ***************************/

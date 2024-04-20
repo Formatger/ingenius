@@ -1,19 +1,22 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/router";
 import withAuth from "@/components/common/WithAuth";
 import Sidebar from "@/components/navigation/Sidebar";
 import { ProjectDetails, ProjectInvoice, ProjectContract } from "@/components/dashboard/profile/ProjectProfile";
 import { Arrow } from "@/components/assets/svg/Arrow";
-import { getProjects, getProjectsDetail } from "@/utils/httpCalls";
+import { getProjectsDetail } from "@/utils/httpCalls";
+import Folder from "@/components/assets/icons/folder.svg";
+import MainLoader from "@/components/common/Loader";
 
 const ProjectProfilePage = () => {
   const router = useRouter()
   const { projectId } = router.query;
 
   const [loader, setLoader] = useState<boolean>(false);
-  // const [invoiceData, setInvoiceData] = useState(null);
   const [projectsData, setProjectsData] = useState({});
+  const [activeTab, setActiveTab] = useState('invoice');
 
   useEffect(() => { fetchData() }, [router]);
 
@@ -38,27 +41,43 @@ const ProjectProfilePage = () => {
       <div className="breadcrumb-nav profile">
         <Link className="row-wrap-2 text-brown" href={{ pathname: '/dashboard/partnerships/projects/' }}>
           <Arrow className="arrow-left orange-fill" />
-          {`Projects`}
+          {`View Projects`}
         </Link>
       </div>
       {loader ? (
-        <div className="spinner-container">
-          <div className="spinner" />
-        </div>
+        <MainLoader />
       ) : (
         <>
           <div className="page-container" id="">
             <div className="profile-container">
               <div>
-              <ProjectDetails projectsData={projectsData} /> 
-              </div>
-              <div>
-                <ProjectInvoice projectsData={projectsData} />
-              </div>
-              <div>
-                <ProjectContract projectsData={projectsData} />
-              </div>
+                <ProjectDetails projectsData={projectsData} />
+              {/* <div className="card-container tab-buttons">
+                <p className="smallcaps">VIEW DOCUMENTS</p>
+                <div className="button-group">
+                <button className={`sec-button ${activeTab === 'contract' ? 'active-button' : 'linen'}`}
+                    onClick={() => setActiveTab('contract')}>
+                    <Image src={Folder} alt="Icon" width={15} height={15} />
+                    <p>View Contract</p>
+                  </button>
+                  <button className={`sec-button ${activeTab === 'invoice' ? 'active-button' : 'linen'}`}
+                    onClick={() => setActiveTab('invoice')}>
+                    <Image className="" src={Folder} alt="Icon" width={15} height={15} />
+                    <p>View Invoice</p>
+                  </button>
+                </div>
+              </div> */}
             </div>
+        
+            <div>
+              {activeTab === 'invoice' ? (
+                <ProjectInvoice projectsData={projectsData} />
+              ) : (
+                <ProjectContract projectsData={projectsData} />
+              )}
+            </div>
+           </div>
+          
           </div>
         </>
       )}

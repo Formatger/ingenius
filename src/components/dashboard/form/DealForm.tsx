@@ -248,11 +248,12 @@ const  DealForm: React.FC< DealFormProps> = ({
               </div>
               <div className='form-box'>
                   <span className='smallcaps'>SELECT STAGE*</span>
+                  <div className="select-wrap">
                   <select
                       {...register("deal_stage")}
                       onChange={handleSelectStage}
                       value={selectedStage}
-                      className="form-input"
+                      className="select-input"
                     >
                       <option value="">Select Stage</option>
                       {Array.isArray(dealStage) && dealStage.map((stage) => (                        
@@ -261,6 +262,7 @@ const  DealForm: React.FC< DealFormProps> = ({
                         </option>
                       ))}
                     </select>
+                    </div>
               </div>
 
               {/* SELECT CREATOR DROPDOWN */}

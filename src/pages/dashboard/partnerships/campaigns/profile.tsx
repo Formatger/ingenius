@@ -6,6 +6,7 @@ import Sidebar from "@/components/navigation/Sidebar";
 import { CampaignDetails, CampaignInvoice } from "@/components/dashboard/profile/CampaignProfile";
 import { Arrow } from "@/components/assets/svg/Arrow";
 import { getCampaignsDetail } from "@/utils/httpCalls";
+import MainLoader from "@/components/common/Loader";
 
 const CampaignProfilePage = () => {
   const router = useRouter()
@@ -42,9 +43,7 @@ const CampaignProfilePage = () => {
         </Link>
       </div>
       {loader ? (
-        <div className="spinner-container">
-          <div className="spinner" />
-        </div>
+        <MainLoader />
       ) : (
         <>
           <div className="page-container" id="">
