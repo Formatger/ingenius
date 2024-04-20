@@ -32,7 +32,7 @@ interface FormData {
   campaign: string;
   creator?: string;
   project_stage?: number;
-  invoice_paid?: boolean;
+  // invoice_paid?: boolean;
 }
 
 interface ProjectFormProps {
@@ -201,7 +201,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
         <div className="sidepanel-wrap">
           <form className="sidepanel-form" onSubmit={handleSubmit(onSubmit)}>
             <div className="form-box">
-              <span className="smallcaps">PROJECT NAME*</span>
+              <span className="smallcaps">ESTOY EDITANDO*</span>
               <input
                 {...register("name", { required: true })}
                 className="form-input"
@@ -244,7 +244,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
               />
             </div>
             <div className="form-box">
-              <span className="smallcaps">CONTRACT VALUE*</span>
+              <span className="smallcaps">CONTRACT VALUE</span>
               <input
                 {...register("contract_value", { required: false })}
                 className="form-input"
@@ -253,20 +253,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
               />
             </div>
             <div className="form-box">
-              <span className="smallcaps">INVOICE STATUS*</span>
-              <div className="select-wrap">
-              <select
-                {...register("invoice_paid", { required: true })}
-                className="select-input"
-                defaultValue={projectsData.invoice_paid}
-              >
-              <option value="false">Unpaid</option> 
-              <option value="true">Paid</option>
-              </select>
-              </div>
-            </div>
-            <div className="form-box">
-              <span className="smallcaps">START DATE*</span>
+              <span className="smallcaps">START DATE</span>
               <input
                 {...register("start_date", { required: true })}
                 className="form-input"
@@ -275,7 +262,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
               />
             </div>
             <div className="form-box">
-              <span className="smallcaps">END DATE*</span>
+              <span className="smallcaps">END DATE</span>
               <input
                 {...register("deadline", { required: true })}
                 className="form-input"
@@ -340,7 +327,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
               />
             </div>
             <div className="form-box">
-              <span className="smallcaps">CONTRACT VALUE*</span>
+              <span className="smallcaps">CONTRACT VALUE</span>
               <input
                 {...register("contract_value", { required: false })}
                 className="form-input"
@@ -348,20 +335,19 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
                 placeholder="Add contract Value"
               />
             </div>
+            {/* <div className="form-box">
+              <span className="smallcaps">INVOICE STATUS</span>
+              <select
+                {...register("invoice_paid")}
+                className="form-input"
+              >
+              <option value="false">Unpaid</option> 
+              <option value="true">Paid</option>
+
+              </select>
+            </div> */}
             <div className="form-box">
-              <span className="smallcaps">INVOICE STATUS*</span>
-              <div className="select-wrap">
-                <select
-                  {...register("invoice_paid")}
-                  className="select-input"
-                >
-                <option value="false">Unpaid</option> 
-                <option value="true">Paid</option>
-                </select>
-              </div>
-            </div>
-            <div className="form-box">
-              <span className="smallcaps">START DATE*</span>
+              <span className="smallcaps">START DATE</span>
               <input
                 {...register("start_date", { required: true })}
                 className="form-input"
@@ -370,7 +356,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
               />
             </div>
             <div className="form-box">
-              <span className="smallcaps">END DATE*</span>
+              <span className="smallcaps">END DATE</span>
               <input
                 {...register("deadline", { required: true })}
                 className="form-input"
@@ -380,24 +366,22 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
             </div>
             <div className='form-box'>
               <span className='smallcaps'>SELECT STAGE*</span>
-              <div className="select-wrap">
-                <select
-                  {...register("project_stage", { required: true })}
-                  onChange={handleSelectStage}
-                  value={selectedStage}
-                  className="select-input"
-                >
-                  <option value="">Select Stage</option> {/* Default option */}
-                  {Array.isArray(projectStage) && projectStage.map((stage) => {
-                    console.log("Stage Name:", stage.name);
-                    return (
-                      <option key={stage.stageID} value={stage.stageID}>
-                        {stage.stageName}
-                      </option>
-                    );
-                  })}
-                </select>
-              </div>
+              <select
+                {...register("project_stage")}
+                onChange={handleSelectStage}
+                value={selectedStage}
+                className="form-input"
+              >
+                <option value="">Select Stage</option> {/* Default option */}
+                {Array.isArray(projectStage) && projectStage.map((stage) => {
+                  console.log("Stage Name:", stage.name); // Agregar console.log() aquí
+                  return (
+                    <option key={stage.stageID} value={stage.stageID}>
+                      {stage.stageName}
+                    </option>
+                  );
+                })}
+              </select>
             </div>
 
             <button className="sec-button linen" type="submit">

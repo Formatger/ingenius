@@ -6,9 +6,10 @@ interface ConfirmModalProps {
   onConfirm: () => void;
   title: string;
   message: string;
+  button: string;
 }
 
-const ConfirmModal: React.FC<ConfirmModalProps> = ({ isOpen, onClose, onConfirm, title, message }) => {
+const ConfirmModal: React.FC<ConfirmModalProps> = ({ isOpen, onClose, onConfirm, title, message, button }) => {
   if (!isOpen) return null;
 
   return (
@@ -25,7 +26,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({ isOpen, onClose, onConfirm,
               Cancel
             </button>
             <button className="app-button mt-4" type="button" onClick={onConfirm}>
-              Yes, delete my project
+              {button}
             </button>
           </div>
         </div>

@@ -67,7 +67,7 @@ const ProjectSidepanel: React.FC<SidepanelProps> = ({
           }}
         >
           <Arrow className="arrow-left orange-fill" />
-          {`Project Profile`}
+          {`View Profile`}
         </Link>
         <div className='button-group'>
            <Link href="/dashboard/support" passHref>
@@ -76,10 +76,6 @@ const ProjectSidepanel: React.FC<SidepanelProps> = ({
                 Get help
               </button>
             </Link>
-          {/* <button className='sidepanel-button' onClick={() => setEditData(true)}>
-            <Image src={Edit} alt='' width={16} height={16} />
-            Edit
-          </button> */}
         </div>
       </div>
       {editData ? (
@@ -102,7 +98,7 @@ const ProjectSidepanel: React.FC<SidepanelProps> = ({
             <p className="smallcaps">MANAGE PROJECT</p>
             <div className="button-group">
               <button className="sec-button linen" onClick={() => setEditData(true)}>
-                {/* <Image src={Message} alt="Icon" width={15} height={15} /> */}
+                {/* <Image src={Edit} alt="Icon" width={15} height={15} /> */}
                 <p>Edit</p>
               </button>
               <button className="sec-button stone" onClick={() => setModalOpen(true)}>
@@ -116,6 +112,7 @@ const ProjectSidepanel: React.FC<SidepanelProps> = ({
               title="Delete Project"
               onConfirm={handleDelete}
               message="Are you sure you want to delete this project?"
+              button="Yes, delete this project"
             />
           </div>
         </div> 

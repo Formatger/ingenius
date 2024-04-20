@@ -48,7 +48,7 @@ const ProjectsKanban = ({ projectsData, data, httpError, handleOpenSidepanel, pr
     }, [projectsData, projectStage]);
 
     setStages(stagesWithProjects);
-  }, [projectsData, projectStage,]);
+  }, [projectsData, projectStage]);
 
   console.log("Projects column", stages);
 

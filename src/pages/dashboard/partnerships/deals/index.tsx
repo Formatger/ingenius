@@ -234,14 +234,14 @@ const DealsPage = () => {
                 setSelectedDeal={setSelectedDeal}
               />
             )}
-            {/* {openFormSidepanel && (
+            {openFormSidepanel && (
               <DealForm
                 // creatorsData={creatorsData}
                 // campaignsData={campaignsData}
                 dealStage={dealStage}
                 handleCloseFormSidepanel={handleCloseFormSidepanel}
               />
-            )} */}
+            )}
             <div className="filtersContainer">
               <Dropdown data={data} setData={setData} origin="deals" noSlicedData={noSlicedData} />
               <div className="button-group">

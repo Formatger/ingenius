@@ -52,19 +52,19 @@ const CampaignDetails = ({ campaignsData }: CampaignDetailsProps) => {
         <div>
           <p className="smallcaps mb-2">CAMPAIGN</p>
           <span className="sec-button gray1" onClick={undefined}>
-            <p className="text-20 bold">{campaignsData.campaign_name || campaignsData.name}</p>
+            <p className="sec-tag">{campaignsData.campaign_name || campaignsData.name}</p>
           </span>
         </div>
         <div>
           <p className="smallcaps mb-2">CONTRACT VALUE</p>
           <span className="sec-button gray1" onClick={undefined}>
-            <p className="text-20 bold">${campaignsData.contract_value}</p>
+            <p className="sec-tag">${campaignsData.contract_value}</p>
           </span>
         </div>
         {/* <div>
           <p className="smallcaps">CAMPAIGN STAGE</p>
           <span className="sec-button gray1" onClick={undefined}>
-            <p className="text-20 bold">{campaignsData?.campaign_stage}</p>
+            <p className="sec-tag">{campaignsData?.campaign_stage}</p>
           </span>
         </div> */}
 

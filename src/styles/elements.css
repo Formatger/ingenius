@@ -77,8 +77,7 @@ button[disabled] {
 
 /* Secondary Button */
 
-.sec-button,
-.sec-tag {
+.sec-button {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -87,11 +86,25 @@ button[disabled] {
   color: black;
   min-height: var(--btn-h);
   font-family: "DMSansMedium";
-  font-size: 16px;
+  font-size: 15px;
   gap: var(--m2);
 }
 
-.sec-button:active img {
+.sec-tag {
+  font-family: "DMSansSemiBold";
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  border-radius: var(--r4);
+  color: black;
+  min-height: var(--btn-h);
+  gap: var(--m2);
+  font-size: 16px;
+}
+
+.sec-button:active img,
+.active-button img {
   filter: invert();
 }
 
@@ -99,9 +112,22 @@ button[disabled] {
   background-color: var(--light-orange);
 }
 
-.sec-button.linen:active {
+.sec-button.linen:active,
+.active-button {
   background-color: var(--pink);
   color: white;
+}
+
+.sec-button.stone:hover {
+  background-color: var(--salmon);
+}
+
+.sec-button.small {
+  min-height: 20px;
+  font-size: 12px;
+  font-family: "InterRegular";
+  width: fit-content;
+  padding: 0 10px ;
 }
 
 /* Submit Button */
