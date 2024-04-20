@@ -5,8 +5,6 @@ import Edit from "@/components/assets/icons/edit.svg";
 import AddFieldModal from "@/components/dashboard/kanban/AddFieldModal";
 import { putProject, putNewOrder } from "@/utils/httpCalls";
 
-
-
 interface ProjectsKanbanProps {
   httpError: {
     hasError: boolean;
@@ -60,103 +58,33 @@ const ProjectsKanban = ({ projectsData, data, httpError, handleOpenSidepanel, pr
     e.dataTransfer.setData('stage', JSON.stringify({stage}));
     console.log("START DATA STAGES", stage)
   };
-  
-  // const handleDropColumn = async (e: any, newColumn: any) => {
-  //   e.preventDefault();
-  //   const oldIndex = parseInt(e.dataTransfer.getData('text/plain'));
-  
-  //   if (oldIndex !== newColumn.stageIndex) {
-  //     const newStages = [...stages];  // Clonamos el array para evitar mutaciones directas
-  //     const sourceStage = newStages.find(stage => stage.stageIndex === oldIndex);
-  //     const targetIndex = newStages.findIndex(stage => stage.stageIndex === newColumn.stageIndex);
-  
-  //     if (!sourceStage) return;
-  
-  //     // Remover el elemento arrastrado y insertarlo en la nueva posición
-  //     newStages.splice(newStages.indexOf(sourceStage), 1);
-  //     newStages.splice(targetIndex, 0, sourceStage);
-  
-  //     // Reasignar stageIndex para reflejar el nuevo orden
-  //     newStages.forEach((stage, index) => {
-  //       stage.stageIndex = index + 1;
-  //     });
-  
-  //     setStages(newStages);  // Actualizar el estado de forma local
-  
-  //     // Llamada al API para actualizar el servidor
-  //     try {
-  //       await updateStagesOrder(newStages);
-  //       console.log('Orden actualizado con éxito en el servidor');
-  //     } catch (error) {
-  //       console.error('Error al actualizar el orden:', error);
-  //       // Opcional: Revertir al orden anterior si la actualización falla
-  //       setStages(stages);
-  //     }
-  //   }
-  // };
-  
-  // const updateStagesOrder = async (stages) => {
-  //   const updates = stages.map(stage => ({
-  //     stageID: stage.stageID,
-  //     newOrder: stage.stageIndex
-  //   }));
-  //   // Realiza la llamada PUT aquí, usando fetch o Axios, según lo que estés usando
-  //   // Ejemplo usando fetch:
-  //   const response = await fetch('/api/stages/updateOrder', {
-  //     method: 'PUT',
-  //     headers: {
-  //       'Content-Type': 'application/json'
-  //     },
-  //     body: JSON.stringify(updates)
-  //   });
-  //   if (!response.ok) throw new Error('Failed to update stage order');
-  //   return response.json();
-  // };
-
  
-  const handleDropColumn = async (e, newColumn) => {
+  const handleDropColumn = async (e: any, newColumn: any) => {
     e.preventDefault();
     const oldColumn = JSON.parse(e.dataTransfer.getData('stage'));
     console.log('Valor de OLD COLUMN:', oldColumn);
     console.log('Valor de NEW COLUMN:', newColumn);
-
-    if (oldColumn.stageIndex !== newColumn.stageIndex) {
-        setStages((currentStages) => {
-            return currentStages.map((stage) => {
-                // Si la columna es la original, actualizar el índice de la etapa
-                if (stage.stageID === oldColumn.stageID) {
-                    return {
-                        ...stage,
-                        stageIndex: newColumn.stageIndex // Actualiza el índice de la etapa
-                    };
-                }
-                // Si la columna es la de destino, insertarla en la nueva posición
-                if (stage.stageID === newColumn.stageID) {
-                    return {
-                        ...stage,
-                        stageIndex: oldColumn.stageIndex // Actualiza el índice de la etapa antigua
-                    };
-                }
-                // Devolver todas las demás columnas sin cambios
-                return stage;
-            });
-        })
-    }
-
-    // Aquí puedes realizar la llamada a la API para actualizar el orden de las columnas en el servidor
-    // Asegúrate de enviar los datos actualizados al servidor según sea necesario
-    // putNewOrder(newColumn.stageID, { stages: updatedData }, 
-    //   (data) => {
-    //     console.log('Orden de columnas actualizada con éxito:', data);
-    //   },
-    //   (error) => {
-    //     console.error('Error al actualizar el orden de columnas:', error);
-    //     // Opcional: Revertir al orden anterior si la actualización falla
-    //     setStages(stages);
-    //   }
-    // );
-};
-
+  
+    // Intercambiar los valores de stageIndex entre oldColumn y newColumn
+    const tempIndex = oldColumn.stageIndex;
+    oldColumn.stageIndex = newColumn.stageIndex;
+    newColumn.stageIndex = tempIndex;
+  
+    // Actualizar el estado de las columnas con los nuevos valores de stageIndex
+    setStages((currentStages) => {
+      const updatedStages = currentStages.map((stage) => {
+        if (stage.stageID === oldColumn.stageID) {
+          return { ...newColumn }; // Actualizar la columna original con el stageIndex de la columna de destino
+        }
+        if (stage.stageID === newColumn.stageID) {
+          return { ...oldColumn }; // Actualizar la columna de destino con el stageIndex de la columna original
+        }
+        // Devolver todas las demás columnas sin cambios
+        return stage;
+      });
+      return updatedStages;
+    });
+  };
 
 
   const handleDragStart = (e: any, projects: any, stages: any) => {
