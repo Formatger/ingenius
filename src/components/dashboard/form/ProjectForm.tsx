@@ -58,12 +58,21 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
   const [selectedStage, setSelectedStage] = useState<any>([]);
   const [creatorsData, setCreatorsData] = useState<Creators[]>([]);
   const [campaignsData, setCampaignsData] = useState<any>([]);
+  const [invoicePaid, setInvoicePaid] = useState<boolean>(projectsData.invoice_paid ?? false);
+ 
+  /* SELECT DROPDOWNS */
 
   const handleSelectStage = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedId = parseInt(event.target.value);
     setSelectedStage(selectedId);
     setValue("project_stage", selectedId);
     console.log("Selected Project Stage ID:", selectedId);
+  };
+
+  const handleInvoiceChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const isPaid = event.target.value === 'true';
+    setInvoicePaid(isPaid);
+    setValue("invoice_paid", isPaid);
   };
 
   /* SEARCH DROPDOWN */
@@ -352,12 +361,14 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
               <span className="smallcaps">INVOICE STATUS*</span>
               <div className="select-wrap">
                 <select
-                  {...register("invoice_paid")}
-                  className="select-input"
-                >
-                <option value="false">Unpaid</option> 
+                {...register("invoice_paid", { required: true })}
+                onChange={handleInvoiceChange}
+                value={invoicePaid.toString()}
+                className="form-input"
+              >
+                <option value="false">Unpaid</option>
                 <option value="true">Paid</option>
-                </select>
+              </select>
               </div>
             </div>
             <div className="form-box">
@@ -405,7 +416,6 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
             </button>
           </form>
         </div>
-
       )}
 
     </FormSidepanel>
@@ -414,50 +424,5 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
 
 export default ProjectForm;
 
-
-/* DOCUMENT TYPE DROPDOWN -> CREATORS DROPDOWN */
-//   const typedocument = [
-//     { id: "tf-1", value: "All" },
-//     { id: "tf-2", value: "Contact" },
-//     { id: "tf-3", value: "Content" },
-//     { id: "tf-4", value: "Invoice" },
-// ];
-// const [isTypedocumentOpen, setIsTypedocumentOpen] = useState(false);
-// const [selectedTypedocument, setSelectedTypedocument] = useState(typedocument[0]);
-
-// const handleSelectTypedocument = (tf: any) => {
-//     setSelectedTypedocument(tf);
-//     setIsTypedocumentOpen(false);
-// };
-
-
-/* SELECT CREATOR DROPDOWN */
-
-
-/* <div className='campaign-box'>
-    <span className='sidepanel-title'>CAMPAIGN</span>
-    <button type="button"
-        className={isTypedocumentOpen ? "documentdownButtonOpen" : "documentdownButton"}
-        onClick={() => setIsTypedocumentOpen(!isTypedocumentOpen)}>
-        <span className="documentTypeLabel">Select campaign(s): &#160;</span>
-        <span className="selectedValue">{selectedTypedocument.value}</span>
-    </button>
-    {isTypedocumentOpen && (
-        <ul className="documentdownListStick">
-            {typedocument.map((tf) => (
-                <li className="documentdownListItem" key={tf.id}>
-                    <button type="button"
-                        className="documentdownItem"
-                        onClick={() => handleSelectTypedocument(tf)}
-                    >
-                        {tf.value}
-                    </button>
-                </li>
-            ))}
-        </ul>
-    )}
-</div> */
-
-/* SELECT CREATOR DROPDOWN */
 
 

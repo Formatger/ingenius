@@ -22,7 +22,7 @@ import { useRouter } from "next/router";
 //   user: string;
 // }
 
-interface campaignData {
+interface FormData {
   id?: number;
   user?: string;
   brand_image_url?: string;
@@ -48,40 +48,41 @@ interface campaignData {
 }
 
 interface CampaignFormProps {
-  // brandsData: BrandInterface[];
-  // dealsData: DealInterface[];  
-  campaignStage: Stages[];
+  campaignStage: any;
   handleCloseFormSidepanel: () => void;
   updateCampaignData: () => void;
-  campaignData: campaignData;
+  campaignsData: any;
   closeEdit: () => void;
   isEditing: boolean; 
 }
 
 const  CampaignForm: React.FC< CampaignFormProps> = ({
-  // brandsData,
-  // dealsData,
   campaignStage,
   handleCloseFormSidepanel,
   updateCampaignData,
-  campaignData,
+  campaignsData,
   isEditing,
   closeEdit,
 }) => {
   const router = useRouter()
   const { register, handleSubmit, reset, setValue } = useForm<FormData>();
   const [selectedStage, setSelectedStage] = useState('');
-  // const [brandsData, setBrandsData] = useState<any>([]);
   const [dealsData, setDealsData] = useState<any>([]);
-
+  const [invoicePaid, setInvoicePaid] = useState<boolean>(campaignsData.invoice_paid ?? false);
   
-  /* SELECT STAGE DROPDOWN */
+  /* SELECT DROPDOWNS */
 
   const handleSelectStage = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedId = event.target.value;
     setSelectedStage(selectedId);
     setValue("campaign_stage", selectedId);
     console.log("Selected Campaign Stage ID:", selectedId);
+  };
+
+  const handleInvoiceChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const isPaid = event.target.value === 'true';
+    setInvoicePaid(isPaid);
+    setValue("invoice_paid", isPaid);
   };
 
   /* SEARCH DROPDOWN */
@@ -95,25 +96,6 @@ const  CampaignForm: React.FC< CampaignFormProps> = ({
   const handleClose = () => {
     handleCloseFormSidepanel();
   };
-
-  /* GET BRANDS API CALL */
-
-  // useEffect(() => { fetchBrands() }, [router]);
-
-  // const fetchBrands = () => {
-  //   getBrands(
-  //     (response: any) => {
-  //       console.log("fetch brands", response)
-
-  //       setBrandsData(response || []);
-  //     },
-  //     (error: any) => {
-  //       console.error('Error fetching profile data:', error);
-  //       setBrandsData([]); 
-  //     }
-  //   ).finally(() => {
-  //   });
-  // };
 
   /* GET DEALS API CALL */
 
@@ -140,11 +122,11 @@ const  CampaignForm: React.FC< CampaignFormProps> = ({
     console.log("Form Data:", data);
     try {
       if (isEditing) {
-        const campaignId = campaignData.id;
+        const campaignId = campaignsData.id;
 
         // Fusionamos los datos del formulario con los datos originales del proyecto
         const updatedData: FormData = {
-          ...campaignData, // Datos originales del proyecto
+          ...campaignsData, // Datos originales del proyecto
           ...data, // Datos del formulario
         };
 
@@ -211,7 +193,7 @@ const  CampaignForm: React.FC< CampaignFormProps> = ({
                 {...register("name", { required: true })}
                 className="form-input"
                 type="text"
-                defaultValue={campaignData.name}
+                defaultValue={campaignsData.name}
                 onChange={(e) => setValue("name", e.target.value)}
               />
             </div>
@@ -220,7 +202,7 @@ const  CampaignForm: React.FC< CampaignFormProps> = ({
               <textarea
                 {...register("description")}
                 className="form-textarea"
-                defaultValue={campaignData.description}
+                defaultValue={campaignsData.description}
                 onChange={(e) => setValue("description", e.target.value)}
               />
             </div>
@@ -229,9 +211,9 @@ const  CampaignForm: React.FC< CampaignFormProps> = ({
               <SearchDropdown
                 data={dealsData}
                 onSelect={(selectedItem) => {
-                  setValue("campaign", selectedItem.id);
+                  setValue("deal", selectedItem.id);
                 }}
-                placeholder={campaignData.name}
+                placeholder={campaignsData.deal}
                 handleSearch={handleSearchChange}
                 displayKey="name"
               />
@@ -242,8 +224,21 @@ const  CampaignForm: React.FC< CampaignFormProps> = ({
                 {...register("contract_value", { required: false })}
                 className="form-input"
                 type="text"
-                defaultValue={campaignData.contract_value}
+                defaultValue={campaignsData.contract_value}
               />
+            </div>
+            <div className="form-box">
+              <span className="smallcaps">INVOICE STATUS*</span>
+              <div className="select-wrap">
+              <select
+                {...register("invoice_paid", { required: true })}
+                className="select-input"
+                defaultValue={campaignsData.invoice_paid}
+              >
+              <option value="false">Unpaid</option> 
+              <option value="true">Paid</option>
+              </select>
+              </div>
             </div>
             <div className="form-box">
               <span className="smallcaps">START DATE</span>
@@ -251,7 +246,7 @@ const  CampaignForm: React.FC< CampaignFormProps> = ({
                 {...register("start_date", { required: true })}
                 className="form-input"
                 type="date"
-                defaultValue={campaignData.start_date}
+                defaultValue={campaignsData.start_date}
               />
             </div>
             <div className="form-box">
@@ -260,7 +255,7 @@ const  CampaignForm: React.FC< CampaignFormProps> = ({
                 {...register("deadline", { required: true })}
                 className="form-input"
                 type="date"
-                defaultValue={campaignData.deadline}
+                defaultValue={campaignsData.deadline}
               />
             </div>
             <div className="button-group">
@@ -277,94 +272,96 @@ const  CampaignForm: React.FC< CampaignFormProps> = ({
       ) : (
 
         <div className="sidepanel-wrap">
-<form className="sidepanel-form" onSubmit={handleSubmit(onSubmit)}>
-  <div className="form-box">
-    <span className="smallcaps">CAMPAIGN NAME*</span>
-    <input
-      {...register("name", { required: true })}
-      className="form-input"
-      type="text"
-      placeholder="Enter a name"
-    />
-  </div>
-  <div className="form-box">
-    <span className="smallcaps">DESCRIPTION</span>
-    <textarea
-      {...register("description")}
-      className="form-textarea"
-      placeholder="Add a description"
-    />
-  </div>
-  <div className="form-box">
-    <span className="smallcaps">SELECT DEAL*</span>
-    <SearchDropdown
-      data={dealsData}
-      onSelect={(selectedItem) => {
-        setValue("deal", selectedItem.id); 
-      }}
-      placeholder="Select Deal"
-      handleSearch={handleSearchChange}
-      displayKey="name"
-    />
-  </div>
-  {/* <div className="form-box">
-    <span className="smallcaps">SELECT PARTNER*</span>
-    <SearchDropdown
-      data={brandsData}
-      onSelect={(selectedItem) => {
-        setValue("brand_name", selectedItem.id);
-      }}
-      placeholder="Select Brand"
-      handleSearch={handleSearchChange}
-      displayKey="name"
-    />
-  </div> */}
-  <div className="form-box">
-    <span className="smallcaps">CONTRACT VALUE</span>
-    <input
-      {...register("contract_value", { required: true })}
-      className="form-input"
-      type="text"
-      placeholder="Add contract Value"
-    />
-  </div>
-  <div className="form-box">
-    <span className="smallcaps">START DATE</span>
-    <input
-      {...register("start_date", { required: true })}
-      className="form-input"
-      type="date"
-      placeholder="YYYY-MM-DD"
-    />
-  </div>
-  <div className="form-box">
-    <span className="smallcaps">END DATE</span>
-    <input
-      {...register("deadline", { required: true })}
-      className="form-input"
-      type="date"
-      placeholder="YYYY-MM-DD"
-    />
-  </div>
-  <div className='form-box'>
-      <span className='smallcaps'>SELECT STAGE*</span>
-      <select
-          {...register("campaign_stage")}
-          onChange={handleSelectStage}
-          value={selectedStage}
-          className="form-input"
-        >
-          <option value="">Select Stage</option> {/* Default option */}
-          {Array.isArray(campaignStage) && campaignStage.map((stage) => {
-          
-          return (                        
-          <option key={stage.stageID} value={stage.stageID}>
-              {stage.stageName}
-            </option>
-          );
-          })}
-        </select>
-  </div>
+          <form className="sidepanel-form" onSubmit={handleSubmit(onSubmit)}>
+            <div className="form-box">
+              <span className="smallcaps">CAMPAIGN NAME*</span>
+              <input
+                {...register("name", { required: true })}
+                className="form-input"
+                type="text"
+                placeholder="Enter a name"
+              />
+            </div>
+            <div className="form-box">
+              <span className="smallcaps">DESCRIPTION</span>
+              <textarea
+                {...register("description")}
+                className="form-textarea"
+                placeholder="Add a description"
+              />
+            </div>
+            <div className="form-box">
+              <span className="smallcaps">SELECT DEAL*</span>
+              <SearchDropdown
+                data={dealsData}
+                onSelect={(selectedItem) => {
+                  setValue("deal", selectedItem.id); 
+                }}
+                placeholder="Select Deal"
+                handleSearch={handleSearchChange}
+                displayKey="name"
+              />
+            </div>
+            <div className="form-box">
+              <span className="smallcaps">CONTRACT VALUE</span>
+              <input
+                {...register("contract_value", { required: true })}
+                className="form-input"
+                type="text"
+                placeholder="Add contract Value"
+              />
+            </div>
+            <div className="form-box">
+              <span className="smallcaps">INVOICE STATUS*</span>
+              <div className="select-wrap">
+                <select
+                {...register("invoice_paid", { required: true })}
+                onChange={handleInvoiceChange}
+                value={invoicePaid.toString()}
+                className="form-input"
+              >
+                <option value="false">Unpaid</option>
+                <option value="true">Paid</option>
+              </select>
+              </div>
+            </div>
+            <div className="form-box">
+              <span className="smallcaps">START DATE</span>
+              <input
+                {...register("start_date", { required: true })}
+                className="form-input"
+                type="date"
+                placeholder="YYYY-MM-DD"
+              />
+            </div>
+            <div className="form-box">
+              <span className="smallcaps">END DATE</span>
+              <input
+                {...register("deadline", { required: true })}
+                className="form-input"
+                type="date"
+                placeholder="YYYY-MM-DD"
+              />
+            </div>
+            <div className='form-box'>
+                <span className='smallcaps'>SELECT STAGE*</span>
+                <select
+                    {...register("campaign_stage")}
+                    onChange={handleSelectStage}
+                    value={selectedStage}
+                    className="form-input"
+                  >
+                    <option value="">Select Stage</option> {/* Default option */}
+                    {Array.isArray(campaignStage) && campaignStage.map((stage) => {
+                    
+                    return (                        
+                    <option key={stage.stageID} value={stage.stageID}>
+                        {stage.stageName}
+                      </option>
+                    );
+                    })}
+                  </select>
+            </div>
 
             <button className="sec-button linen" type="submit">
               <p>SAVE</p>

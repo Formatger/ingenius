@@ -6,7 +6,7 @@ import SearchDropdown from "./SearchDropdown";
 import { useForm } from "react-hook-form";
 import FormSidepanel from "@/components/common/ProfileSidepanel";
 import { CampaignInterface, BrandInterface, DealInterface } from "@/interfaces/interfaces";
-import { getBrands, getCampaigns, postCampaigns, postDeals } from "@/utils/httpCalls";
+import { getBrands, getCampaigns, postCampaigns, postDeals, putDeal } from "@/utils/httpCalls";
 import DateInput from "@/components/common/DateInput";
 import { useRouter } from 'next/router';
 
@@ -29,6 +29,8 @@ interface FormData {
   invoice_number?: string;
   invoice_date?: string;
   deal_duration?: string;
+  deal_stage_name?: string;
+  deal_stage_order?: number;
   start_date: Date;
   deadline: Date;
   name: string;
@@ -37,36 +39,46 @@ interface FormData {
   description?: string;
   created_at?: Date;
   campaigns?: string;
-  campaign?: string[];
   deal_stage?: string;
   brand?:string;
 }
 
 interface DealFormProps {
-  // brandsData: BrandInterface[];  // This should be an array of BrandInterface
-  // dealsData: DealInterface[];   // This should be an array of DealInterface
+  dealsData: any;
   dealStage: Stages[];
   handleCloseFormSidepanel: () => void;
+  updateDealData: () => void;
+  isEditing: boolean; 
+  closeEdit: () => void;
 }
 
-const  DealForm: React.FC< DealFormProps> = ({
-  // brandsData,
-  // dealsData,
+const DealForm: React.FC< DealFormProps> = ({
+  dealsData,
   dealStage,
   handleCloseFormSidepanel,
+  updateDealData,
+  isEditing,
+  closeEdit,
 }) => {
+  const router = useRouter()
   const { register, handleSubmit, reset, setValue } = useForm<FormData>();
   const [selectedStage, setSelectedStage] = useState('');
-  const router = useRouter()
   const [brandsData, setBrandsData] = useState<any>([]);
-  const [campaignsData, setCampaignsData] = useState<any>([]);
+  const [invoicePaid, setInvoicePaid] = useState<boolean>(dealsData.invoice_paid ?? false);
 
+  /* SELECT DROPDOWNS */
 
   const handleSelectStage = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedId = event.target.value;
     setSelectedStage(selectedId);
     setValue("deal_stage", selectedId);
     console.log("Selected Deal Stage ID:", selectedId);
+  };
+
+  const handleInvoiceChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const isPaid = event.target.value === 'true';
+    setInvoicePaid(isPaid);
+    setValue("invoice_paid", isPaid);
   };
 
   /* SEARCH DROPDOWN */
@@ -86,7 +98,6 @@ const  DealForm: React.FC< DealFormProps> = ({
   useEffect(() => { fetchBrands() }, [router]);
 
   const fetchBrands = () => {
-    // setLoader(true);
     getBrands(
       (response: any) => {
         
@@ -97,52 +108,57 @@ const  DealForm: React.FC< DealFormProps> = ({
         setBrandsData([]); 
       }
     ).finally(() => {
-      // setLoader(false);
     });
   };
-
-      /* GET CAMPAIGNS API CALL */
-
-      useEffect(() => { fetchCampaigns() }, [router]);
-
-      const fetchCampaigns = () => {
-        getCampaigns(
-          (response: any) => {
-            
-            setCampaignsData(response || []);
-          },
-          (error: any) => {
-            console.error('Error fetching profile data:', error);
-            setCampaignsData([]); 
-          }
-        ).finally(() => {
-        });
-      };
 
   /* SUBMIT FORM - DEALS API */
 
   const onSubmit = async (data: FormData) => {
     console.log("Form Data:", data);
     try {
-      await postDeals(
-        data,
-        (response) => {
-          console.log("Deal created successfully:", response);
-          reset();
-          handleCloseFormSidepanel();
-        },
-        (error) => {
-          console.error("Error creating deal:", error);
-        }
-      );
+      if (isEditing) {
+        const dealId = dealsData.id;
+
+        // Fusionamos los datos del formulario con los datos originales del proyecto
+        const updatedData: FormData = {
+          ...dealsData, // Datos originales del proyecto
+          ...data, // Datos del formulario
+        };
+
+        // Realizamos una solicitud PUT con los datos fusionados
+        await putDeal(
+          dealId,
+          updatedData,
+          (response) => {
+            console.log("Project updated successfully:", response);
+            reset();
+            closeEdit();
+            updateDealData();
+          },
+          (error) => {
+            console.error("Error updating project:", error);
+          }
+        );
+      } else {
+        // Si no se está editando, realizamos una solicitud POST
+        await postDeals(
+          data,
+          (response) => {
+            console.log("Deal created successfully:", response);
+            reset();
+            handleClose();
+            updateDealData();
+          },
+          (error) => {
+            console.error("Error creating deal:", error);
+          }
+        );
+      }
     } catch (error) {
       console.error("ERROR", error);
     }
-    reset();  
-    handleCloseFormSidepanel();
   };
 
-  
   return (
     <FormSidepanel handleClose={handleClose}>
           <div className="sidepanel-header">
@@ -164,32 +180,6 @@ const  DealForm: React.FC< DealFormProps> = ({
           </div>
           <div className="sidepanel-wrap">
             <form className="sidepanel-form" onSubmit={handleSubmit(onSubmit)}>
-              {/* <div className="form-box">
-                <span className="smallcaps">SELECT BRAND*</span>
-                <SearchDropdown
-                  data={brandsData}
-                  onSelect={(selectedItem) => {
-                    setValue("deal", selectedItem.id); 
-                  }}
-                  placeholder="Select Deal"
-                  handleSearch={handleSearchChange}
-                  displayKey="name"
-                />
-              </div> */}
-
-              {/* <div className="form-box">
-                <span className="smallcaps">SELECT CAMPAIGN*</span>
-                <SearchDropdown
-                  data={campaignsData}
-                  onSelect={(selectedItem) => {
-                    setValue("campaign", selectedItem.id); 
-                  }}
-                  placeholder="Select Campaign"
-                  handleSearch={handleSearchChange}
-                  displayKey="name"
-                />
-              </div> */}
-
               <div className="form-box">
                 <span className="smallcaps">DEAL NAME*</span>
                 <input
@@ -229,6 +219,20 @@ const  DealForm: React.FC< DealFormProps> = ({
                 />
               </div>
               <div className="form-box">
+              <span className="smallcaps">INVOICE STATUS*</span>
+              <div className="select-wrap">
+                <select
+                {...register("invoice_paid", { required: true })}
+                onChange={handleInvoiceChange}
+                value={invoicePaid.toString()}
+                className="form-input"
+              >
+                <option value="false">Unpaid</option>
+                <option value="true">Paid</option>
+              </select>
+              </div>
+            </div>
+              <div className="form-box">
                 <span className="smallcaps">START DATE</span>
                 <input
                   {...register("start_date", { required: true })}
@@ -264,8 +268,6 @@ const  DealForm: React.FC< DealFormProps> = ({
                     </select>
                     </div>
               </div>
-
-              {/* SELECT CREATOR DROPDOWN */}
 
               <button className="sec-button linen" type="submit">
                 <p>SAVE</p>

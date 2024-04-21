@@ -57,12 +57,12 @@
 }
 
 .table-row:hover {
-  background-color: var(--soft-orange);
+  background-color: var(--gray);
   cursor: pointer;
 }
 
 .table-row:not(:last-child) {
-  border-bottom: 1px solid #ddd;
+  border-bottom: 0.5px solid var(--gray3);
 }
 
 .table-cell {

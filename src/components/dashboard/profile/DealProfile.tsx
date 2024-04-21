@@ -10,6 +10,8 @@ import { DealInterface } from "@/interfaces/interfaces";
 
 interface DealDetailsProps {
   dealsData: any;
+  updateDealData?: () => void;
+  handleClose?: () => void;
 }
 
 interface DealInvoiceProps {

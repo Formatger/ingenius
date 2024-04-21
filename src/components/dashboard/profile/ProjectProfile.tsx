@@ -80,20 +80,20 @@ const ProjectDetails = ({ projectsData, handleClose, updateProjectData }: Projec
       <div className="card-text">
         <div>
           <p className="smallcaps">PROJECT</p>
-          <span className="sec-button gray1" onClick={undefined}>
+          <span className="sec-button gray1" >
             <p className="sec-tag">{projectsData?.name}</p>
           </span>
         </div>
         <div>
           <p className="smallcaps">CAMPAIGN</p>
-          <span className="sec-button gray1" onClick={undefined}>
+          <span className="sec-button gray1" >
             <p className="sec-tag">{projectsData?.campaign_name}</p>
           </span>
         </div>
 
         <div>
           <p className="smallcaps">description</p>
-          <span className="sec-button gray1" onClick={undefined}>
+          <span className="sec-button gray1" >
             <p className="description">{projectsData?.description}</p>
           </span>
         </div>
@@ -105,18 +105,18 @@ const ProjectDetails = ({ projectsData, handleClose, updateProjectData }: Projec
         </div> */}
         <div>
           <p className="smallcaps">CONTRACT VALUE</p>
-          <span className="sec-button gray1" onClick={undefined}>
+          <span className="sec-button gray1" >
             <p className="sec-tag">${projectsData?.contract_value}</p>
           </span>
         </div>
         <div>
           <p className="smallcaps">PROJECT STAGE</p>
-          <span className="sec-button gray1" onClick={undefined}>
+          <span className="sec-button gray1">
             <p className="sec-tag">{projectsData?.project_stage_name}</p>
           </span>
         </div>
 
-      {/* Hidden on Sidepanel */}
+        {/* Hidden on Sidepanel */}
         <div className="sidepanel-hidden">
           <p className="smallcaps">MANAGE CREATOR</p>
           <div className="button-group">
@@ -130,29 +130,6 @@ const ProjectDetails = ({ projectsData, handleClose, updateProjectData }: Projec
             </button>
           </div>
         </div>
-      
-      {/* EDIT-DELETE - Hidden on Profile */}
-
-      {/* 
-        <div className="profile-hidden">
-          <p className="smallcaps">MANAGE PROJECT</p>
-          <div className="button-group">
-            <button className="sec-button linen" onClick={undefined}>
-              <p>Edit</p>
-            </button>
-            <button className="sec-button stone" onClick={() => setModalOpen(true)}>
-              <p>Delete</p>
-            </button>
-          </div> 
-        </div>
-
-        <ConfirmModal
-          isOpen={isModalOpen}
-          onClose={() => setModalOpen(false)}
-          title="Delete Project"
-          onConfirm={handleDelete}
-          message="Are you sure you want to delete this project?"
-        /> */}
       </div>
     </div >
   );
@@ -202,7 +179,7 @@ const ProjectInvoice = ({ projectsData }: ProjectInvoiceProps) => {
             </li>
             <li className="invoice-data-list">
               <p>Invoice Status</p>
-              <span className="invoice-tag">{projectsData?.invoice_paid}Unpaid</span>
+              <span className="invoice-tag">{projectsData?.invoice_paid ? "Paid" : "Unpaid"}</span>
             </li>
           </ul>
         </div>

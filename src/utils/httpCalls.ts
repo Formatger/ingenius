@@ -232,35 +232,6 @@ export const putCreator = async (
 /***************************  DELETE CALLS  ***************************/
 ////////////////////////////////////////////////////////////////////////
 
-
-/*DELETE CAMPAIGN*/
-
-export const deleteCampaign = async (
-  campaignId: number,
-  callback: () => void, // No data parameter
-  errorCallback: (error: any) => void
-) => {
-  const url = `${DEPLOYED_API_BASE_URL}projects/${campaignId}/`;
-
-  try {
-    const response = await fetch(url, {
-      method: 'DELETE',
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
-        'Content-Type': 'application/json',
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    callback(); // Call callback directly without data
-  } catch (error) {
-    errorCallback(error);
-  }
-};
-
 /* DELETE PROJECT */
 
 export const deleteProject = async (

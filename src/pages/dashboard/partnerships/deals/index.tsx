@@ -40,17 +40,32 @@ const DealsPage = () => {
   const { height } = useWindowSize();
   const [openSidepanel, setOpenSidepanel] = useState(false);
   const [openFormSidepanel, setOpenFormSidepanel] = useState(false);
-  // const [brandsData, setBrandsData] = useState<Creators[]>([]);
-  // const [campaignsData, setCampaignsData] = useState<any>([]);
   const [dealsData, setDealsData] = useState<any>([]);
   const [selectedDeal, setSelectedDeal] = useState({} as any);
   const [dealStage, setDealStage] = useState<any>([]);
+  const [updateDeal, setUpdateDeal] = useState(false);
 
   const breadcrumbLinks = [
     // { label: "Home", link: "/" },
     { label: "Partnerships", link: "/dashboard/partnerships/deals" },
     { label: "Deals", link: "/dashboard/partnerships/deals", current: true },
   ];
+
+  /* UPDATE DEALS DATA */
+
+    useEffect(() => {
+      const dealsDataCopy = [...dealsData];
+      setNoSlicedData(dealsDataCopy);
+      setData(dealsDataCopy.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+      ));
+    }, [currentPage, updateDeal, tableRows]);
+  
+    const updateDealData = () => {
+      setUpdateDeal(prevState => !prevState);
+    };
+    console.log("UPDATE STAGE", updateDeal)
 
   /* DEAL-STAGE API CALL  */
 
@@ -232,14 +247,17 @@ const DealsPage = () => {
                 setOpenSidepanel={setOpenSidepanel}
                 dealsData={selectedDeal}
                 setSelectedDeal={setSelectedDeal}
+                updateDealData={updateDealData}
               />
             )}
             {openFormSidepanel && (
               <DealForm
-                // creatorsData={creatorsData}
-                // campaignsData={campaignsData}
                 dealStage={dealStage}
                 handleCloseFormSidepanel={handleCloseFormSidepanel}
+                updateDealData={updateDealData}
+                dealsData={data}
+                isEditing={false}
+                closeEdit={handleCloseFormSidepanel}
               />
             )}
             <div className="filtersContainer">
@@ -286,6 +304,7 @@ const DealsPage = () => {
                   httpError={httpError}
                   dealsData={dealsData}
                   handleOpenSidepanel={handleOpenSidepanel}
+                  updateDealData={updateDealData}
                 /> */}
               </>
             )}

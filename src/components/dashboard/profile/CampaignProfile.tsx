@@ -9,6 +9,8 @@ import Send from "@/components/assets/icons/send.svg";
 
 interface CampaignDetailsProps {
   campaignsData: any;
+  updateCampaignData?: () => void;
+  handleClose?: () => void;
 }
 
 interface CampaignInvoiceProps {
@@ -56,17 +58,23 @@ const CampaignDetails = ({ campaignsData }: CampaignDetailsProps) => {
           </span>
         </div>
         <div>
+          <p className="smallcaps">DESCRIPTION</p>
+          <span className="sec-button gray1" onClick={undefined}>
+            <p className="description">{campaignsData?.description}</p>
+          </span>
+        </div>
+        <div>
           <p className="smallcaps mb-2">CONTRACT VALUE</p>
           <span className="sec-button gray1" onClick={undefined}>
             <p className="sec-tag">${campaignsData.contract_value}</p>
           </span>
         </div>
-        {/* <div>
+        <div>
           <p className="smallcaps">CAMPAIGN STAGE</p>
           <span className="sec-button gray1" onClick={undefined}>
-            <p className="sec-tag">{campaignsData?.campaign_stage}</p>
+            <p className="sec-tag">{campaignsData?.campaign_stage_name}</p>
           </span>
-        </div> */}
+        </div>
 
       {/* INVOICE/CONTRACT SECTION - Hidden on Sidepanel */}
         <div className="sidepanel-hidden">

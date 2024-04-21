@@ -48,14 +48,11 @@ const CampaignsPage = () => {
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const { height } = useWindowSize();
   const [campaignsData, setCampaignsData] = useState<any>([]);
-  // const [brandsData, setBrandsData] = useState<any>([]);
-  // const [dealsData, setDealsData] = useState<any>([]);
   const [selectedCampaign, setSelectedCampaign] = useState({} as any);
   const [campaignStage, setCampaignStage] = useState<any>([]);
   const [updateCampaign, setUpdateCampaign] = useState(false);
   const [openSidepanel, setOpenSidepanel] = useState(false);
   const [openFormSidepanel, setOpenFormSidepanel] = useState(false);
-
 
   const breadcrumbLinks = [
     // { label: "Home", link: "/" },
@@ -63,12 +60,12 @@ const CampaignsPage = () => {
     { label: "Campaigns", link: "/dashboard/partnerships/campaigns", current: true },
   ];
 
-  /* ACTUALIZAR EL RENDERIZADO API */
+  /* UPDATE CAMPAIGNS DATA */
 
   useEffect(() => {
-    const projectsDataCopy = [...campaignsData];
-    setNoSlicedData(projectsDataCopy);
-    setData(projectsDataCopy.slice(
+    const campaignsDataCopy = [...campaignsData];
+    setNoSlicedData(campaignsDataCopy);
+    setData(campaignsDataCopy.slice(
       (currentPage - 1) * itemsPerPage,
       currentPage * itemsPerPage
     ));
@@ -288,7 +285,7 @@ const CampaignsPage = () => {
             )}
             {openFormSidepanel && (
               <CampaignForm
-                campaignData={data}
+                campaignsData={data}
                 campaignStage={campaignStage}
                 isEditing={false}
                 closeEdit={handleCloseFormSidepanel}
@@ -340,7 +337,7 @@ const CampaignsPage = () => {
               <CampaignKanban
                 httpError={httpError}
                 data={data}
-                campaignData={campaignsData}
+                campaignsData={campaignsData}
                 handleOpenSidepanel={handleOpenSidepanel}
                 campaignStage={campaignStage}
                 updateCampaignData={updateCampaignData}

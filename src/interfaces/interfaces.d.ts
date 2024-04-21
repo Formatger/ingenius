@@ -1,6 +1,7 @@
 export interface CampaignInterface {
-  // filter(arg0: (campaign: { name: string; }) => boolean): unknown;
-  id: number;
+  filter(arg0: (campaign: { name: string; }) => boolean): unknown;
+  id?: number;
+  user?: string;
   name: string;
   start_date: Date | null;
   deadline: Date | null;

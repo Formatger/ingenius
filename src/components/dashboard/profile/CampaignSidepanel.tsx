@@ -23,7 +23,6 @@ const CampaignSidepanel: React.FC<ProfileSidepanelProps> = ({
   setSelectedCampaign, 
   setOpenSidepanel,
   updateCampaignData,
-
  }) => {
 
   const [isModalOpen, setModalOpen] = useState(false);
@@ -42,7 +41,7 @@ const CampaignSidepanel: React.FC<ProfileSidepanelProps> = ({
 
   const handleDelete = () => {
     deleteCampaign(campaignsData.id, () => {
-      console.log("Project deleted successfully");
+      console.log("Campaign deleted successfully");
       setModalOpen(false);
       if (handleClose) {
         handleClose();
@@ -51,7 +50,7 @@ const CampaignSidepanel: React.FC<ProfileSidepanelProps> = ({
         updateCampaignData();
       }
     }, (error) => {
-      console.error("Failed to delete project:", error);
+      console.error("Failed to delete campaign:", error);
     });
   };
 
@@ -61,7 +60,7 @@ const CampaignSidepanel: React.FC<ProfileSidepanelProps> = ({
         <Link className="row-wrap-2 text-brown" href={{ pathname: '/dashboard/partnerships/campaigns/profile', 
         query: { campaignId: campaignsData.id } }}>
           <Arrow className="arrow-left orange-fill" />
-          {`Campaign Profile`}
+          {`View Profile`}
         </Link>
         <div className='button-group'>
            <Link href="/dashboard/support" passHref>
@@ -70,15 +69,11 @@ const CampaignSidepanel: React.FC<ProfileSidepanelProps> = ({
                 Get help
               </button>
             </Link>
-          {/* <button className='sidepanel-button'>
-            <Image src={Edit} alt='' width={16} height={16} />
-            Edit
-          </button> */}
         </div>
       </div>
       {editData ? (
         <CampaignForm
-          campaignData={campaignsData}
+          campaignsData={campaignsData}
           closeEdit={closeEdit}
           isEditing={editData}
           handleCloseFormSidepanel={handleClose}
@@ -89,14 +84,11 @@ const CampaignSidepanel: React.FC<ProfileSidepanelProps> = ({
       ) : (
         <div className='sidepanel-wrap-space'>
           <CampaignDetails campaignsData={campaignsData}
-            handleClose={handleClose}
-            updateCampaignData={updateCampaignData} 
-          />
+            />
           <div className="card-container">
             <p className="smallcaps">MANAGE CAMPAIGN</p>
             <div className="button-group">
               <button className="sec-button linen" onClick={() => setEditData(true)}>
-                {/* <Image src={Message} alt="Icon" width={15} height={15} /> */}
                 <p>Edit</p>
               </button>
               <button className="sec-button stone" onClick={() => setModalOpen(true)}>
@@ -107,9 +99,10 @@ const CampaignSidepanel: React.FC<ProfileSidepanelProps> = ({
             <ConfirmModal
               isOpen={isModalOpen}
               onClose={() => setModalOpen(false)}
-              title="Delete Project"
-              // onConfirm={handleDelete}
-              message="Are you sure you want to delete this project?"
+              title="Delete Campaign>"
+              onConfirm={handleDelete}
+              message="Are you sure you want to delete this campaign?"
+              button="Yes, delete this campaign"
             />
           </div>
         </div> 
