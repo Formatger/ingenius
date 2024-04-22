@@ -31,7 +31,29 @@ function Dropdown({ data, origin, setData, noSlicedData }: DropdownProps) {
 
   const selectedFiltersRef = useRef<string[]>([]);
   const searchValue = useRef<string>("");
+  const filterRef = useRef(null);
+  const timeframeRef = useRef(null);
 
+  useEffect(() => {
+    const handleClickOutside = (event: any) => {
+      if (filterRef.current && !(filterRef.current as HTMLElement).contains(event.target)) {
+        setIsPeopleOpen(false);
+      }
+    };
+
+    const handleClickOutsideTimeframe = (event: any) => {
+      if (timeframeRef.current && !(timeframeRef.current as HTMLElement).contains(event.target)) {
+        setIsTimeframeOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutsideTimeframe);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutsideTimeframe);
+    };
+  }, []);
 
   const handleSelectTimeframe = (tf: any) => {
     if (isTimeframeOpen) selectedFiltersRef.current = [];
@@ -84,6 +106,18 @@ function Dropdown({ data, origin, setData, noSlicedData }: DropdownProps) {
   }, [data]);
 
   useEffect(() => {
+    defineSearchableFields()
+  }, [radialValue]);
+
+  const defineSearchableFields = () => {
+    const fields = (item: any) => {
+      if (origin === "projects") {
+        return [item.creator_name, item.brand_name];
+      } else {
+        return [item.name, item.brand_name];
+      }
+    }
+
     switch (radialValue) {
       case "brands": {
         setPartnerSearchOptions(Array.from(new Set(noSlicedData?.flatMap((item: any) => [item.brand_name].filter(Boolean)))))
@@ -93,16 +127,24 @@ function Dropdown({ data, origin, setData, noSlicedData }: DropdownProps) {
         setPartnerSearchOptions(Array.from(new Set(noSlicedData?.flatMap((item: any) => [item.creator_name].filter(Boolean)))))
         break;
       }
+      case "deals": {
+        setPartnerSearchOptions(Array.from(new Set(noSlicedData?.flatMap((item: any) => [item.name].filter(Boolean)))))
+        break;
+      }
+      case "campaigns": {
+        setPartnerSearchOptions(Array.from(new Set(noSlicedData?.flatMap((item: any) => [item.name].filter(Boolean)))))
+        break;
+      }
       case "": {
-        setPartnerSearchOptions(Array.from(new Set(noSlicedData?.flatMap((item: any) => [item.creator_name, item.brand_name].filter(Boolean)))))
+        setPartnerSearchOptions(Array.from(new Set(noSlicedData?.flatMap((item: any) => fields(item).filter(Boolean)))))
         break;
       }
       default: {
-        setPartnerSearchOptions(Array.from(new Set(noSlicedData?.flatMap((item: any) => [item.creator_name, item.brand_name].filter(Boolean)))))
+        setPartnerSearchOptions(Array.from(new Set(noSlicedData?.flatMap((item: any) => fields(item).filter(Boolean)))))
         break;
       }
     }
-  }, [radialValue]);
+  }
 
   /**
    * Type can be 'people', 'timeframe'
@@ -129,7 +171,7 @@ function Dropdown({ data, origin, setData, noSlicedData }: DropdownProps) {
 
   const displayTimeframeFilter = () => {
     return (
-      <div className="filter">
+      <div className="filter" ref={timeframeRef}>
         <button
           className={isTimeframeOpen ? "dropdownButtonOpen" : "dropdownButton"}
           onClick={() => handleOpenFilter("timeframe")}
@@ -162,10 +204,11 @@ function Dropdown({ data, origin, setData, noSlicedData }: DropdownProps) {
     setShowSuggestionDropdown(false);
     selectedFiltersRef.current = [...selectedFiltersRef.current, value]
     const filteredData = [...dataCopy.filter((item: any) => {
-      const { brand_name, creator_name } = item;
+      const { brand_name, creator_name, name } = item;
       return (
         (brand_name && selectedFiltersRef.current.includes(brand_name)) ||
-        (creator_name && selectedFiltersRef.current.includes(creator_name))
+        (creator_name && selectedFiltersRef.current.includes(creator_name)) ||
+        (name && selectedFiltersRef.current.includes(name))
       );
     })];
     setData(filteredData)
@@ -178,10 +221,11 @@ function Dropdown({ data, origin, setData, noSlicedData }: DropdownProps) {
       setData(dataCopy)
     } else {
       const filteredData = [...dataCopy.filter((item: any) => {
-        const { brand_name, creator_name } = item;
+        const { brand_name, creator_name, name, campaign_name } = item;
         return (
           (brand_name && selectedFiltersRef.current.includes(brand_name)) ||
-          (creator_name && selectedFiltersRef.current.includes(creator_name))
+          (creator_name && selectedFiltersRef.current.includes(creator_name)) ||
+          (name && selectedFiltersRef.current.includes(name))
         );
       })];
       setData(filteredData)
@@ -190,7 +234,7 @@ function Dropdown({ data, origin, setData, noSlicedData }: DropdownProps) {
 
   const displayPeopleFilter = () => {
     return (
-      <div className="filter">
+      <div className="filter" ref={filterRef}>
         <button
           className={isPeopleOpen ? "dropdownButtonOpen" : "dropdownButton"}
           onClick={() => handleOpenFilter("people")}
@@ -213,17 +257,29 @@ function Dropdown({ data, origin, setData, noSlicedData }: DropdownProps) {
                 <h3 className="dropdownSectionTitle">Groups</h3>
                 <div className="radialSelector">
                   <label>
-                    <input type="radio" name="group" value="" defaultChecked={radialValue === undefined} onChange={() => setRadialValue("")} />
+                    <input type="radio" name="group" value="" checked={radialValue === ""} defaultChecked={radialValue === ""} onChange={() => setRadialValue("")} />
                     All Groups
                   </label>
                   <label>
                     <input type="radio" name="group" value="brands" checked={radialValue === "brands"} onChange={() => setRadialValue("brands")} />
                     Brands
                   </label>
-                  <label>
-                    <input type="radio" name="group" value="creators" checked={radialValue === "creators"} onChange={() => setRadialValue("creators")} />
-                    Creators
-                  </label>
+                  {origin === "deals" ? (
+                    <label>
+                      <input type="radio" name="group" value="deals" checked={radialValue === "deals"} onChange={() => setRadialValue("deals")} />
+                      Deals
+                    </label>
+                  ) : origin === "campaigns" ? (
+                    <label>
+                      <input type="radio" name="group" value="campaigns" checked={radialValue === "campaigns"} onChange={() => setRadialValue("campaigns")} />
+                      Campaigns
+                    </label>
+                  ) : (
+                    <label>
+                      <input type="radio" name="group" value="creators" checked={radialValue === "creators"} onChange={() => setRadialValue("creators")} />
+                      Creators
+                    </label>
+                  )}
                 </div>
               </div>
               <h3 className="dropdownSectionTitle">Search</h3>
