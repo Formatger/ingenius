@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
+import PropTypes from "prop-types";
 import Arrow from "../assets/svg/Arrow";
+import { set } from "react-hook-form";
 
 const timeframes = [
   { id: "tf-1", value: "All" },
@@ -10,18 +12,13 @@ const timeframes = [
 ];
 
 interface DropdownProps {
-  setFilteredData: any;
-  originalData: any;
-  setCurrentPage: any;
+  data?: any;
+  noSlicedData?: any;
+  setData?: any;
   origin?: string;
 }
 
-function Dropdown({
-  setFilteredData,
-  originalData,
-  setCurrentPage,
-  origin,
-}: DropdownProps) {
+function Dropdown({ data, origin, setData, noSlicedData }: DropdownProps) {
   const [isTimeframeOpen, setIsTimeframeOpen] = useState(false);
   const [isPeopleOpen, setIsPeopleOpen] = useState(false);
   const [selectedTimeframe, setSelectedTimeframe] = useState(timeframes[0]);
@@ -29,6 +26,7 @@ function Dropdown({
   const [partnerSearchFilter, setPartnerSearchFilter] = useState([]);
   const [partnerSearchOptions, setPartnerSearchOptions] = useState([]);
   const [showSuggestionDropdown, setShowSuggestionDropdown] = useState(false);
+  const [dataCopy, setDataCopy] = useState([]);
   const [radialValue, setRadialValue] = useState("");
 
   const selectedFiltersRef = useRef<string[]>([]);
@@ -36,7 +34,6 @@ function Dropdown({
   const filterRef = useRef(null);
   const timeframeRef = useRef(null);
 
-  // Handle click filter when clicking outside of it
   useEffect(() => {
     const handleClickOutside = (event: any) => {
       if (
@@ -64,45 +61,6 @@ function Dropdown({
     };
   }, []);
 
-  // Load filter options based on the origin of the data
-  useEffect(() => {
-    if (
-      originalData &&
-      (originalData.length === originalData.length || originalData.length === 0)
-    ) {
-      originalData?.flatMap((item: any) => {
-        if (origin === "campaigns") {
-          return [item.name, item.brand_name].filter(Boolean);
-        }
-        if (origin === "deals") {
-          return [item.name, item.brand_name].filter(Boolean);
-        }
-        if (origin === "projects") {
-          return [item.creator_name, item.brand_name].filter(Boolean);
-        }
-      });
-
-      setPartnerSearchOptions(
-        Array.from(
-          new Set(
-            originalData?.flatMap((item: any) => {
-              if (origin === "campaigns") {
-                return [item.name, item.brand_name].filter(Boolean);
-              }
-              if (origin === "deals") {
-                return [item.name, item.brand_name].filter(Boolean);
-              }
-              if (origin === "projects") {
-                return [item.creator_name, item.brand_name].filter(Boolean);
-              }
-            })
-          )
-        )
-      );
-    }
-  }, [originalData]);
-
-  // Filter by date
   const handleSelectTimeframe = (tf: any) => {
     if (isTimeframeOpen) selectedFiltersRef.current = [];
     setSelectedTimeframe(tf);
@@ -110,41 +68,37 @@ function Dropdown({
 
     switch (tf.id) {
       case "tf-1": {
-        setCurrentPage(1);
-        setFilteredData(originalData);
+        setData(dataCopy);
         break;
       }
       case "tf-2": {
-        setCurrentPage(1);
         const today = new Date();
         const sevenDaysAgo = new Date(
           today.getTime() - 7 * 24 * 60 * 60 * 1000
         );
-        const filteredData = originalData.filter((item: any) => {
+        const filteredData = dataCopy.filter((item: any) => {
           const createdAt = new Date(item.created_at);
           return createdAt >= sevenDaysAgo && createdAt <= today;
         });
-        setFilteredData(filteredData);
+        setData(filteredData);
         break;
       }
       case "tf-3": {
-        setCurrentPage(1);
         const currentMonth = new Date().getMonth();
-        const filteredData = originalData.filter((item: any) => {
+        const filteredData = dataCopy.filter((item: any) => {
           const createdAt = new Date(item.created_at);
           return createdAt.getMonth() === currentMonth;
         });
-        setFilteredData(filteredData);
+        setData(filteredData);
         break;
       }
       case "tf-4": {
-        setCurrentPage(1);
         const currentYear = new Date().getFullYear();
-        const filteredData = originalData.filter((item: any) => {
+        const filteredData = dataCopy.filter((item: any) => {
           const createdAt = new Date(item.created_at);
           return createdAt.getFullYear() === currentYear;
         });
-        setFilteredData(filteredData);
+        setData(filteredData);
         break;
       }
       default:
@@ -152,7 +106,21 @@ function Dropdown({
     }
   };
 
-  // Set searchable options depending on radial button value
+  useEffect(() => {
+    if (data && (data.length === dataCopy.length || dataCopy.length === 0)) {
+      setPartnerSearchOptions(
+        Array.from(
+          new Set(
+            noSlicedData?.flatMap((item: any) =>
+              [item.creator_name, item.brand_name].filter(Boolean)
+            )
+          )
+        )
+      );
+      setDataCopy(noSlicedData);
+    }
+  }, [data]);
+
   useEffect(() => {
     defineSearchableFields();
   }, [radialValue]);
@@ -171,7 +139,7 @@ function Dropdown({
         setPartnerSearchOptions(
           Array.from(
             new Set(
-              originalData?.flatMap((item: any) =>
+              noSlicedData?.flatMap((item: any) =>
                 [item.brand_name].filter(Boolean)
               )
             )
@@ -183,7 +151,7 @@ function Dropdown({
         setPartnerSearchOptions(
           Array.from(
             new Set(
-              originalData?.flatMap((item: any) =>
+              noSlicedData?.flatMap((item: any) =>
                 [item.creator_name].filter(Boolean)
               )
             )
@@ -195,7 +163,7 @@ function Dropdown({
         setPartnerSearchOptions(
           Array.from(
             new Set(
-              originalData?.flatMap((item: any) => [item.name].filter(Boolean))
+              noSlicedData?.flatMap((item: any) => [item.name].filter(Boolean))
             )
           )
         );
@@ -205,7 +173,7 @@ function Dropdown({
         setPartnerSearchOptions(
           Array.from(
             new Set(
-              originalData?.flatMap((item: any) => [item.name].filter(Boolean))
+              noSlicedData?.flatMap((item: any) => [item.name].filter(Boolean))
             )
           )
         );
@@ -215,7 +183,7 @@ function Dropdown({
         setPartnerSearchOptions(
           Array.from(
             new Set(
-              originalData?.flatMap((item: any) => fields(item).filter(Boolean))
+              noSlicedData?.flatMap((item: any) => fields(item).filter(Boolean))
             )
           )
         );
@@ -225,7 +193,7 @@ function Dropdown({
         setPartnerSearchOptions(
           Array.from(
             new Set(
-              originalData?.flatMap((item: any) => fields(item).filter(Boolean))
+              noSlicedData?.flatMap((item: any) => fields(item).filter(Boolean))
             )
           )
         );
@@ -286,15 +254,13 @@ function Dropdown({
     );
   };
 
-  // When searching for a partner, campaign or else and selecting it, we add it to the selected filters
   const handleSelectFilter = (value: string) => {
-    setCurrentPage(1);
     handleSelectTimeframe(timeframes[0]);
     searchValue.current = "";
     setShowSuggestionDropdown(false);
     selectedFiltersRef.current = [...selectedFiltersRef.current, value];
     const filteredData = [
-      ...originalData.filter((item: any) => {
+      ...dataCopy.filter((item: any) => {
         const { brand_name, creator_name, name } = item;
         return (
           (brand_name && selectedFiltersRef.current.includes(brand_name)) ||
@@ -303,23 +269,20 @@ function Dropdown({
         );
       }),
     ];
-    setFilteredData(filteredData);
+    setData(filteredData);
   };
 
-  // When removing a filter, we remove it from the selected filters
   const handleRemoveFilter = (value: string) => {
-    // TODO
-    setCurrentPage(1);
     handleSelectTimeframe(timeframes[0]);
     selectedFiltersRef.current = selectedFiltersRef.current.filter(
       (filter: string) => filter !== value
     );
     if (selectedFiltersRef.current.length === 0) {
-      setFilteredData(originalData);
+      setData(dataCopy);
     } else {
       const filteredData = [
-        ...originalData.filter((item: any) => {
-          const { brand_name, creator_name, name } = item;
+        ...dataCopy.filter((item: any) => {
+          const { brand_name, creator_name, name, campaign_name } = item;
           return (
             (brand_name && selectedFiltersRef.current.includes(brand_name)) ||
             (creator_name &&
@@ -328,7 +291,7 @@ function Dropdown({
           );
         }),
       ];
-      setFilteredData(filteredData);
+      setData(filteredData);
     }
   };
 
@@ -373,6 +336,7 @@ function Dropdown({
                       type="radio"
                       name="group"
                       value=""
+                      checked={radialValue === ""}
                       defaultChecked={radialValue === ""}
                       onChange={() => setRadialValue("")}
                     />

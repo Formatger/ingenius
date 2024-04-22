@@ -22,29 +22,29 @@ import DealSidepanel from "@/components/dashboard/profile/DealSidepanel";
 import DealsKanban from "@/components/dashboard/kanban/DealsKanban";
 import DealForm from "@/components/dashboard/form/DealForm";
 
-interface HttpError {
-  hasError: boolean;
-  message: string;
-}
-
 const DealsPage = () => {
-  const router = useRouter()
+  const router = useRouter();
   const [invoiceData, setInvoiceData] = useState(null);
   const [loader, setLoader] = useState<boolean>(false);
-  const [httpError, setHttpError] = useState({ hasError: false, status: 0, message: "", });
+  const [httpError, setHttpError] = useState({
+    hasError: false,
+    status: 0,
+    message: "",
+  });
   const [tableRows, setTableRows] = useState<boolean>(true);
-  const [noSlicedData, setNoSlicedData] = useState<any[]>([]);
-  const [data, setData] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
-  const { height } = useWindowSize();
+  const [itemsPerPage] = useState(10);
   const [openSidepanel, setOpenSidepanel] = useState(false);
   const [openFormSidepanel, setOpenFormSidepanel] = useState(false);
-  const [dealsData, setDealsData] = useState<any>([]);
   const [selectedDeal, setSelectedDeal] = useState({} as any);
   const [dealStage, setDealStage] = useState<any>([]);
   const [updateDeal, setUpdateDeal] = useState(false);
 
+  const [originalData, setOriginalData] = useState<any[]>([]);
+  const [filteredData, setFilteredData] = useState<any[]>([]);
+  const [dataToDisplay, setDataToDisplay] = useState<any[]>([]);
+
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
   const breadcrumbLinks = [
     // { label: "Home", link: "/" },
     { label: "Partnerships", link: "/dashboard/partnerships/deals" },
@@ -53,35 +53,35 @@ const DealsPage = () => {
 
   /* UPDATE DEALS DATA */
 
-    useEffect(() => {
-      const dealsDataCopy = [...dealsData];
-      setNoSlicedData(dealsDataCopy);
-      setData(dealsDataCopy.slice(
+  useEffect(() => {
+    const originalDataCopy = [...originalData];
+    setFilteredData(originalDataCopy);
+    setDataToDisplay(
+      originalDataCopy.slice(
         (currentPage - 1) * itemsPerPage,
         currentPage * itemsPerPage
-      ));
-    }, [currentPage, updateDeal, tableRows]);
-  
-    const updateDealData = () => {
-      setUpdateDeal(prevState => !prevState);
-    };
-    console.log("UPDATE STAGE", updateDeal)
+      )
+    );
+  }, [updateDeal, tableRows]);
+
+  const updateDealData = () => {
+    setUpdateDeal((prevState) => !prevState);
+  };
 
   /* DEAL-STAGE API CALL  */
 
-  useEffect(() => { fetchDealStages() }, [router]);
+  useEffect(() => {
+    fetchDealStages();
+  }, [router]);
 
   const fetchDealStages = () => {
     setLoader(true);
     getDealStages(
       (response: any) => {
-        console.log('Deal Stages:', dealStage);
-
         setDealStage(response || []);
-
       },
       (error: any) => {
-        console.error('Error fetching profile data:', error);
+        console.error("Error fetching profile data:", error);
         setDealStage([]);
       }
     ).finally(() => {
@@ -97,126 +97,73 @@ const DealsPage = () => {
 
     setLoader(true);
     Promise.all([
-      getDeals((response) => {
-        provisionalDealsData = response;
-      }, (error) => {
-        setHttpError({
-          hasError: true,
-          status: error.status,
-          message: error.message,
-        });
-      }),
-      getDealsDetail((response: any[]) => {
-        provisionalDealsDetailData = response;
-      }, (error: { status: any; message: any; }) => {
-        setHttpError({
-          hasError: true,
-          status: error.status,
-          message: error.message,
-        });
-      })
+      getDeals(
+        (response) => (provisionalDealsData = response),
+        (error) => {
+          setHttpError({
+            hasError: true,
+            status: error.status,
+            message: error.message,
+          });
+        }
+      ),
+      getDealsDetail(
+        (response: any[]) => (provisionalDealsDetailData = response),
+        (error: { status: any; message: any }) => {
+          setHttpError({
+            hasError: true,
+            status: error.status,
+            message: error.message,
+          });
+        }
+      ),
     ]).finally(() => {
-      const DealsFullData = provisionalDealsData.map(item => {
-        const detail = provisionalDealsDetailData.find(detail => detail.id === item.id);
+      const DealsFullData = provisionalDealsData.map((item) => {
+        const detail = provisionalDealsDetailData.find(
+          (detail) => detail.id === item.id
+        );
         return {
           ...item,
-          ...detail
+          ...detail,
         };
       });
 
-      setDealsData(DealsFullData);
-      setNoSlicedData(DealsFullData);
-      setData(DealsFullData.slice(
-        (currentPage - 1) * itemsPerPage,
-        currentPage * itemsPerPage
-      ));
+      setOriginalData(DealsFullData);
+      setFilteredData(DealsFullData);
+      setDataToDisplay(
+        DealsFullData.slice(
+          (currentPage - 1) * itemsPerPage,
+          currentPage * itemsPerPage
+        )
+      );
 
       setLoader(false);
     });
   }, []);
 
-  /* TABLE ROW DISPLAY - modify to deals data */
-
-  const totalPages = Math.ceil(
-    noSlicedData.length / itemsPerPage
-  );
-
   useEffect(() => {
-    // items per page must be an integer value between 0 and 10 depending on the height of the window
-    const calculateItemsPerPage = () => {
-      const minRows = 2;
-      const maxRows = 10;
-      const ratio = height / 96;
-      const itemsPerPage = Math.max(minRows, Math.min(maxRows, Math.floor(ratio)));
-      setItemsPerPage(itemsPerPage);
-
-      const dealsDataCopy = [...dealsData];
-      setData(dealsDataCopy.slice(
+    setDataToDisplay(
+      filteredData.slice(
         (currentPage - 1) * itemsPerPage,
         currentPage * itemsPerPage
-      ));
-    }; 4
+      )
+    );
+  }, [filteredData, currentPage]);
 
-    calculateItemsPerPage();
-  }, [height]);
-
-  useEffect(() => {
-    const dealsDataCopy = [...dealsData];
-    setNoSlicedData(dealsDataCopy);
-    setData(dealsDataCopy.slice(
-      (currentPage - 1) * itemsPerPage,
-      currentPage * itemsPerPage
-    ));
-  }, [currentPage]);
-
-  const handlePrevious = () => setCurrentPage((oldPage) => Math.max(oldPage - 1, 1));
-  const handleNext = () => setCurrentPage((oldPage) => Math.min(oldPage + 1, totalPages));
+  const handlePrevious = () =>
+    setCurrentPage((oldPage) => Math.max(oldPage - 1, 1));
+  const handleNext = () =>
+    setCurrentPage((oldPage) => Math.min(oldPage + 1, totalPages));
 
   /* TABLE SORT LOGIC - modify to deals data */
 
-  const sortBy = (field: keyof typeof dealsData[0]) => {
+  const sortBy = (field: keyof (typeof filteredData)[0]) => {
     // Sort by specified field
-    const dealsDataCopy = [...dealsData];
-    if (field === "total_deals" || field === "contract_value") {
-      dealsDataCopy.sort((a, b) => a[field] - b[field]);
-      if (JSON.stringify(dealsDataCopy) === JSON.stringify(dealsData)) {
-        // Already sorted in ascending order, so sort in descending order
-        dealsDataCopy.sort((a, b) => b[field] - a[field]);
-      }
-    } else {
-      dealsDataCopy.sort((a, b) => (a[field] as string)?.localeCompare(b[field] as string));
-      if (JSON.stringify(dealsDataCopy) === JSON.stringify(dealsData)) {
-        // Already sorted in ascending order, so sort in descending order
-        dealsDataCopy.sort((a, b) => (b[field] as string)?.localeCompare(a[field] as string));
-      }
-    }
-    setDealsData(dealsData);
-    setNoSlicedData(dealsDataCopy);
-    setData(dealsDataCopy.slice(
-      (currentPage - 1) * itemsPerPage,
-      currentPage * itemsPerPage
-    ));
-  };
-
-  /* SEARCH LOGIC - modify to deals data */
-
-  const handleSearch = (search: string) => {
-    const filteredData = dealsData.filter((deal: DealInterface) => {
-      return deal.name.toLowerCase().includes(search.toLowerCase())
-      // ||
-      // deal.deal_name.toLowerCase().includes(search.toLowerCase());
-    });
-    setNoSlicedData(filteredData);
-    setData(filteredData.slice(
-      (currentPage - 1) * itemsPerPage,
-      currentPage * itemsPerPage
-    ));
   };
 
   /* SIDEPANEL */
-
   const handleOpenSidepanel = (deal: object) => {
-    setSelectedDeal(deal)
+    setSelectedDeal(deal);
     setOpenSidepanel(!openSidepanel);
   };
 
@@ -235,7 +182,9 @@ const DealsPage = () => {
 
   return (
     <div className="main-container">
-      <div className="breadcrumb-nav"><Breadcrumbs items={breadcrumbLinks} /></div>
+      <div className="breadcrumb-nav">
+        <Breadcrumbs items={breadcrumbLinks} />
+      </div>
       {loader ? (
         <MainLoader />
       ) : (
@@ -255,18 +204,26 @@ const DealsPage = () => {
                 dealStage={dealStage}
                 handleCloseFormSidepanel={handleCloseFormSidepanel}
                 updateDealData={updateDealData}
-                dealsData={data}
+                dealsData={selectedDeal}
                 isEditing={false}
                 closeEdit={handleCloseFormSidepanel}
               />
             )}
             <div className="filtersContainer">
-              <Dropdown data={data} setData={setData} origin="deals" noSlicedData={noSlicedData} />
+              <Dropdown
+                setFilteredData={setFilteredData}
+                originalData={originalData}
+                setCurrentPage={setCurrentPage}
+                origin="deals"
+              />
               <div className="button-group">
                 <button className="app-button cream" onClick={undefined}>
                   CSV Upload
                 </button>
-                <button className="app-button" onClick={handleOpenFormSidepanel}>
+                <button
+                  className="app-button"
+                  onClick={handleOpenFormSidepanel}
+                >
                   <Image src={PlusWhite} alt="Icon" width={14} height={14} />
                   Add Deal
                 </button>
@@ -286,13 +243,13 @@ const DealsPage = () => {
                   httpError={httpError}
                   sortBy={sortBy}
                   handleOpenSidepanel={handleOpenSidepanel}
-                  data={data}
+                  data={dataToDisplay}
                 />
                 <Pagination
                   currentPage={currentPage}
                   itemsPerPage={itemsPerPage}
-                  noSlicedData={noSlicedData}
-                  data={data}
+                  filteredData={filteredData}
+                  dataToDisplay={dataToDisplay}
                   handlePrevious={handlePrevious}
                   handleNext={handleNext}
                   totalPages={totalPages}
@@ -308,9 +265,7 @@ const DealsPage = () => {
                 /> */}
               </>
             )}
-
           </div>
-
         </>
       )}
     </div>
@@ -322,4 +277,3 @@ const Deals = () => {
 };
 
 export default withAuth(Deals);
-

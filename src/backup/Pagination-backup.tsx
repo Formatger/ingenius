@@ -3,8 +3,8 @@ import React from "react";
 interface PaginationProps {
   currentPage: number;
   itemsPerPage: number;
-  filteredData: any[];
-  dataToDisplay: any[];
+  noSlicedData: any[];
+  data: any[];
   handlePrevious: () => void;
   handleNext: () => void;
   totalPages: number;
@@ -13,8 +13,8 @@ interface PaginationProps {
 const Pagination = ({
   currentPage,
   itemsPerPage,
-  filteredData,
-  dataToDisplay,
+  noSlicedData,
+  data,
   handlePrevious,
   handleNext,
   totalPages,
@@ -23,11 +23,11 @@ const Pagination = ({
     <div className="pagination">
       <span>{`${(currentPage - 1) * itemsPerPage + 1}-${Math.min(
         currentPage * itemsPerPage,
-        filteredData.length
-      )} of ${filteredData.length}`}</span>
+        noSlicedData.length
+      )} of ${noSlicedData.length}`}</span>
       <button
         onClick={handlePrevious}
-        disabled={currentPage === 1 || dataToDisplay.length === 0}
+        disabled={currentPage === 1 || data.length === 0}
       >
         &lt;
       </button>
@@ -36,8 +36,8 @@ const Pagination = ({
         onClick={handleNext}
         disabled={
           currentPage === totalPages ||
-          dataToDisplay.length === 0 ||
-          dataToDisplay.length < itemsPerPage
+          data.length === 0 ||
+          data.length < itemsPerPage
         }
       >
         &gt;

@@ -51,21 +51,19 @@ const CampaignsPage = () => {
     status: 0,
     message: "",
   });
-
   const [tableRows, setTableRows] = useState<boolean>(true);
+  const [noSlicedData, setNoSlicedData] = useState<any[]>([]);
+  const [data, setData] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(10);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const { height } = useWindowSize();
+  const [campaignsData, setCampaignsData] = useState<any>([]);
   const [selectedCampaign, setSelectedCampaign] = useState({} as any);
   const [campaignStage, setCampaignStage] = useState<any>([]);
   const [updateCampaign, setUpdateCampaign] = useState(false);
   const [openSidepanel, setOpenSidepanel] = useState(false);
   const [openFormSidepanel, setOpenFormSidepanel] = useState(false);
 
-  const [originalData, setOriginalData] = useState<any[]>([]);
-  const [filteredData, setFilteredData] = useState<any[]>([]);
-  const [dataToDisplay, setDataToDisplay] = useState<any[]>([]);
-
-  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
   const breadcrumbLinks = [
     // { label: "Home", link: "/" },
     { label: "Partnerships", link: "/dashboard/partnerships/campaigns" },
@@ -77,22 +75,25 @@ const CampaignsPage = () => {
   ];
 
   /* UPDATE CAMPAIGNS DATA */
+
   useEffect(() => {
-    const originalDataCopy = [...originalData];
-    setFilteredData(originalDataCopy);
-    setDataToDisplay(
-      originalDataCopy.slice(
+    const campaignsDataCopy = [...campaignsData];
+    setNoSlicedData(campaignsDataCopy);
+    setData(
+      campaignsDataCopy.slice(
         (currentPage - 1) * itemsPerPage,
         currentPage * itemsPerPage
       )
     );
-  }, [updateCampaign, tableRows]);
+  }, [currentPage, updateCampaign, tableRows]);
 
   const updateCampaignData = () => {
     setUpdateCampaign((prevState) => !prevState);
   };
+  console.log("UPDATE STAGE", updateCampaign);
 
   /* CAMPAIGN-STAGE API CALL  */
+
   useEffect(() => {
     fetchCampaignStages();
   }, [router, updateCampaign, tableRows]);
@@ -101,6 +102,7 @@ const CampaignsPage = () => {
     setLoader(true);
     getCampaignStages(
       (response: any) => {
+        console.log("Campaign Stages:", campaignStage);
         setCampaignStage(
           response.map((stage: any) => ({
             stageID: stage.id,
@@ -111,6 +113,7 @@ const CampaignsPage = () => {
         );
 
         setUpdateCampaign(false);
+        console.log(campaignStage);
       },
 
       (error: any) => {
@@ -123,6 +126,7 @@ const CampaignsPage = () => {
   };
 
   /* CAMPAIGNS API CALL */
+
   useEffect(() => {
     let provisionalCampaignsData: any[] = [];
     let provisionalCampaignsDetailData: any[] = [];
@@ -130,7 +134,12 @@ const CampaignsPage = () => {
     setLoader(true);
     Promise.all([
       getCampaignsDetail(
-        (response: any) => (provisionalCampaignsDetailData = response),
+        (response: any) => {
+          provisionalCampaignsDetailData = response;
+          console.log("===========================");
+          console.log("primer", response);
+          console.log("===========================");
+        },
         (error: any) => {
           setHttpError({
             hasError: true,
@@ -140,7 +149,12 @@ const CampaignsPage = () => {
         }
       ),
       getCampaigns(
-        (response: any[]) => (provisionalCampaignsData = response),
+        (response: any[]) => {
+          provisionalCampaignsData = response;
+          console.log("===========================");
+          console.log("segon", response);
+          console.log("===========================");
+        },
         (error: any) => {
           setHttpError({
             hasError: true,
@@ -168,9 +182,9 @@ const CampaignsPage = () => {
         };
       });
 
-      setOriginalData(campaignsFullData);
-      setFilteredData(campaignsFullData);
-      setDataToDisplay(
+      setCampaignsData(campaignsFullData);
+      setNoSlicedData(campaignsFullData);
+      setData(
         campaignsFullData.slice(
           (currentPage - 1) * itemsPerPage,
           currentPage * itemsPerPage
@@ -181,14 +195,44 @@ const CampaignsPage = () => {
     });
   }, [updateCampaign, tableRows]);
 
+  /* TABLE ROW DISPLAY */
+
+  const totalPages = Math.ceil(noSlicedData.length / itemsPerPage);
+
   useEffect(() => {
-    setDataToDisplay(
-      filteredData.slice(
+    const calculateItemsPerPage = () => {
+      const minRows = 2;
+      const maxRows = 10;
+      const ratio = height / 96;
+      const itemsPerPage = Math.max(
+        minRows,
+        Math.min(maxRows, Math.floor(ratio))
+      );
+      setItemsPerPage(itemsPerPage);
+
+      const campaignsDataCopy = [...campaignsData];
+      setData(
+        campaignsDataCopy.slice(
+          (currentPage - 1) * itemsPerPage,
+          currentPage * itemsPerPage
+        )
+      );
+    };
+    4;
+
+    calculateItemsPerPage();
+  }, [height]);
+
+  useEffect(() => {
+    const campaignsDataCopy = [...campaignsData];
+    setNoSlicedData(campaignsDataCopy);
+    setData(
+      campaignsDataCopy.slice(
         (currentPage - 1) * itemsPerPage,
         currentPage * itemsPerPage
       )
     );
-  }, [filteredData, currentPage]);
+  }, [currentPage]);
 
   const handlePrevious = () =>
     setCurrentPage((oldPage) => Math.max(oldPage - 1, 1));
@@ -203,11 +247,55 @@ const CampaignsPage = () => {
    * @param field - Field to sort by
    */
 
-  const sortBy = (field: keyof (typeof originalData)[0]) => {
-    // TODO
+  const sortBy = (field: keyof (typeof campaignsData)[0]) => {
+    // Sort by specified field
+    const campaignsDataCopy = [...campaignsData];
+    if (field === "total_projects" || field === "contract_value") {
+      campaignsDataCopy.sort((a, b) => a[field] - b[field]);
+      if (JSON.stringify(campaignsDataCopy) === JSON.stringify(campaignsData)) {
+        // Already sorted in ascending order, so sort in descending order
+        campaignsDataCopy.sort((a, b) => b[field] - a[field]);
+      }
+    } else {
+      campaignsDataCopy.sort((a, b) =>
+        (a[field] as string)?.localeCompare(b[field] as string)
+      );
+      if (JSON.stringify(campaignsDataCopy) === JSON.stringify(campaignsData)) {
+        // Already sorted in ascending order, so sort in descending order
+        campaignsDataCopy.sort((a, b) =>
+          (b[field] as string)?.localeCompare(a[field] as string)
+        );
+      }
+    }
+    setCampaignsData(campaignsData);
+    setNoSlicedData(campaignsDataCopy);
+    setData(
+      campaignsDataCopy.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+      )
+    );
+  };
+
+  /* SEARCH LOGIC */
+
+  const handleSearch = (search: string) => {
+    const filteredData = campaignsData.filter((campaign: CampaignInterface) => {
+      // return campaign.brand_name.toLowerCase().includes(search.toLowerCase())
+      // ||
+      //   campaign.campaign_name.toLowerCase().includes(search.toLowerCase());
+    });
+    setNoSlicedData(filteredData);
+    setData(
+      filteredData.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+      )
+    );
   };
 
   /* SIDEPANEL LOGIC */
+
   const handleOpenSidepanel = (campaign: any) => {
     setSelectedCampaign(campaign);
     setOpenSidepanel(!openSidepanel);
@@ -247,7 +335,7 @@ const CampaignsPage = () => {
             )}
             {openFormSidepanel && (
               <CampaignForm
-                campaignsData={selectedCampaign}
+                campaignsData={data}
                 campaignStage={campaignStage}
                 isEditing={false}
                 closeEdit={handleCloseFormSidepanel}
@@ -259,10 +347,10 @@ const CampaignsPage = () => {
             )}
             <div className="filtersContainer">
               <Dropdown
-                setFilteredData={setFilteredData}
-                originalData={originalData}
-                setCurrentPage={setCurrentPage}
+                data={data}
+                setData={setData}
                 origin="campaigns"
+                noSlicedData={noSlicedData}
               />
               <div className="button-group">
                 <button className="app-button cream" onClick={undefined}>
@@ -289,15 +377,15 @@ const CampaignsPage = () => {
               <Fragment>
                 <CampaignTable
                   httpError={httpError}
-                  dataToDisplay={dataToDisplay}
+                  data={data}
                   sortBy={sortBy}
                   handleOpenSidepanel={handleOpenSidepanel}
                 />
                 <Pagination
                   currentPage={currentPage}
                   itemsPerPage={itemsPerPage}
-                  filteredData={filteredData}
-                  dataToDisplay={dataToDisplay}
+                  noSlicedData={noSlicedData}
+                  data={data}
                   handlePrevious={handlePrevious}
                   handleNext={handleNext}
                   totalPages={totalPages}
@@ -306,8 +394,8 @@ const CampaignsPage = () => {
             ) : (
               <CampaignKanban
                 httpError={httpError}
-                data={dataToDisplay}
-                campaignsData={filteredData}
+                data={data}
+                campaignsData={campaignsData}
                 handleOpenSidepanel={handleOpenSidepanel}
                 campaignStage={campaignStage}
                 updateCampaignData={updateCampaignData}
