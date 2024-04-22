@@ -3,7 +3,7 @@ import Image from 'next/image';
 import Plus from "@/components/assets/icons/plus.svg";
 import Edit from "@/components/assets/icons/edit.svg";
 import AddFieldModalCampaign from "@/components/dashboard/kanban/AddFieldModalCampaign";
-import { putCampaign } from '@/utils/httpCalls';
+import { putCampaign, putNewOrder } from '@/utils/httpCalls';
 
 
 
@@ -86,39 +86,50 @@ console.log("Campaigns column", stages);
 
 /* DRAG & DROP */
 
-  /* DRAG DROP */
 
-  const handleDragStartColumn = (e: any, stage: any) => {
-    // e.dataTransfer.setData('text/plain', stage.stageIndex);  // Guardar el índice de la columna basado en `stageIndex`
-    e.dataTransfer.setData('stage', JSON.stringify({stage}));
-    console.log("START DATA STAGES", stage)
-  };
+
+   const handleDragStartColumn = (e: any, stage: any) => {
+    e.dataTransfer.setData('text/plain', stage.stageIndex);  // Guardar el índice de la columna basado en `stageIndex`
+     e.dataTransfer.setData('stage', JSON.stringify({stage}));
+     console.log("START DATA STAGES", stage)
+   };
  
-  const handleDropColumn = async (e:any, newColumn:any) => {
+   const handleDropColumn = async (e, newColumn) => {
     e.preventDefault();
-    const oldColumn = JSON.parse(e.dataTransfer.getData('stage'));
-    console.log('Valor de OLD COLUMN:', oldColumn);
-    console.log('Valor de NEW COLUMN:', newColumn);
+    const oldColumnData = JSON.parse(e.dataTransfer.getData('stage'));
+    const oldColumn = oldColumnData.stage;
   
-    // Intercambiar los valores de stageIndex entre oldColumn y newColumn
-    const tempIndex = oldColumn.stageIndex;
-    oldColumn.stageIndex = newColumn.stageIndex;
-    newColumn.stageIndex = tempIndex;
+    // Verificar si hay un cambio en el orden de las columnas
+    if (oldColumn.stageIndex !== newColumn.stageIndex) {
+      try {
+        // Llamar a la función para actualizar el orden en la base de datos
+        await Promise.all([
+          putNewOrder(oldColumn.stageID, { name: oldColumn.stageName ,order: newColumn.stageIndex }, () => {}, null),
+          putNewOrder(newColumn.stageID, { name: newColumn.stageName, order: oldColumn.stageIndex }, () => {}, null)
+        ]);
   
-    // Actualizar el estado de las columnas con los nuevos valores de stageIndex
-    setStages((currentStages) => {
-      const updatedStages = currentStages.map((stage) => {
-        if (stage.stageID === oldColumn.stageID) {
-          return { ...newColumn }; // Actualizar la columna original con el stageIndex de la columna de destino
-        }
-        if (stage.stageID === newColumn.stageID) {
-          return { ...oldColumn }; // Actualizar la columna de destino con el stageIndex de la columna original
-        }
-        // Devolver todas las demás columnas sin cambios
-        return stage;
-      });
-      return updatedStages;
-    });
+        // Actualizar el estado para reflejar el cambio sin recargar
+        setStages((currentStages) => {
+          return currentStages.map((stage) => {
+            if (stage.stageID === oldColumn.stageID) {
+              return {
+                ...stage,
+                stageIndex: newColumn.stageIndex,
+              };
+            }
+            if (stage.stageID === newColumn.stageID) {
+              return {
+                ...stage,
+                stageIndex: oldColumn.stageIndex,
+              };
+            }
+            return stage;
+          });
+        });
+      } catch (error) {
+        console.error('Error al procesar la solicitud PUT:', error);
+      }
+    }
   };
 
   const handleDragStart = (e: any, campaigns : any, stages: any) => {
@@ -199,15 +210,17 @@ console.log("Campaigns column", stages);
           console.log("Datos de la columna de campaña:", campaignCol); // Agregar este console.log para verificar los datos de campaignCol
           return (
             <div
-              className={`kanban-column ${draggedOverStageIndex === campaignCol.stageIndex ? 'drag-over-column' : ''}`}
-              onDrop={(e) => {handleDrop(e, campaignCol.stageID); handleDropColumn(e, campaignCol);}}
+              // className={`kanban-column ${draggedOverStageIndex === campaignCol.stageIndex ? 'drag-over-column' : ''}`}
+              onDrop={(e) => {handleDrop(e, campaignCol.stageID)}}
               onDragOver={(e) => handleDragOver(e, campaignCol.stageID)}
               onDragLeave={handleDragLeave}
               onDragStart={(e) => handleDragStartColumn(e, campaignCol)}
               key={campaignCol.stageIndex}
               draggable
             >
-              <div className="kanban-header">
+              <div className={`kanban-header ${draggedOverStageIndex === campaignCol.stageIndex ? 'drag-over-column' : ''}`}
+              onDrop={(e) => {handleDropColumn(e, campaignCol);}}
+              onDragStart={(e) => handleDragStartColumn(e, campaignCol)}>
                 <span className={`round-tag stone ${campaignCol.color}`}>
                   {campaignCol.stageName}
                 </span>

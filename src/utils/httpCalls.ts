@@ -38,13 +38,13 @@ export const refreshToken = async (errorCallback?: (error: any) => void) => {
 /* PUT NEW ORDER*/
 
 export const putNewOrder = async (
-  projectId: number,
+  stageId: number,
   updatedData: any,
   callback: (data: any) => void,
   errorCallback?: (error: any) => void
 ) => {
   console.log("PUT successful",updatedData)
-  const url = `${DEPLOYED_API_BASE_URL}projects/${projectId}/`;
+  const url = `${DEPLOYED_API_BASE_URL}campaign-stages/${stageId}/`;
 
   try {
     const response = await fetch(url, {
