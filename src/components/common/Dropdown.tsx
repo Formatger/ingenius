@@ -293,16 +293,16 @@ function Dropdown({
     searchValue.current = "";
     setShowSuggestionDropdown(false);
     selectedFiltersRef.current = [...selectedFiltersRef.current, value];
-    const filteredData = [
-      ...originalData.filter((item: any) => {
-        const { brand_name, creator_name, name } = item;
-        return (
-          (brand_name && selectedFiltersRef.current.includes(brand_name)) ||
-          (creator_name && selectedFiltersRef.current.includes(creator_name)) ||
-          (name && selectedFiltersRef.current.includes(name))
-        );
-      }),
-    ];
+
+    const filteredData = originalData.filter((item: any) => {
+      const { brand_name, creator_name, name } = item;
+      // Check if the item's brand, creator, or name matches all of the selected filters
+      return selectedFiltersRef.current.every(
+        (filter) =>
+          filter === brand_name || filter === creator_name || filter === name
+      );
+    });
+
     setFilteredData(filteredData);
   };
 
@@ -339,7 +339,7 @@ function Dropdown({
           className={isPeopleOpen ? "dropdownButtonOpen" : "dropdownButton"}
           onClick={() => handleOpenFilter("people")}
         >
-          {`Partner: ${
+          {`Group: ${
             selectedFiltersRef.current.length === 1
               ? selectedFiltersRef.current[0]
               : selectedFiltersRef.current.length === 0
