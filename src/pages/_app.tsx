@@ -26,19 +26,19 @@ export default function App({ Component, pageProps }: AppProps) {
 
   useEffect(() => {
     if (!localStorage.access_token || !localStorage.refresh_token) {
-      router.push('/auth');
+      router.push("/auth");
     } else {
       if (localStorage.refresh_token) {
         refreshToken((error) => {
-          console.error('Error:', error);
+          console.error("Error:", error);
         });
         setInterval(() => {
           refreshToken((error) => {
-            console.error('Error:', error);
+            console.error("Error:", error);
           });
         }, 1000 * 30);
       } else {
-        router.push('/auth');
+        router.push("/auth");
       }
     }
   }, []);

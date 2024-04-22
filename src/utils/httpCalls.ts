@@ -35,9 +35,41 @@ export const refreshToken = async (errorCallback?: (error: any) => void) => {
 /******************************  PUT CALLS  ***************************/
 ////////////////////////////////////////////////////////////////////////
 
-/* PUT NEW ORDER*/
+/* PUT NEW ORDER PROJECT*/
 
-export const putNewOrder = async (
+export const putNewOrderProject = async (
+  stageId: number,
+  updatedData: any,
+  callback: (data: any) => void,
+  errorCallback?: (error: any) => void
+) => {
+  console.log("PUT successful",updatedData)
+  const url = `${DEPLOYED_API_BASE_URL}project-stages/${stageId}/`;
+
+  try {
+    const response = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.access_token}`,
+      },
+      body: JSON.stringify(updatedData),
+    });
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    const data = await response.json();
+    callback(data);
+  } catch (error) {
+    errorCallback && errorCallback(error);
+  }
+};
+
+/* PUT NEW ORDER CAMPAIGN*/
+
+export const putNewOrderCampaign = async (
   stageId: number,
   updatedData: any,
   callback: (data: any) => void,

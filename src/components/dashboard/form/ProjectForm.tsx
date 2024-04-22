@@ -54,7 +54,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
 
 }) => {
   const router = useRouter()
-  const { register, handleSubmit, reset, setValue } = useForm<FormData>();
+  const { register, handleSubmit, reset, setValue,formState: { errors } } = useForm<FormData>();
   const [selectedStage, setSelectedStage] = useState<any>([]);
   const [creatorsData, setCreatorsData] = useState<Creators[]>([]);
   const [campaignsData, setCampaignsData] = useState<any>([]);
@@ -306,110 +306,130 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
       ) : (
 
         <div className="sidepanel-wrap">
-          <form className="sidepanel-form" onSubmit={handleSubmit(onSubmit)}>
-            <div className="form-box">
-              <span className="smallcaps">PROJECT NAME*</span>
-              <input
-                {...register("name", { required: true })}
-                className="form-input"
-                type="text"
-                placeholder="Enter a name"
-              />
-            </div>
-            <div className="form-box">
-              <span className="smallcaps">DESCRIPTION</span>
-              <textarea
-                {...register("description")}
-                className="form-textarea"
-                placeholder="Add a description"
-              />
-            </div>
-            <div className="form-box">
-              <span className="smallcaps">SELECT CAMPAIGN*</span>
-              <SearchDropdown
-                data={campaignsData}
-                onSelect={(selectedItem) => {
-                  setValue("campaign", selectedItem.id);
-                }}
-                placeholder="Select Campaign"
-                handleSearch={handleSearchChange}
-                displayKey="name"
-              />
-            </div>
-            <div className="form-box">
-              <span className="smallcaps">SELECT CREATOR*</span>
-              <SearchDropdown
-                data={creatorsData}
-                onSelect={(selectedItem) => {
-                  setValue("creator", selectedItem.id);
-                }}
-                placeholder="Select Creator"
-                handleSearch={handleSearchChange}
-                displayKey="name"
-              />
-            </div>
-            <div className="form-box">
-              <span className="smallcaps">CONTRACT VALUE*</span>
-              <input
-                {...register("contract_value", { required: false })}
-                className="form-input"
-                type="text"
-                placeholder="Add contract Value"
-              />
-            </div>
-            <div className="form-box">
-              <span className="smallcaps">INVOICE STATUS*</span>
-              <div className="select-wrap">
-                <select
-                {...register("invoice_paid", { required: true })}
-                onChange={handleInvoiceChange}
-                value={invoicePaid.toString()}
-                className="form-input"
-              >
-                <option value="false">Unpaid</option>
-                <option value="true">Paid</option>
-              </select>
-              </div>
-            </div>
-            <div className="form-box">
-              <span className="smallcaps">START DATE*</span>
-              <input
-                {...register("start_date", { required: true })}
-                className="form-input"
-                type="date"
-                placeholder="YYYY-MM-DD"
-              />
-            </div>
-            <div className="form-box">
-              <span className="smallcaps">END DATE*</span>
-              <input
-                {...register("deadline", { required: true })}
-                className="form-input"
-                type="date"
-                placeholder="YYYY-MM-DD"
-              />
-            </div>
-            <div className='form-box'>
-              <span className='smallcaps'>SELECT STAGE*</span>
-              <div className="select-wrap">
-                <select
-                  {...register("project_stage", { required: true })}
-                  onChange={handleSelectStage}
-                  value={selectedStage}
-                  className="select-input"
-                >
-                  <option value="">Select Stage</option> {/* Default option */}
-                  {Array.isArray(projectStage) && projectStage.map((stage) => {
-                    console.log("Stage Name:", stage.name);
-                    return (
-                      <option key={stage.stageID} value={stage.stageID}>
-                        {stage.stageName}
-                      </option>
-                    );
-                  })}
-                </select>
-              </div>
-            </div>
+  <form className="sidepanel-form" onSubmit={handleSubmit(onSubmit)}>
+    <div className="form-box">
+      <span className="smallcaps">PROJECT NAME*</span>
+      <input
+        {...register("name", {
+          required: "Project name is required",
+          validate: value => value.trim() !== "" || "Project name is required"
+        })}
+        className="form-input"
+        type="text"
+        placeholder="Enter a name" 
+      />
+      {errors.name && <span className="error-message">Project name is required</span>}
+    </div>
+    <div className="form-box">
+      <span className="smallcaps">DESCRIPTION</span>
+      <textarea
+        {...register("description")}
+        className="form-textarea"
+        placeholder="Add a description"
+      />
+    </div>
+    <div className="form-box">
+      <span className="smallcaps">SELECT CAMPAIGN*</span>
+      <SearchDropdown
+        data={campaignsData}
+        onSelect={(selectedItem) => {
+          setValue("campaign", selectedItem.id);
+        }}
+        placeholder="Select Campaign"
+        handleSearch={handleSearchChange}
+        displayKey="name"
+        {...register("campaign", { required: true })}
+      />
+      {errors.campaign && <span className="error-message">Campaign is required</span>}
+    </div>
+    <div className="form-box">
+      <span className="smallcaps">SELECT CREATOR*</span>
+      <SearchDropdown
+        data={creatorsData}
+        onSelect={(selectedItem) => {
+          setValue("creator", selectedItem.id);
+        }}
+        placeholder="Select Creator"
+        handleSearch={handleSearchChange}
+        displayKey="name"
+        {...register("creator", {
+          required: "Contract value is required",
+          validate: value => value.trim() !== "" || "Contract value is required"
+        })}
+      />
+      {errors.creator && <span className="error-message">Creator is required</span>}
+    </div>
+    <div className="form-box">
+      <span className="smallcaps">CONTRACT VALUE*</span>
+      <input
+        {...register("contract_value", { required: true })}
+        className="form-input"
+        type="text"
+        placeholder="Add contract Value"
+        {...register("contract_value", {
+          required: "Contract value is required",
+          validate: value => value.trim() !== "" || "Contract value is required"
+        })}
+      />
+      {errors.contract_value && <span className="error-message">Contract value is required</span>}
+    </div>
+    <div className="form-box">
+      <span className="smallcaps">INVOICE STATUS*</span>
+      <div className="select-wrap">
+        <select
+          {...register("invoice_paid", { required: true })}
+          onChange={handleInvoiceChange}
+          value={invoicePaid.toString()}
+          className="form-input"
+        >
+          <option value="false">Unpaid</option>
+          <option value="true">Paid</option>
+        </select>
+      </div>
+      {errors.invoice_paid && <span className="error-message">Please select invoice status</span>}
+    </div>
+    <div className="form-box">
+      <span className="smallcaps">START DATE*</span>
+      <input
+        {...register("start_date", { required: true })}
+        className="form-input"
+        type="date"
+        placeholder="YYYY-MM-DD"
+      />
+      {errors.start_date && <span className="error-message">Start date is required</span>}
+    </div>
+    <div className="form-box">
+      <span className="smallcaps">END DATE*</span>
+      <input
+        {...register("deadline", { required: true })}
+        className="form-input"
+        type="date"
+        placeholder="YYYY-MM-DD"
+      />
+      {errors.deadline && <span className="error-message">End date is required</span>}
+    </div>
+    <div className='form-box'>
+      <span className='smallcaps'>SELECT STAGE*</span>
+      <div className="select-wrap">
+        <select
+          {...register("project_stage", { required: true })}
+          onChange={handleSelectStage}
+          value={selectedStage}
+          className="select-input"
+        >
+          <option value="">Select Stage</option> {/* Default option */}
+          {Array.isArray(projectStage) && projectStage.map((stage) => {
+            console.log("Stage Name:", stage.name);
+            return (
+              <option key={stage.stageID} value={stage.stageID}>
+                {stage.stageName}
+              </option>
+            );
+          })}
+        </select>
+      </div>
+      {errors.project_stage && <span className="error-message">Please select a project stage</span>}
+    </div>
 
             <button className="sec-button linen" type="submit">
               <p>SAVE</p>

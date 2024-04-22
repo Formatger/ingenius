@@ -3,7 +3,7 @@ import Image from "next/image";
 import Plus from "@/components/assets/icons/plus.svg";
 import Edit from "@/components/assets/icons/edit.svg";
 import AddFieldModalCampaign from "@/components/dashboard/kanban/AddFieldModalCampaign";
-import { putCampaign, putNewOrder } from "@/utils/httpCalls";
+import { putCampaign, putNewOrderCampaign } from "@/utils/httpCalls";
 
 interface CampaignKanbanProps {
   httpError: {
@@ -97,7 +97,7 @@ const CampaignKanban = ({
     console.log("START DATA STAGES", stage);
   };
 
-  const handleDropColumn = async (e, newColumn) => {
+  const handleDropColumn = async (e: any, newColumn: any) => {
     e.preventDefault();
     const oldColumnData = JSON.parse(e.dataTransfer.getData("stage"));
     const oldColumn = oldColumnData.stage;
@@ -107,17 +107,17 @@ const CampaignKanban = ({
       try {
         // Llamar a la función para actualizar el orden en la base de datos
         await Promise.all([
-          putNewOrder(
+          putNewOrderCampaign(
             oldColumn.stageID,
             { name: oldColumn.stageName, order: newColumn.stageIndex },
             () => {},
-            null
+            undefined
           ),
-          putNewOrder(
+          putNewOrderCampaign(
             newColumn.stageID,
             { name: newColumn.stageName, order: oldColumn.stageIndex },
             () => {},
-            null
+            undefined
           ),
         ]);
 
@@ -231,18 +231,29 @@ const CampaignKanban = ({
   };
 
   return (
-    <div className="kanban-container">
+    <div
+      className="kanban-container"
+      style={{
+        gridTemplateColumns: `repeat(${stages.length}, 1fr)`,
+      }}
+    >
       {stages
         .sort((a, b) => a.stageIndex - b.stageIndex)
-        .map((campaignCol) => {
+        .map((campaignCol, stagesIndex) => {
           console.log("Datos de la columna de campaña:", campaignCol); // Agregar este console.log para verificar los datos de campaignCol
           return (
             <div
-              className="kanban-column-wrapper"
+              className={`kaban-column`}
               // className={`kanban-column ${draggedOverStageIndex === campaignCol.stageIndex ? 'drag-over-column' : ''}`}
-              onDrop={(e) => {
-                handleDrop(e, campaignCol.stageID);
+              // className={`kanban-column`}
+              style={{
+                width: "100%",
+                maxWidth: "450px",
+                border: "none",
+                backgroundColor: "white",
+                padding: "0 10px",
               }}
+              onDrop={(e) => handleDrop(e, campaignCol.stageID)}
               onDragOver={(e) => handleDragOver(e, campaignCol.stageID)}
               onDragLeave={handleDragLeave}
               onDragStart={(e) => handleDragStartColumn(e, campaignCol)}
@@ -250,19 +261,36 @@ const CampaignKanban = ({
               draggable
             >
               <div
-                className={`kanban-header ${
-                  draggedOverStageIndex === campaignCol.stageIndex
-                    ? "drag-over-column"
-                    : ""
-                }`}
-                onDrop={(e) => {
-                  handleDropColumn(e, campaignCol);
-                }}
+                className={`kanban-header`}
+                onDrop={(e) => handleDropColumn(e, campaignCol)}
                 onDragStart={(e) => handleDragStartColumn(e, campaignCol)}
               >
-                <span className={`round-tag stone ${campaignCol.color}`}>
+                <span
+                  className={`round-tag stone ${campaignCol.color}`}
+                  onDrop={(e) => handleDropColumn(e, campaignCol)}
+                  onDragStart={(e) => handleDragStartColumn(e, campaignCol)}
+                  draggable
+                >
                   {campaignCol.stageName}
                 </span>
+                {stagesIndex === stages.length - 1 && (
+                  <div className="addtags-wrap">
+                    <div className="row-wrap-2">
+                      <button onClick={() => setIsModalOpen(true)}>
+                        <Image src={Plus} alt="Icon" width={15} height={15} />
+                      </button>
+                      <button>
+                        <Image src={Edit} alt="Icon" width={15} height={15} />
+                      </button>
+                    </div>
+                    <AddFieldModalCampaign
+                      isOpen={isModalOpen}
+                      onClose={() => setIsModalOpen(false)}
+                      title="Add Field"
+                      updateCampaignData={updateCampaignData}
+                    />
+                  </div>
+                )}
               </div>
               {campaignCol.campaigns?.map((campaignCard: any) => {
                 console.log(
@@ -302,22 +330,6 @@ const CampaignKanban = ({
             </div>
           );
         })}
-      <div className="addtags-wrap">
-        <div className="row-wrap-2">
-          <button onClick={() => setIsModalOpen(true)}>
-            <Image src={Plus} alt="Icon" width={15} height={15} />
-          </button>
-          <button>
-            <Image src={Edit} alt="Icon" width={15} height={15} />
-          </button>
-        </div>
-        <AddFieldModalCampaign
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          title="Add Field"
-          updateCampaignData={updateCampaignData}
-        />
-      </div>
     </div>
   );
 };
