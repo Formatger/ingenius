@@ -63,9 +63,14 @@
   outline: none;
 }
 
+.error-message {
+  font-family: "InterRegular";
+  font-size: 12px;
+  margin-top: 4px;
+  color: var(--red);
+}
+
 /* React Calendar */
-
-
 
 .react-calendar {
   font-size: 16px !important;

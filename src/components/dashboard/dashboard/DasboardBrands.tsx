@@ -213,10 +213,10 @@ const DashboardBrands = () => {
               
             </table>
 
-        <button className="app-button mt-3" onClick={undefined}>
+        {/* <button className="app-button mt-3" onClick={undefined}>
           <Image src={Add} alt="Icon" width={20} height={20} />
           <p>Add New</p>
-        </button>
+        </button> */}
       </div>
 
   );

@@ -27,7 +27,7 @@ interface FormData {
   start_date: Date;
   deadline: Date;
   name: string;
-  contract_value: number;
+  contract_value?: number;
   description?: string;
   campaign: string;
   creator?: string;
@@ -58,7 +58,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
   const [selectedStage, setSelectedStage] = useState<any>([]);
   const [creatorsData, setCreatorsData] = useState<Creators[]>([]);
   const [campaignsData, setCampaignsData] = useState<any>([]);
-  const [invoicePaid, setInvoicePaid] = useState<boolean>(projectsData.invoice_paid ?? false);
+  const [invoicePaid, setInvoicePaid] = useState<boolean>(projectsData?.invoice_paid ?? false);
  
   /* SELECT DROPDOWNS */
 
@@ -354,25 +354,29 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
         displayKey="name"
         {...register("creator", {
           required: "Contract value is required",
-          validate: value => value.trim() !== "" || "Contract value is required"
+          validate: value => value !== "" && value != null || "Creator is required"
         })}
       />
       {errors.creator && <span className="error-message">Creator is required</span>}
     </div>
     <div className="form-box">
-      <span className="smallcaps">CONTRACT VALUE*</span>
-      <input
-        {...register("contract_value", { required: true })}
-        className="form-input"
-        type="text"
-        placeholder="Add contract Value"
-        {...register("contract_value", {
-          required: "Contract value is required",
-          validate: value => value.trim() !== "" || "Contract value is required"
-        })}
-      />
-      {errors.contract_value && <span className="error-message">Contract value is required</span>}
-    </div>
+        <span className="smallcaps">CONTRACT VALUE*</span>
+        <input
+          {...register("contract_value", {
+            required: "Contract value is required",
+            valueAsNumber: true, // Ensure the value is treated as a number
+            validate: {
+              notEmpty: value => value !== undefined || "Contract value cannot be empty",
+              isNumber: value => !isNaN(value ?? 0) || "Please enter a number", // Check if the value is not NaN
+            }
+          })}
+          className="form-input"
+          type="text" // Using type="text" to handle input manually
+          placeholder="Add contract Value"
+        />
+        {errors.contract_value && <span className="error-message">{errors.contract_value.message}</span>}
+      </div>
+
     <div className="form-box">
       <span className="smallcaps">INVOICE STATUS*</span>
       <div className="select-wrap">
@@ -380,7 +384,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
           {...register("invoice_paid", { required: true })}
           onChange={handleInvoiceChange}
           value={invoicePaid.toString()}
-          className="form-input"
+          className="select-input"
         >
           <option value="false">Unpaid</option>
           <option value="true">Paid</option>

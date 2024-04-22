@@ -47,6 +47,7 @@ button[disabled] {
   justify-content: center;
   width: max-content;
   max-width: fit-content;
+  min-width: 100px;
   height: 46px;
   padding: 0 var(--m5);
   border-radius: var(--r6);
@@ -218,7 +219,7 @@ green, blue, light-blue, ivory, pink */
 }
 .status-tag.pink {
   background-color: var(--pink);
-  color: var(--darkred);
+  color: var(--firebrick);
 }
 
 /* Input */

@@ -35,10 +35,19 @@ const DashboardPage = () => {
               <div className="brands-clients">
                   <DashboardBrands/>
                 <div className="invoice-stats">
-                <PendingInvoices/>
                 <InvoiceChart/>
+                {/* <PendingInvoices/> */}
                 </div>
               </div>
+
+              <div className="brands-clients">
+                  <DashboardBrands/>
+                <div className="invoice-stats">
+                <InvoiceChart/>
+                {/* <PendingInvoices/> */}
+                </div>
+              </div>
+
             </div>
           </div>
         </>

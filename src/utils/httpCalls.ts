@@ -348,6 +348,34 @@ export const deleteCampaign = async (
   }
 };
 
+/* DELETE CAMPAIGN-STAGE */
+
+export const deleteCampaignStage = async (
+  stageId: number,
+  callback: () => void, 
+  errorCallback: (error: any) => void
+) => {
+  const url = `${DEPLOYED_API_BASE_URL}campaign-stages/${stageId}/`; // Adjusted endpoint to 'project-stages'
+
+  try {
+    const response = await fetch(url, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    callback();
+  } catch (error) {
+    errorCallback(error);
+  }
+};
+
 /* DELETE DEAL */
 
 export const deleteDeal = async (

@@ -70,10 +70,10 @@ const AddFieldModalCampaign: React.FC<AddFieldModalCampaignProps> = ({ isOpen, o
           </div>
         )}
         <div className="modal-content">
-          <p className='text'>
+          {/* <p className='text'>
             Add a new field to your kanban board here
-          </p>
-          <p className='smallcaps mt-4'>
+          </p> */}
+          <p className='smallcaps'>
             Add Label
           </p>
           <input

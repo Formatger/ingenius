@@ -76,12 +76,13 @@
   --transparent: transparent;
   --white: white;
   --black: black;
+  --dark: var(--gray7)
 
   --darkred: #C71026;
   --red: #ff5b4d;
   --salmon: #ff8e84;
   --firebrick: #CD1D05;
-  --pink: #f7cfca;
+  --pink: #ffc2ba;
   --cream: #E2C8C5;
 
   --brown2:#ee5f00;
@@ -94,6 +95,7 @@
   --soft-orange: #FFF7ED;
 
   --yellow: #ffcd58;
+  --soft-yellow: #ffe187;
 
   --dark-linen: #797470;
   --linen: #f2e9df;
@@ -102,7 +104,7 @@
   --ivory: #f2f2cf;
   --darkgreen: #0B8A00;
   --green: #cff2cf;
-  --blue: #cfe0f2;
+  --blue: #cfe6ff;
   --light-blue: #e7ecf4;
   --light-steel-blue: #A3AED0;
 

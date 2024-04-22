@@ -21,8 +21,7 @@ const ProjectsKanban = ({
   updateProjectData,
 }: ProjectsKanbanProps) => {
   const [isAddModalOpen, setAddModalOpen] = useState(false);
-  const [isModalOpen, setModalOpen] = useState(false);
-  const [isEditModalOpen, setEditModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [draggedOverStageIndex, setDraggedOverStageIndex] = useState<string | null>(null); // Estado para almacenar el ID de la columna sobre la que se arrastra
   const [stages, setStages] = useState<any[]>([]);
   const [deleteStageId, setDeleteStageId] = useState<string | null>(null);
@@ -80,29 +79,40 @@ const ProjectsKanban = ({
     }
     console.log("Setting deleteStageId to:", stageID);
     setDeleteStageId(stageID);
-    setModalOpen(true);
+    setIsModalOpen(true);
   };
   
   const handleDelete = async () => {
     if (deleteStageId) {
       const stage = stages.find(stage => stage.stageID === deleteStageId);
-      // Ensure the stage is empty before allowing deletion
       if (stage && stage.projects.length > 0) {
         alert("Please move all projects from this stage to another stage before deleting it.");
         return;
       }
   
-      // Call the API to delete the stage
-      deleteProjectStage(parseInt(deleteStageId), () => {
-        // Success callback
+      deleteProjectStage(parseInt(deleteStageId), async () => {
         console.log("Stage deleted successfully");
-        const updatedStages = stages.filter(stage => stage.stageID !== deleteStageId);
-        setStages(updatedStages); // Update the local state to reflect the change
+        const remainingStages = stages.filter(stage => stage.stageID !== deleteStageId);
+        const updatedStages = remainingStages.map((stage, index) => ({
+          ...stage,
+          stageIndex: index + 1 // Reassign stageIndex starting from 1
+        }));
+        setStages(updatedStages); // Update the local state
+  
+        // Update the backend about the new order
+        for (const stage of updatedStages) {
+          await putNewOrderProject(
+            stage.stageID,
+            { name: stage.stageName, order: stage.stageIndex },
+            () => {},
+            (error) => console.error("Failed to update stage order:", error)
+          );
+        }
+  
         updateProjectData(); // Additional updates if necessary
-        setModalOpen(false);
+        setIsModalOpen(false);
         setDeleteStageId(null); // Reset deletion target ID
       }, (error) => {
-        // Error callback
         console.error("Failed to delete stage:", error);
         alert("Failed to delete stage. Please try again.");
       });
@@ -284,7 +294,7 @@ const ProjectsKanban = ({
               {/* {stagesIndex === stages.length - 1 && ( */}
                 <div className="addtags-wrap">
                   <div className="row-wrap-2">
-                    <button onClick={() => setEditModalOpen(true)}>
+                    <button onClick={() => setAddModalOpen(true)}>
                       <Image src={Edit} alt="Icon" width={12} height={12} />
                     </button>
                     <button onClick={() => openDeleteModal(projectCol.stageID)}>
@@ -292,10 +302,19 @@ const ProjectsKanban = ({
                     </button>
                   </div>
 
+                  {/* Add / Edit Modal */}
+                  <AddFieldModal
+                    isOpen={isAddModalOpen}
+                    onClose={() => setAddModalOpen(false)}
+                    title="Add Project Stage"
+                    updateProjectData={updateProjectData}
+                  />
+                
+                  {/* Delete Stage Modal */}
                   <ConfirmModal
                     isOpen={isModalOpen && deleteStageId === projectCol.stageID}
-                    onClose={() => setModalOpen(false)}
-                    title="Confirm Delete"
+                    onClose={() => setIsModalOpen(false)}
+                    title="Delete Project Stage"
                     message={`Are you sure you want to delete the stage '${projectCol.stageName}'?`}
                     onConfirm={handleDelete}
                     button="Yes, delete this stage"
@@ -334,18 +353,12 @@ const ProjectsKanban = ({
           </div>
         ))}
 
+       {/* ADD STAGE BUTTON */}
         <div className="addstage-wrap">
           <button className="add-stage-btn" onClick={() => setAddModalOpen(true)}>
             <Image src={Plus} alt="Icon" width={12} height={12} />
             Add Stage
           </button>
-
-          <AddFieldModal
-            isOpen={isAddModalOpen}
-            onClose={() => setAddModalOpen(false)}
-            title="Add Project Stage"
-            updateProjectData={updateProjectData}
-          />
         </div>
                     
     </div>

@@ -20,15 +20,15 @@ const PieChartComponent = () => {
     <div className="dashboard-box">
         <div className="chart-header">
           <h5 className="dashboard-title">Invoices</h5>
-          <div className="row-wrap-1">
+          {/* <div className="row-wrap-1">
             <button className="row-wrap" onClick={undefined}>
               <p className="timeline-text">Monthly </p>
               <Arrow className="gray-fill arrow-down" />
             </button>
-          </div>
+          </div> */}
         </div>
         <div className="chart-wrap">
-          <PieChart width={400} height={400}>
+          <PieChart width={400} height={320}>
             <Pie
               data={data}
               cx={200}

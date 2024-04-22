@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import Arrow from "../assets/svg/Arrow";
+import Exit from "@/components/assets/icons/exit.svg";
 
 const timeframes = [
   { id: "tf-1", value: "All" },
@@ -360,7 +362,7 @@ function Dropdown({
                       className="chipClose"
                       onClick={() => handleRemoveFilter(filter)}
                     >
-                      X
+                    <Image src={Exit} alt="Icon" width={12} height={12} />
                     </button>
                   </div>
                 ))}
