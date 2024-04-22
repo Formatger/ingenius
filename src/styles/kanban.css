@@ -1,7 +1,6 @@
 /* KANBAN STYLES */
 .kanban-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  display: flex;
   padding-right: 40px;
   margin-top: 30px;
   overflow-x: auto;
@@ -15,6 +14,7 @@
 .kanban-column {
   width: 100%;
   max-width: 450px;
+  min-width: 300px;
   border: none;
   background-color: white;
   padding: 0 10px;
@@ -32,7 +32,7 @@
 .kanban-header {
   display: flex;
   justify-content: flex-start;
-  padding: 16px 0;
+  padding: 12px 0;
   margin-bottom: 16px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   position: relative;
@@ -93,6 +93,22 @@
   background-color: #e4e4e4;
 }
 
+.exit-icon {
+  transform: rotate(45deg);
+}
+
+.stage-tag {
+  font-family: "InterRegular";
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  padding: var(--m2) var(--m4);
+  font-size: 13px;
+  border-radius: var(--r5);
+  gap: var(--m1);
+}
+
 .color-pink {
   background-color: var(--pink);
 }
@@ -121,15 +137,43 @@
     203,
     203,
     0.1
-  ); /* Fondo amarillo claro, por ejemplo */
-  border: 1px dashed rgb(211, 211, 211); /* Un borde punteado amarillo */
+  ); 
+  border: 1px dashed rgb(211, 211, 211); 
   border-radius: 8px;
 }
 
-.kanban-card {
-  cursor: grab; /* Changes the cursor to a grabbing hand when hovering */
+.add-stage-btn {
+  font-family: "InterRegular";
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: max-content;
+  padding: var(--m2) var(--m4);
+  font-size: 13px;
+  border-radius: var(--r5);
+  gap: var(--m1);
+  background-color: var(--stone);
 }
 
+.addstage-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* border: 1px solid red; */
+  height: 60px;
+  margin-left: 10px;
+}
+
+.stage-tag {
+  cursor: grab;
+}
+.stage-tag:active {
+  cursor: grabbing; 
+}
+
+.kanban-card {
+  cursor: grab;
+}
 .kanban-card:active {
-  cursor: grabbing; /* Changes the cursor to a grabbing hand when the card is being clicked and held */
+  cursor: grabbing; 
 }

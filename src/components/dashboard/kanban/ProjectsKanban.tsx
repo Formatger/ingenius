@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Plus from "@/components/assets/icons/plus.svg";
+import PlusWhite from "@/components/assets/icons/plus-white.svg";
 import Edit from "@/components/assets/icons/edit.svg";
 import AddFieldModal from "@/components/dashboard/kanban/AddFieldModal";
-import { putProject, putNewOrderProject } from "@/utils/httpCalls";
+import { putProject, putNewOrderProject, deleteProjectStage } from "@/utils/httpCalls";
+import ConfirmModal from "../profile/ConfirmModal";
 
 interface ProjectsKanbanProps {
   projectsData: any;
-  handleOpenSidepanel: (project: object) => void;
   projectStage: any;
   updateProjectData: () => void;
+  handleOpenSidepanel: (project: object) => void;
 }
 
 const ProjectsKanban = ({
@@ -18,21 +20,37 @@ const ProjectsKanban = ({
   projectStage,
   updateProjectData,
 }: ProjectsKanbanProps) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isFormOpen, setIsFormOpen] = useState(false);
-  const [projectsColumn, setProjectsColumn] = useState<any[]>([]);
-  const [draggedOverStageIndex, setDraggedOverStageIndex] = useState<
-    string | null
-  >(null); // Estado para almacenar el ID de la columna sobre la que se arrastra
+  const [isAddModalOpen, setAddModalOpen] = useState(false);
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [isEditModalOpen, setEditModalOpen] = useState(false);
+  const [draggedOverStageIndex, setDraggedOverStageIndex] = useState<string | null>(null); // Estado para almacenar el ID de la columna sobre la que se arrastra
   const [stages, setStages] = useState<any[]>([]);
+  const [deleteStageId, setDeleteStageId] = useState<string | null>(null);
   const colors = ["pink", "linen", "green", "blue", "yellow", "orange", "red"];
+
+  /* ASSIGN COLOR TO STAGES */
+
+  const assignColorsToStages = (stages: any[]) => {
+    const storedColors = localStorage.getItem('stageColors');
+    const colorsMap = storedColors ? JSON.parse(storedColors) : {};
+  
+    const coloredStages = stages.map(stage => {
+      if (!colorsMap[stage.stageID]) {
+        colorsMap[stage.stageID] = `color-${colors[Math.floor(Math.random() * colors.length)]}`;
+      }
+      return {...stage, color: colorsMap[stage.stageID]};
+    });
+  
+    localStorage.setItem('stageColors', JSON.stringify(colorsMap));
+    return coloredStages;
+  };
 
   /* FETCH STAGE COLUMNS */
 
   useEffect(() => {
     if (projectStage.length === 0) return; // Evitar procesamiento si projectStage está vacío
 
-    const stagesWithProjects = projectStage.map(
+    let stagesWithProjects = projectStage.map(
       (stage: any) => {
         const stageProjects = projectsData.filter((project: any) => {
           console.log("PROJECT PROJECT_STAGE", project.project_stage); // Agregado console.log para project.project_stage
@@ -46,20 +64,60 @@ const ProjectsKanban = ({
       [projectsData, projectStage]
     );
 
+    stagesWithProjects = assignColorsToStages(stagesWithProjects);
     setStages(stagesWithProjects);
   }, [projectsData, projectStage]);
 
   console.log("Projects column", stages);
 
-  /* DRAG DROP */
+  /* DELETE STAGE */
 
-  const handleDragStartColumn = (e: any, stage: any) => {
+  const openDeleteModal = (stageID: any) => {
+    const stage = stages.find(stage => stage.stageID === stageID);
+    if (stage && stage.projects.length > 0) {
+      alert("Please move all projects from this stage to another stage before deleting it.");
+      return;
+    }
+    console.log("Setting deleteStageId to:", stageID);
+    setDeleteStageId(stageID);
+    setModalOpen(true);
+  };
+  
+  const handleDelete = async () => {
+    if (deleteStageId) {
+      const stage = stages.find(stage => stage.stageID === deleteStageId);
+      // Ensure the stage is empty before allowing deletion
+      if (stage && stage.projects.length > 0) {
+        alert("Please move all projects from this stage to another stage before deleting it.");
+        return;
+      }
+  
+      // Call the API to delete the stage
+      deleteProjectStage(parseInt(deleteStageId), () => {
+        // Success callback
+        console.log("Stage deleted successfully");
+        const updatedStages = stages.filter(stage => stage.stageID !== deleteStageId);
+        setStages(updatedStages); // Update the local state to reflect the change
+        updateProjectData(); // Additional updates if necessary
+        setModalOpen(false);
+        setDeleteStageId(null); // Reset deletion target ID
+      }, (error) => {
+        // Error callback
+        console.error("Failed to delete stage:", error);
+        alert("Failed to delete stage. Please try again.");
+      });
+    }
+  };
+
+  /* DRAG DROP COLUMNS */
+
+  const handleDragStartColumn = (e: React.DragEvent, stage: any) => {
     e.dataTransfer.setData("text/plain", stage.stageIndex); // Guardar el índice de la columna basado en `stageIndex`
     e.dataTransfer.setData("stage", JSON.stringify({ stage }));
     console.log("START DATA STAGES", stage);
   };
 
-  const handleDropColumn = async (e: any, newColumn: any) => {
+  const handleDropColumn = async (e: React.DragEvent, newColumn: any) => {
     e.preventDefault();
     const oldColumnData = JSON.parse(e.dataTransfer.getData("stage"));
     const oldColumn = oldColumnData.stage;
@@ -106,6 +164,8 @@ const ProjectsKanban = ({
       }
     }
   };
+
+  /* DRAG DROP CARDS  */
 
   const handleDragStart = (e: any, projects: any, stages: any) => {
     e.dataTransfer.setData("projects", JSON.stringify({ ...projects, stages }));
@@ -188,6 +248,7 @@ const ProjectsKanban = ({
       console.error("Error al procesar la solicitud PUT:", error);
     }
   };
+
   return (
     <div
       className="kanban-container"
@@ -199,19 +260,19 @@ const ProjectsKanban = ({
         .sort((a, b) => a.stageIndex - b.stageIndex)
         .map((projectCol, stagesIndex) => (
           <div
-            className="kanban-column"
-            onDrop={(e) => {
-              handleDrop(e, projectCol.stageID);
-            }}
+            className={`kanban-column ${draggedOverStageIndex === projectCol.stageID ? 'drag-over-column' : ''}`}
+            onDrop={(e) => {handleDrop(e, projectCol.stageID);}}
             onDragOver={(e) => handleDragOver(e, projectCol.stageID)}
             onDragLeave={handleDragLeave}
-            // onDragStart={(e) => handleDragStartColumn(e, projectCol)}
+            onDragStart={(e) => handleDragStartColumn(e, projectCol)}
             key={projectCol.stageIndex}
             draggable
           >
-            <div className={`kanban-header`}>
+            <div className={`kanban-header`}
+              onDrop={(e) => handleDropColumn(e, projectCol)}
+              onDragStart={(e) => handleDragStartColumn(e, projectCol)}>
               <span
-                className={`round-tag stone ${projectCol.color}`}
+                className={`stage-tag stone ${projectCol.color}`}
                 onDrop={(e) => {
                   handleDropColumn(e, projectCol);
                 }}
@@ -220,25 +281,27 @@ const ProjectsKanban = ({
               >
                 {projectCol.stageName}
               </span>
-              {stagesIndex === stages.length - 1 && (
+              {/* {stagesIndex === stages.length - 1 && ( */}
                 <div className="addtags-wrap">
                   <div className="row-wrap-2">
-                    <button onClick={() => setIsModalOpen(true)}>
-                      <Image src={Plus} alt="Icon" width={15} height={15} />
+                    <button onClick={() => setEditModalOpen(true)}>
+                      <Image src={Edit} alt="Icon" width={12} height={12} />
                     </button>
-                    <button>
-                      <Image src={Edit} alt="Icon" width={15} height={15} />
+                    <button onClick={() => openDeleteModal(projectCol.stageID)}>
+                      <Image className="exit-icon" src={Plus} alt="Icon" width={15} height={15} />
                     </button>
                   </div>
 
-                  <AddFieldModal
-                    isOpen={isModalOpen}
-                    onClose={() => setIsModalOpen(false)}
-                    title="Add Field"
-                    updateProjectData={updateProjectData}
+                  <ConfirmModal
+                    isOpen={isModalOpen && deleteStageId === projectCol.stageID}
+                    onClose={() => setModalOpen(false)}
+                    title="Confirm Delete"
+                    message={`Are you sure you want to delete the stage '${projectCol.stageName}'?`}
+                    onConfirm={handleDelete}
+                    button="Yes, delete this stage"
                   />
                 </div>
-              )}
+              {/* )} */}
             </div>
 
             {projectCol.projects?.map((projectCard: any) => (
@@ -270,6 +333,21 @@ const ProjectsKanban = ({
             ))}
           </div>
         ))}
+
+        <div className="addstage-wrap">
+          <button className="add-stage-btn" onClick={() => setAddModalOpen(true)}>
+            <Image src={Plus} alt="Icon" width={12} height={12} />
+            Add Stage
+          </button>
+
+          <AddFieldModal
+            isOpen={isAddModalOpen}
+            onClose={() => setAddModalOpen(false)}
+            title="Add Project Stage"
+            updateProjectData={updateProjectData}
+          />
+        </div>
+                    
     </div>
   );
 };

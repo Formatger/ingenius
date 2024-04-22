@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import ConfirmModal from "./ConfirmModal";
 import Image from "next/image";
 import Insta from "@/components/assets/images/insta.png";
 import Tiktok from "@/components/assets/images/tiktok.png";

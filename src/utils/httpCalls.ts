@@ -35,7 +35,7 @@ export const refreshToken = async (errorCallback?: (error: any) => void) => {
 /******************************  PUT CALLS  ***************************/
 ////////////////////////////////////////////////////////////////////////
 
-/* PUT NEW ORDER PROJECT*/
+/* PUT NEW STAGE ORDER PROJECT*/
 
 export const putNewOrderProject = async (
   stageId: number,
@@ -67,7 +67,7 @@ export const putNewOrderProject = async (
   }
 };
 
-/* PUT NEW ORDER CAMPAIGN*/
+/* PUT NEW STAGE ORDER CAMPAIGN*/
 
 export const putNewOrderCampaign = async (
   stageId: number,
@@ -287,6 +287,34 @@ export const deleteProject = async (
     }
 
     callback(); // Call callback directly without data
+  } catch (error) {
+    errorCallback(error);
+  }
+};
+
+/* DELETE PROJECT-STAGE */
+
+export const deleteProjectStage = async (
+  stageId: number,
+  callback: () => void, 
+  errorCallback: (error: any) => void
+) => {
+  const url = `${DEPLOYED_API_BASE_URL}project-stages/${stageId}/`; // Adjusted endpoint to 'project-stages'
+
+  try {
+    const response = await fetch(url, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    callback();
   } catch (error) {
     errorCallback(error);
   }

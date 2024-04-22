@@ -4,6 +4,7 @@ import Plus from "@/components/assets/icons/plus.svg";
 import Edit from "@/components/assets/icons/edit.svg";
 import AddFieldModalCampaign from "@/components/dashboard/kanban/AddFieldModalCampaign";
 import { putCampaign, putNewOrderCampaign } from "@/utils/httpCalls";
+import ConfirmModal from "../profile/ConfirmModal";
 
 interface CampaignKanbanProps {
   httpError: {
@@ -14,8 +15,8 @@ interface CampaignKanbanProps {
   data: any[];
   campaignStage: any;
   campaignsData: any;
-  handleOpenSidepanel: (campaign: object) => void;
   updateCampaignData: () => void;
+  handleOpenSidepanel: (campaign: object) => void;
 }
 
 const CampaignKanban = ({
@@ -26,7 +27,7 @@ const CampaignKanban = ({
   updateCampaignData,
 }: CampaignKanbanProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [stagesWithColors, setStagesWithColors] = useState<any[]>([]);
+  // const [stagesWithColors, setStagesWithColors] = useState<any[]>([]);
   const [draggedOverStageIndex, setDraggedOverStageIndex] = useState<
     string | null
   >(null); // Estado para almacenar el ID de la columna sobre la que se arrastra
@@ -36,41 +37,29 @@ const CampaignKanban = ({
   console.log(campaignStage);
   console.log(campaignsData);
 
-  /* FETCH COLUMN STAGES WITH COLORS*/
+  /* ASSIGN COLOR TO STAGES */
+  
+  const assignColorsToStages = (stages: any[]) => {
+  const storedColors = localStorage.getItem('stageColors');
+  const colorsMap = storedColors ? JSON.parse(storedColors) : {};
 
-  // useEffect(() => {
-  //   const loadStagesWithColors = () => {
-  //     const savedStages = localStorage.getItem('stagesWithColors');
-  //     if (savedStages) {
-  //       return JSON.parse(savedStages);
-  //     }
-  //     const newStages = campaignStage.map((stage: any) => ({
-  //       ...stage,
-  //       colorClass: `color-${colors[Math.floor(Math.random() * colors.length)]}`
-  //     }));
-  //     localStorage.setItem('stagesWithColors', JSON.stringify(newStages));
-  //     return newStages;
-  //   };
+  const coloredStages = stages.map(stage => {
+    if (!colorsMap[stage.stageID]) {
+      colorsMap[stage.stageID] = `color-${colors[Math.floor(Math.random() * colors.length)]}`;
+    }
+    return {...stage, color: colorsMap[stage.stageID]};
+  });
 
-  //   const coloredStages = loadStagesWithColors();
-  //   setStagesWithColors(coloredStages);
-
-  //   const stagesColumns = coloredStages.map((stage: { id: any; name: any; colorClass: any; }) => ({
-  //     columnId: `col-${stage.id}`,
-  //     columnName: stage.name,
-  //     color: stage.colorClass,
-  //     campaigns: data.filter(campaign => campaign.stageId === stage.id)
-  //   }));
-
-  //   setCampaignsData(stagesColumns);
-  // }, [campaignStage, data]);
+  localStorage.setItem('stageColors', JSON.stringify(colorsMap));
+  return coloredStages;
+};
 
   /* FETCH COLUMN STAGES */
 
   useEffect(() => {
     if (campaignStage.length === 0) return; // Evitar procesamiento si campaignStage está vacío
 
-    const stagesWithCampaigns = campaignStage.map(
+    let stagesWithCampaigns = campaignStage.map(
       (stage: any) => {
         const stageCampaigns = campaignsData.filter((campaign: any) => {
           console.log("CAMPAIGN CAMPAIGN_STAGE", campaign.campaign_stage); // Agregado console.log para campaign.campaign_stage
@@ -84,6 +73,7 @@ const CampaignKanban = ({
       [campaignsData, campaignStage]
     );
 
+    stagesWithCampaigns = assignColorsToStages(stagesWithCampaigns);
     setStages(stagesWithCampaigns);
   }, [campaignsData, campaignStage]); // Ahora la lista de dependencias se pasa correctamente al useEffect
 
@@ -91,13 +81,13 @@ const CampaignKanban = ({
 
   /* DRAG & DROP */
 
-  const handleDragStartColumn = (e: any, stage: any) => {
+  const handleDragStartColumn = (e: React.DragEvent, stage: any) => {
     e.dataTransfer.setData("text/plain", stage.stageIndex); // Guardar el índice de la columna basado en `stageIndex`
     e.dataTransfer.setData("stage", JSON.stringify({ stage }));
     console.log("START DATA STAGES", stage);
   };
 
-  const handleDropColumn = async (e: any, newColumn: any) => {
+  const handleDropColumn = async (e: React.DragEvent, newColumn: any) => {
     e.preventDefault();
     const oldColumnData = JSON.parse(e.dataTransfer.getData("stage"));
     const oldColumn = oldColumnData.stage;
@@ -146,10 +136,7 @@ const CampaignKanban = ({
   };
 
   const handleDragStart = (e: any, campaigns: any, stages: any) => {
-    e.dataTransfer.setData(
-      "campaigns",
-      JSON.stringify({ ...campaigns, stages })
-    );
+    e.dataTransfer.setData("campaigns",JSON.stringify({ ...campaigns, stages }));
     console.log("CAMPAIGNS START DATA", campaigns, stages);
   };
 
@@ -243,16 +230,7 @@ const CampaignKanban = ({
           console.log("Datos de la columna de campaña:", campaignCol); // Agregar este console.log para verificar los datos de campaignCol
           return (
             <div
-              className={`kaban-column`}
-              // className={`kanban-column ${draggedOverStageIndex === campaignCol.stageIndex ? 'drag-over-column' : ''}`}
-              // className={`kanban-column`}
-              style={{
-                width: "100%",
-                maxWidth: "450px",
-                border: "none",
-                backgroundColor: "white",
-                padding: "0 10px",
-              }}
+              className={`kanban-column ${draggedOverStageIndex === campaignCol.stageID ? 'drag-over-column' : ''}`}
               onDrop={(e) => handleDrop(e, campaignCol.stageID)}
               onDragOver={(e) => handleDragOver(e, campaignCol.stageID)}
               onDragLeave={handleDragLeave}
@@ -266,14 +244,14 @@ const CampaignKanban = ({
                 onDragStart={(e) => handleDragStartColumn(e, campaignCol)}
               >
                 <span
-                  className={`round-tag stone ${campaignCol.color}`}
+                  className={`stage-tag ${campaignCol.color}`}
                   onDrop={(e) => handleDropColumn(e, campaignCol)}
                   onDragStart={(e) => handleDragStartColumn(e, campaignCol)}
                   draggable
                 >
                   {campaignCol.stageName}
                 </span>
-                {stagesIndex === stages.length - 1 && (
+                {/* {stagesIndex === stages.length - 1 && ( */}
                   <div className="addtags-wrap">
                     <div className="row-wrap-2">
                       <button onClick={() => setIsModalOpen(true)}>
@@ -286,11 +264,12 @@ const CampaignKanban = ({
                     <AddFieldModalCampaign
                       isOpen={isModalOpen}
                       onClose={() => setIsModalOpen(false)}
-                      title="Add Field"
+                      title="Add Campaign Stage"
                       updateCampaignData={updateCampaignData}
                     />
+                    
                   </div>
-                )}
+                {/* )} */}
               </div>
               {campaignCol.campaigns?.map((campaignCard: any) => {
                 console.log(
