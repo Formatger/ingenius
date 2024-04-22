@@ -3,7 +3,7 @@ import Image from 'next/image';
 import Plus from "@/components/assets/icons/plus.svg";
 import Edit from "@/components/assets/icons/edit.svg";
 import AddFieldModalCampaign from "@/components/dashboard/kanban/AddFieldModalCampaign";
-import { putCampaign, putNewOrder } from '@/utils/httpCalls';
+import { putCampaign, putNewOrderCampaign } from '@/utils/httpCalls';
 
 
 
@@ -104,8 +104,8 @@ console.log("Campaigns column", stages);
       try {
         // Llamar a la función para actualizar el orden en la base de datos
         await Promise.all([
-          putNewOrder(oldColumn.stageID, { name: oldColumn.stageName ,order: newColumn.stageIndex }, () => {}, null),
-          putNewOrder(newColumn.stageID, { name: newColumn.stageName, order: oldColumn.stageIndex }, () => {}, null)
+          putNewOrderCampaign(oldColumn.stageID, { name: oldColumn.stageName ,order: newColumn.stageIndex }, () => {}, null),
+          putNewOrderCampaign(newColumn.stageID, { name: newColumn.stageName, order: oldColumn.stageIndex }, () => {}, null)
         ]);
   
         // Actualizar el estado para reflejar el cambio sin recargar
@@ -210,7 +210,7 @@ console.log("Campaigns column", stages);
           console.log("Datos de la columna de campaña:", campaignCol); // Agregar este console.log para verificar los datos de campaignCol
           return (
             <div
-              // className={`kanban-column ${draggedOverStageIndex === campaignCol.stageIndex ? 'drag-over-column' : ''}`}
+              className={`kanban-column`}
               onDrop={(e) => {handleDrop(e, campaignCol.stageID)}}
               onDragOver={(e) => handleDragOver(e, campaignCol.stageID)}
               onDragLeave={handleDragLeave}
@@ -218,10 +218,15 @@ console.log("Campaigns column", stages);
               key={campaignCol.stageIndex}
               draggable
             >
-              <div className={`kanban-header ${draggedOverStageIndex === campaignCol.stageIndex ? 'drag-over-column' : ''}`}
+              <div className={`kanban-header`}
               onDrop={(e) => {handleDropColumn(e, campaignCol);}}
               onDragStart={(e) => handleDragStartColumn(e, campaignCol)}>
-                <span className={`round-tag stone ${campaignCol.color}`}>
+                <span
+                className={`round-tag stone ${campaignCol.color}`}
+                onDrop={(e) => {handleDropColumn(e, campaignCol);}}
+                onDragStart={(e) => handleDragStartColumn(e, campaignCol)}
+                draggable
+              >
                   {campaignCol.stageName}
                 </span>
               </div>

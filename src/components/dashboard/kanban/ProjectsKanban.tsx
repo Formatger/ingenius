@@ -3,7 +3,7 @@ import Image from 'next/image';
 import Plus from "@/components/assets/icons/plus.svg";
 import Edit from "@/components/assets/icons/edit.svg";
 import AddFieldModal from "@/components/dashboard/kanban/AddFieldModal";
-import { putProject, putNewOrder } from "@/utils/httpCalls";
+import { putProject, putNewOrderProject } from "@/utils/httpCalls";
 
 
 
@@ -55,40 +55,51 @@ const ProjectsKanban = ({ projectsData, data, httpError, handleOpenSidepanel, pr
 
   /* DRAG DROP */
 
-  // const handleDragStartColumn = (e: any, stage: any) => {
-  //   // e.dataTransfer.setData('text/plain', stage.stageIndex);  // Guardar el índice de la columna basado en `stageIndex`
-  //   e.dataTransfer.setData('stage', JSON.stringify({stage}));
-  //   console.log("START DATA STAGES", stage)
-  // };
-  
-
+  const handleDragStartColumn = (e: any, stage: any) => {
+    e.dataTransfer.setData('text/plain', stage.stageIndex);  // Guardar el índice de la columna basado en `stageIndex`
+     e.dataTransfer.setData('stage', JSON.stringify({stage}));
+     console.log("START DATA STAGES", stage)
+   };
  
-  // const handleDropColumn = async (e, newColumn) => {
-  //   e.preventDefault();
-  //   const oldColumn = JSON.parse(e.dataTransfer.getData('stage'));
-  //   console.log('Valor de OLD COLUMN:', oldColumn);
-  //   console.log('Valor de NEW COLUMN:', newColumn);
+   const handleDropColumn = async (e, newColumn) => {
+    e.preventDefault();
+    const oldColumnData = JSON.parse(e.dataTransfer.getData('stage'));
+    const oldColumn = oldColumnData.stage;
   
-  //   // Intercambiar los valores de stageIndex entre oldColumn y newColumn
-  //   const tempIndex = oldColumn.stageIndex;
-  //   oldColumn.stageIndex = newColumn.stageIndex;
-  //   newColumn.stageIndex = tempIndex;
+    // Verificar si hay un cambio en el orden de las columnas
+    if (oldColumn.stageIndex !== newColumn.stageIndex) {
+      try {
+        // Llamar a la función para actualizar el orden en la base de datos
+        await Promise.all([
+          putNewOrderProject(oldColumn.stageID, { name: oldColumn.stageName ,order: newColumn.stageIndex }, () => {}, null),
+          putNewOrderProject(newColumn.stageID, { name: newColumn.stageName, order: oldColumn.stageIndex }, () => {}, null)
+        ]);
   
-  //   // Actualizar el estado de las columnas con los nuevos valores de stageIndex
-  //   setStages((currentStages) => {
-  //     const updatedStages = currentStages.map((stage) => {
-  //       if (stage.stageID === oldColumn.stageID) {
-  //         return { ...newColumn }; // Actualizar la columna original con el stageIndex de la columna de destino
-  //       }
-  //       if (stage.stageID === newColumn.stageID) {
-  //         return { ...oldColumn }; // Actualizar la columna de destino con el stageIndex de la columna original
-  //       }
-  //       // Devolver todas las demás columnas sin cambios
-  //       return stage;
-  //     });
-  //     return updatedStages;
-  //   });
-  // };
+        // Actualizar el estado para reflejar el cambio sin recargar
+        setStages((currentStages) => {
+          return currentStages.map((stage) => {
+            if (stage.stageID === oldColumn.stageID) {
+              return {
+                ...stage,
+                stageIndex: newColumn.stageIndex,
+              };
+            }
+            if (stage.stageID === newColumn.stageID) {
+              return {
+                ...stage,
+                stageIndex: oldColumn.stageIndex,
+              };
+            }
+            return stage;
+          });
+        });
+      } catch (error) {
+        console.error('Error al procesar la solicitud PUT:', error);
+      }
+    }
+  };
+
+  
 
 
   const handleDragStart = (e: any, projects: any, stages: any) => {
@@ -166,17 +177,20 @@ const ProjectsKanban = ({ projectsData, data, httpError, handleOpenSidepanel, pr
         .sort((a, b) => a.stageIndex - b.stageIndex)
         .map((projectCol) => (
           <div
-            className={`kanban-column ${draggedOverStageIndex === projectCol.stageIndex ? 'drag-over-column' : ''}`}
-            onDrop={(e) => {handleDrop(e, projectCol.stageID); handleDropColumn(e, projectCol);}}
+            className={`kanban-column`}
+            onDrop={(e) => {handleDrop(e, projectCol.stageID)}}
             onDragOver={(e) => handleDragOver(e, projectCol.stageID)}
             onDragLeave={handleDragLeave}
             onDragStart={(e) => handleDragStartColumn(e, projectCol)}
             key={projectCol.stageIndex}
             draggable
           >
-            <div className="kanban-header">
-              <span className={`round-tag stone
-              ${projectCol.color}`}
+            <div className={`kanban-header`}>
+            <span
+                className={`round-tag stone ${projectCol.color}`}
+                onDrop={(e) => {handleDropColumn(e, projectCol);}}
+                onDragStart={(e) => handleDragStartColumn(e, projectCol)}
+                draggable
               >
                 {projectCol.stageName}
               </span>
