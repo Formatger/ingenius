@@ -5,7 +5,7 @@ interface AddFieldModalProps {
   isOpen: boolean;
   onClose: () => void;
   title?: string;
-  updateProjectData: () => void;
+  updateProjectData: () => void; 
 }
 
 const AddFieldModal: React.FC<AddFieldModalProps> = ({ isOpen, onClose, title, updateProjectData }) => {

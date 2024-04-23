@@ -5,6 +5,7 @@ import Edit from "@/components/assets/icons/edit.svg";
 import AddFieldModalCampaign from "@/components/dashboard/kanban/AddFieldModalCampaign";
 import { deleteCampaignStage, putCampaign, putNewOrderCampaign } from "@/utils/httpCalls";
 import ConfirmModal from "../profile/ConfirmModal";
+import ChangeCampaignColumn from "@/components/dashboard/kanban/ChangeProjectColumn";
 
 interface CampaignKanbanProps {
   httpError: {
@@ -32,6 +33,7 @@ const CampaignKanban = ({
   const [stages, setStages] = useState<any[]>([]);
   const [deleteStageId, setDeleteStageId] = useState<string | null>(null);
   const colors = ["pink", "linen", "green", "blue", "yellow", "orange", "red"];
+  const [changeStage, setChangeStage] = useState<string | null>(null);
 
   console.log(campaignStage);
   console.log(campaignsData);
@@ -77,6 +79,14 @@ const CampaignKanban = ({
   }, [campaignsData, campaignStage]); // Ahora la lista de dependencias se pasa correctamente al useEffect
 
   console.log("Campaigns column", stages);
+
+/* CHANGE STAGE */
+
+const openChangeModal = (stage: any) => {
+  setChangeStage(stage);
+  setIsModalOpen(true);
+};
+
 
   /* DELETE STAGE */
 
@@ -303,7 +313,7 @@ const CampaignKanban = ({
                 {/* {stagesIndex === stages.length - 1 && ( */}
                   <div className="addtags-wrap">
                   <div className="row-wrap-2">
-                    <button onClick={() => setAddModalOpen(true)}>
+                    <button onClick={() => openChangeModal(campaignCol)}>
                       <Image src={Edit} alt="Icon" width={12} height={12} />
                     </button>
                     <button onClick={() => openDeleteModal(campaignCol.stageID)}>
@@ -317,6 +327,15 @@ const CampaignKanban = ({
                       title="Add Campaign Stage"
                       updateCampaignData={updateCampaignData}
                     />
+
+                  <ChangeCampaignColumn
+                    isOpen={isModalOpen}
+                    onClose={() => setIsModalOpen(false)}
+                    changeStage={changeStage}
+                    title="Change Stage Name"
+                    button="Change this stage name"
+                    updateCampaignData={updateCampaignData}
+                  /> 
 
                     <ConfirmModal
                       isOpen={isModalOpen && deleteStageId === campaignCol.stageID}

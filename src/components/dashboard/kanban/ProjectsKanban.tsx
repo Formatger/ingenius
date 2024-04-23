@@ -4,8 +4,9 @@ import Plus from "@/components/assets/icons/plus.svg";
 import PlusWhite from "@/components/assets/icons/plus-white.svg";
 import Edit from "@/components/assets/icons/edit.svg";
 import AddFieldModal from "@/components/dashboard/kanban/AddFieldModal";
-import { putProject, putNewOrderProject, deleteProjectStage } from "@/utils/httpCalls";
+import { putProject, putNewOrderProject, deleteProjectStage} from "@/utils/httpCalls";
 import ConfirmModal from "../profile/ConfirmModal";
+import ChangeProjectColumn from "@/components/dashboard/kanban/ChangeProjectColumn";
 
 interface ProjectsKanbanProps {
   projectsData: any;
@@ -21,10 +22,12 @@ const ProjectsKanban = ({
   updateProjectData,
 }: ProjectsKanbanProps) => {
   const [isAddModalOpen, setAddModalOpen] = useState(false);
+  const [isChangeModalOpen, setChangeModalOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [draggedOverStageIndex, setDraggedOverStageIndex] = useState<string | null>(null); // Estado para almacenar el ID de la columna sobre la que se arrastra
   const [stages, setStages] = useState<any[]>([]);
   const [deleteStageId, setDeleteStageId] = useState<string | null>(null);
+  const [changeStage, setChangeStage] = useState<string | null>(null);
   const colors = ["pink", "linen", "green", "blue", "yellow", "orange", "red"];
 
   /* ASSIGN COLOR TO STAGES */
@@ -81,6 +84,11 @@ const ProjectsKanban = ({
     setDeleteStageId(stageID);
     setIsModalOpen(true);
   };
+
+  const openChangeModal = (stage: any) => {
+    setChangeStage(stage);
+    setIsModalOpen(true);
+  };
   
   const handleDelete = async () => {
     if (deleteStageId) {
@@ -118,6 +126,7 @@ const ProjectsKanban = ({
       });
     }
   };
+
 
   /* DRAG DROP COLUMNS */
 
@@ -294,7 +303,7 @@ const ProjectsKanban = ({
               {/* {stagesIndex === stages.length - 1 && ( */}
                 <div className="addtags-wrap">
                   <div className="row-wrap-2">
-                    <button onClick={() => setAddModalOpen(true)}>
+                    <button onClick={() => openChangeModal(projectCol)}>
                       <Image src={Edit} alt="Icon" width={12} height={12} />
                     </button>
                     <button onClick={() => openDeleteModal(projectCol.stageID)}>
@@ -309,6 +318,15 @@ const ProjectsKanban = ({
                     title="Add Project Stage"
                     updateProjectData={updateProjectData}
                   />
+
+                  <ChangeProjectColumn
+                    isOpen={isModalOpen}
+                    onClose={() => setIsModalOpen(false)}
+                    changeStage={changeStage}
+                    title="Change Stage Name"
+                    button="Change this stage name"
+                    updateProjectData={updateProjectData}
+                  /> 
                 
                   {/* Delete Stage Modal */}
                   <ConfirmModal
