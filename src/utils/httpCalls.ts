@@ -261,8 +261,49 @@ export const putCreator = async (
 };
 
 ////////////////////////////////////////////////////////////////////////
+/***************************  CHANGE CALLS  ***************************/
+////////////////////////////////////////////////////////////////////////
+
+
+/* CHANGE PROJECT-STAGE NAME */
+
+export const changeProjectStageName = async (
+  projectId: number,
+  updatedData: any,
+  callback: (data: any) => void,
+  errorCallback?: (error: any) => void
+) => {
+  console.log("PUT successful",updatedData)
+  const url = `${DEPLOYED_API_BASE_URL}project-stages/${projectId}/`;
+
+  try {
+    const response = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.access_token}`,
+      },
+      body: JSON.stringify(updatedData),
+    });
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    const data = await response.json();
+    callback(data);
+  } catch (error) {
+    errorCallback && errorCallback(error);
+  }
+};
+
+
+
+
+////////////////////////////////////////////////////////////////////////
 /***************************  DELETE CALLS  ***************************/
 ////////////////////////////////////////////////////////////////////////
+
 
 /* DELETE PROJECT */
 
