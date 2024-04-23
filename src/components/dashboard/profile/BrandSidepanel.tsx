@@ -72,12 +72,13 @@ const BrandSidepanel: React.FC<SidepanelProps> = ({
       </div>
 
       {editData ? (
+        //BrandForm no existeix - sha de crear quan acabem el CreatorForm amb el upload i tot
         <BrandForm
           brandsData={brandsData}
           closeEdit={closeEdit}
           isEditing={editData}
           handleCloseFormSidepanel={handleClose}
-          updateCreatorData={() => {}}     
+          updateBrandData={() => {}}     
           />
         ) : (
       <div className='sidepanel-wrap-space'>

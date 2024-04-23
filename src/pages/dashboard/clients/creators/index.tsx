@@ -208,7 +208,7 @@ const CreatorsPage = () => {
               />
             )}
             {/* {openFormSidepanel && (
-              <BrandForm 
+              <CreatorForm 
                 handleCloseFormSidepanel={handleCloseFormSidepanel} 
               />
             )} */}
