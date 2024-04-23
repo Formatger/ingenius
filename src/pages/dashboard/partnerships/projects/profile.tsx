@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import withAuth from "@/components/common/WithAuth";
 import Sidebar from "@/components/navigation/Sidebar";
-import { ProjectDetails, ProjectInvoice, ProjectContract } from "@/components/dashboard/profile/ProjectProfile";
+import { ProjectDetails, ProjectInvoice } from "@/components/dashboard/profile/ProjectProfile";
 import { Arrow } from "@/components/assets/svg/Arrow";
 import { getProjectsDetail } from "@/utils/httpCalls";
 import Folder from "@/components/assets/icons/folder.svg";
@@ -70,11 +70,11 @@ const ProjectProfilePage = () => {
             </div>
         
             <div>
-              {activeTab === 'invoice' ? (
+              {/* {activeTab === 'invoice' ? ( */}
                 <ProjectInvoice projectsData={projectsData} />
-              ) : (
+              {/* ) : (
                 <ProjectContract projectsData={projectsData} />
-              )}
+              )} */}
             </div>
            </div>
           

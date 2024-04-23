@@ -27,12 +27,12 @@ interface FormData {
   start_date: Date;
   deadline: Date;
   name: string;
-  contract_value: number;
+  contract_value?: number;
   description?: string;
   campaign: string;
   creator?: string;
   project_stage?: number;
-  // invoice_paid?: boolean;
+  invoice_paid?: boolean;
 }
 
 interface ProjectFormProps {
@@ -54,16 +54,25 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
 
 }) => {
   const router = useRouter()
-  const { register, handleSubmit, reset, setValue } = useForm<FormData>();
+  const { register, handleSubmit, reset, setValue,formState: { errors } } = useForm<FormData>();
   const [selectedStage, setSelectedStage] = useState<any>([]);
   const [creatorsData, setCreatorsData] = useState<Creators[]>([]);
   const [campaignsData, setCampaignsData] = useState<any>([]);
+  const [invoicePaid, setInvoicePaid] = useState<boolean>(projectsData?.invoice_paid ?? false);
+ 
+  /* SELECT DROPDOWNS */
 
   const handleSelectStage = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedId = parseInt(event.target.value);
     setSelectedStage(selectedId);
     setValue("project_stage", selectedId);
     console.log("Selected Project Stage ID:", selectedId);
+  };
+
+  const handleInvoiceChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const isPaid = event.target.value === 'true';
+    setInvoicePaid(isPaid);
+    setValue("invoice_paid", isPaid);
   };
 
   /* SEARCH DROPDOWN */
@@ -201,7 +210,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
         <div className="sidepanel-wrap">
           <form className="sidepanel-form" onSubmit={handleSubmit(onSubmit)}>
             <div className="form-box">
-              <span className="smallcaps">ESTOY EDITANDO*</span>
+              <span className="smallcaps">PROJECT NAME*</span>
               <input
                 {...register("name", { required: true })}
                 className="form-input"
@@ -244,7 +253,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
               />
             </div>
             <div className="form-box">
-              <span className="smallcaps">CONTRACT VALUE</span>
+              <span className="smallcaps">CONTRACT VALUE*</span>
               <input
                 {...register("contract_value", { required: false })}
                 className="form-input"
@@ -253,7 +262,20 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
               />
             </div>
             <div className="form-box">
-              <span className="smallcaps">START DATE</span>
+              <span className="smallcaps">INVOICE STATUS*</span>
+              <div className="select-wrap">
+              <select
+                {...register("invoice_paid", { required: true })}
+                className="select-input"
+                defaultValue={projectsData.invoice_paid}
+              >
+              <option value="false">Unpaid</option> 
+              <option value="true">Paid</option>
+              </select>
+              </div>
+            </div>
+            <div className="form-box">
+              <span className="smallcaps">START DATE*</span>
               <input
                 {...register("start_date", { required: true })}
                 className="form-input"
@@ -262,7 +284,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
               />
             </div>
             <div className="form-box">
-              <span className="smallcaps">END DATE</span>
+              <span className="smallcaps">END DATE*</span>
               <input
                 {...register("deadline", { required: true })}
                 className="form-input"
@@ -284,112 +306,140 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
       ) : (
 
         <div className="sidepanel-wrap">
-          <form className="sidepanel-form" onSubmit={handleSubmit(onSubmit)}>
-            <div className="form-box">
-              <span className="smallcaps">PROJECT NAME*</span>
-              <input
-                {...register("name", { required: true })}
-                className="form-input"
-                type="text"
-                placeholder="Enter a name"
-              />
-            </div>
-            <div className="form-box">
-              <span className="smallcaps">DESCRIPTION</span>
-              <textarea
-                {...register("description")}
-                className="form-textarea"
-                placeholder="Add a description"
-              />
-            </div>
-            <div className="form-box">
-              <span className="smallcaps">SELECT CAMPAIGN*</span>
-              <SearchDropdown
-                data={campaignsData}
-                onSelect={(selectedItem) => {
-                  setValue("campaign", selectedItem.id);
-                }}
-                placeholder="Select Campaign"
-                handleSearch={handleSearchChange}
-                displayKey="name"
-              />
-            </div>
-            <div className="form-box">
-              <span className="smallcaps">SELECT CREATOR*</span>
-              <SearchDropdown
-                data={creatorsData}
-                onSelect={(selectedItem) => {
-                  setValue("creator", selectedItem.id);
-                }}
-                placeholder="Select Creator"
-                handleSearch={handleSearchChange}
-                displayKey="name"
-              />
-            </div>
-            <div className="form-box">
-              <span className="smallcaps">CONTRACT VALUE</span>
-              <input
-                {...register("contract_value", { required: false })}
-                className="form-input"
-                type="text"
-                placeholder="Add contract Value"
-              />
-            </div>
-            {/* <div className="form-box">
-              <span className="smallcaps">INVOICE STATUS</span>
-              <select
-                {...register("invoice_paid")}
-                className="form-input"
-              >
-              <option value="false">Unpaid</option> 
-              <option value="true">Paid</option>
+  <form className="sidepanel-form" onSubmit={handleSubmit(onSubmit)}>
+    <div className="form-box">
+      <span className="smallcaps">PROJECT NAME*</span>
+      <input
+        {...register("name", {
+          required: "Project name is required",
+          validate: value => value.trim() !== "" || "Project name is required"
+        })}
+        className="form-input"
+        type="text"
+        placeholder="Enter a name" 
+      />
+      {errors.name && <span className="error-message">Project name is required</span>}
+    </div>
+    <div className="form-box">
+      <span className="smallcaps">DESCRIPTION</span>
+      <textarea
+        {...register("description")}
+        className="form-textarea"
+        placeholder="Add a description"
+      />
+    </div>
+    <div className="form-box">
+      <span className="smallcaps">SELECT CAMPAIGN*</span>
+      <SearchDropdown
+        data={campaignsData}
+        onSelect={(selectedItem) => {
+          setValue("campaign", selectedItem.id);
+        }}
+        placeholder="Select Campaign"
+        handleSearch={handleSearchChange}
+        displayKey="name"
+        {...register("campaign", { required: true })}
+      />
+      {errors.campaign && <span className="error-message">Campaign is required</span>}
+    </div>
+    <div className="form-box">
+      <span className="smallcaps">SELECT CREATOR*</span>
+      <SearchDropdown
+        data={creatorsData}
+        onSelect={(selectedItem) => {
+          setValue("creator", selectedItem.id);
+        }}
+        placeholder="Select Creator"
+        handleSearch={handleSearchChange}
+        displayKey="name"
+        {...register("creator", {
+          required: "Contract value is required",
+          validate: value => value !== "" && value != null || "Creator is required"
+        })}
+      />
+      {errors.creator && <span className="error-message">Creator is required</span>}
+    </div>
+    <div className="form-box">
+        <span className="smallcaps">CONTRACT VALUE*</span>
+        <input
+          {...register("contract_value", {
+            required: "Contract value is required",
+            valueAsNumber: true, // Ensure the value is treated as a number
+            validate: {
+              notEmpty: value => value !== undefined || "Contract value cannot be empty",
+              isNumber: value => !isNaN(value ?? 0) || "Please enter a number", // Check if the value is not NaN
+            }
+          })}
+          className="form-input"
+          type="text" // Using type="text" to handle input manually
+          placeholder="Add contract Value"
+        />
+        {errors.contract_value && <span className="error-message">{errors.contract_value.message}</span>}
+      </div>
 
-              </select>
-            </div> */}
-            <div className="form-box">
-              <span className="smallcaps">START DATE</span>
-              <input
-                {...register("start_date", { required: true })}
-                className="form-input"
-                type="date"
-                placeholder="YYYY-MM-DD"
-              />
-            </div>
-            <div className="form-box">
-              <span className="smallcaps">END DATE</span>
-              <input
-                {...register("deadline", { required: true })}
-                className="form-input"
-                type="date"
-                placeholder="YYYY-MM-DD"
-              />
-            </div>
-            <div className='form-box'>
-              <span className='smallcaps'>SELECT STAGE*</span>
-              <select
-                {...register("project_stage")}
-                onChange={handleSelectStage}
-                value={selectedStage}
-                className="form-input"
-              >
-                <option value="">Select Stage</option> {/* Default option */}
-                {Array.isArray(projectStage) && projectStage.map((stage) => {
-                  console.log("Stage Name:", stage.name); // Agregar console.log() aquí
-                  return (
-                    <option key={stage.stageID} value={stage.stageID}>
-                      {stage.stageName}
-                    </option>
-                  );
-                })}
-              </select>
-            </div>
+    <div className="form-box">
+      <span className="smallcaps">INVOICE STATUS*</span>
+      <div className="select-wrap">
+        <select
+          {...register("invoice_paid", { required: true })}
+          onChange={handleInvoiceChange}
+          value={invoicePaid.toString()}
+          className="select-input"
+        >
+          <option value="false">Unpaid</option>
+          <option value="true">Paid</option>
+        </select>
+      </div>
+      {errors.invoice_paid && <span className="error-message">Please select invoice status</span>}
+    </div>
+    <div className="form-box">
+      <span className="smallcaps">START DATE*</span>
+      <input
+        {...register("start_date", { required: true })}
+        className="form-input"
+        type="date"
+        placeholder="YYYY-MM-DD"
+      />
+      {errors.start_date && <span className="error-message">Start date is required</span>}
+    </div>
+    <div className="form-box">
+      <span className="smallcaps">END DATE*</span>
+      <input
+        {...register("deadline", { required: true })}
+        className="form-input"
+        type="date"
+        placeholder="YYYY-MM-DD"
+      />
+      {errors.deadline && <span className="error-message">End date is required</span>}
+    </div>
+    <div className='form-box'>
+      <span className='smallcaps'>SELECT STAGE*</span>
+      <div className="select-wrap">
+        <select
+          {...register("project_stage", { required: true })}
+          onChange={handleSelectStage}
+          value={selectedStage}
+          className="select-input"
+        >
+          <option value="">Select Stage</option> {/* Default option */}
+          {Array.isArray(projectStage) && projectStage.map((stage) => {
+            console.log("Stage Name:", stage.name);
+            return (
+              <option key={stage.stageID} value={stage.stageID}>
+                {stage.stageName}
+              </option>
+            );
+          })}
+        </select>
+      </div>
+      {errors.project_stage && <span className="error-message">Please select a project stage</span>}
+    </div>
 
             <button className="sec-button linen" type="submit">
               <p>SAVE</p>
             </button>
           </form>
         </div>
-
       )}
 
     </FormSidepanel>
@@ -398,50 +448,5 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
 
 export default ProjectForm;
 
-
-/* DOCUMENT TYPE DROPDOWN -> CREATORS DROPDOWN */
-//   const typedocument = [
-//     { id: "tf-1", value: "All" },
-//     { id: "tf-2", value: "Contact" },
-//     { id: "tf-3", value: "Content" },
-//     { id: "tf-4", value: "Invoice" },
-// ];
-// const [isTypedocumentOpen, setIsTypedocumentOpen] = useState(false);
-// const [selectedTypedocument, setSelectedTypedocument] = useState(typedocument[0]);
-
-// const handleSelectTypedocument = (tf: any) => {
-//     setSelectedTypedocument(tf);
-//     setIsTypedocumentOpen(false);
-// };
-
-
-/* SELECT CREATOR DROPDOWN */
-
-
-/* <div className='campaign-box'>
-    <span className='sidepanel-title'>CAMPAIGN</span>
-    <button type="button"
-        className={isTypedocumentOpen ? "documentdownButtonOpen" : "documentdownButton"}
-        onClick={() => setIsTypedocumentOpen(!isTypedocumentOpen)}>
-        <span className="documentTypeLabel">Select campaign(s): &#160;</span>
-        <span className="selectedValue">{selectedTypedocument.value}</span>
-    </button>
-    {isTypedocumentOpen && (
-        <ul className="documentdownListStick">
-            {typedocument.map((tf) => (
-                <li className="documentdownListItem" key={tf.id}>
-                    <button type="button"
-                        className="documentdownItem"
-                        onClick={() => handleSelectTypedocument(tf)}
-                    >
-                        {tf.value}
-                    </button>
-                </li>
-            ))}
-        </ul>
-    )}
-</div> */
-
-/* SELECT CREATOR DROPDOWN */
 
 

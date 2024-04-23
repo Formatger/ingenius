@@ -10,7 +10,7 @@ interface ChangeDealColumnProps {
     changeStage: any;
 }
 
-const ChangeDealColumn: React.FC<ChangeDealColumnProps> = ({ isOpen, changeStage, onClose, title, button, updateCampaignData }) => {
+const ChangeDealColumn: React.FC<ChangeDealColumnProps> = ({ isOpen, changeStage, onClose, title, button, updateDealData }) => {
     const [newName, setNewName] = useState<string>('');
 
     const handleChangeDeal = async () => {
@@ -19,7 +19,7 @@ const ChangeDealColumn: React.FC<ChangeDealColumnProps> = ({ isOpen, changeStage
             await putNewOrderDeal(changeStage.stageID, { name: newName, order: changeStage.stageIndex }, () => { });
 
             // Aquí llamamos a la función updateCampaignData para actualizar el estado después de la actualización
-            updateCampaignData();
+            updateDealData();
             onClose();
         } catch (error) {
             console.error("Failed to change stage name:", error);

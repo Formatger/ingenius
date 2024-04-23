@@ -92,7 +92,7 @@ const CampaignKanban = ({
   const openDeleteModal = (stageID: any) => {
     const stage = stages.find(stage => stage.stageID === stageID);
     if (stage && stage.campaigns.length > 0) {
-      alert("Please move all projects from this stage to another stage before deleting it.");
+      alert("Please move all campaigns from this stage to another stage before deleting it.");
       return;
     }
     console.log("Setting deleteStageId to:", stageID);
@@ -104,7 +104,7 @@ const CampaignKanban = ({
     if (deleteStageId) {
       const stage = stages.find(stage => stage.stageID === deleteStageId);
       if (stage && stage.campaigns.length > 0) {
-        alert("Please move all projects from this stage to another stage before deleting it.");
+        alert("Please move all campaigns from this stage to another stage before deleting it.");
         return;
       }
 

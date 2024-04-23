@@ -70,6 +70,16 @@ const BrandSidepanel: React.FC<SidepanelProps> = ({
             </Link>
         </div>
       </div>
+
+      {editData ? (
+        <BrandForm
+          brandsData={brandsData}
+          closeEdit={closeEdit}
+          isEditing={editData}
+          handleCloseFormSidepanel={handleClose}
+          updateCreatorData={() => {}}     
+          />
+        ) : (
       <div className='sidepanel-wrap-space'>
     
         <BrandDetails brandsData={brandsData} /> 
@@ -96,6 +106,7 @@ const BrandSidepanel: React.FC<SidepanelProps> = ({
         </div>
 
       </div>
+      )}
     </ProfileSidepanel>
   );
 };

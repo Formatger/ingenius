@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import ConfirmModal from "./ConfirmModal";
 import Image from "next/image";
 import Insta from "@/components/assets/images/insta.png";
@@ -6,6 +6,7 @@ import Tiktok from "@/components/assets/images/tiktok.png";
 import Folder from "@/components/assets/icons/folder.svg";
 import Download from "@/components/assets/icons/download.svg";
 import Plus from "@/components/assets/icons/plus.svg";
+import Upload from "@/components/assets/icons/upload.svg";
 import Message from "@/components/assets/icons/message.svg";
 import Send from "@/components/assets/icons/send.svg";
 import { deleteProject } from "@/utils/httpCalls";
@@ -25,23 +26,7 @@ interface ProjectContractProps {
   projectsData: any;
 }
 
-const ProjectDetails = ({ projectsData, handleClose, updateProjectData }: ProjectDetailsProps) => {
-  const [isModalOpen, setModalOpen] = useState(false);
-
-  const handleDelete = () => {
-    deleteProject(projectsData.id, () => {
-      console.log("Project deleted successfully");
-      setModalOpen(false);
-      if (handleClose) {
-        handleClose();
-      }
-      if (updateProjectData) {
-        updateProjectData();
-      }
-    }, (error) => {
-      console.error("Failed to delete project:", error);
-    });
-  };
+const ProjectDetails = ({ projectsData }: ProjectDetailsProps) => {
 
   return (
     <div className="card-container">
@@ -136,6 +121,51 @@ const ProjectDetails = ({ projectsData, handleClose, updateProjectData }: Projec
 };
 
 const ProjectInvoice = ({ projectsData }: ProjectInvoiceProps) => {
+  const fileInputRef = useRef(null);
+  const [loading, setLoading] = useState(false);
+
+  const handleFileUpload = async (event: any) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    setLoading(true);
+    const formData = new FormData();
+    formData.append('contract', file);
+    formData.append('projectId', projectsData.id);
+
+    try {
+      const response = await fetch('/api/contract/upload', {
+        method: 'POST',
+        body: formData,
+      });
+      setLoading(false);
+      if (response.ok) {
+        console.log('File uploaded successfully');
+        // Optionally refresh or update parent component data
+      } else {
+        throw new Error('Failed to upload file');
+      }
+    } catch (error) {
+      setLoading(false);
+      console.error('Error uploading file:', error);
+    }
+  };
+
+  const handleViewContract = () => {
+    const url = `/api/projects/${projectsData.id}/view`;
+    window.open(url, '_blank');
+  };
+
+  const handleDownloadContract = () => {
+    const url = `/api/projects/${projectsData.id}/download`;
+    const link = document.createElement('a');
+    link.href = url;
+    // link.setAttribute('download', 'Project_Contract.pdf');  // Optionally set a filename
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+  
   return (
     <div className="card-container">
 
@@ -146,17 +176,9 @@ const ProjectInvoice = ({ projectsData }: ProjectInvoiceProps) => {
         <div className="invoice-data">
           <ul>
             {/* <li className="invoice-data-list">
-              <p>Invoice Number</p>
-              <span className="invoice-tag">{projectsData?.invoice_number}</span>
-            </li>
-            <li className="invoice-data-list">
-              <p>Invoice Date</p>
-              <span className="invoice-tag">{projectsData?.invoice_date}</span>
-            </li> */}
-            <li className="invoice-data-list">
               <p>Company</p>
               <span className="invoice-tag">company_name</span>
-            </li>
+            </li> */}
             <li className="invoice-data-list">
               <p>Creator</p>
               <span className="invoice-tag">{projectsData?.creator_name}</span>
@@ -165,10 +187,6 @@ const ProjectInvoice = ({ projectsData }: ProjectInvoiceProps) => {
               <p>Scope of Work</p>
               <span className="invoice-tag">{projectsData?.name}</span>
             </li>
-            {/* <li className="invoice-data-list">
-              <p>Deliverables</p>
-              <span className="invoice-tag">{projectsData?.deliverables}deliverables</span>
-            </li> */}
             <li className="invoice-data-list">
               <p>Delivery Period</p>
               <span className="invoice-tag">{projectsData?.project_duration}</span>
@@ -184,27 +202,29 @@ const ProjectInvoice = ({ projectsData }: ProjectInvoiceProps) => {
           </ul>
         </div>
 
-        <div className="sidepanel-hidden">
-          <p className="smallcaps mt-5" >MANAGE CONTRACT</p>
+        <div className="mt-5">
+          <p className="smallcaps" >MANAGE CONTRACT</p>
+
+          <input type="file" onChange={handleFileUpload} style={{ display: 'none' }} ref={fileInputRef} />
 
           <div className="button-group">
-            <button className="sec-button linen" onClick={undefined}>
-              {/* <Image src={Send} alt="Icon" width={15} height={15} /> */}
+            {/* <button className="sec-button linen" onClick={() => fileInputRef.current.click()}>
+              <Image src={Upload} alt="Icon" width={18} height={18} />
               <p>Upload Contract</p>
-            </button>
-            <button className="sec-button w-50 img-btn linen" onClick={undefined}>
+            </button> */}
+            <button className="sec-button w-50 img-btn linen" onClick={handleViewContract}>
               <Image src={Folder} alt="Icon" width={15} height={15} />
               <p>View Contract</p>
             </button>      
           </div>
 
           <div className="button-group mt-3">
-            <button className="sec-button linen" onClick={undefined}>
+            {/* <button className="sec-button linen" onClick={undefined}>
               <Image src={Send} alt="Icon" width={15} height={15} />
               <p>Send Contract</p>
-            </button>
-            <button className="sec-button w-50 img-btn linen" onClick={undefined}>
-              <Image src={Download} alt="Icon" width={20} height={20} />
+            </button> */}
+            <button className="sec-button w-50 img-btn linen" onClick={handleDownloadContract}>
+              <Image src={Download} alt="Icon" width={18} height={18} />
               <p>Download as PDF</p>
             </button>
           </div>
@@ -214,7 +234,7 @@ const ProjectInvoice = ({ projectsData }: ProjectInvoiceProps) => {
           <p className="smallcaps mt-5" >MANAGE INVOICE</p>
           <div className="button-group">
             <button className="sec-button linen" onClick={undefined}>
-              {/* <Image src={Send} alt="Icon" width={15} height={15} /> */}
+              <Image src={Upload} alt="Icon" width={18} height={18} />
               <p>Upload Invoice</p>
             </button>
             <button className="sec-button w-50 img-btn linen" onClick={undefined}>
@@ -223,12 +243,12 @@ const ProjectInvoice = ({ projectsData }: ProjectInvoiceProps) => {
             </button>      
           </div>
           <div className="button-group mt-3">
-            <button className="sec-button linen" onClick={undefined}>
+            {/* <button className="sec-button linen" onClick={undefined}>
               <Image src={Send} alt="Icon" width={15} height={15} />
               <p>Send Invoice</p>
-            </button>
+            </button> */}
             <button className="sec-button w-50 img-btn linen" onClick={undefined}>
-              <Image src={Download} alt="Icon" width={20} height={20} />
+            <Image src={Download} alt="Icon" width={18} height={18} />
               <p>Download as PDF</p>
             </button>      
           </div>
@@ -239,198 +259,4 @@ const ProjectInvoice = ({ projectsData }: ProjectInvoiceProps) => {
   );
 };
 
-const ProjectContract = ({ projectsData }: ProjectContractProps) => {
-  return (
-    <div className="card-container">
-
-      <div className="agency-invoice">
-        <p className="smallcaps">
-          CREATOR CONTRACT
-        </p>
-        <div className="invoice-data">
-        <ul>
-           <li className="invoice-data-list">
-              <p>Company</p>
-              <span className="invoice-tag">company_name</span>
-            </li>
-            <li className="invoice-data-list">
-              <p>Creator</p>
-              <span className="invoice-tag">{projectsData?.creator_name}</span>
-            </li>
-            <li className="invoice-data-list">
-              <p>Project</p>
-              <span className="invoice-tag">{projectsData?.name}</span>
-            </li>
-            <li className="invoice-data-list">
-              <p>Project Duration</p>
-              <span className="invoice-tag">{projectsData?.project_duration}</span>
-            </li>
-            <li className="invoice-data-list">
-              <p>Contract Value</p>
-              <span className="invoice-tag">${projectsData?.contract_value}</span>
-            </li>
-            <li className="deliverable-wrap">
-              <div><p>Deliverables</p></div>
-              <div className="deliverables mt-3">
-                <span className="invoice-tag">{projectsData?.deliverables} 1 Instagram reel, 2 youtube videos, 1 tiktok video </span>
-                <span className="invoice-tag">{projectsData?.deliverables} 2 Tiktok videos</span>
-                <span className="invoice-tag">{projectsData?.deliverables} 1 Youtube videos</span>
-              </div>
-            </li>
-            <li className="deliverable-wrap">
-              <div><p>Payment Terms</p></div>
-              <div className="deliverables mt-3">
-                <span className="invoice-textarea">{projectsData?.deliverables}  10 days after content delivery </span>
-              </div>
-            </li>
-        </ul>
-        
-        {/* <div className="contract-parties">
-          <ul>
-            <li className="invoice-data-list">
-              <p>Company</p>
-              <span className="invoice-tag">company_name</span>
-            </li>
-            <li className="invoice-data-list">
-              <p>Address</p>
-              <span className="invoice-tag">company_address</span>
-            </li>
-            <li className="invoice-data-list">
-              <p>Contact Name</p>
-              <span className="invoice-tag">company_contact</span>
-            </li>
-            <li className="invoice-data-list">
-              <p>Email</p>
-              <span className="invoice-tag">company_mail</span>
-            </li>
-          </ul>
-
-          <ul>
-            <li className="invoice-data-list">
-              <p>Creator Partner</p>
-              <span className="invoice-tag">{projectsData?.creator_name}</span>
-            </li>
-            <li className="invoice-data-list">
-              <p>Address</p>
-              <span className="invoice-tag">creator_address</span>
-            </li>
-            <li className="invoice-data-list">
-              <p>Contact Name</p>
-              <span className="invoice-tag">creator_contact</span>
-            </li>
-            <li className="invoice-data-list">
-              <p>Email</p>
-              <span className="invoice-tag">{projectsData?.creator_email}</span>
-            </li>
-          </ul>
-          </div>
-          <div>
-          <ul>
-            <li className="invoice-data-list">
-              <p>Project</p>
-              <span className="invoice-tag">{projectsData?.name}</span>
-            </li>
-            <li className="invoice-data-list">
-              <p>Deliverables</p>
-              <span className="invoice-tag">{projectsData?.deliverables}deliverables</span>
-            </li>
-            <li className="invoice-data-list">
-              <p>Project Duration</p>
-              <span className="invoice-tag">{projectsData?.project_duration}</span>
-            </li>
-            <li className="invoice-data-list">
-              <p>Compensation</p>
-              <span className="invoice-tag">${projectsData?.contract_value}</span>
-            </li>
-          </ul>
-          </div> */}
-        </div>
-
-        <div className="sidepanel-hidden">
-          <p className="smallcaps mt-5" >MANAGE CONTRACT</p>
-
-          <div className="button-group">
-            <button className="sec-button linen" onClick={undefined}>
-              <Image src={Send} alt="Icon" width={15} height={15} />
-              <p>Send Contract</p>
-            </button>
-            <button className="sec-button w-50 img-btn linen" onClick={undefined}>
-              <Image src={Download} alt="Icon" width={20} height={20} />
-              <p>Download as PDF</p>
-            </button>
-          </div>
-        </div>
-
-      </div>
-    </div >
-  );
-};
-
-export { ProjectDetails, ProjectInvoice, ProjectContract };
-
-
-
-/* SECOND STEP */
-// const ProfileDetailsSidebar = ({ creatorsData }: ProfileDetailsSidebarProps) => {
-//   return (
-//     <div className="card-container">
-//             <div className="head-card mb-1" >
-//         <div className="profile-info">
-//           <div className="profile-info-image">
-//             <img src={creatorsData?.profile_picture_url} alt="Brand" className="profile-image" loading="lazy" />
-//           </div>
-//         </div>
-//         <div className="profile-info">
-//           <div className="profile-info-box">
-//             <div className="profile-info-wrap">
-//               <p className="smallcaps">CREATOR</p>
-//               <p className="profile-text ml-2">{creatorsData?.name}</p>
-//             </div>
-//             <div className="profile-info-wrap">
-//               <p className="smallcaps">CONTACT</p>
-//               <p className="profile-text ml-2 text-14">{creatorsData?.email}</p>
-//             </div>
-//             <div className="profile-info-wrap">
-//               <p className="smallcaps">WEBSITE</p>
-//               <div className="row-wrap-2 ml-2">
-//                 <Image src={Export} alt="Icon" width={12} height={12} />
-//                 <a
-//                   href={creatorsData?.brand_website}
-//                   className="profile-text text-12"
-//                   target="_blank"
-//                 >View Website</a>
-//               </div>
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-//       <div className="card-text">
-//         <div>
-//           <p className="smallcaps mb-1">CAMPAIGN</p>
-//           <span className="sec-button gray1" onClick={undefined}>
-//             <p className="sec-tag">{creatorsData?.campaign_name}</p>
-//           </span>
-//         </div>
-//         <div>
-//           <p className="smallcaps mb-1">ADD STAGE</p>
-//           <span className="sec-button gray1" onClick={undefined}>
-//             <p className="sec-tag">${creatorsData?.contract_value}</p>
-//           </span>
-//         </div>
-//         <div>
-//           <p className="smallcaps mb-1" >MANAGE CONTRACTS</p>
-//           <div className="button-group">
-//           <button className="sec-button linen" onClick={undefined}>
-//               <Image src={Message} alt="Icon" width={15} height={15} />
-//               <p>Message</p>
-//             </button>
-//             <button className="sec-button linen" onClick={undefined}>
-//               <Image src={Send} alt="Icon" width={15} height={15} />
-//               <p>Send Contract</p>
-//             </button>
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
+export { ProjectDetails, ProjectInvoice };

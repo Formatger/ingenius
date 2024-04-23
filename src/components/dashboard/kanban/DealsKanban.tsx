@@ -3,7 +3,7 @@ import Image from 'next/image';
 import Plus from "@/components/assets/icons/plus.svg";
 import Edit from "@/components/assets/icons/edit.svg";
 import AddFieldModalDeal from "@/components/dashboard/kanban/AddFieldModalDeal";
-import { deleteCampaignStage, putCampaign, putNewOrderDeal } from "@/utils/httpCalls";
+import { deleteDealStage, putDeal, putNewOrderDeal } from "@/utils/httpCalls";
 import ConfirmModal from "../profile/ConfirmModal";
 import ChangeDealColumn from "@/components/dashboard/kanban/ChangeDealColumn";
 
@@ -27,7 +27,7 @@ interface DealsKanbanProps {
   updateDealData: () => void;
 }
 
-const DealsKanban = ({ DealData, httpError, handleOpenSidepanel, Dealstage, updateDealData }: DealsKanbanProps) => {
+const DealsKanban = ({ DealData, httpError, data, handleOpenSidepanel, Dealstage, updateDealData }: DealsKanbanProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [isAddModalOpen, setAddModalOpen] = useState(false);
@@ -57,7 +57,6 @@ const DealsKanban = ({ DealData, httpError, handleOpenSidepanel, Dealstage, upda
     return coloredStages;
   };
 
-
   /* FETCH STAGE COLUMNS */
 
   useEffect(() => {
@@ -68,10 +67,10 @@ const DealsKanban = ({ DealData, httpError, handleOpenSidepanel, Dealstage, upda
         const stageDeals = DealData.filter((deal: any) => {
           return deal.deal_stage === stage.stageID;
         });
-        console.log("STAGE CAMPAIGNS", stageDeals);
+        console.log("STAGE DEALS", stageDeals);
         console.log("STAGE ID:", stage.stageID);
 
-        return { ...stage, campaigns: stageDeals };
+        return { ...stage, deals: stageDeals };
       },
       [DealData, Dealstage]
     );
@@ -94,7 +93,7 @@ const DealsKanban = ({ DealData, httpError, handleOpenSidepanel, Dealstage, upda
   const openDeleteModal = (stageID: any) => {
     const stage = stages.find(stage => stage.stageID === stageID);
     if (stage && stage.deals.length > 0) {
-      alert("Please move all projects from this stage to another stage before deleting it.");
+      alert("Please move all deals from this stage to another stage before deleting it.");
       return;
     }
     console.log("Setting deleteStageId to:", stageID);
@@ -105,12 +104,12 @@ const DealsKanban = ({ DealData, httpError, handleOpenSidepanel, Dealstage, upda
   const handleDelete = async () => {
     if (deleteStageId) {
       const stage = stages.find(stage => stage.stageID === deleteStageId);
-      if (stage && stage.campaigns.length > 0) {
-        alert("Please move all projects from this stage to another stage before deleting it.");
+      if (stage && stage.deals.length > 0) {
+        alert("Please move all deals from this stage to another stage before deleting it.");
         return;
       }
 
-      deleteDealsStage(parseInt(deleteStageId), async () => {
+      deleteDealStage(parseInt(deleteStageId), async () => {
         console.log("Stage deleted successfully");
         const remainingStages = stages.filter(stage => stage.stageID !== deleteStageId);
         const updatedStages = remainingStages.map((stage, index) => ({
@@ -137,8 +136,6 @@ const DealsKanban = ({ DealData, httpError, handleOpenSidepanel, Dealstage, upda
       });
     }
   };
-
-
 
   /* DRAG & DROP */
 
@@ -195,7 +192,7 @@ const DealsKanban = ({ DealData, httpError, handleOpenSidepanel, Dealstage, upda
 
   const handleDragStart = (e: any, deals: any, stages: any) => {
     e.dataTransfer.setData("deals", JSON.stringify({ ...deals, stages }));
-    console.log("CAMPAIGNS START DATA", deals, stages);
+    console.log("DEALS START DATA", deals, stages);
   };
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>, stageID: any) => {
@@ -213,7 +210,7 @@ const DealsKanban = ({ DealData, httpError, handleOpenSidepanel, Dealstage, upda
     try {
       const deal = JSON.parse(e.dataTransfer.getData("deals"));
       if (deal.deal_stage !== stageID) {
-        putCampaign(
+        putDeal(
           deal.id,
           { ...deal, deal_stage: stageID },
           () => {

@@ -72,6 +72,16 @@ const CreatorSidepanel: React.FC<SidepanelProps> = ({
             </Link>
         </div>
       </div>
+
+      {editData ? (
+        <CreatorForm
+          creatorsData={creatorsData}
+          closeEdit={closeEdit}
+          isEditing={editData}
+          handleCloseFormSidepanel={handleClose}
+          updateCreatorData={() => {}}     
+          />
+        ) : (
       <div className='sidepanel-wrap-space'>
         <CreatorDetails creatorsData={creatorsData} /> 
 
@@ -98,6 +108,7 @@ const CreatorSidepanel: React.FC<SidepanelProps> = ({
         </div>
  
       </div>
+    )}
     </ProfileSidepanel>
   );
 };

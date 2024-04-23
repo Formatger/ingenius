@@ -477,6 +477,34 @@ export const deleteDeal = async (
   }
 };
 
+/* DELETE DEAL-STAGE */
+
+export const deleteDealStage = async (
+  stageId: number,
+  callback: () => void,
+  errorCallback: (error: any) => void
+) => {
+  const url = `${DEPLOYED_API_BASE_URL}deal-stages/${stageId}/`; 
+  
+  try {
+    const response = await fetch(url, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    callback();
+  } catch (error) {
+    errorCallback(error);
+  }
+};
+
 /* DELETE CREATOR */
 
 export const deleteCreator = async (
@@ -1121,3 +1149,49 @@ export const getCreatorsDetail = async (
     errorCallback && errorCallback(error);
   }
 }
+
+
+////////////////////////////////////////////////////////////////////////
+/********************  PROFILE BUTTON CALLS  *************************/
+////////////////////////////////////////////////////////////////////////
+
+
+// PROJECT PROFILE BUTTONS
+
+export const uploadContract = async (
+  projectId: string,
+  file: Blob,
+  callback: (data: any) => void,
+  errorCallback: (error: any) => void
+) => {
+  const url = `${DEPLOYED_API_BASE_URL}projects/${projectId}/upload-contract/`;
+  const formData = new FormData();
+  formData.append('file', file);
+
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+      },
+      body: formData
+    });
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    const data = await response.json();
+    callback(data);
+  } catch (error) {
+    errorCallback(error);
+  }
+};
+
+export const viewContract = (projectId: string) => {
+  return `${DEPLOYED_API_BASE_URL}projects/${projectId}/view-contract/`; // Assuming this endpoint streams the file back to the client
+};
+
+export const downloadContract = (projectId: string) => {
+  return `${DEPLOYED_API_BASE_URL}projects/${projectId}/download-contract/`; // Assuming this endpoint sets 'Content-Disposition' to attachment in headers
+};
