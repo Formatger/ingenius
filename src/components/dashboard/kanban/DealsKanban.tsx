@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Plus from "@/components/assets/icons/plus.svg";
 import Edit from "@/components/assets/icons/edit.svg";
-import AddFieldModal from "@/components/dashboard/kanban/AddFieldModal";
-import { putProject, getProjectStages } from "@/utils/httpCalls";
+import AddFieldModalDeal from "@/components/dashboard/kanban/AddFieldModalDeal";
+import { deleteCampaignStage, putCampaign, putNewOrderDeal } from "@/utils/httpCalls";
+import ConfirmModal from "../profile/ConfirmModal";
+import ChangeDealColumn from "@/components/dashboard/kanban/ChangeDealColumn";
 
 // interface Stages2 {
 //   id: number;
@@ -19,173 +21,364 @@ interface DealsKanbanProps {
     message: string;
   };
   data: any[]; // Considera definir tipos más específicos si es posible
-  projectsData: any; // Considera definir tipos más específicos si es posible
+  DealData: any; // Considera definir tipos más específicos si es posible
   handleOpenSidepanel: (project: object) => void;
-  projectStage: any; // Considera definir un tipo más específico si es posible
-  updateProjectData: () => void;
+  Dealstage: any; // Considera definir un tipo más específico si es posible
+  updateDealData: () => void;
 }
 
-const DealsKanban = ({ projectsData, data, httpError, handleOpenSidepanel, projectStage, updateProjectData }: DealsKanbanProps) => {
+const DealsKanban = ({ DealData, httpError, handleOpenSidepanel, Dealstage, updateDealData }: DealsKanbanProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isFormOpen, setIsFormOpen] = useState(false);
-  const [projectsColumn, setProjectsColumn] = useState<any[]>([]);
+  const [isEditModalOpen, setEditModalOpen] = useState(false);
+  const [isAddModalOpen, setAddModalOpen] = useState(false);
   const [draggedOverStageIndex, setDraggedOverStageIndex] = useState<string | null>(null); // Estado para almacenar el ID de la columna sobre la que se arrastra
   const [stages, setStages] = useState<any[]>([]);
+  const [deleteStageId, setDeleteStageId] = useState<string | null>(null);
+  const colors = ["pink", "linen", "green", "blue", "yellow", "orange", "red"];
+  const [changeStage, setChangeStage] = useState<string | null>(null);
 
-  console.log(projectStage)
+  console.log("DEAL STAGE", Dealstage)
+  console.log("DEAL STAGE", DealData)
+
+  /* ASSIGN COLOR TO STAGES */
+
+  const assignColorsToStages = (stages: any[]) => {
+    const storedColors = localStorage.getItem('stageColors');
+    const colorsMap = storedColors ? JSON.parse(storedColors) : {};
+
+    const coloredStages = stages.map(stage => {
+      if (!colorsMap[stage.stageID]) {
+        colorsMap[stage.stageID] = `color-${colors[Math.floor(Math.random() * colors.length)]}`;
+      }
+      return { ...stage, color: colorsMap[stage.stageID] };
+    });
+
+    localStorage.setItem('stageColors', JSON.stringify(colorsMap));
+    return coloredStages;
+  };
 
 
   /* FETCH STAGE COLUMNS */
 
   useEffect(() => {
-    if (projectStage.length === 0) return; // Evitar procesamiento si projectStage está vacío
+    if (Dealstage.length === 0) return;
 
-    const stagesWithProjects = projectStage.map((stage: any) => {
-      const stageProjects = projectsData.filter((project: any) => {
-        console.log("PROJECT PROJECT_STAGE", project.project_stage); // Agregado console.log para project.project_stage
-        return project.project_stage === stage.stageID;
-      })
-      console.log("STAGE PROJECTS", stageProjects);
-      console.log("STAGE ID:", stage.stageID);
+    let stagesWithDeals = Dealstage.map(
+      (stage: any) => {
+        const stageDeals = DealData.filter((deal: any) => {
+          return deal.deal_stage === stage.stageID;
+        });
+        console.log("STAGE CAMPAIGNS", stageDeals);
+        console.log("STAGE ID:", stage.stageID);
 
-      return { ...stage, projects: stageProjects };
-    }, [projectsData, projectStage]);
+        return { ...stage, campaigns: stageDeals };
+      },
+      [DealData, Dealstage]
+    );
 
-    setStages(stagesWithProjects);
-  }, [projectsData, projectStage]);
+    stagesWithDeals = assignColorsToStages(stagesWithDeals);
+    setStages(stagesWithDeals);
+  }, [DealData, Dealstage]);
 
-  console.log("Projects column", stages);
+  console.log("Deals column", stages);
 
+  /* EDIT STAGE */
 
-  /* DRAG DROP */
-
-  const handleDragStart = (e: any, projects: any, stageID: any, stageIndex?: any) => {
-    e.dataTransfer.setData('projects', JSON.stringify({ ...projects, stageID }));
-    e.dataTransfer.setData('stageOrder', stageIndex); // Establecer el ID de la columna en dataTransfer
+  const openChangeModal = (stageID: any) => {
+    setChangeStage(stageID);
+    setEditModalOpen(true);
   };
 
-  const handleDragOver = (e: React.DragEvent<HTMLDivElement>, stageID: string, stageIndex: any) => {
-    e.preventDefault(); // Prevenir el comportamiento predeterminado del navegador
-    setDraggedOverStageIndex(stageID); // Actualizar el estado para iluminar la columna
-    setDraggedOverStageIndex(stageIndex);
+  /* DELETE STAGE */
+
+  const openDeleteModal = (stageID: any) => {
+    const stage = stages.find(stage => stage.stageID === stageID);
+    if (stage && stage.deals.length > 0) {
+      alert("Please move all projects from this stage to another stage before deleting it.");
+      return;
+    }
+    console.log("Setting deleteStageId to:", stageID);
+    setDeleteStageId(stageID);
+    setIsModalOpen(true);
+  };
+
+  const handleDelete = async () => {
+    if (deleteStageId) {
+      const stage = stages.find(stage => stage.stageID === deleteStageId);
+      if (stage && stage.campaigns.length > 0) {
+        alert("Please move all projects from this stage to another stage before deleting it.");
+        return;
+      }
+
+      deleteDealsStage(parseInt(deleteStageId), async () => {
+        console.log("Stage deleted successfully");
+        const remainingStages = stages.filter(stage => stage.stageID !== deleteStageId);
+        const updatedStages = remainingStages.map((stage, index) => ({
+          ...stage,
+          stageIndex: index + 1
+        }));
+        setStages(updatedStages);
+
+        for (const stage of updatedStages) {
+          await putNewOrderDeal(
+            stage.stageID,
+            { name: stage.stageName, order: stage.stageIndex },
+            () => { },
+            (error) => console.error("Failed to update stage order:", error)
+          );
+        }
+
+        updateDealData();
+        setIsModalOpen(false);
+        setDeleteStageId(null);
+      }, (error) => {
+        console.error("Failed to delete stage:", error);
+        alert("Failed to delete stage. Please try again.");
+      });
+    }
+  };
+
+
+
+  /* DRAG & DROP */
+
+  const handleDragStartColumn = (e: React.DragEvent, stage: any) => {
+    e.dataTransfer.setData("text/plain", stage.stageIndex);
+    e.dataTransfer.setData("stage", JSON.stringify({ stage }));
+    console.log("START DATA STAGES", stage);
+  };
+
+  const handleDropColumn = async (e: React.DragEvent, newColumn: any) => {
+    e.preventDefault();
+    const oldColumnData = JSON.parse(e.dataTransfer.getData("stage"));
+    const oldColumn = oldColumnData.stage;
+
+    if (oldColumn.stageIndex !== newColumn.stageIndex) {
+      try {
+        await Promise.all([
+          putNewOrderDeal(
+            oldColumn.stageID,
+            { name: oldColumn.stageName, order: newColumn.stageIndex },
+            () => { },
+            undefined
+          ),
+          putNewOrderDeal(
+            newColumn.stageID,
+            { name: newColumn.stageName, order: oldColumn.stageIndex },
+            () => { },
+            undefined
+          ),
+        ]);
+
+        setStages((currentStages) => {
+          return currentStages.map((stage) => {
+            if (stage.stageID === oldColumn.stageID) {
+              return {
+                ...stage,
+                stageIndex: newColumn.stageIndex,
+              };
+            }
+            if (stage.stageID === newColumn.stageID) {
+              return {
+                ...stage,
+                stageIndex: oldColumn.stageIndex,
+              };
+            }
+            return stage;
+          });
+        });
+      } catch (error) {
+        console.error("Error al procesar la solicitud PUT:", error);
+      }
+    }
+  };
+
+  const handleDragStart = (e: any, deals: any, stages: any) => {
+    e.dataTransfer.setData("deals", JSON.stringify({ ...deals, stages }));
+    console.log("CAMPAIGNS START DATA", deals, stages);
+  };
+
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>, stageID: any) => {
+    e.preventDefault();
+    setDraggedOverStageIndex(stageID);
+    setDraggedOverStageIndex(stageID);
   };
 
   const handleDragLeave = () => {
-    setDraggedOverStageIndex(null); // Resetea el estado cuando el drag sale de la columna
+    setDraggedOverStageIndex(null);
   };
 
-  const handleDrop = (e: React.DragEvent<HTMLDivElement>, stageID: string, stageIndex: any) => {
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>, stageID: any) => {
     setDraggedOverStageIndex(null);
-    console.log('Valor de stageID:', stageID);
     try {
-      const project = JSON.parse(e.dataTransfer.getData('projects'));
-
-      // Verificar si project_stage es diferente a columnId
-      if (project.project_stage !== stageID) {
-        putProject(project.id, { ...project, project_stage: stageID },
+      const deal = JSON.parse(e.dataTransfer.getData("deals"));
+      if (deal.deal_stage !== stageID) {
+        putCampaign(
+          deal.id,
+          { ...deal, deal_stage: stageID },
           () => {
-            // Actualizar el estado para reflejar el cambio sin recargar
-            setStages((currentColumns) => {
-              console.log("current columns", currentColumns);
-              return currentColumns.map((col) => {
-                // Remover el proyecto de su columna original
-                if (col.stageID === project.stageID) {
+            setStages((currentStages) => {
+              return currentStages.map((stage) => {
+                if (stage.stageID === deal.deal_stage) {
                   return {
-                    ...col,
-                    projects: col.projects.filter((p: any) => p.id !== project.id),
+                    ...stage,
+                    deals: stage.deals.filter(
+                      (p: any) => p.id !== deal.id
+                    ),
                   };
                 }
-                // Añadir el proyecto a la columna destino
-                if (col.stageID === stageID) {
-                  return {
-                    ...col,
-                    projects: [...col.projects, { ...project, project_stage: stageID }],
-                  };
+                if (stage.stageID === stageID) {
+                  const existingDealIndex = stage.deals.findIndex(
+                    (p: any) => p.id === deal.id
+                  );
+                  if (existingDealIndex === -1) {
+                    return {
+                      ...stage,
+                      deals: [
+                        ...stage.deals,
+                        { ...deal, deal_stage: stageID },
+                      ],
+                    };
+                  } else {
+                    const updatedDeal = [...stage.deals];
+                    updatedDeal.splice(existingDealIndex, 1);
+                    updatedDeal.push({
+                      ...deal,
+                      deal_stage: stageID,
+                    });
+                    return {
+                      ...stage,
+                      deals: updatedDeal,
+                    };
+                  }
                 }
-                // Para las columnas que no están involucradas, se retornan sin cambios
-                return col;
+                return stage;
               });
             });
           },
           (error) => {
-            console.error('Error al actualizar el proyecto:', error);
+            console.error("Error al actualizar el proyecto:", error);
           }
         );
       }
     } catch (error) {
-      console.error('Error al procesar la solicitud PUT:', error);
-    }
-    try {
-      const stage = JSON.parse(e.dataTransfer.getData('stageorder'));
-      console.log('Valor de stageIndex:', stage.stageIndex);
-      if (stage.stageIndex !== stageIndex) {
-        putProject(stage.stageIndex, { ...stage, order: stageIndex },
-          () => {
-            // Aquí puedes realizar acciones adicionales si es necesario
-          },
-          (error) => {
-            console.error('Error al actualizar el índice de la columna:', error);
-          }
-        );
-      }
-    } catch (error) {
-      console.error('Error al procesar la solicitud PUT para el índice de la columna:', error);
+      console.error("Error al procesar la solicitud PUT:", error);
     }
   };
+
+
+
+
   return (
-    <div className="kanban-container">
+    <div
+      className="kanban-container"
+      style={{ gridTemplateColumns: `repeat(${stages.length}, 1fr)`, }}
+    >
       {stages
         .sort((a, b) => a.stageIndex - b.stageIndex)
-        .map((projectCol) => (
-          <div
-            className={`kanban-column ${draggedOverStageIndex === projectCol.stageIndex ? 'drag-over-column' : ''}`}
-            onDrop={(e) => handleDrop(e, projectCol.stageID, projectCol.stageIndex)}
-            onDragOver={(e) => handleDragOver(e, projectCol.stageID, projectCol.stageIndex)}
-            onDragLeave={handleDragLeave}
-            key={projectCol.stageIndex}
-            draggable
-          >
-            <div className="kanban-header">
-              <span className={`round-tag ${projectCol.color}`}>{projectCol.stageName}</span>
-            </div>
-
-            {projectCol.projects?.map((projectCard: any) => (
+        .map((dealCol) => {
+          return (
+            <div
+              className={`kanban-column ${draggedOverStageIndex === dealCol.stageID ? 'drag-over-column' : ''}`}
+              onDrop={(e) => handleDrop(e, dealCol.stageID)}
+              onDragOver={(e) => handleDragOver(e, dealCol.stageID)}
+              onDragLeave={handleDragLeave}
+              onDragStart={(e) => handleDragStartColumn(e, dealCol)}
+              key={dealCol.stageIndex}
+              draggable
+            >
               <div
-                className="kanban-card"
-                key={projectCard.id}
-                draggable
-                onDragStart={(e) => handleDragStart(e, projectCard, projectCol.stageID)}
-                onClick={() => handleOpenSidepanel(projectCard)}
+                className={`kanban-header`}
+                onDrop={(e) => handleDropColumn(e, dealCol)}
+                onDragStart={(e) => handleDragStartColumn(e, dealCol)}
               >
-                <div className="kanban-card-header">
-                  <img src={projectCard.creator_profile_picture} alt={projectCard.creator_name} className="brandImage" />
-                  <p className="brandTitle">{projectCard.creator_name}</p>
-                </div>
-                <p className="campaignName">{projectCard.name}</p>
-                <p className="campaignDescription">{projectCard.description}</p>
-                <div className="card-tags mt-4">
-                  <span className="square-tag green">Due: {projectCard.deadline}</span>
+                <span
+                  className={`stage-tag ${dealCol.color}`}
+                  onDrop={(e) => handleDropColumn(e, dealCol)}
+                  onDragStart={(e) => handleDragStartColumn(e, dealCol)}
+                  draggable
+                >
+                  {dealCol.stageName}
+                </span>
+
+                <div className="addtags-wrap">
+                  <div className="row-wrap-2">
+                    <button onClick={() => openChangeModal(dealCol)}>
+                      <Image src={Edit} alt="Icon" width={12} height={12} />
+                    </button>
+                    <button onClick={() => openDeleteModal(dealCol.stageID)}>
+                      <Image className="exit-icon" src={Plus} alt="Icon" width={15} height={15} />
+                    </button>
+                  </div>
+
+                  <AddFieldModalDeal
+                    isOpen={isAddModalOpen}
+                    onClose={() => setAddModalOpen(false)}
+                    title="Add Deal Stage"
+                    updateDealData={updateDealData}
+                  />
+
+                  <ChangeDealColumn
+                    isOpen={isEditModalOpen}
+                    onClose={() => setEditModalOpen(false)}
+                    changeStage={changeStage}
+                    title="Edit Stage Name"
+                    button="Save"
+                    updateDealData={updateDealData}
+                  />
+
+                  <ConfirmModal
+                    isOpen={isModalOpen && deleteStageId === dealCol.stageID}
+                    onClose={() => setIsModalOpen(false)}
+                    title="Delete Deal Stage"
+                    message={`Are you sure you want to delete the stage '${dealCol.stageName}'?`}
+                    onConfirm={handleDelete}
+                    button="Yes, delete this stage"
+                  />
+
                 </div>
               </div>
-            ))}
-          </div>
-        ))}
-      <div className='addtags-wrap'>
-        <div className='row-wrap-2'>
-          <button onClick={() => setIsModalOpen(true)}>
-            <Image src={Plus} alt="Icon" width={15} height={15} />
-          </button>
-          <button>
-            <Image src={Edit} alt="Icon" width={15} height={15} />
-          </button>
-        </div>
+              {dealCol.deals?.map((dealCard: any) => {
+                return (
+                  <div
+                    className="kanban-card"
+                    key={dealCard.id}
+                    draggable
+                    onDragStart={(e) =>
+                      handleDragStart(e, dealCard, dealCol.stageID)
+                    }
+                    onClick={() => handleOpenSidepanel(dealCard)}
+                  >
+                    <div className="kanban-card-header">
+                      <img
+                        src={dealCard.brand_image_url}
+                        alt={dealCard.brand_name}
+                        className="brandImage"
+                      />
+                      <p className="brandTitle">{dealCard.brand_name}</p>
+                    </div>
+                    <p className="dealName">{dealCard.name}</p>
+                    <p className="dealDescription">
+                      {dealCard.description}
+                    </p>
+                    <div className="card-tags mt-4">
+                      <span className="square-tag green">
+                        Due: {dealCard.deadline}
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          );
+        })}
 
-        <AddFieldModal
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          title="Add Field"
-          updateProjectData={updateProjectData}
-        />
+      {/* ADD STAGE BUTTON */}
+      <div className="addstage-wrap">
+        <button className="add-stage-btn" onClick={() => setAddModalOpen(true)}>
+          <Image src={Plus} alt="Icon" width={12} height={12} />
+          Add Stage
+        </button>
       </div>
     </div>
   );

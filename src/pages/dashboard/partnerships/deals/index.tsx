@@ -24,13 +24,13 @@ import DealForm from "@/components/dashboard/form/DealForm";
 
 const DealsPage = () => {
   const router = useRouter();
-  const [invoiceData, setInvoiceData] = useState(null);
   const [loader, setLoader] = useState<boolean>(false);
   const [httpError, setHttpError] = useState({
     hasError: false,
     status: 0,
     message: "",
   });
+
   const [tableRows, setTableRows] = useState<boolean>(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
@@ -72,13 +72,22 @@ const DealsPage = () => {
 
   useEffect(() => {
     fetchDealStages();
-  }, [router]);
+  }, [router, updateDeal, tableRows]);
 
   const fetchDealStages = () => {
     setLoader(true);
     getDealStages(
       (response: any) => {
-        setDealStage(response || []);
+        setDealStage(
+          response.map((stage: any) => ({
+            stageID: stage.id,
+            stageName: stage.name,
+            stageIndex: stage.order,
+            stageUser: stage.user,
+          }))
+        );
+
+        setUpdateDeal(false);
       },
       (error: any) => {
         console.error("Error fetching profile data:", error);
@@ -118,20 +127,28 @@ const DealsPage = () => {
         }
       ),
     ]).finally(() => {
-      const DealsFullData = provisionalDealsData.map((item) => {
-        const detail = provisionalDealsDetailData.find(
-          (detail) => detail.id === item.id
+      const dealsFullData = provisionalDealsData.map((item) => {
+        const item2 = provisionalDealsDetailData.find(
+          (item2) => item2.id === item.id
         );
         return {
           ...item,
-          ...detail,
+          ...Object.keys(item2).reduce((result: any, key) => {
+            if (
+              !Object.values(item).includes(item2[key]) &&
+              !Object.values(result).includes(item2[key])
+            ) {
+              result[key] = item2[key];
+            }
+            return result;
+          }, {}),
         };
       });
 
-      setOriginalData(DealsFullData);
-      setFilteredData(DealsFullData);
+      setOriginalData(dealsFullData);
+      setFilteredData(dealsFullData);
       setDataToDisplay(
-        DealsFullData.slice(
+        dealsFullData.slice(
           (currentPage - 1) * itemsPerPage,
           currentPage * itemsPerPage
         )
@@ -139,7 +156,7 @@ const DealsPage = () => {
 
       setLoader(false);
     });
-  }, []);
+  }, [updateDeal, tableRows]);
 
   useEffect(() => {
     setDataToDisplay(
@@ -281,12 +298,14 @@ const DealsPage = () => {
               </Fragment>
             ) : (
               <>
-                {/* <DealsKanban
+                <DealsKanban
                   httpError={httpError}
-                  dealsData={dealsData}
+                  data={dataToDisplay}
+                  DealData={filteredData}
                   handleOpenSidepanel={handleOpenSidepanel}
+                  Dealstage={dealStage}
                   updateDealData={updateDealData}
-                /> */}
+                />
               </>
             )}
           </div>

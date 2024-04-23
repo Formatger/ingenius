@@ -40,26 +40,26 @@ const CampaignKanban = ({
   console.log(campaignsData);
 
   /* ASSIGN COLOR TO STAGES */
-  
+
   const assignColorsToStages = (stages: any[]) => {
-  const storedColors = localStorage.getItem('stageColors');
-  const colorsMap = storedColors ? JSON.parse(storedColors) : {};
+    const storedColors = localStorage.getItem('stageColors');
+    const colorsMap = storedColors ? JSON.parse(storedColors) : {};
 
-  const coloredStages = stages.map(stage => {
-    if (!colorsMap[stage.stageID]) {
-      colorsMap[stage.stageID] = `color-${colors[Math.floor(Math.random() * colors.length)]}`;
-    }
-    return {...stage, color: colorsMap[stage.stageID]};
-  });
+    const coloredStages = stages.map(stage => {
+      if (!colorsMap[stage.stageID]) {
+        colorsMap[stage.stageID] = `color-${colors[Math.floor(Math.random() * colors.length)]}`;
+      }
+      return { ...stage, color: colorsMap[stage.stageID] };
+    });
 
-  localStorage.setItem('stageColors', JSON.stringify(colorsMap));
-  return coloredStages;
-};
+    localStorage.setItem('stageColors', JSON.stringify(colorsMap));
+    return coloredStages;
+  };
 
   /* FETCH COLUMN STAGES */
 
   useEffect(() => {
-    if (campaignStage.length === 0) return; 
+    if (campaignStage.length === 0) return;
 
     let stagesWithCampaigns = campaignStage.map(
       (stage: any) => {
@@ -99,7 +99,7 @@ const CampaignKanban = ({
     setDeleteStageId(stageID);
     setIsModalOpen(true);
   };
-  
+
   const handleDelete = async () => {
     if (deleteStageId) {
       const stage = stages.find(stage => stage.stageID === deleteStageId);
@@ -107,7 +107,7 @@ const CampaignKanban = ({
         alert("Please move all projects from this stage to another stage before deleting it.");
         return;
       }
-  
+
       deleteCampaignStage(parseInt(deleteStageId), async () => {
         console.log("Stage deleted successfully");
         const remainingStages = stages.filter(stage => stage.stageID !== deleteStageId);
@@ -115,17 +115,17 @@ const CampaignKanban = ({
           ...stage,
           stageIndex: index + 1
         }));
-        setStages(updatedStages); 
-  
+        setStages(updatedStages);
+
         for (const stage of updatedStages) {
           await putNewOrderCampaign(
             stage.stageID,
             { name: stage.stageName, order: stage.stageIndex },
-            () => {},
+            () => { },
             (error) => console.error("Failed to update stage order:", error)
           );
         }
-  
+
         updateCampaignData();
         setIsModalOpen(false);
         setDeleteStageId(null);
@@ -155,13 +155,13 @@ const CampaignKanban = ({
           putNewOrderCampaign(
             oldColumn.stageID,
             { name: oldColumn.stageName, order: newColumn.stageIndex },
-            () => {},
+            () => { },
             undefined
           ),
           putNewOrderCampaign(
             newColumn.stageID,
             { name: newColumn.stageName, order: oldColumn.stageIndex },
-            () => {},
+            () => { },
             undefined
           ),
         ]);
@@ -190,7 +190,7 @@ const CampaignKanban = ({
   };
 
   const handleDragStart = (e: any, campaigns: any, stages: any) => {
-    e.dataTransfer.setData("campaigns",JSON.stringify({ ...campaigns, stages }));
+    e.dataTransfer.setData("campaigns", JSON.stringify({ ...campaigns, stages }));
     console.log("CAMPAIGNS START DATA", campaigns, stages);
   };
 
@@ -265,7 +265,7 @@ const CampaignKanban = ({
   return (
     <div
       className="kanban-container"
-      style={{ gridTemplateColumns: `repeat(${stages.length}, 1fr)`,}}
+      style={{ gridTemplateColumns: `repeat(${stages.length}, 1fr)`, }}
     >
       {stages
         .sort((a, b) => a.stageIndex - b.stageIndex)
@@ -318,7 +318,7 @@ const CampaignKanban = ({
                     title="Edit Stage Name"
                     button="Save"
                     updateCampaignData={updateCampaignData}
-                  /> 
+                  />
 
                   <ConfirmModal
                     isOpen={isModalOpen && deleteStageId === campaignCol.stageID}
@@ -328,7 +328,7 @@ const CampaignKanban = ({
                     onConfirm={handleDelete}
                     button="Yes, delete this stage"
                   />
-                    
+
                 </div>
               </div>
               {campaignCol.campaigns?.map((campaignCard: any) => {
@@ -366,13 +366,13 @@ const CampaignKanban = ({
           );
         })}
 
-        {/* ADD STAGE BUTTON */}
-        <div className="addstage-wrap">
-          <button className="add-stage-btn" onClick={() => setAddModalOpen(true)}>
-            <Image src={Plus} alt="Icon" width={12} height={12} />
-            Add Stage
-          </button>
-        </div>
+      {/* ADD STAGE BUTTON */}
+      <div className="addstage-wrap">
+        <button className="add-stage-btn" onClick={() => setAddModalOpen(true)}>
+          <Image src={Plus} alt="Icon" width={12} height={12} />
+          Add Stage
+        </button>
+      </div>
     </div>
   );
 };

@@ -37,13 +37,45 @@ export const refreshToken = async (errorCallback?: (error: any) => void) => {
 
 /* PUT NEW STAGE ORDER PROJECT*/
 
+export const putNewOrderDeal = async (
+  stageId: number,
+  updatedData: any,
+  callback: (data: any) => void,
+  errorCallback?: (error: any) => void
+) => {
+  console.log("PUT successful", updatedData)
+  const url = `${DEPLOYED_API_BASE_URL}deal-stages/${stageId}/`;
+
+  try {
+    const response = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.access_token}`,
+      },
+      body: JSON.stringify(updatedData),
+    });
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    const data = await response.json();
+    callback(data);
+  } catch (error) {
+    errorCallback && errorCallback(error);
+  }
+};
+
+/* PUT NEW STAGE ORDER PROJECT*/
+
 export const putNewOrderProject = async (
   stageId: number,
   updatedData: any,
   callback: (data: any) => void,
   errorCallback?: (error: any) => void
 ) => {
-  console.log("PUT successful",updatedData)
+  console.log("PUT successful", updatedData)
   const url = `${DEPLOYED_API_BASE_URL}project-stages/${stageId}/`;
 
   try {
@@ -75,7 +107,7 @@ export const putNewOrderCampaign = async (
   callback: (data: any) => void,
   errorCallback?: (error: any) => void
 ) => {
-  console.log("PUT successful",updatedData)
+  console.log("PUT successful", updatedData)
   const url = `${DEPLOYED_API_BASE_URL}campaign-stages/${stageId}/`;
 
   try {
@@ -107,7 +139,7 @@ export const putProject = async (
   callback: (data: any) => void,
   errorCallback?: (error: any) => void
 ) => {
-  console.log("PUT successful",updatedData)
+  console.log("PUT successful", updatedData)
   const url = `${DEPLOYED_API_BASE_URL}projects/${projectId}/`;
 
   try {
@@ -139,8 +171,8 @@ export const putCampaign = async (
   callback: (data: any) => void,
   errorCallback?: (error: any) => void
 ) => {
-  console.log("CAMAPIGN ID",campaignId)
-  console.log("PUT successful",updatedData)
+  console.log("CAMAPIGN ID", campaignId)
+  console.log("PUT successful", updatedData)
   const url = `${DEPLOYED_API_BASE_URL}campaigns/${campaignId}/`;
 
   try {
@@ -172,8 +204,8 @@ export const putDeal = async (
   callback: (data: any) => void,
   errorCallback?: (error: any) => void
 ) => {
-  console.log("PUT successful",dealId)
-  const url = `${DEPLOYED_API_BASE_URL}deals/${dealId}/`; 
+  console.log("PUT successful", dealId)
+  const url = `${DEPLOYED_API_BASE_URL}deals/${dealId}/`;
 
   try {
     const response = await fetch(url, {
@@ -204,8 +236,8 @@ export const putBrand = async (
   callback: (data: any) => void,
   errorCallback?: (error: any) => void
 ) => {
-  console.log("PUT successful",brandId)
-  const url = `${DEPLOYED_API_BASE_URL}brands/${brandId}/`; 
+  console.log("PUT successful", brandId)
+  const url = `${DEPLOYED_API_BASE_URL}brands/${brandId}/`;
 
   try {
     const response = await fetch(url, {
@@ -236,8 +268,8 @@ export const putCreator = async (
   callback: (data: any) => void,
   errorCallback?: (error: any) => void
 ) => {
-  console.log("PUT successful",creatorId)
-  const url = `${DEPLOYED_API_BASE_URL}creators/${creatorId}/`; 
+  console.log("PUT successful", creatorId)
+  const url = `${DEPLOYED_API_BASE_URL}creators/${creatorId}/`;
 
   try {
     const response = await fetch(url, {
@@ -265,7 +297,7 @@ export const putCreator = async (
 ////////////////////////////////////////////////////////////////////////
 
 
-/* CHANGE PROJECT-STAGE NAME ------------------>   ES IDENTICO A putNewOrderProject */       
+/* CHANGE PROJECT-STAGE NAME ------------------>   ES IDENTICO A putNewOrderProject */
 
 // export const changeProjectStageName = async (
 //   projectId: number,
@@ -337,7 +369,7 @@ export const deleteProject = async (
 
 export const deleteProjectStage = async (
   stageId: number,
-  callback: () => void, 
+  callback: () => void,
   errorCallback: (error: any) => void
 ) => {
   const url = `${DEPLOYED_API_BASE_URL}project-stages/${stageId}/`; // Adjusted endpoint to 'project-stages'
@@ -365,7 +397,7 @@ export const deleteProjectStage = async (
 
 export const deleteCampaign = async (
   campaignId: number,
-  callback: () => void, 
+  callback: () => void,
   errorCallback: (error: any) => void
 ) => {
   const url = `${DEPLOYED_API_BASE_URL}campaigns/${campaignId}/`;
@@ -383,7 +415,7 @@ export const deleteCampaign = async (
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    callback(); 
+    callback();
   } catch (error) {
     errorCallback(error);
   }
@@ -393,7 +425,7 @@ export const deleteCampaign = async (
 
 export const deleteCampaignStage = async (
   stageId: number,
-  callback: () => void, 
+  callback: () => void,
   errorCallback: (error: any) => void
 ) => {
   const url = `${DEPLOYED_API_BASE_URL}campaign-stages/${stageId}/`; // Adjusted endpoint to 'project-stages'
@@ -421,7 +453,7 @@ export const deleteCampaignStage = async (
 
 export const deleteDeal = async (
   dealId: number,
-  callback: () => void, 
+  callback: () => void,
   errorCallback: (error: any) => void
 ) => {
   const url = `${DEPLOYED_API_BASE_URL}deals/${dealId}/`;
@@ -439,7 +471,7 @@ export const deleteDeal = async (
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    callback(); 
+    callback();
   } catch (error) {
     errorCallback(error);
   }
@@ -513,6 +545,36 @@ export const postProjects = async (
   errorCallback?: (error: any) => void
 ) => {
   const url = DEPLOYED_API_BASE_URL + 'projects/';
+
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.access_token}`,
+      },
+      body: JSON.stringify(requestData),
+    });
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    const data = await response.json();
+    callback(data);
+  } catch (error) {
+    errorCallback && errorCallback(error);
+  }
+};
+
+/* POST DEAL-STAGE */
+
+export const postDealStage = async (
+  requestData: any,
+  callback: (data: any) => void,
+  errorCallback?: (error: any) => void
+) => {
+  const url = DEPLOYED_API_BASE_URL + 'deal-stages/';
 
   try {
     const response = await fetch(url, {
