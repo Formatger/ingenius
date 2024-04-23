@@ -6,17 +6,17 @@ interface ChangeCampaignColumnProps {
   onClose: () => void;
   title: string;
   button: string;
-  campaign: any;
   updateCampaignData: () => void;
+  changeStage: any;
 }
 
-const ChangeCampaignColumn: React.FC<ChangeCampaignColumnProps> = ({ isOpen, onClose, title, button, campaign, updateCampaignData }) => {
+const ChangeCampaignColumn: React.FC<ChangeCampaignColumnProps> = ({ isOpen, changeStage, onClose, title, button, updateCampaignData }) => {
   const [newName, setNewName] = useState<string>('');
 
   const handleChangeCampaign = async () => {
     try {
       // Llamar a la función para actualizar el nombre en la base de datos
-      await putNewOrderCampaign(campaign.stageID, { name: newName, order: campaign.stageIndex }, () => {});
+      await putNewOrderCampaign(changeStage.stageID, { name: newName, order: changeStage.stageIndex }, () => {});
       
       // Aquí llamamos a la función updateCampaignData para actualizar el estado después de la actualización
       updateCampaignData();

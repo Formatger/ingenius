@@ -4,19 +4,14 @@ import {putNewOrderProject} from "@/utils/httpCalls";
 interface ChangeProjectColumnProps {
   isOpen: boolean;
   onClose: () => void;
-  onConfirm: () => void;
   title: string;
-  message: string;
   button: string;
-  project: any;
   updateProjectData: () => void;
   changeStage: any;
 }
 
-
-
-const ChangeProjectColumn: React.FC<ChangeProjectColumnProps> = ({ isOpen, onClose, onConfirm, title, button, updateProjectData,changeStage}) => {
-    console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",changeStage)
+const ChangeProjectColumn: React.FC<ChangeProjectColumnProps> = ({ isOpen, onClose, title, button, updateProjectData,changeStage}) => {
+    console.log("!!!!!!!!!!!!!!!!",changeStage)
 
     const [newName, setNewName] = useState<string>('');
 
@@ -33,8 +28,6 @@ const ChangeProjectColumn: React.FC<ChangeProjectColumnProps> = ({ isOpen, onClo
           console.error("Failed to change stage name:", error);
         }
       };
-
-
 
     if (!isOpen) return null;
   

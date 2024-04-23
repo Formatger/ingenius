@@ -5,7 +5,7 @@ import Edit from "@/components/assets/icons/edit.svg";
 import AddFieldModalCampaign from "@/components/dashboard/kanban/AddFieldModalCampaign";
 import { deleteCampaignStage, putCampaign, putNewOrderCampaign } from "@/utils/httpCalls";
 import ConfirmModal from "../profile/ConfirmModal";
-import ChangeCampaignColumn from "@/components/dashboard/kanban/ChangeProjectColumn";
+import ChangeCampaignColumn from "@/components/dashboard/kanban/ChangeCampaignColumn";
 
 interface CampaignKanbanProps {
   httpError: {
@@ -28,8 +28,9 @@ const CampaignKanban = ({
   updateCampaignData,
 }: CampaignKanbanProps) => {
   const [isAddModalOpen, setAddModalOpen] = useState(false);
+  const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [draggedOverStageIndex, setDraggedOverStageIndex] = useState<string | null>(null); // Estado para almacenar el ID de la columna sobre la que se arrastra
+  const [draggedOverStageIndex, setDraggedOverStageIndex] = useState<string | null>(null);
   const [stages, setStages] = useState<any[]>([]);
   const [deleteStageId, setDeleteStageId] = useState<string | null>(null);
   const colors = ["pink", "linen", "green", "blue", "yellow", "orange", "red"];
@@ -58,12 +59,11 @@ const CampaignKanban = ({
   /* FETCH COLUMN STAGES */
 
   useEffect(() => {
-    if (campaignStage.length === 0) return; // Evitar procesamiento si campaignStage está vacío
+    if (campaignStage.length === 0) return; 
 
     let stagesWithCampaigns = campaignStage.map(
       (stage: any) => {
         const stageCampaigns = campaignsData.filter((campaign: any) => {
-          console.log("CAMPAIGN CAMPAIGN_STAGE", campaign.campaign_stage); // Agregado console.log para campaign.campaign_stage
           return campaign.campaign_stage === stage.stageID;
         });
         console.log("STAGE CAMPAIGNS", stageCampaigns);
@@ -76,17 +76,16 @@ const CampaignKanban = ({
 
     stagesWithCampaigns = assignColorsToStages(stagesWithCampaigns);
     setStages(stagesWithCampaigns);
-  }, [campaignsData, campaignStage]); // Ahora la lista de dependencias se pasa correctamente al useEffect
+  }, [campaignsData, campaignStage]);
 
   console.log("Campaigns column", stages);
 
-/* CHANGE STAGE */
+  /* EDIT STAGE */
 
-const openChangeModal = (stage: any) => {
-  setChangeStage(stage);
-  setIsModalOpen(true);
-};
-
+  const openChangeModal = (stageID: any) => {
+    setChangeStage(stageID);
+    setEditModalOpen(true);
+  };
 
   /* DELETE STAGE */
 
@@ -114,11 +113,10 @@ const openChangeModal = (stage: any) => {
         const remainingStages = stages.filter(stage => stage.stageID !== deleteStageId);
         const updatedStages = remainingStages.map((stage, index) => ({
           ...stage,
-          stageIndex: index + 1 // Reassign stageIndex starting from 1
+          stageIndex: index + 1
         }));
-        setStages(updatedStages); // Update the local state
+        setStages(updatedStages); 
   
-        // Update the backend about the new order
         for (const stage of updatedStages) {
           await putNewOrderCampaign(
             stage.stageID,
@@ -128,9 +126,9 @@ const openChangeModal = (stage: any) => {
           );
         }
   
-        updateCampaignData(); // Additional updates if necessary
+        updateCampaignData();
         setIsModalOpen(false);
-        setDeleteStageId(null); // Reset deletion target ID
+        setDeleteStageId(null);
       }, (error) => {
         console.error("Failed to delete stage:", error);
         alert("Failed to delete stage. Please try again.");
@@ -141,7 +139,7 @@ const openChangeModal = (stage: any) => {
   /* DRAG & DROP */
 
   const handleDragStartColumn = (e: React.DragEvent, stage: any) => {
-    e.dataTransfer.setData("text/plain", stage.stageIndex); // Guardar el índice de la columna basado en `stageIndex`
+    e.dataTransfer.setData("text/plain", stage.stageIndex);
     e.dataTransfer.setData("stage", JSON.stringify({ stage }));
     console.log("START DATA STAGES", stage);
   };
@@ -151,10 +149,8 @@ const openChangeModal = (stage: any) => {
     const oldColumnData = JSON.parse(e.dataTransfer.getData("stage"));
     const oldColumn = oldColumnData.stage;
 
-    // Verificar si hay un cambio en el orden de las columnas
     if (oldColumn.stageIndex !== newColumn.stageIndex) {
       try {
-        // Llamar a la función para actualizar el orden en la base de datos
         await Promise.all([
           putNewOrderCampaign(
             oldColumn.stageID,
@@ -170,7 +166,6 @@ const openChangeModal = (stage: any) => {
           ),
         ]);
 
-        // Actualizar el estado para reflejar el cambio sin recargar
         setStages((currentStages) => {
           return currentStages.map((stage) => {
             if (stage.stageID === oldColumn.stageID) {
@@ -200,31 +195,26 @@ const openChangeModal = (stage: any) => {
   };
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>, stageID: any) => {
-    e.preventDefault(); // Prevenir el comportamiento predeterminado del navegador
-    setDraggedOverStageIndex(stageID); // Actualizar el estado para iluminar la columna
+    e.preventDefault();
+    setDraggedOverStageIndex(stageID);
     setDraggedOverStageIndex(stageID);
   };
 
   const handleDragLeave = () => {
-    setDraggedOverStageIndex(null); // Resetea el estado cuando el drag sale de la columna
+    setDraggedOverStageIndex(null);
   };
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>, stageID: any) => {
     setDraggedOverStageIndex(null);
-    console.log("Valor de stageID:", stageID);
     try {
       const campaign = JSON.parse(e.dataTransfer.getData("campaigns"));
-
-      // Verificar si campaign_stage es diferente a stageID
       if (campaign.campaign_stage !== stageID) {
         putCampaign(
           campaign.id,
           { ...campaign, campaign_stage: stageID },
           () => {
-            // Actualizar el estado para reflejar el cambio sin recargar
             setStages((currentStages) => {
               return currentStages.map((stage) => {
-                // Si la columna es la original, eliminar el proyecto
                 if (stage.stageID === campaign.campaign_stage) {
                   return {
                     ...stage,
@@ -233,9 +223,7 @@ const openChangeModal = (stage: any) => {
                     ),
                   };
                 }
-                // Si la columna es la de destino, añadir el proyecto
                 if (stage.stageID === stageID) {
-                  // Verificar si el proyecto ya existe en la columna de destino
                   const existingProjectIndex = stage.campaigns.findIndex(
                     (p: any) => p.id === campaign.id
                   );
@@ -248,7 +236,6 @@ const openChangeModal = (stage: any) => {
                       ],
                     };
                   } else {
-                    // Si el proyecto ya existe, solo actualizar su posición
                     const updatedCampaign = [...stage.campaigns];
                     updatedCampaign.splice(existingProjectIndex, 1);
                     updatedCampaign.push({
@@ -261,7 +248,6 @@ const openChangeModal = (stage: any) => {
                     };
                   }
                 }
-                // Para las columnas que no están involucradas, se retornan sin cambios
                 return stage;
               });
             });
@@ -279,14 +265,11 @@ const openChangeModal = (stage: any) => {
   return (
     <div
       className="kanban-container"
-      style={{
-        gridTemplateColumns: `repeat(${stages.length}, 1fr)`,
-      }}
+      style={{ gridTemplateColumns: `repeat(${stages.length}, 1fr)`,}}
     >
       {stages
         .sort((a, b) => a.stageIndex - b.stageIndex)
         .map((campaignCol, stagesIndex) => {
-          console.log("Datos de la columna de campaña:", campaignCol); // Agregar este console.log para verificar los datos de campaignCol
           return (
             <div
               className={`kanban-column ${draggedOverStageIndex === campaignCol.stageID ? 'drag-over-column' : ''}`}
@@ -310,8 +293,8 @@ const openChangeModal = (stage: any) => {
                 >
                   {campaignCol.stageName}
                 </span>
-                {/* {stagesIndex === stages.length - 1 && ( */}
-                  <div className="addtags-wrap">
+
+                <div className="addtags-wrap">
                   <div className="row-wrap-2">
                     <button onClick={() => openChangeModal(campaignCol)}>
                       <Image src={Edit} alt="Icon" width={12} height={12} />
@@ -321,39 +304,34 @@ const openChangeModal = (stage: any) => {
                     </button>
                   </div>
 
-                    <AddFieldModalCampaign
-                      isOpen={isAddModalOpen}
-                      onClose={() => setAddModalOpen(false)}
-                      title="Add Campaign Stage"
-                      updateCampaignData={updateCampaignData}
-                    />
+                  <AddFieldModalCampaign
+                    isOpen={isAddModalOpen}
+                    onClose={() => setAddModalOpen(false)}
+                    title="Add Campaign Stage"
+                    updateCampaignData={updateCampaignData}
+                  />
 
                   <ChangeCampaignColumn
-                    isOpen={isModalOpen}
-                    onClose={() => setIsModalOpen(false)}
+                    isOpen={isEditModalOpen}
+                    onClose={() => setEditModalOpen(false)}
                     changeStage={changeStage}
-                    title="Change Stage Name"
-                    button="Change this stage name"
+                    title="Edit Stage Name"
+                    button="Save"
                     updateCampaignData={updateCampaignData}
                   /> 
 
-                    <ConfirmModal
-                      isOpen={isModalOpen && deleteStageId === campaignCol.stageID}
-                      onClose={() => setIsModalOpen(false)}
-                      title="Delete Campaign Stage"
-                      message={`Are you sure you want to delete the stage '${campaignCol.stageName}'?`}
-                      onConfirm={handleDelete}
-                      button="Yes, delete this stage"
-                    />
+                  <ConfirmModal
+                    isOpen={isModalOpen && deleteStageId === campaignCol.stageID}
+                    onClose={() => setIsModalOpen(false)}
+                    title="Delete Campaign Stage"
+                    message={`Are you sure you want to delete the stage '${campaignCol.stageName}'?`}
+                    onConfirm={handleDelete}
+                    button="Yes, delete this stage"
+                  />
                     
-                  </div>
-                {/* )} */}
+                </div>
               </div>
               {campaignCol.campaigns?.map((campaignCard: any) => {
-                console.log(
-                  "Datos de la tarjeta de campaña:",
-                  campaignCol.campaigns
-                ); // Agregar este console.log para verificar los datos de campaignCard
                 return (
                   <div
                     className="kanban-card"

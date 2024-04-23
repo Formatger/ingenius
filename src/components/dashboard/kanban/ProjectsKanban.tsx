@@ -22,8 +22,8 @@ const ProjectsKanban = ({
   updateProjectData,
 }: ProjectsKanbanProps) => {
   const [isAddModalOpen, setAddModalOpen] = useState(false);
-  const [isChangeModalOpen, setChangeModalOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [draggedOverStageIndex, setDraggedOverStageIndex] = useState<string | null>(null); // Estado para almacenar el ID de la columna sobre la que se arrastra
   const [stages, setStages] = useState<any[]>([]);
   const [deleteStageId, setDeleteStageId] = useState<string | null>(null);
@@ -72,6 +72,13 @@ const ProjectsKanban = ({
 
   console.log("Projects column", stages);
 
+  /* EDIT STAGE */
+
+    const openChangeModal = (stageID: any) => {
+      setChangeStage(stageID);
+      setEditModalOpen(true);
+    };
+
   /* DELETE STAGE */
 
   const openDeleteModal = (stageID: any) => {
@@ -85,11 +92,6 @@ const ProjectsKanban = ({
     setIsModalOpen(true);
   };
 
-  const openChangeModal = (stage: any) => {
-    setChangeStage(stage);
-    setIsModalOpen(true);
-  };
-  
   const handleDelete = async () => {
     if (deleteStageId) {
       const stage = stages.find(stage => stage.stageID === deleteStageId);
@@ -311,7 +313,7 @@ const ProjectsKanban = ({
                     </button>
                   </div>
 
-                  {/* Add / Edit Modal */}
+                  {/* Add Modal */}
                   <AddFieldModal
                     isOpen={isAddModalOpen}
                     onClose={() => setAddModalOpen(false)}
@@ -319,13 +321,14 @@ const ProjectsKanban = ({
                     updateProjectData={updateProjectData}
                   />
 
+                  {/* Edit Modal */}
                   <ChangeProjectColumn
-                    isOpen={isModalOpen}
-                    onClose={() => setIsModalOpen(false)}
+                    isOpen={isEditModalOpen}
+                    onClose={() => setEditModalOpen(false)}
                     changeStage={changeStage}
-                    title="Change Stage Name"
-                    button="Change this stage name"
-                    updateProjectData={updateProjectData}
+                    title="Edit Stage Name"
+                    button="Save"
+                    updateProjectData={updateProjectData} 
                   /> 
                 
                   {/* Delete Stage Modal */}
