@@ -24,16 +24,17 @@ const BrandsPage = () => {
     status: 0,
     message: "",
   });
-  const [noSlicedData, setNoSlicedData] = useState<any[]>([]);
-  const [data, setData] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
-  const { height } = useWindowSize();
+  const [itemsPerPage] = useState(10);
   const [openSidepanel, setOpenSidepanel] = useState(false);
   const [, setOpenFormSidepanel] = useState(false);
-  const [brandsData, setBrandsData] = useState<any>([]);
   const [selectedBrand, setSelectedBrand] = useState({} as any);
 
+  const [originalData, setOriginalData] = useState<any[]>([]);
+  const [filteredData, setFilteredData] = useState<any[]>([]);
+  const [dataToDisplay, setDataToDisplay] = useState<any[]>([]);
+
+  const totalPages = Math.ceil(originalData.length / itemsPerPage);
   const breadcrumbLinks = [
     // { label: "Home", link: "/" },
     { label: "Clients", link: "/dashboard/clients/brands" },
@@ -83,9 +84,9 @@ const BrandsPage = () => {
         };
       });
 
-      setBrandsData(BrandsFullData);
-      setNoSlicedData(BrandsFullData);
-      setData(
+      setOriginalData(BrandsFullData);
+      setFilteredData(BrandsFullData);
+      setDataToDisplay(
         BrandsFullData.slice(
           (currentPage - 1) * itemsPerPage,
           currentPage * itemsPerPage
@@ -96,44 +97,14 @@ const BrandsPage = () => {
     });
   }, []);
 
-  /* TABLE ROW DISPLAY */
-
-  const totalPages = Math.ceil(noSlicedData.length / itemsPerPage);
-
   useEffect(() => {
-    const calculateItemsPerPage = () => {
-      const minRows = 2;
-      const maxRows = 10;
-      const ratio = height / 96;
-      const itemsPerPage = Math.max(
-        minRows,
-        Math.min(maxRows, Math.floor(ratio))
-      );
-      setItemsPerPage(itemsPerPage);
-
-      const brandsDataCopy = [...brandsData];
-      setData(
-        brandsDataCopy.slice(
-          (currentPage - 1) * itemsPerPage,
-          currentPage * itemsPerPage
-        )
-      );
-    };
-    4;
-
-    calculateItemsPerPage();
-  }, [height]);
-
-  useEffect(() => {
-    const brandsDataCopy = [...brandsData];
-    setNoSlicedData(brandsDataCopy);
-    setData(
-      brandsDataCopy.slice(
+    setDataToDisplay(
+      filteredData.slice(
         (currentPage - 1) * itemsPerPage,
         currentPage * itemsPerPage
       )
     );
-  }, [currentPage]);
+  }, [filteredData, currentPage]);
 
   const handlePrevious = () =>
     setCurrentPage((oldPage) => Math.max(oldPage - 1, 1));
@@ -141,35 +112,34 @@ const BrandsPage = () => {
     setCurrentPage((oldPage) => Math.min(oldPage + 1, totalPages));
 
   /* TABLE SORT LOGIC - modify to brands data */
-
-  const sortBy = (field: keyof (typeof brandsData)[0]) => {
-    // Sort by specified field
-    const brandsDataCopy = [...brandsData];
-    if (field === "total_brands" || field === "contract_value") {
-      brandsDataCopy.sort((a, b) => a[field] - b[field]);
-      if (JSON.stringify(brandsDataCopy) === JSON.stringify(brandsData)) {
-        // Already sorted in ascending order, so sort in descending order
-        brandsDataCopy.sort((a, b) => b[field] - a[field]);
-      }
+  const sortBy = (field: keyof (typeof originalData)[0]) => {
+    const sortedData = [...filteredData];
+    if (field === "active_projects_value") {
+      sortedData.sort((a, b) => {
+        const valueA = parseFloat(a[field]);
+        const valueB = parseFloat(b[field]);
+        return valueA - valueB;
+      });
     } else {
-      brandsDataCopy.sort((a, b) =>
-        (a[field] as string)?.localeCompare(b[field] as string)
-      );
-      if (JSON.stringify(brandsDataCopy) === JSON.stringify(brandsData)) {
-        // Already sorted in ascending order, so sort in descending order
-        brandsDataCopy.sort((a, b) =>
-          (b[field] as string)?.localeCompare(a[field] as string)
-        );
-      }
+      sortedData.sort((a, b) => {
+        if (typeof a[field] === "string" && typeof b[field] === "string") {
+          return a[field].localeCompare(b[field]);
+        } else if (
+          typeof a[field] === "number" &&
+          typeof b[field] === "number"
+        ) {
+          return a[field] - b[field];
+        } else {
+          return 0;
+        }
+      });
     }
-    setBrandsData(brandsData);
-    setNoSlicedData(brandsDataCopy);
-    setData(
-      brandsDataCopy.slice(
-        (currentPage - 1) * itemsPerPage,
-        currentPage * itemsPerPage
-      )
-    );
+
+    const isAscending =
+      JSON.stringify(filteredData) === JSON.stringify(sortedData);
+    const sortedDataFinal = isAscending ? sortedData.reverse() : sortedData;
+
+    setFilteredData(sortedDataFinal);
   };
 
   /* SEARCH LOGIC - modify to brands data */
@@ -256,13 +226,13 @@ const BrandsPage = () => {
                 httpError={httpError}
                 sortBy={sortBy}
                 handleOpenSidepanel={handleOpenSidepanel}
-                data={data}
+                data={dataToDisplay}
               />
               <Pagination
                 currentPage={currentPage}
                 itemsPerPage={itemsPerPage}
-                filteredData={noSlicedData}
-                dataToDisplay={data}
+                filteredData={filteredData}
+                dataToDisplay={dataToDisplay}
                 handlePrevious={handlePrevious}
                 handleNext={handleNext}
                 totalPages={totalPages}

@@ -27,12 +27,14 @@
   font-size: 14px;
   padding: 0 0 0 8px;
   margin: 0;
+  user-select: none;
 }
 
 .table-header-content-center p {
   font-size: 14px;
   /* padding: 0 0 0 8px; */
   margin: 0;
+  user-select: none;
 }
 
 .header-button {
@@ -43,7 +45,6 @@
   justify-content: flex-start;
   align-items: center;
   cursor: pointer;
-  /* transform: rotateX(180deg); */
 }
 
 .table-header-content-center {
@@ -133,4 +134,3 @@
   font-size: 14px;
   padding: 0 16px;
 }
-

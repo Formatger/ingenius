@@ -170,8 +170,34 @@ const ProjectsPage = () => {
 
   /* TABLE SORT LOGIC - modify to projects data */
 
-  const sortBy = (field: keyof (typeof filteredData)[0]) => {
-    // Sort by specified field
+  const sortBy = (field: keyof (typeof originalData)[0]) => {
+    const sortedData = [...filteredData];
+    if (field === "contract_value") {
+      sortedData.sort((a, b) => {
+        const valueA = parseFloat(a[field]);
+        const valueB = parseFloat(b[field]);
+        return valueA - valueB;
+      });
+    } else {
+      sortedData.sort((a, b) => {
+        if (typeof a[field] === "string" && typeof b[field] === "string") {
+          return a[field].localeCompare(b[field]);
+        } else if (
+          typeof a[field] === "number" &&
+          typeof b[field] === "number"
+        ) {
+          return a[field] - b[field];
+        } else {
+          return 0;
+        }
+      });
+    }
+
+    const isAscending =
+      JSON.stringify(filteredData) === JSON.stringify(sortedData);
+    const sortedDataFinal = isAscending ? sortedData.reverse() : sortedData;
+
+    setFilteredData(sortedDataFinal);
   };
 
   /* SIDEPANEL */

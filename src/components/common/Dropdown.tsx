@@ -40,6 +40,7 @@ function Dropdown({
 
   // Handle click filter when clicking outside of it
   useEffect(() => {
+    console.log(originalData);
     const handleClickOutside = (event: any) => {
       if (
         filterRef.current &&
@@ -157,6 +158,8 @@ function Dropdown({
   // Set searchable options depending on radial button value
   useEffect(() => {
     defineSearchableFields();
+    setPartnerSearchFilter([]);
+    searchValue.current = "";
   }, [radialValue]);
 
   const defineSearchableFields = () => {
@@ -362,7 +365,7 @@ function Dropdown({
                       className="chipClose"
                       onClick={() => handleRemoveFilter(filter)}
                     >
-                    <Image src={Exit} alt="Icon" width={12} height={12} />
+                      <Image src={Exit} alt="Icon" width={12} height={12} />
                     </button>
                   </div>
                 ))}

@@ -1,6 +1,6 @@
 import Arrow from "@/components/assets/svg/Arrow";
 import { profile } from "console";
-import React from "react";
+import React, { useState } from "react";
 
 interface ProjectTableProps {
   httpError: {
@@ -19,6 +19,48 @@ const ProjectTable = ({
   sortBy,
   handleOpenSidepanel,
 }: ProjectTableProps) => {
+  const [sortDirection, setSortDirection] = useState([
+    {
+      name: "creator_name",
+      isSortAsc: false,
+    },
+    {
+      name: "name",
+      isSortAsc: false,
+    },
+    {
+      name: "campaign_name",
+      isSortAsc: false,
+    },
+    {
+      name: "brand_name",
+      isSortAsc: false,
+    },
+    {
+      name: "contract_value",
+      isSortAsc: false,
+    },
+    {
+      name: "project_stage_name",
+      isSortAsc: false,
+    },
+  ]);
+
+  const handleSort = (type: string) => {
+    sortBy(type);
+    const newSortDirection = sortDirection.map((item: any) => {
+      if (item.name === type) {
+        return { name: item.name, isSortAsc: !item.isSortAsc };
+      }
+      return { name: item.name, isSortAsc: false };
+    });
+    setSortDirection(newSortDirection);
+  };
+
+  const findFieldAsc = (name: string) => {
+    return sortDirection.find((sd) => sd.name === name)?.isSortAsc;
+  };
+
   return (
     <div className="table-container">
       {httpError.hasError ? (
@@ -33,9 +75,13 @@ const ProjectTable = ({
                 <div className="table-header-content">
                   <button
                     className="header-button"
-                    onClick={() => sortBy("creator_name")}
+                    onClick={() => handleSort("creator_name")}
                   >
-                    <Arrow className="arrow-down" />
+                    <Arrow
+                      className={
+                        findFieldAsc("creator_name") ? "arrow-up" : "arrow-down"
+                      }
+                    />
                   </button>
                   <p>Creator</p>
                 </div>
@@ -43,10 +89,14 @@ const ProjectTable = ({
               <th>
                 <div
                   className="table-header-content"
-                  onClick={() => sortBy("name")}
+                  onClick={() => handleSort("name")}
                 >
                   <button className="header-button">
-                    <Arrow className="arrow-down" />
+                    <Arrow
+                      className={
+                        findFieldAsc("name") ? "arrow-up" : "arrow-down"
+                      }
+                    />
                   </button>
                   <p>Project</p>
                 </div>
@@ -54,10 +104,16 @@ const ProjectTable = ({
               <th>
                 <div
                   className="table-header-content"
-                  onClick={() => sortBy("campaign_name")}
+                  onClick={() => handleSort("campaign_name")}
                 >
                   <button className="header-button">
-                    <Arrow className="arrow-down" />
+                    <Arrow
+                      className={
+                        findFieldAsc("campaign_name")
+                          ? "arrow-up"
+                          : "arrow-down"
+                      }
+                    />
                   </button>
                   <p>Campaign</p>
                 </div>
@@ -65,10 +121,14 @@ const ProjectTable = ({
               <th>
                 <div
                   className="table-header-content"
-                  onClick={() => sortBy("campaign_name")}
+                  onClick={() => handleSort("brand_name")}
                 >
                   <button className="header-button">
-                    <Arrow className="arrow-down" />
+                    <Arrow
+                      className={
+                        findFieldAsc("brand_name") ? "arrow-up" : "arrow-down"
+                      }
+                    />
                   </button>
                   <p>Brand</p>
                 </div>
@@ -76,10 +136,16 @@ const ProjectTable = ({
               <th>
                 <div
                   className="table-header-content-center"
-                  onClick={() => sortBy("contract_value")}
+                  onClick={() => handleSort("contract_value")}
                 >
                   <button className="header-button">
-                    <Arrow className="arrow-down" />
+                    <Arrow
+                      className={
+                        findFieldAsc("contract_value")
+                          ? "arrow-up"
+                          : "arrow-down"
+                      }
+                    />
                   </button>
                   <p>Contract Value</p>
                 </div>
@@ -87,10 +153,16 @@ const ProjectTable = ({
               <th>
                 <div
                   className="table-header-content"
-                  onClick={() => sortBy("label")}
+                  onClick={() => handleSort("project_stage_name")}
                 >
                   <button className="header-button">
-                    <Arrow className="arrow-down" />
+                    <Arrow
+                      className={
+                        findFieldAsc("project_stage_name")
+                          ? "arrow-up"
+                          : "arrow-down"
+                      }
+                    />
                   </button>
                   <p>Label</p>
                 </div>

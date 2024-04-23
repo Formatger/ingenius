@@ -26,25 +26,23 @@ interface Creators {
 }
 
 const CreatorsPage = () => {
-  const router = useRouter();
-  // const { profileID } = router.query;
-  // const [invoiceData, setInvoiceData] = useState(null);
   const [loader, setLoader] = useState<boolean>(false);
   const [httpError, setHttpError] = useState({
     hasError: false,
     status: 0,
     message: "",
   });
-  const [noSlicedData, setNoSlicedData] = useState<any[]>([]);
-  const [data, setData] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
-  const { height } = useWindowSize();
+  const [itemsPerPage] = useState(10);
   const [openSidepanel, setOpenSidepanel] = useState(false);
   const [, setOpenFormSidepanel] = useState(false);
-  const [creatorsData, setCreatorsData] = useState<any>([]);
   const [selectedCreator, setSelectedCreator] = useState({} as any);
 
+  const [originalData, setOriginalData] = useState<any[]>([]);
+  const [filteredData, setFilteredData] = useState<any[]>([]);
+  const [dataToDisplay, setDataToDisplay] = useState<any[]>([]);
+
+  const totalPages = Math.ceil(originalData.length / itemsPerPage);
   const breadcrumbLinks = [
     // { label: "Home", link: "/" },
     { label: "Clients", link: "/dashboard/clients/creators" },
@@ -94,9 +92,9 @@ const CreatorsPage = () => {
         };
       });
 
-      setCreatorsData(CreatorsFullData);
-      setNoSlicedData(CreatorsFullData);
-      setData(
+      setOriginalData(CreatorsFullData);
+      setFilteredData(CreatorsFullData);
+      setDataToDisplay(
         CreatorsFullData.slice(
           (currentPage - 1) * itemsPerPage,
           currentPage * itemsPerPage
@@ -107,44 +105,14 @@ const CreatorsPage = () => {
     });
   }, []);
 
-  /* TABLE ROW DISPLAY */
-
-  const totalPages = Math.ceil(noSlicedData.length / itemsPerPage);
-
   useEffect(() => {
-    const calculateItemsPerPage = () => {
-      const minRows = 2;
-      const maxRows = 10;
-      const ratio = height / 96;
-      const itemsPerPage = Math.max(
-        minRows,
-        Math.min(maxRows, Math.floor(ratio))
-      );
-      setItemsPerPage(itemsPerPage);
-
-      const creatorsDataCopy = [...creatorsData];
-      setData(
-        creatorsDataCopy.slice(
-          (currentPage - 1) * itemsPerPage,
-          currentPage * itemsPerPage
-        )
-      );
-    };
-    4;
-
-    calculateItemsPerPage();
-  }, [height]);
-
-  useEffect(() => {
-    const creatorsDataCopy = [...creatorsData];
-    setNoSlicedData(creatorsDataCopy);
-    setData(
-      creatorsDataCopy.slice(
+    setDataToDisplay(
+      filteredData.slice(
         (currentPage - 1) * itemsPerPage,
         currentPage * itemsPerPage
       )
     );
-  }, [currentPage]);
+  }, [filteredData, currentPage]);
 
   const handlePrevious = () =>
     setCurrentPage((oldPage) => Math.max(oldPage - 1, 1));
@@ -153,34 +121,34 @@ const CreatorsPage = () => {
 
   /* TABLE SORT LOGIC - modify to creators data */
 
-  const sortBy = (field: keyof (typeof creatorsData)[0]) => {
-    // Sort by specified field
-    const creatorsDataCopy = [...creatorsData];
-    if (field === "total_creators" || field === "contract_value") {
-      creatorsDataCopy.sort((a, b) => a[field] - b[field]);
-      if (JSON.stringify(creatorsDataCopy) === JSON.stringify(creatorsData)) {
-        // Already sorted in ascending order, so sort in descending order
-        creatorsDataCopy.sort((a, b) => b[field] - a[field]);
-      }
+  const sortBy = (field: keyof (typeof originalData)[0]) => {
+    const sortedData = [...filteredData];
+    if (field === "active_projects_value") {
+      sortedData.sort((a, b) => {
+        const valueA = parseFloat(a[field]);
+        const valueB = parseFloat(b[field]);
+        return valueA - valueB;
+      });
     } else {
-      creatorsDataCopy.sort((a, b) =>
-        (a[field] as string)?.localeCompare(b[field] as string)
-      );
-      if (JSON.stringify(creatorsDataCopy) === JSON.stringify(creatorsData)) {
-        // Already sorted in ascending order, so sort in descending order
-        creatorsDataCopy.sort((a, b) =>
-          (b[field] as string)?.localeCompare(a[field] as string)
-        );
-      }
+      sortedData.sort((a, b) => {
+        if (typeof a[field] === "string" && typeof b[field] === "string") {
+          return a[field].localeCompare(b[field]);
+        } else if (
+          typeof a[field] === "number" &&
+          typeof b[field] === "number"
+        ) {
+          return a[field] - b[field];
+        } else {
+          return 0;
+        }
+      });
     }
-    setCreatorsData(creatorsData);
-    setNoSlicedData(creatorsDataCopy);
-    setData(
-      creatorsDataCopy.slice(
-        (currentPage - 1) * itemsPerPage,
-        currentPage * itemsPerPage
-      )
-    );
+
+    const isAscending =
+      JSON.stringify(filteredData) === JSON.stringify(sortedData);
+    const sortedDataFinal = isAscending ? sortedData.reverse() : sortedData;
+
+    setFilteredData(sortedDataFinal);
   };
 
   /* SEARCH LOGIC - modify to creators data */
@@ -267,13 +235,13 @@ const CreatorsPage = () => {
                 httpError={httpError}
                 sortBy={sortBy}
                 handleOpenSidepanel={handleOpenSidepanel}
-                data={data}
+                data={dataToDisplay}
               />
               <Pagination
                 currentPage={currentPage}
                 itemsPerPage={itemsPerPage}
-                filteredData={noSlicedData}
-                dataToDisplay={data}
+                filteredData={filteredData}
+                dataToDisplay={dataToDisplay}
                 handlePrevious={handlePrevious}
                 handleNext={handleNext}
                 totalPages={totalPages}

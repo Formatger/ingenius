@@ -1,5 +1,5 @@
 import Arrow from "@/components/assets/svg/Arrow";
-import React from "react";
+import React, { useState } from "react";
 
 interface CampaignTableProps {
   httpError: {
@@ -18,6 +18,44 @@ const CampaignTable = ({
   sortBy,
   handleOpenSidepanel,
 }: CampaignTableProps) => {
+  const [sortDirection, setSortDirection] = useState([
+    {
+      name: "brand_name",
+      isSortAsc: false,
+    },
+    {
+      name: "name",
+      isSortAsc: false,
+    },
+    {
+      name: "total_projects",
+      isSortAsc: false,
+    },
+    {
+      name: "contract_value",
+      isSortAsc: false,
+    },
+    {
+      name: "campaign_stage_name",
+      isSortAsc: false,
+    },
+  ]);
+
+  const handleSort = (type: string) => {
+    sortBy(type);
+    const newSortDirection = sortDirection.map((item: any) => {
+      if (item.name === type) {
+        return { name: item.name, isSortAsc: !item.isSortAsc };
+      }
+      return { name: item.name, isSortAsc: false };
+    });
+    setSortDirection(newSortDirection);
+  };
+
+  const findFieldAsc = (name: string) => {
+    return sortDirection.find((sd) => sd.name === name)?.isSortAsc;
+  };
+
   return (
     <div className="table-container">
       {httpError.hasError ? (
@@ -32,53 +70,79 @@ const CampaignTable = ({
                 <div className="table-header-content">
                   <button
                     className="header-button"
-                    onClick={() => sortBy("brand_name")}
+                    onClick={() => handleSort("brand_name")}
                   >
-                    <Arrow className="arrow-down" />
+                    <Arrow
+                      className={
+                        findFieldAsc("brand_name") ? "arrow-up" : "arrow-down"
+                      }
+                    />
                   </button>
                   <p>Partner</p>
                 </div>
               </th>
               <th>
-                <div
-                  className="table-header-content"
-                  onClick={() => sortBy("campaign_name")}
-                >
-                  <button className="header-button">
-                    <Arrow className="arrow-down" />
+                <div className="table-header-content">
+                  <button
+                    className="header-button"
+                    onClick={() => handleSort("name")}
+                  >
+                    <Arrow
+                      className={
+                        findFieldAsc("name") ? "arrow-up" : "arrow-down"
+                      }
+                    />
                   </button>
                   <p>Campaign</p>
                 </div>
               </th>
               <th>
-                <div
-                  className="table-header-content-center"
-                  onClick={() => sortBy("total_projects")}
-                >
-                  <button className="header-button">
-                    <Arrow className="arrow-down" />
+                <div className="table-header-content-center">
+                  <button
+                    className="header-button"
+                    onClick={() => handleSort("total_projects")}
+                  >
+                    <Arrow
+                      className={
+                        findFieldAsc("total_projects")
+                          ? "arrow-up"
+                          : "arrow-down"
+                      }
+                    />
                   </button>
                   <p>Total Projects</p>
                 </div>
               </th>
               <th>
-                <div
-                  className="table-header-content-center"
-                  onClick={() => sortBy("contract_value")}
-                >
-                  <button className="header-button">
-                    <Arrow className="arrow-down" />
+                <div className="table-header-content-center">
+                  <button
+                    className="header-button"
+                    onClick={() => handleSort("contract_value")}
+                  >
+                    <Arrow
+                      className={
+                        findFieldAsc("contract_value")
+                          ? "arrow-up"
+                          : "arrow-down"
+                      }
+                    />
                   </button>
                   <p>Contract Value</p>
                 </div>
               </th>
               <th>
-                <div
-                  className="table-header-content"
-                  onClick={() => sortBy("contract_value")}
-                >
-                  <button className="header-button">
-                    <Arrow className="arrow-down" />
+                <div className="table-header-content">
+                  <button
+                    className="header-button"
+                    onClick={() => handleSort("campaign_stage_name")}
+                  >
+                    <Arrow
+                      className={
+                        findFieldAsc("campaign_stage_name")
+                          ? "arrow-up"
+                          : "arrow-down"
+                      }
+                    />
                   </button>
                   <p>Label</p>
                 </div>
