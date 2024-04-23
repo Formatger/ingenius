@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {changeProjectStageName} from "@/utils/httpCalls";
+import {putNewOrderProject} from "@/utils/httpCalls";
 
 interface ChangeProjectColumnProps {
   isOpen: boolean;
@@ -23,7 +23,7 @@ const ChangeProjectColumn: React.FC<ChangeProjectColumnProps> = ({ isOpen, onClo
     const handleChange = async () => {
         try {
           // Llamar a la función para actualizar el nombre en la base de datos
-          await changeProjectStageName(changeStage.stageID, { name: newName, order: changeStage.stageIndex }, () => {});
+          await putNewOrderProject(changeStage.stageID, { name: newName, order: changeStage.stageIndex }, () => {});
           
           // Aquí deberías llamar a las funciones que actualizan el estado o realizan otras tareas necesarias después de la actualización
           // Por ejemplo:

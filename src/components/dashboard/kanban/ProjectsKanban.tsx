@@ -324,7 +324,6 @@ const ProjectsKanban = ({
                     onClose={() => setIsModalOpen(false)}
                     changeStage={changeStage}
                     title="Change Stage Name"
-                    // updateProjectData={updateProjectData}
                     button="Change this stage name"
                     updateProjectData={updateProjectData}
                   /> 
