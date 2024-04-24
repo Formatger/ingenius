@@ -11,8 +11,8 @@ import { useWindowSize } from "@/utils/hooks/useWindowSize";
 import { getBrands, getBrandsDetail } from "@/utils/httpCalls";
 import BrandTable from "@/components/dashboard/table/BrandTable";
 import BrandSidepanel from "@/components/dashboard/profile/BrandSidepanel";
-
-// import BrandForm from "@/components/dashboard/form/BrandForm";
+import Dropdown from "@/components/common/Dropdown";
+import BrandForm from "@/components/dashboard/form/BrandForm";
 
 const BrandsPage = () => {
   const router = useRouter();
@@ -27,8 +27,9 @@ const BrandsPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
   const [openSidepanel, setOpenSidepanel] = useState(false);
-  const [, setOpenFormSidepanel] = useState(false);
+  const [openFormSidepanel, setOpenFormSidepanel] = useState(false);
   const [selectedBrand, setSelectedBrand] = useState({} as any);
+  const [updateBrand, setUpdateBrand] = useState(false);
 
   const [originalData, setOriginalData] = useState<any[]>([]);
   const [filteredData, setFilteredData] = useState<any[]>([]);
@@ -40,6 +41,23 @@ const BrandsPage = () => {
     { label: "Clients", link: "/dashboard/clients/brands" },
     { label: "Brands", link: "/dashboard/clients/brands", current: true },
   ];
+
+   /* ACTUALIZAR EL RENDERIZADO API */
+
+  //  useEffect(() => {
+  //   const originalDataCopy = [...originalData];
+  //   setFilteredData(originalDataCopy);
+  //   setDataToDisplay(
+  //     originalDataCopy.slice(
+  //       (currentPage - 1) * itemsPerPage,
+  //       currentPage * itemsPerPage
+  //     )
+  //   );
+  // }, [updateBrand);
+
+  const updateBrandData = () => {
+    setUpdateBrand((prevState) => !prevState);
+  };
 
   /* BRANDS API CALL  */
 
@@ -95,7 +113,7 @@ const BrandsPage = () => {
 
       setLoader(false);
     });
-  }, []);
+  }, [updateBrand]);
 
   useEffect(() => {
     setDataToDisplay(
@@ -142,19 +160,6 @@ const BrandsPage = () => {
     setFilteredData(sortedDataFinal);
   };
 
-  /* SEARCH LOGIC - modify to brands data */
-
-  // const handleSearch = (search: string) => {
-  //   const filteredData = brandsData.filter((brand: BrandInterface) => {
-  //     return brand.name.toLowerCase().includes(search.toLowerCase()) ||
-  //     brand.brand_name.toLowerCase().includes(search.toLowerCase());
-  //   });
-  //   setNoSlicedData(filteredData);
-  //   setData(filteredData.slice(
-  //     (currentPage - 1) * itemsPerPage,
-  //     currentPage * itemsPerPage
-  //   ));
-  // };
 
   /* SIDEPANEL */
 
@@ -189,25 +194,32 @@ const BrandsPage = () => {
         <MainLoader />
       ) : (
         <>
-          <div className="page-container" id="brandsData">
+          <div className="page-container" id="brandData">
             {openSidepanel && (
               <BrandSidepanel
                 open={openSidepanel}
                 setOpenSidepanel={setOpenSidepanel}
                 brandsData={selectedBrand}
                 setSelectedBrand={setSelectedBrand}
+                updateBrandData={updateBrandData}
               />
             )}
-            {/* {openFormSidepanel && (
-              <BrandForm 
-                handleCloseFormSidepanel={handleCloseFormSidepanel} 
+            {openFormSidepanel && (
+              <BrandForm
+                projectsData={selectedBrand}
+                isEditing={false}
+                closeEdit={handleCloseFormSidepanel}
+                handleCloseFormSidepanel={handleCloseFormSidepanel}
+                updateBrandData={updateBrandData}
               />
-            )} */}
-            <div className="row-between">
-              <div>
-                {/* <Dropdown /> */}
-                {/* <EasyFilters filterByDate={filterByDate} handleSearch={handleSearch} /> */}
-              </div>
+            )}
+            <div className="filtersContainer">
+              <Dropdown
+                setFilteredData={setFilteredData}
+                originalData={originalData}
+                setCurrentPage={setCurrentPage}
+                origin="brands"
+              />
               <div className="button-group">
                 <button className="app-button cream" onClick={undefined}>
                   CSV Upload

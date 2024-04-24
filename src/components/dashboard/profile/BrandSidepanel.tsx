@@ -7,6 +7,7 @@ import ProfileSidepanel from '../../common/ProfileSidepanel';
 import { deleteBrand } from "@/utils/httpCalls";
 import ConfirmModal from "./ConfirmModal";
 import { BrandDetails } from "./BrandProfile";
+import BrandForm from "@/components/dashboard/form/BrandForm";
 
 type SidepanelProps = {
   open: boolean;
