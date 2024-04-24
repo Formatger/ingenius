@@ -70,6 +70,57 @@
   color: var(--red);
 }
 
+.upload-image-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--m3);
+  gap: var(--m4);
+  border: 1px dashed var(--gray3);
+  border-radius: var(--r2);
+}
+
+.upload-image {
+  width: 120px;
+  height: 120px;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+}
+
+.upload-image img {
+  min-width: 100%; 
+  min-height: 100%; 
+  object-fit: cover; 
+}
+
+.custom-file-upload {
+  display: flex;
+  width: 50%;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 30px;
+  cursor: pointer;
+  background-color: var(--linen);
+  border: none;
+  border-radius: var(--r3);
+  text-align: center;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  height: 42px;
+  font-family: "InterRegular";
+  /* margin-right: 10%; */
+}
+
+.custom-file-upload:hover {
+  background-color: var(--light-orange);
+}
+
+
+
 /* React Calendar */
 
 .react-calendar {

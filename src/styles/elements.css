@@ -56,6 +56,7 @@ button[disabled] {
   font-family: "InterMedium";
   font-size: 14px;
   color: var(--white);
+  transition: all 0.3s ease;
 }
 .app-button:hover {
   filter: brightness(150%);
@@ -83,12 +84,13 @@ button[disabled] {
   justify-content: center;
   align-items: center;
   width: 100%;
-  border-radius: var(--r4);
+  border-radius: var(--r3);
   color: black;
-  min-height: var(--btn-h);
+  height: 42px;
   font-family: "DMSansMedium";
   font-size: 15px;
   gap: var(--m2);
+  transition: all 0.3s ease;
 }
 
 .sec-tag {

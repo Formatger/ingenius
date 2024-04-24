@@ -45,16 +45,16 @@ const BrandsPage = () => {
 
   /* ACTUALIZAR EL RENDERIZADO API */
 
-  //  useEffect(() => {
-  //   const originalDataCopy = [...originalData];
-  //   setFilteredData(originalDataCopy);
-  //   setDataToDisplay(
-  //     originalDataCopy.slice(
-  //       (currentPage - 1) * itemsPerPage,
-  //       currentPage * itemsPerPage
-  //     )
-  //   );
-  // }, [updateBrand);
+   useEffect(() => {
+    const originalDataCopy = [...originalData];
+    setFilteredData(originalDataCopy);
+    setDataToDisplay(
+      originalDataCopy.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+      )
+    );
+  }, [updateBrand]);
 
   const updateBrandData = () => {
     setUpdateBrand((prevState) => !prevState);
@@ -225,7 +225,7 @@ const BrandsPage = () => {
             )}
             {openFormSidepanel && (
               <BrandForm
-                projectsData={selectedBrand}
+                brandsData={selectedBrand}
                 isEditing={false}
                 closeEdit={handleCloseFormSidepanel}
                 handleCloseFormSidepanel={handleCloseFormSidepanel}

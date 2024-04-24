@@ -167,7 +167,7 @@ const DealForm: React.FC< DealFormProps> = ({
               // href={{ pathname: "dashboard/partnerships/projects" }}
             >
               {/* <Arrow className="arrow-left orange-fill" /> */}
-              {`Add Deal`}
+              {isEditing ? "Edit Deal" : "Add Deal"}
             </p>
             <div className="sidepanel-button">
             <Link href="/dashboard/support" passHref>

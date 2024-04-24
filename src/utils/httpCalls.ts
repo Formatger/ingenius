@@ -232,21 +232,19 @@ export const putDeal = async (
 
 export const putBrand = async (
   brandId: string,
-  updatedData: any,
+  updatedData: FormData,
   callback: (data: any) => void,
   errorCallback?: (error: any) => void
 ) => {
-  console.log("PUT successful", brandId)
   const url = `${DEPLOYED_API_BASE_URL}brands/${brandId}/`;
 
   try {
     const response = await fetch(url, {
       method: 'PUT',
       headers: {
-        'Content-Type': 'application/json',
         'Authorization': `Bearer ${localStorage.access_token}`,
       },
-      body: JSON.stringify(updatedData),
+      body: updatedData,
     });
 
     if (!response.ok) {
@@ -264,21 +262,19 @@ export const putBrand = async (
 
 export const putCreator = async (
   creatorId: string,
-  updatedData: any,
+  updatedData: FormData,
   callback: (data: any) => void,
   errorCallback?: (error: any) => void
 ) => {
-  console.log("PUT successful", creatorId)
   const url = `${DEPLOYED_API_BASE_URL}creators/${creatorId}/`;
 
   try {
     const response = await fetch(url, {
       method: 'PUT',
       headers: {
-        'Content-Type': 'application/json',
         'Authorization': `Bearer ${localStorage.access_token}`,
       },
-      body: JSON.stringify(updatedData),
+      body: updatedData,
     });
 
     if (!response.ok) {
@@ -291,6 +287,7 @@ export const putCreator = async (
     errorCallback && errorCallback(error);
   }
 };
+
 
 ////////////////////////////////////////////////////////////////////////
 /***************************  CHANGE CALLS  ***************************/
@@ -781,7 +778,7 @@ export const postDeals = async (
 /* POST BRAND */
 
 export const postBrands = async (
-  requestData: any,
+  requestData: FormData,
   callback: (data: any) => void,
   errorCallback?: (error: any) => void
 ) => {
@@ -791,10 +788,9 @@ export const postBrands = async (
     const response = await fetch(url, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
         'Authorization': `Bearer ${localStorage.access_token}`,
       },
-      body: JSON.stringify(requestData),
+      body: requestData,
     });
 
     if (!response.ok) {
@@ -811,7 +807,7 @@ export const postBrands = async (
 /* POST CREATOR */
 
 export const postCreators = async (
-  requestData: any,
+  requestData: FormData,
   callback: (data: any) => void,
   errorCallback?: (error: any) => void
 ) => {
@@ -821,10 +817,9 @@ export const postCreators = async (
     const response = await fetch(url, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
         'Authorization': `Bearer ${localStorage.access_token}`,
       },
-      body: JSON.stringify(requestData),
+      body: requestData,
     });
 
     if (!response.ok) {

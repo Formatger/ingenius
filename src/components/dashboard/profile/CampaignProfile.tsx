@@ -178,7 +178,7 @@ const CampaignInvoice = ({ campaignsData }: CampaignInvoiceProps) => {
               <p>Send Contract</p>
             </button>
             <button className="sec-button w-50 img-btn linen" onClick={undefined}>
-              <Image src={Download} alt="Icon" width={20} height={20} />
+            <Image src={Download} alt="Icon" width={18} height={18} />
               <p>Download as PDF</p>
             </button>
           </div>
@@ -202,7 +202,7 @@ const CampaignInvoice = ({ campaignsData }: CampaignInvoiceProps) => {
               <p>Send Invoice</p>
             </button>
             <button className="sec-button w-50 img-btn linen" onClick={undefined}>
-              <Image src={Download} alt="Icon" width={20} height={20} />
+            <Image src={Download} alt="Icon" width={18} height={18} />
               <p>Download as PDF</p>
             </button>      
           </div>

@@ -173,7 +173,7 @@ const  CampaignForm: React.FC< CampaignFormProps> = ({
               // href={{ pathname: "dashboard/partnerships/projects" }}
             >
               {/* <Arrow className="arrow-left orange-fill" /> */}
-              {`Add Campaign`}
+              {isEditing ? "Edit Campaign" : "Add Campaign"}
             </p>
             <div className="sidepanel-button">
             <Link href="/dashboard/support" passHref>

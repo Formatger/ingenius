@@ -195,7 +195,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
         // href={{ pathname: "dashboard/partnerships/projects" }}
         >
           {/* <Arrow className="arrow-left orange-fill" /> */}
-          {`Add Project`}
+          {isEditing ? "Edit Project" : "Add Project"}
         </p>
         <div className="sidepanel-button">
           <Link href="/dashboard/support" passHref>
