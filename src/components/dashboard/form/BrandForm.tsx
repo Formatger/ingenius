@@ -156,8 +156,8 @@ const BrandForm: React.FC<BrandFormProps> = ({
                 }
                 </div>
                 {imageURL 
-                ? <label htmlFor="fileInput" className="custom-file-upload">Change Image</label>
-                :  <label htmlFor="fileInput" className="custom-file-upload">Upload Image</label>}
+                ? <label htmlFor="fileInput" className="custom-image-upload">Change Image</label>
+                :  <label htmlFor="fileInput" className="custom-image-upload">Upload Image</label>}
               </div>
             </div>
             <div className="form-box">
@@ -245,8 +245,8 @@ const BrandForm: React.FC<BrandFormProps> = ({
               }
               </div>
               {imageURL 
-              ? <label htmlFor="fileInput" className="custom-file-upload">Change Image</label>
-              :  <label htmlFor="fileInput" className="custom-file-upload">Upload Image</label>}
+              ? <label htmlFor="fileInput" className="custom-image-upload">Change Image</label>
+              :  <label htmlFor="fileInput" className="custom-image-upload">Upload Image</label>}
             </div>
           </div>
 

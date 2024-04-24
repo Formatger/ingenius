@@ -33,7 +33,7 @@ const DashboardStats = ({ sections }: any) => {
         </div>
         <div><h2 className="stats-result">56</h2></div>
         <div>
-          <p className="stats-footer-text">Contracts this year</p>
+          <p className="stats-footer-text">Contracts this Year</p>
         </div>
       </div>
 
@@ -126,7 +126,7 @@ const DashboardStats = ({ sections }: any) => {
         </div>
         <div><h2 className="stats-result">56</h2></div>
         <div>
-          <p className="stats-footer-text">Down from 2023</p>
+          <p className="stats-footer-text">Yearly Expenses</p>
         </div>
       </div>
 

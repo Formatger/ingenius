@@ -114,12 +114,21 @@ button[disabled] {
 .sec-button.orange {
   background-color: var(--light-orange);
 }
+.sec-button.orange:hover {
+  background-color: var(--orange);
+}
+
+.sec-button.red {
+  background-color: var(--red);
+  color: white;
+}
+.sec-button.red:hover {
+  background-color: var(--salmon);
+}
+
 
 .sec-button.linen:hover {
   background-color: var(--light-orange);
-}
-.sec-button.orange:hover {
-  background-color: var(--orange);
 }
 
 .sec-button.linen:active,

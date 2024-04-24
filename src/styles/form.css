@@ -72,7 +72,7 @@
 
 .upload-image-box {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: space-between;
   align-items: center;
   padding: var(--m3);
@@ -97,9 +97,9 @@
   object-fit: cover; 
 }
 
-.custom-file-upload {
+.custom-image-upload {
   display: flex;
-  width: 50%;
+  width: 40%;
   align-items: center;
   justify-content: center;
   padding: 10px 30px;
@@ -112,11 +112,37 @@
   transition: all 0.3s ease;
   height: 42px;
   font-family: "InterRegular";
-  /* margin-right: 10%; */
+  margin-right: 10%;
 }
 
-.custom-file-upload:hover {
+.custom-image-upload:hover {
   background-color: var(--light-orange);
+}
+
+.upload-files-box {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: var(--m3);
+  gap: var(--m4);
+  border: 1px dashed var(--gray3);
+  border-radius: var(--r2);
+  margin-bottom: 10px;
+}
+
+.custom-file-upload {
+  display: flex;
+  align-items: center;
+  padding: 10px 30px;
+  cursor: pointer;
+  background-color: var(--linen);
+  border: none;
+  border-radius: var(--r3);
+  text-align: center;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  height: 42px;
+  font-family: "InterRegular";
 }
 
 .settings-page {
@@ -124,7 +150,26 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-top: 10%
+  margin-top: 10%;
+}
+
+.settings-page .sidepanel-form {
+  padding-top: 0;
+}
+
+.settings-page ul {
+  padding-left: 10px;
+  margin: 0;
+}
+
+.ticket-files {
+  font-family: "InterRegular";
+  font-size: 14px;
+  list-style-type: none;
+  display: flex;
+  gap: var(--m2);
+  align-items: center;
+  padding: 4px;
 }
 
 .form-container {

@@ -42,12 +42,12 @@ const CreatorForm: React.FC<CreatorFormProps> = ({
 }) => {
   const router = useRouter()
   const { register, handleSubmit, reset, setValue,formState: { errors } } = useForm<FormData>();
-  const [imageURL, setImageURL] = useState<string | null>(null);
+  const [imageURL, setImageURL] = useState<string | null>(creatorsData.profile_picture_url || null);
+
   /* SIDEPANEL STATE */
   const handleClose = () => {
     handleCloseFormSidepanel();
   };
-
 
   /* UPLOAD PROFILE PICTURE */
 
@@ -67,7 +67,6 @@ const CreatorForm: React.FC<CreatorFormProps> = ({
   
     const formData = new FormData();
   
-    // Append all form data fields to the FormData object
     Object.entries(data).forEach(([key, value]) => {
       if (value !== undefined && value !== null) {
         formData.append(key, value);
@@ -148,8 +147,8 @@ const CreatorForm: React.FC<CreatorFormProps> = ({
                 }
                 </div>
                 {imageURL 
-                ? <label htmlFor="fileInput" className="custom-file-upload">Change Image</label>
-                :  <label htmlFor="fileInput" className="custom-file-upload">Upload Image</label>}
+                ? <label htmlFor="fileInput" className="custom-image-upload">Change Image</label>
+                :  <label htmlFor="fileInput" className="custom-image-upload">Upload Image</label>}
               </div>
             </div>
             <div className="form-box">
@@ -180,7 +179,7 @@ const CreatorForm: React.FC<CreatorFormProps> = ({
                 defaultValue={creatorsData.niche}
               />
             </div>
-            <div className="form-box">
+            {/* <div className="form-box">
             <span className="smallcaps">PROFILE PICTURE*</span>
                 <input
                     className="form-input"
@@ -188,7 +187,7 @@ const CreatorForm: React.FC<CreatorFormProps> = ({
                     accept="image/jpeg"
                     onChange={handleUploadImage}
                 />
-            </div>
+            </div> */}
             <div className="button-group">
               <button className="sec-button stone" type="button" onClick={handleClose}>
                 <p>Cancel</p>
@@ -219,8 +218,8 @@ const CreatorForm: React.FC<CreatorFormProps> = ({
               }
               </div>
               {imageURL 
-              ? <label htmlFor="fileInput" className="custom-file-upload">Change Image</label>
-              :  <label htmlFor="fileInput" className="custom-file-upload">Upload Image</label>}
+              ? <label htmlFor="fileInput" className="custom-image-upload">Change Image</label>
+              :  <label htmlFor="fileInput" className="custom-image-upload">Upload Image</label>}
             </div>
           </div>
 
