@@ -76,16 +76,14 @@
   --transparent: transparent;
   --white: white;
   --black: black;
-  --dark: var(--gray7)
-
-  --darkred: #C71026;
+  --dark: var(--gray7) --darkred: #C71026;
   --red: #ff5b4d;
   --salmon: #ff8e84;
   --firebrick: #CD1D05;
   --pink: #ffc2ba;
   --cream: #E2C8C5;
 
-  --brown2:#ee5f00;
+  --brown2: #ee5f00;
   --brown: #bd5e00;
   --dark-hover-orange: #d06901;
   --dark-orange: #e97505;
@@ -193,11 +191,27 @@ link {
   overflow-x: hidden;
 } */
 
-h1,h2,h3,h4,h5,h6,hr,dl,dd,figure,p,pre {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+hr,
+dl,
+dd,
+figure,
+p,
+pre {
   margin: 0;
 }
 
-h1,h2,h3,h4,h5,h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-size: inherit;
   font-weight: inherit;
 }
@@ -347,6 +361,12 @@ h6 {
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+
+.filtersSearchContainer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
 }
 
 .w-full {

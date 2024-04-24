@@ -26,6 +26,7 @@ function Dropdown({
 }: DropdownProps) {
   const [isTimeframeOpen, setIsTimeframeOpen] = useState(false);
   const [isPeopleOpen, setIsPeopleOpen] = useState(false);
+  const [isNicheOpen, setIsNicheOpen] = useState(false);
   const [selectedTimeframe, setSelectedTimeframe] = useState(timeframes[0]);
 
   const [partnerSearchFilter, setPartnerSearchFilter] = useState([]);
@@ -33,10 +34,18 @@ function Dropdown({
   const [showSuggestionDropdown, setShowSuggestionDropdown] = useState(false);
   const [radialValue, setRadialValue] = useState("");
 
+  const [nicheSearchFilter, setNicheSearchFilter] = useState([]);
+  const [nicheSearchOptions, setNicheSearchOptions] = useState([]);
+
   const selectedFiltersRef = useRef<string[]>([]);
   const searchValue = useRef<string>("");
+  const selectedNicheFiltersRef = useRef<string[]>([]);
+  const searchNicheValue = useRef<string>("");
   const filterRef = useRef(null);
   const timeframeRef = useRef(null);
+  const nicheRef = useRef(null);
+
+  console.log(originalData)
 
   // Handle click filter when clicking outside of it
   useEffect(() => {
@@ -59,11 +68,22 @@ function Dropdown({
       }
     };
 
+    const handleClickOutsideNiche = (event: any) => {
+      if (
+        nicheRef.current &&
+        !(nicheRef.current as HTMLElement).contains(event.target)
+      ) {
+        setIsNicheOpen(false);
+      }
+    };
+
     document.addEventListener("mousedown", handleClickOutside);
     document.addEventListener("mousedown", handleClickOutsideTimeframe);
+    document.addEventListener("mousedown", handleClickOutsideNiche);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
       document.removeEventListener("mousedown", handleClickOutsideTimeframe);
+      document.removeEventListener("mousedown", handleClickOutsideNiche);
     };
   }, []);
 
@@ -97,6 +117,21 @@ function Dropdown({
               }
               if (origin === "projects") {
                 return [item.creator_name, item.brand_name].filter(Boolean);
+              }
+            })
+          )
+        )
+      );
+
+      setNicheSearchOptions(
+        Array.from(
+          new Set(
+            originalData?.flatMap((item: any) => {
+              if (origin === "campaigns" || origin === "deals") {
+                return [item.brand_niche].filter(Boolean);
+              }
+              if (origin === "projects") {
+                return [item.creator_niche].filter(Boolean);
               }
             })
           )
@@ -249,14 +284,17 @@ function Dropdown({
       case "people":
         setIsPeopleOpen(!isPeopleOpen);
         setIsTimeframeOpen(false);
+        setIsNicheOpen(false);
         break;
       case "niche": {
+        setIsNicheOpen(!isNicheOpen);
         setIsPeopleOpen(false);
         setIsTimeframeOpen(false);
         break;
       }
       case "timeframe":
         setIsPeopleOpen(false);
+        setIsNicheOpen(false);
         setIsTimeframeOpen(!isTimeframeOpen);
         break;
     }
@@ -298,6 +336,7 @@ function Dropdown({
     searchValue.current = "";
     setShowSuggestionDropdown(false);
     selectedFiltersRef.current = [...selectedFiltersRef.current, value];
+    selectedNicheFiltersRef.current = [];
 
     const filteredData = originalData.filter((item: any) => {
       const { brand_name, creator_name, name } = item;
@@ -337,6 +376,49 @@ function Dropdown({
     }
   };
 
+  const handleSelectNicheFilter = (value: string) => {
+    setCurrentPage(1);
+    handleSelectTimeframe(timeframes[0]);
+    searchNicheValue.current = "";
+    setShowSuggestionDropdown(false);
+    selectedNicheFiltersRef.current = [...selectedNicheFiltersRef.current, value];
+    selectedFiltersRef.current = [];
+
+    const filteredData = originalData.filter((item: any) => {
+      const { brand_niche, creator_niche } = item;
+      // Check if the item's brand, creator, or name matches all of the selected filters
+      return selectedNicheFiltersRef.current.every(
+        (filter) => filter === brand_niche || filter === creator_niche
+      );
+    });
+
+    setFilteredData(filteredData);
+  }
+
+  const handleRemoveNicheFilter = (value: string) => {
+    setCurrentPage(1);
+    handleSelectTimeframe(timeframes[0]);
+    selectedNicheFiltersRef.current = selectedNicheFiltersRef.current.filter(
+      (filter: string) => filter !== value
+    );
+    if (selectedNicheFiltersRef.current.length === 0) {
+      setFilteredData(originalData);
+    } else {
+      const filteredData = [
+        ...originalData.filter((item: any) => {
+          const { brand_niche, creator_niche } = item;
+          return (
+            (brand_niche &&
+              selectedNicheFiltersRef.current.includes(brand_niche)) ||
+            (creator_niche &&
+              selectedNicheFiltersRef.current.includes(creator_niche))
+          );
+        }),
+      ];
+      setFilteredData(filteredData);
+    }
+  }
+
   const displayPeopleFilter = () => {
     return (
       <div className="filter" ref={filterRef}>
@@ -344,13 +426,12 @@ function Dropdown({
           className={isPeopleOpen ? "dropdownButtonOpen" : "dropdownButton"}
           onClick={() => handleOpenFilter("people")}
         >
-          {`Group: ${
-            selectedFiltersRef.current.length === 1
-              ? selectedFiltersRef.current[0]
-              : selectedFiltersRef.current.length === 0
+          {`Group: ${selectedFiltersRef.current.length === 1
+            ? selectedFiltersRef.current[0]
+            : selectedFiltersRef.current.length === 0
               ? `All`
               : "Multiple Selected"
-          }`}
+            }`}
           <Arrow className={`${isPeopleOpen ? "" : "arrow-down"}`} />
         </button>
         {isPeopleOpen && (
@@ -490,11 +571,87 @@ function Dropdown({
     return (
       <div className="filter">
         <button
-          className={"dropdownButton"}
+          className={isNicheOpen ? "dropdownButtonOpen" : "dropdownButton"}
           onClick={() => handleOpenFilter("niche")}
         >
-          {`Niche: All`}
+          {`Niche: ${selectedNicheFiltersRef.current.length === 1
+            ? selectedNicheFiltersRef.current[0]
+            : selectedNicheFiltersRef.current.length === 0
+              ? `All`
+              : "Multiple Selected"
+            }`}
+          <Arrow className={`${isNicheOpen ? "" : "arrow-down"}`} />
         </button>
+        {isNicheOpen && (
+          <div className="dropdownListStick">
+            <div className="hr-line"></div>
+            <div className="peopleFiltersSection">
+              <div className="dropdownSection">
+                {selectedNicheFiltersRef.current.map((filter: string) => (
+                  <div className="chip">
+                    {filter}
+                    <button
+                      className="chipClose"
+                      onClick={() => handleRemoveNicheFilter(filter)}
+                    >
+                      <Image src={Exit} alt="Icon" width={12} height={12} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+              <h3 className="dropdownSectionTitle">Search niche</h3>
+              <div
+                className="searchContainer"
+                style={{
+                  backgroundColor: showSuggestionDropdown ? "#F9FAFB" : "#FFF",
+                }}
+              >
+                <input
+                  type="text"
+                  placeholder="Search..."
+                  className="searchInput"
+                  value={searchNicheValue.current}
+                  onChange={(e) => {
+                    searchNicheValue.current = e.target.value;
+                    if (
+                      searchNicheValue.current.length > 0 &&
+                      !showSuggestionDropdown
+                    )
+                      setShowSuggestionDropdown(true);
+                    if (searchNicheValue.current.length === 0)
+                      setShowSuggestionDropdown(false);
+
+                    const filteredOptions: any = (
+                      nicheSearchOptions as string[]
+                    ).filter(
+                      (option: string) =>
+                        option
+                          .toLowerCase()
+                          .includes(searchNicheValue.current.toLowerCase()) &&
+                        !selectedNicheFiltersRef.current.includes(option)
+                    );
+
+                    setNicheSearchFilter(filteredOptions);
+                  }}
+                />
+                {showSuggestionDropdown && (
+                  <ul className="suggestionDropdown">
+                    {nicheSearchFilter.map((option: any) => (
+                      <li className="dropdownSearchRow" key={option}>
+                        <button
+                          className="dropdownSearchItem"
+                          onClick={() => handleSelectNicheFilter(option)} // Replace handleSelectPartner with handleSelectFilter
+                        >
+                          {option}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     );
   };

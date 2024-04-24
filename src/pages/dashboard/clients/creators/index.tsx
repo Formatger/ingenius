@@ -11,6 +11,7 @@ import { useWindowSize } from "@/utils/hooks/useWindowSize";
 import { getCreators, getCreatorsDetail } from "@/utils/httpCalls";
 import CreatorTable from "@/components/dashboard/table/CreatorTable";
 import CreatorSidepanel from "@/components/dashboard/profile/CreatorSidepanel";
+import Searchbox from "@/components/dashboard/table/Search";
 
 // import BrandForm from "@/components/dashboard/form/BrandForm";
 
@@ -153,17 +154,22 @@ const CreatorsPage = () => {
 
   /* SEARCH LOGIC - modify to creators data */
 
-  // const handleSearch = (search: string) => {
-  //   const filteredData = creatorsData.filter((brand: CreatorInterface) => {
-  //     return brand.name.toLowerCase().includes(search.toLowerCase()) ||
-  //     brand.brand_name.toLowerCase().includes(search.toLowerCase());
-  //   });
-  //   setNoSlicedData(filteredData);
-  //   setData(filteredData.slice(
-  //     (currentPage - 1) * itemsPerPage,
-  //     currentPage * itemsPerPage
-  //   ));
-  // };
+  const handleSearch = (search: string) => {
+    const filtered = originalData.filter((brand: any) => {
+      return (
+        brand.name.toLowerCase().includes(search.toLowerCase()) ||
+        brand.email.toLowerCase().includes(search.toLowerCase()) ||
+        brand.niche.toLowerCase().includes(search.toLowerCase())
+      );
+    });
+    setFilteredData(filtered);
+    setDataToDisplay(
+      filtered.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+      )
+    );
+  };
 
   /* SIDEPANEL */
 
@@ -212,12 +218,15 @@ const CreatorsPage = () => {
                 handleCloseFormSidepanel={handleCloseFormSidepanel} 
               />
             )} */}
-            <div className="row-between">
+            <div className="filtersSearchContainer">
               <div>
                 {/* <Dropdown /> */}
                 {/* <EasyFilters filterByDate={filterByDate} handleSearch={handleSearch} /> */}
               </div>
+
               <div className="button-group">
+                <Searchbox handleSearch={handleSearch} />
+
                 <button className="app-button cream" onClick={undefined}>
                   CSV Upload
                 </button>

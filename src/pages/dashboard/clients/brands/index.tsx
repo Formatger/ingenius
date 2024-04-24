@@ -13,6 +13,7 @@ import BrandTable from "@/components/dashboard/table/BrandTable";
 import BrandSidepanel from "@/components/dashboard/profile/BrandSidepanel";
 import Dropdown from "@/components/common/Dropdown";
 import BrandForm from "@/components/dashboard/form/BrandForm";
+import Searchbox from "@/components/dashboard/table/Search";
 
 const BrandsPage = () => {
   const router = useRouter();
@@ -42,7 +43,7 @@ const BrandsPage = () => {
     { label: "Brands", link: "/dashboard/clients/brands", current: true },
   ];
 
-   /* ACTUALIZAR EL RENDERIZADO API */
+  /* ACTUALIZAR EL RENDERIZADO API */
 
   //  useEffect(() => {
   //   const originalDataCopy = [...originalData];
@@ -160,6 +161,24 @@ const BrandsPage = () => {
     setFilteredData(sortedDataFinal);
   };
 
+  /* SEARCH LOGIC - modify to brands data */
+
+  const handleSearch = (search: string) => {
+    const filtered = originalData.filter((brand: any) => {
+      return (
+        brand.name.toLowerCase().includes(search.toLowerCase()) ||
+        brand.email.toLowerCase().includes(search.toLowerCase()) ||
+        brand.website.toLowerCase().includes(search.toLowerCase())
+      );
+    });
+    setFilteredData(filtered);
+    setDataToDisplay(
+      filtered.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+      )
+    );
+  };
 
   /* SIDEPANEL */
 
@@ -213,14 +232,16 @@ const BrandsPage = () => {
                 updateBrandData={updateBrandData}
               />
             )}
-            <div className="filtersContainer">
-              <Dropdown
+            <div className="filtersSearchContainer">
+              {/*  <Dropdown
                 setFilteredData={setFilteredData}
                 originalData={originalData}
                 setCurrentPage={setCurrentPage}
                 origin="brands"
-              />
+              /> */}
               <div className="button-group">
+                <Searchbox handleSearch={handleSearch} />
+
                 <button className="app-button cream" onClick={undefined}>
                   CSV Upload
                 </button>
