@@ -78,7 +78,7 @@ const ProjectDetails = ({ projectsData }: ProjectDetailsProps) => {
 
         <div>
           <p className="smallcaps">description</p>
-          <span className="sec-button gray1" >
+          <span className="sec-tag gray1" >
             <p className="description">{projectsData?.description}</p>
           </span>
         </div>

@@ -60,7 +60,7 @@ const DealDetails = ({ dealsData }: DealDetailsProps) => {
         </div>
         <div>
           <p className="smallcaps">DESCRIPTION</p>
-          <span className="sec-button gray1" onClick={undefined}>
+          <span className="sec-tag gray1" onClick={undefined}>
             <p className="description">{dealsData?.description}</p>
           </span>
         </div>

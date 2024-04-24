@@ -4,7 +4,7 @@ import Link from 'next/link';
 import HelpIcon from "@/components/assets/svg/Help";
 import Edit from "@/components/assets/icons/edit.svg";
 import { Arrow } from "@/components/assets/svg/Arrow";
-import ProfileSidepanel from '../../common/ProfileSidepanel';
+import ProfileSidepanel from '../../common/Sidepanel';
 import { CreatorDetails } from './CreatorProfile';
 import CreatorForm from "@/components/dashboard/form/CreatorForm";
 import ConfirmModal from "./ConfirmModal";

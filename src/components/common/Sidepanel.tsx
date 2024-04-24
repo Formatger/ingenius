@@ -1,11 +1,11 @@
 import React, { Fragment } from 'react';
 
-type ProfileSidepanelProps = {
+type SidepanelProps = {
   handleClose: () => void; 
   children: React.ReactNode; 
 }
 
-const ProfileSidepanel: React.FC<ProfileSidepanelProps> = ({ 
+const Sidepanel: React.FC<SidepanelProps> = ({ 
   handleClose, 
   children 
 }) => {
@@ -13,10 +13,12 @@ const ProfileSidepanel: React.FC<ProfileSidepanelProps> = ({
     <Fragment>
       <button className="overlayer" onClick={handleClose} />
       <div className='sidepanel-container'>
+        <div className='sidepanel-box'>
         {children}
+        </div>
       </div>
     </Fragment>
   );
 };
 
-export default ProfileSidepanel;
+export default Sidepanel;

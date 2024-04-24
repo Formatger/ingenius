@@ -33,7 +33,7 @@ const DashboardStats = ({ sections }: any) => {
         </div>
         <div><h2 className="stats-result">56</h2></div>
         <div>
-          <p className="stats-footer-text">Contracts in 2024</p>
+          <p className="stats-footer-text">Contracts this year</p>
         </div>
       </div>
 
@@ -64,7 +64,7 @@ const DashboardStats = ({ sections }: any) => {
         </div>
         <div><h2 className="stats-result">$80,230</h2></div>
         <div>
-          <p className="stats-footer-text">Profits in 2024</p>
+          <p className="stats-footer-text">Yearly Profits</p>
         </div>
       </div>
 
@@ -95,13 +95,13 @@ const DashboardStats = ({ sections }: any) => {
         </div>
         <div><h2 className="stats-result">+/- 4</h2></div>
         <div>
-          <p className="stats-footer-text">More brands & creators in Jan</p>
+          <p className="stats-footer-text">Brands & Creators</p>
         </div>
       </div>
 
       <div className="dash-stats-box">
         <div className="row-wrap-3">
-          <h5 className="dash-stats-title">Expense Total</h5>
+          <h5 className="dash-stats-title">Total Expenses</h5>
           {/* {dataExpenseTotal < 0 ? (
             <div className="stats-tag-negative">
               <Image src={StatsDown} alt="icon"  />

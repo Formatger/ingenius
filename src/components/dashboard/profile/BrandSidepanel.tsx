@@ -3,7 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import HelpIcon from "@/components/assets/svg/Help";
 import { Arrow } from "@/components/assets/svg/Arrow";
-import ProfileSidepanel from '../../common/ProfileSidepanel';
+import ProfileSidepanel from '../../common/Sidepanel';
 import { deleteBrand } from "@/utils/httpCalls";
 import ConfirmModal from "./ConfirmModal";
 import { BrandDetails } from "./BrandProfile";

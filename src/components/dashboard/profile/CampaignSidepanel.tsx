@@ -5,7 +5,7 @@ import { CampaignDetails } from "@/components/dashboard/profile/CampaignProfile"
 import HelpIcon from "@/components/assets/svg/Help";
 import Edit from "@/components/assets/icons/edit.svg";
 import { Arrow } from "@/components/assets/svg/Arrow";
-import ProfileSidepanel from '../../common/ProfileSidepanel';
+import ProfileSidepanel from '../../common/Sidepanel';
 import CampaignForm from '../form/CampaignForm';
 import { deleteCampaign } from "@/utils/httpCalls";
 import ConfirmModal from "./ConfirmModal";

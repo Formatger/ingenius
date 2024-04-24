@@ -54,12 +54,11 @@ const SupportForm: React.FC<SupportFormProps> = ({ title }) => {
   };
 
   return (
-    <div className="modal-overlay" >
-      <div className="modal-container" onClick={e => e.stopPropagation()}>
+    <div className="settings-page">
+      <div className="form-container" onClick={e => e.stopPropagation()}>
         {title && (
           <div className="modal-header">
             <h5 className="subtitle">{title}</h5>
-            <button type="button" className="close-button">×</button>
           </div>
         )}
         <div className="modal-content">
@@ -71,8 +70,8 @@ const SupportForm: React.FC<SupportFormProps> = ({ title }) => {
               <input
                 {...register("subject", { required: true })}
                 type="text"
-                placeholder="Label (eg. Prospective)"
-                className="app-input"
+                placeholder="Enter subject"
+                className="form-input"
               />
             </div>
             <div className="form-box">
@@ -82,8 +81,8 @@ const SupportForm: React.FC<SupportFormProps> = ({ title }) => {
               <input
                 {...register("email", { required: true })}
                 type="text"
-                placeholder="Label (eg. Prospective)"
-                className="app-input"
+                placeholder="Enter email"
+                className="form-input"
               />
             </div>
             <div className="form-box">
@@ -92,7 +91,7 @@ const SupportForm: React.FC<SupportFormProps> = ({ title }) => {
               </p>
               <textarea
                 {...register("message", { required: true })}
-                placeholder="Label (eg. Prospective)"
+                placeholder="Enter message"
                 className="form-textarea"
               />
             </div>
@@ -114,7 +113,7 @@ const SupportForm: React.FC<SupportFormProps> = ({ title }) => {
               )}
             </div>
             <div className='column-center'>
-              <button className="app-button mt-4" type="submit">
+              <button className="sec-button orange mt-2" type="submit">
                 Submit
               </button>
             </div>

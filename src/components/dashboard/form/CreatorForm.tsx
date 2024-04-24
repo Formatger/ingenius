@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import HelpIcon from "@/components/assets/svg/Help";
 import { useForm } from "react-hook-form";
-import FormSidepanel from "@/components/common/ProfileSidepanel";
+import FormSidepanel from "@/components/common/Sidepanel";
 import { CampaignInterface, ProjectInterface } from "@/interfaces/interfaces";
 import { getBrands, postBrands, postCreators, putBrand, putCreator } from "@/utils/httpCalls";
 import { useRouter } from "next/router";

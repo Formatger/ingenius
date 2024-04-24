@@ -5,9 +5,10 @@ import { DealDetails } from "@/components/dashboard/profile/DealProfile";
 import HelpIcon from "@/components/assets/svg/Help";
 import Edit from "@/components/assets/icons/edit.svg";
 import { Arrow } from "@/components/assets/svg/Arrow";
-import Sidepanel from '../../common/ProfileSidepanel';
+import Sidepanel from '../../common/Sidepanel';
 import { deleteDeal } from "@/utils/httpCalls";
 import ConfirmModal from "./ConfirmModal";
+import DealForm from "../form/DealForm";
 
 type SidepanelProps = {
   open: boolean;
@@ -22,9 +23,7 @@ const DealSidepanel: React.FC<SidepanelProps> = ({
   setSelectedDeal, 
   setOpenSidepanel,
   updateDealData, 
-
 }) => {
-
   const [isModalOpen, setModalOpen] = useState(false);
   const [editData, setEditData] = useState(false);
   
@@ -53,6 +52,7 @@ const DealSidepanel: React.FC<SidepanelProps> = ({
       console.error("Failed to delete deal:", error);
     });
   };
+
   return (
     <Sidepanel handleClose={handleClose}>
       <div className='sidepanel-header'>
@@ -70,6 +70,17 @@ const DealSidepanel: React.FC<SidepanelProps> = ({
             </Link>
         </div>
       </div>
+      {editData ? (
+        <DealForm
+        dealsData={dealsData}
+        closeEdit={closeEdit}
+        isEditing={editData}
+        handleCloseFormSidepanel={handleClose}
+        // updateProjectData={updateProjectData} 
+        dealStage={[]}  
+        updateDealData={() => {}}
+        />
+    ) : (
       <div className='sidepanel-wrap-space'>
         <DealDetails dealsData={dealsData} />
 
@@ -93,8 +104,8 @@ const DealSidepanel: React.FC<SidepanelProps> = ({
               button="Yes, delete this deal"
             />
           </div>
-
       </div>
+      )}
     </Sidepanel>
   );
 };

@@ -111,8 +111,15 @@ button[disabled] {
   filter: invert();
 }
 
+.sec-button.orange {
+  background-color: var(--light-orange);
+}
+
 .sec-button.linen:hover {
   background-color: var(--light-orange);
+}
+.sec-button.orange:hover {
+  background-color: var(--orange);
 }
 
 .sec-button.linen:active,
@@ -253,7 +260,7 @@ input:focus {
   padding: 0 38px;
   background-color: var(--gray);
   border-radius: 10px;
-  border: 1px solid var(--gray1);
+  border: 1px solid var(--gray2);
 }
 
 .search-icon {
