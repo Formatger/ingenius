@@ -16,11 +16,13 @@ import Edit from "@/components/assets/icons/edit.svg";
 import Plus from "@/components/assets/icons/plus.svg";
 import PlusWhite from "@/components/assets/icons/plus-white.svg";
 import AddFieldModal from "@/components/dashboard/kanban/AddFieldModal";
+import SupportForm from "@/components/common/SupportForm";
 
 const SettingsPage = () => {
   const router = useRouter();
   const [loader, setLoader] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAddModalOpen, setAddModalOpen] = useState(false);
   
   const breadcrumbLinks = [
     { label: "Settings", link: "/dashboard/support"  },
@@ -37,12 +39,9 @@ const SettingsPage = () => {
       ) : (
         <>
           <div className="page-container" id="dashboard">
-        
-            <div className="column-wrap">
-              <div className="">
-
-              </div>
-            </div>
+                <SupportForm
+                title="Submit your feedback or ticket"
+                />
           </div>
         </>
       )}
