@@ -261,7 +261,7 @@ const BrandForm: React.FC<BrandFormProps> = ({
                 <input
                     className="form-input"
                     type="file"
-                    accept="image/jpeg"
+                    accept="image/jpeg, image/png, image/gif, image/jpg"
                     onChange={handlePictureChange}
                 />
             </div>

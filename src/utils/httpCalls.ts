@@ -565,6 +565,38 @@ export const deleteBrand = async (
 /******************************  POST CALLS  ***************************/
 ////////////////////////////////////////////////////////////////////////
 
+
+/* POST TICKET*/
+
+export const postTicket = async (
+  requestData: any,
+  callback: (data: any) => void,
+  errorCallback?: (error: any) => void
+) => {
+  const url = DEPLOYED_API_BASE_URL + 'tickets/';
+
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.access_token}`,
+      },
+      body: JSON.stringify(requestData),
+    });
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    const data = await response.json();
+    callback(data);
+  } catch (error) {
+    errorCallback && errorCallback(error);
+  }
+};
+
+
 /* POST PROJECT */
 
 export const postProjects = async (
