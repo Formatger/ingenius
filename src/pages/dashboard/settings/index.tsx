@@ -2,31 +2,81 @@ import React, { useEffect, useState } from "react";
 import MainLoader from "@/components/common/Loader";
 import Sidebar from "@/components/navigation/Sidebar";
 import Breadcrumbs from "@/components/navigation/Breadcrumbs";
-import Icon from "@/components/assets/icons/icon.svg";
-import Img from "@/components/assets/images/image.png";
 import Image from "next/image";
-import { Arrow } from "@/components/assets/svg/Arrow";
 import withAuth from "@/components/common/WithAuth";
 import { useRouter } from "next/router";
-import Add from "@/components/assets/icons/add.svg";
-import PlusBlue from "@/components/assets/icons/plus-blue.svg";
-import Table from "@/components/assets/icons/table.svg";
-import Kanban from "@/components/assets/icons/kanban.svg";
-import Edit from "@/components/assets/icons/edit.svg";
-import Plus from "@/components/assets/icons/plus.svg";
-import PlusWhite from "@/components/assets/icons/plus-white.svg";
-import AddFieldModal from "@/components/dashboard/kanban/AddFieldModal";
+import { getUserProfile, postUserProfile, putUserProfile } from "@/utils/httpCalls";
+import ProfilePic from "@/components/assets/images/creator.png";
+import { useForm } from "react-hook-form";
+import { UserProfile } from "@clerk/nextjs";
+import UserProfileForm from "@/components/dashboard/form/UserProfileForm";
+import TeamTable from "@/components/dashboard/dashboard/TeamTable";
 
-const SettingsPage = () => {
+interface FormData {
+  id?: number;
+  name: string;
+  representative: string;
+  email: string;
+  niche: string;
+  website?: string;
+  profile_picture_url?: string;
+  profile_picture?: File;
+  user?: string;
+  active_campaigns?: string;
+  active_campaigns_value?: string;
+  created_at?: Date;
+}
+
+interface SettingsPageProps {
+}
+
+const SettingsPage: React.FC<SettingsPageProps> = ({
+}) => {
   const router = useRouter();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setValue,
+    formState: { errors },
+  } = useForm<FormData>();
   const [loader, setLoader] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  
+  // const [imageURL, setImageURL] = useState<string | null>(userData.profile_picture_url || null);
+  const [imageURL, setImageURL] = useState<any[]>([]);
+  const [userData, setUserData] = useState<any[]>([]);
+  const [editData, setEditData] = useState(false);
+  const [updateUser, setUpdateUser] = useState(false);
+
   const breadcrumbLinks = [
     { label: "Settings", link: "/dashboard/settings"  },
     { label: "My Account", link: "/dashboard/settings" },
   ];
 
+  /* UPDATE USER API CALL */
+
+  const updateUserData = () => {
+    setUpdateUser((prevState) => !prevState);
+  };
+  
+
+  /* GET USER API CALL */
+
+    useEffect(() => {
+      fetchUserProfile();
+    }, [router]);
+  
+    const fetchUserProfile = () => {
+      getUserProfile(
+        (response: any) => {
+          setUserData(response || []);
+        },
+        (error: any) => {
+          console.error("Error fetching profile data:", error);
+          setUserData([]);
+        }
+      ).finally(() => {});
+    };
 
   return (
     <div className="main-container">
@@ -38,77 +88,91 @@ const SettingsPage = () => {
       ) : (
         <>
           <div className="page-container" id="dashboard">
-          <button className="app-button" onClick={() => {
-          localStorage.clear();
-          router.push('/auth');
-          }} aria-label="Close" type="button">
-          Logout</button>
-
-            {/* <div className="dashboard-box mt-4">
-
-              <div>
-                <button className="app-button" 
-                onClick={() => setIsModalOpen(true)}>
-                  <Image src={PlusWhite} alt="Icon" width={16} height={16} />
-                    Add Field
+            <div className="settings-box">
+              <div className="section-title">
+                <h4 className="">
+                  User Profile
+                </h4>
+                <button className="app-button linen" type="button" onClick={() => setEditData(true)}>
+                  <p>Edit</p>
                 </button>
-                <AddFieldModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} 
-                   title="Add Field">
-                </AddFieldModal>
+              </div>
+              <div className="settings-form-box">
+                <UserProfileForm 
+                  userData={userData}
+                  isEditing={editData}
+                  closeEdit={() => setEditData(false)}
+                  updateUserData={updateUserData}
+                />
               </div>
 
-
-              <p className="">Hello</p>
-
-                <button className="sec-button linen" onClick={undefined}>
-                  button
-                </button>
-                <button className="app-button mt-3" onClick={undefined}>
-                  <Image src={Add} alt="Icon" width={20} height={20} />
-                  <p>Add New</p>
-                </button>
-                <button className="app-button" onClick={undefined}>
-                <Image src={PlusWhite} alt="Icon" width={16} height={16} />
-                  Add Deal
-                </button>
-                <button className="app-button cream" onClick={undefined}>
-                  CSV Upload
-                </button>
-
-              <div className="row-wrap">
-                <span className="square-tag light-blue">Square Tag</span>
-
-                <span className="square-tag green">Due: 03/25/2024</span>
-
-                <span className="square-tag blue">
-                  <Image src={PlusBlue} alt="Icon" width={12} height={12} />
-                  Add Campaign
-                </span>
-
-                <span className="square-tag ivory">Due: 03/25/2024</span>
-
-                <span className="square-tag pink">Due: 03/25/2024</span>
+              <div className="section-title mt-4">
+                <h4 className="">
+                  Team Profile
+                </h4>
               </div>
+              <div className="settings-form-box">
+                <div className="card-text mt-4">
+                  <div>
+                    <p className="smallcaps">BUSINESS NAME</p>
+                    <span className="sec-button gray1 ">
+                      <p className="sec-tag">Ingenius</p>
+                    </span>
+                  </div> 
+                  <div>
+                    <p className="smallcaps">BUSINESS EMAIL</p>
+                    <span className="sec-button gray1">
+                      <p className="sec-tag">latecia@gmail.com</p>
+                    </span>
+                  </div> 
+                  <div>
+                    <p className="smallcaps">TEAM MEMBERS</p>
+                    <TeamTable userData={userData} />
+                  </div> 
+                </div>
+               </div>
 
-              <span className="round-tag pink">Round Tag</span>
+              <div className="manage-account">
+                <div className="section-title mt-4">
+                  <h4 className="">
+                    Account Settings
+                  </h4>
+                </div>
 
-              <Image src={Table} alt="Icon" width={16} height={16} className="icon" />
-              <Image src={Kanban} alt="Icon" width={16} height={16} className="image" />
-              <Image src={Edit} alt="Icon" width={16} height={16} className="image" />
-              <Image src={Plus} alt="Icon" width={16} height={16} className="image" />
+                <div className="card-text mt-4">
+                  <div>
+                      <p className="smallcaps">MANAGE ACCOUNT</p>
+                  
+                      <p className="settings-text">If you need to manage your account username, email or password or you want to close your account, please contact support.</p>
+                    
+                    <div className="button-group mt-6">
+                      <button className="app-button orange" onClick={() => {
+                        localStorage.clear();
+                        router.push('/auth');
+                        }} aria-label="Close" type="button">
+                        Contact Support
+                      </button>
+                      <button className="app-button" onClick={() => {
+                        localStorage.clear();
+                        router.push('/auth');
+                        }} aria-label="Close" type="button">
+                        Logout
+                      </button>
+                    </div>
+                  </div> 
+                  {/* <div className="mt-4">
+                      <p className="smallcaps">ACCOUNT LOGOUT</p>
+                      <button className="app-button" onClick={() => {
+                        localStorage.clear();
+                        router.push('/auth');
+                        }} aria-label="Close" type="button">
+                        Logout
+                      </button>
+                  </div>  */}
+                </div> 
 
-              <Arrow />
-              <Arrow className="arrow-down" />
-              <Arrow className="arrow-right" />
-              <Arrow className="arrow-left" />
-
-              <Arrow className="gray-fill" />
-              <Arrow className="arrow-down gray-fill" />
-              <Arrow className="arrow-right gray-fill" />
-              <Arrow className="arrow-left gray-fill" />
-
-              <Arrow className="arrow-left orange-fill" />
-            </div> */}
+              </div>
+            </div>
           </div>
         </>
       )}

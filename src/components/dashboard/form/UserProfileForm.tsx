@@ -1,0 +1,254 @@
+import React, { useEffect, useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import HelpIcon from "@/components/assets/svg/Help";
+import { useForm } from "react-hook-form";
+import FormSidepanel from "@/components/common/Sidepanel";
+import {
+  postUserProfile,
+  putUserProfile,
+} from "@/utils/httpCalls";
+import { useRouter } from "next/router";
+import ProfilePic from "@/components/assets/images/creator.png";
+
+interface FormData {
+  id?: number;
+  name: string;
+  representative: string;
+  email: string;
+  niche: string;
+  website?: string;
+  profile_picture_url?: string;
+  profile_picture?: File;
+  user?: string;
+  active_campaigns?: string;
+  active_campaigns_value?: string;
+  created_at?: Date;
+}
+
+interface UserProfileFormProps {
+  updateUserData: () => void;
+  isEditing: boolean;
+  userData: any;
+  closeEdit: () => void;
+}
+
+const UserProfileForm: React.FC<UserProfileFormProps> = ({
+  updateUserData,
+  isEditing,
+  userData,
+  closeEdit,
+}) => {
+  const router = useRouter();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setValue,
+    formState: { errors },
+  } = useForm<FormData>();
+  const [imageURL, setImageURL] = useState<string | null>(
+    userData.profile_picture_url || null
+  );
+
+
+  /* UPLOAD PROFILE PICTURE */
+
+  const handleUploadImage = (event: any) => {
+    const file = event.target.files[0]; // Get the first file
+    if (file) {
+      setValue("profile_picture", file);
+      const url = URL.createObjectURL(file); // Create a URL for the file
+      setImageURL(url); // Update the imageURL state
+    }
+  };
+
+  /* SUBMIT FORM - POST CREATOR API CALL  */
+
+  const onSubmit = async (data: FormData) => {
+    console.log("Form Data:", data);
+
+    const formData = new FormData();
+
+    Object.entries(data).forEach(([key, value]) => {
+      if (value !== undefined && value !== null) {
+        formData.append(key, value);
+      }
+    });
+
+    try {
+      if (isEditing) {
+        const creatorId = userData.id;
+
+        await putUserProfile(
+          creatorId,
+          formData,
+          (response) => {
+            reset();
+            closeEdit();
+            updateUserData();
+          },
+          (error) => {
+            console.error("Error updating brand:", error);
+          }
+        );
+      } else {
+        console.log("Data for POST:", formData);
+
+        await postUserProfile(
+          formData,
+          (response) => {
+            reset();
+            // handleClose();
+            updateUserData();
+          },
+          (error) => {
+            console.error("Error creating brand:", error);
+          }
+        );
+      }
+    } catch (error) {
+      console.error("ERROR", error);
+    }
+  };
+
+  return (
+    <div>
+      {isEditing ? (
+        <div className="">
+          <form
+            className="sidepanel-form"
+            onSubmit={handleSubmit(onSubmit)}
+            encType="multipart/form-data"
+          >
+            <div className="form-box">
+              <span className="smallcaps">PROFILE PICTURE</span>
+              <input
+                id="fileInput"
+                style={{ display: "none" }}
+                type="file"
+                accept="image/jpeg, image/png, image/gif, image/jpg"
+                onChange={handleUploadImage}
+              />
+              <div className="upload-image-box">
+                <div className="upload-image">
+                  {imageURL ? (
+                    <img
+                      src={imageURL}
+                      alt="Uploaded"
+                      style={{ width: "120px", height: "120px" }}
+                    />
+                  ) : (
+                    <Image
+                      src={ProfilePic}
+                      alt="Icon"
+                      width={120}
+                      height={120}
+                    />
+                  )}
+                </div>
+                {imageURL ? (
+                  <label htmlFor="fileInput" className="custom-image-upload">
+                    Change Image
+                  </label>
+                ) : (
+                  <label htmlFor="fileInput" className="custom-image-upload">
+                    Upload Image
+                  </label>
+                )}
+              </div>
+            </div>
+            <div className="form-box">
+              <span className="smallcaps">NAME</span>
+              <input
+                {...register("name", { required: true })}
+                className="form-input"
+                type="text"
+                defaultValue={userData.name}
+                onChange={(e) => setValue("name", e.target.value)}
+              />
+            </div>
+            <div className="form-box">
+              <span className="smallcaps">LAST NAME</span>
+              <input
+                {...register("name")}
+                className="form-input"
+                type="text"
+                defaultValue={userData.name}
+                onChange={(e) => setValue("name", e.target.value)}
+              />
+            </div>
+            <div className="form-box">
+              <span className="smallcaps">EMAIL</span>
+              <input
+                className="form-input disabled"
+                defaultValue={userData.email}
+                disabled
+              />
+            </div>
+            <div className="button-group">
+              <button
+                className="sec-button stone"
+                type="button"
+                onClick={closeEdit}
+              >
+                <p>Cancel</p>
+              </button>
+              <button className="sec-button linen" type="submit">
+                <p>Save</p>
+              </button>
+            </div>
+          </form>
+        </div>
+      ) : (
+        <div>
+          <div className="sidepanel-form">
+            <div className="form-box">
+              {/* <span className="smallcaps">PROFILE PICTURE</span> */}
+              <div className="">
+                <div className="upload-image">
+                  {imageURL ? (
+                    <img
+                      src={imageURL}
+                      alt="Uploaded"
+                      style={{ width: "120px", height: "120px" }}
+                    />
+                  ) : (
+                    <Image
+                      src={ProfilePic}
+                      alt="Icon"
+                      width={120}
+                      height={120}
+                    />
+                  )}
+                </div>
+              </div>
+            </div>
+            <div className="card-text mt-4">
+              <div>
+                <p className="smallcaps">NAME</p>
+                <span className="sec-button gray1 ">
+                  <p className="sec-tag">{userData?.name} LaTecia</p>
+                </span>
+              </div> 
+              <div>
+                <p className="smallcaps">LAST NAME</p>
+                <span className="sec-button gray1">
+                  <p className="sec-tag">{userData?.lastname}Johnson</p>
+                </span>
+              </div> 
+              <div>
+                <p className="smallcaps">EMAIL</p>
+                <span className="sec-button gray1">
+                  <p className="sec-tag">{userData?.email}latecia@gmail.com</p>
+                </span>
+              </div> 
+            </div> 
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default UserProfileForm;

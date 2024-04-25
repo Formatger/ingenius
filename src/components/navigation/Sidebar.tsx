@@ -12,7 +12,7 @@ import Partner from "../assets/icons/partner.svg";
 import Support from "../assets/icons/supportAndHelp.svg";
 import ClientDropdown from "./ClientDropdown";
 import PartDropdown from "./PartDropdown";
-import Revenue from "../assets/icons/revenue.svg";
+import Logout from "../assets/icons/logout.svg";
 
 interface SidebarProps {
   layout: React.ReactNode;
@@ -106,15 +106,35 @@ const Sidebar: React.FC<SidebarProps> = ({ layout }) => {
 
           </div>
 
-          <div className="row-wrap-3">
-            <div>
-              <Image src={Profile} alt="Profile" width={30} height={30} className="image" />
+
+          <div className="">
+            <div className="row-wrap-3">
+              <div>
+                <Image src={Profile} alt="Profile" width={30} height={30} className="image" />
+              </div>
+              <div>
+                <p>LaTecia Johnson</p>
+                <p className="account-subtitle">Ingenius</p>
+              </div>
             </div>
-            <div>
-              <p>LaTecia Johnson</p>
-              <p className="account-subtitle">Ingenius</p>
-            </div>
+
+            {/* <button className="" onClick={() => {
+              localStorage.clear();
+              router.push('/auth');
+              }} aria-label="Close" type="button"
+            >
+              <Link href="/dashboard/support"
+                className={`navlink-wrap ${router.pathname == "/dashboard/support" ? "active-link" : ""}`}>
+                <div>
+                  <Image src={Logout} alt="Icon" width={20} height={20} className="image" />
+                </div>
+                <div>Logout</div>
+              </Link>
+            </button> 
+            */}
+
           </div>
+          
 
 
         </div>

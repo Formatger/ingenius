@@ -61,7 +61,7 @@ button[disabled] {
 }
 
 .app-button:hover {
-  filter: brightness(150%);
+  background-color: var(--salmon);
 }
 
 /* .app-button button{
@@ -78,6 +78,16 @@ button[disabled] {
 
 .app-button.cream:hover {
   filter: brightness(105%);
+}
+
+.app-button.orange {
+  background-color: var(--orange);
+}
+
+.app-button.orange:hover {
+  background-color: var(--yellow);
+  filter: none;
+
 }
 
 .reload-button {
