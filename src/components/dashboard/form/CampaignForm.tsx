@@ -78,7 +78,8 @@ const CampaignForm: React.FC<CampaignFormProps> = ({
   closeEdit,
 }) => {
   const router = useRouter();
-  const { register, handleSubmit, reset, setValue } = useForm<FormData>();
+  const { register, handleSubmit, reset, setValue, trigger } =
+    useForm<FormData>();
   const [selectedStage, setSelectedStage] = useState("");
   const [dealsData, setDealsData] = useState<any>([]);
   const [invoicePaid, setInvoicePaid] = useState<boolean>(
@@ -101,7 +102,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({
     const selectedId = event.target.value;
     setSelectedStage(selectedId);
     setValue("campaign_stage", selectedId);
-    // trigger("campaign_stage");
+    trigger("campaign_stage");
   };
 
   const handleInvoiceChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
