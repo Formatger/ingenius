@@ -80,6 +80,25 @@ button[disabled] {
   filter: brightness(105%);
 }
 
+.reload-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border-radius: var(--r6);
+  gap: var(--m2);
+  background: var(--orange);
+  font-family: "InterMedium";
+  font-size: 14px;
+  color: var(--white);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.reload-button:hover {
+  filter: brightness(115%);
+}
+
 /* Secondary Button */
 
 .sec-button {
