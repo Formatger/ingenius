@@ -2,13 +2,9 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import HelpIcon from "@/components/assets/svg/Help";
-import Edit from "@/components/assets/icons/edit.svg";
-import { Arrow } from "@/components/assets/svg/Arrow";
 import SearchDropdown from "./SearchDropdown";
-import { profile } from "console";
-import { v4 as uuidv4 } from "uuid";
 import { useForm } from "react-hook-form";
-import FormSidepanel from "@/components/common/ProfileSidepanel";
+import FormSidepanel from "@/components/common/Sidepanel";
 import { CampaignInterface, ProjectInterface } from "@/interfaces/interfaces";
 import {
   getCampaigns,
@@ -17,8 +13,8 @@ import {
   putProject,
 } from "@/utils/httpCalls";
 import DateInput from "@/components/common/DateInput";
-import axios from "axios";
 import { useRouter } from "next/router";
+import InvoiceDropdown from "@/components/common/InvoiceDropdown";
 
 interface Creators {
   id: string;
@@ -38,6 +34,7 @@ interface FormData {
   creator?: string;
   project_stage?: number;
   invoice_paid?: boolean;
+  team_name?: string;
 }
 
 interface ProjectFormProps {
@@ -63,28 +60,40 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
     handleSubmit,
     reset,
     setValue,
+    trigger,
+    watch,
     formState: { errors },
   } = useForm<FormData>();
   const [selectedStage, setSelectedStage] = useState<any>([]);
   const [creatorsData, setCreatorsData] = useState<Creators[]>([]);
   const [campaignsData, setCampaignsData] = useState<any>([]);
-  const [invoicePaid, setInvoicePaid] = useState<boolean>(
-    projectsData?.invoice_paid ?? false
+  const [invoiceStatus, setInvoiceStatus] = useState(
+    projectsData.invoice_paid ? "Paid" : "Unpaid"
   );
+  const startDate = watch("start_date");
+  const endDate = watch("deadline");
 
-  /* SELECT DROPDOWNS */
+  /* INVOICE DROPDOWN */
 
-  const handleSelectStage = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedId = parseInt(event.target.value);
-    setSelectedStage(selectedId);
-    setValue("project_stage", selectedId);
+  const handleInvoiceSelect = (value: string) => {
+    setInvoiceStatus(value);
+    setValue("invoice_paid", value === "Paid");
+    trigger("invoice_paid");
   };
 
-  const handleInvoiceChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const isPaid = event.target.value === "true";
-    setInvoicePaid(isPaid);
-    setValue("invoice_paid", isPaid);
-  };
+  // const handleSelectStage = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  //   const selectedId = parseInt(event.target.value);
+  //   setSelectedStage(selectedId);
+  //   setValue("project_stage", selectedId);
+  //   console.log("Selected Project Stage ID:", selectedId);
+  //   trigger("project_stage");
+  // };
+
+  // const handleInvoiceChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  //   const isPaid = event.target.value === "true";
+  //   setInvoicePaid(isPaid);
+  //   setValue("invoice_paid", isPaid);
+  // };
 
   /* SEARCH DROPDOWN */
   const [searchTerm, setSearchTerm] = useState("");
@@ -93,13 +102,13 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
     setSearchTerm(term);
   };
 
-  const filteredCreatorsData = creatorsData.filter((creator) =>
-    creator.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-  const filteredCampaignsData = campaignsData.filter(
-    (campaign: { name: string }) =>
-      campaign.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // const filteredCreatorsData = creatorsData.filter((creator) =>
+  //   creator.name.toLowerCase().includes(searchTerm.toLowerCase())
+  // );
+  // const filteredCampaignsData = campaignsData.filter(
+  //   (campaign: { name: string }) =>
+  //     campaign.name.toLowerCase().includes(searchTerm.toLowerCase())
+  // );
 
   /* DATE INPUT CALENDAR  */
   // const [selectedDate, setSelectedDate] = useState<Date>(new Date());
@@ -156,13 +165,11 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
       if (isEditing) {
         const projectId = projectsData.id;
 
-        // Fusionamos los datos del formulario con los datos originales del proyecto
         const updatedData: FormData = {
-          ...projectsData, // Datos originales del proyecto
-          ...data, // Datos del formulario
+          ...projectsData,
+          ...data,
         };
 
-        // Realizamos una solicitud PUT con los datos fusionados
         await putProject(
           projectId,
           updatedData,
@@ -176,7 +183,6 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
           }
         );
       } else {
-        // Si no se está editando, realizamos una solicitud POST
         await postProjects(
           data,
           (response) => {
@@ -202,7 +208,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
           // href={{ pathname: "dashboard/partnerships/projects" }}
         >
           {/* <Arrow className="arrow-left orange-fill" /> */}
-          {`Add Project`}
+          {isEditing ? "Edit Project" : "Add Project"}
         </p>
         <div className="sidepanel-button">
           <Link href="/dashboard/support" passHref>
@@ -225,6 +231,9 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
                 defaultValue={projectsData.name}
                 onChange={(e) => setValue("name", e.target.value)}
               />
+              {errors.name && (
+                <span className="error-message">Project name is required</span>
+              )}
             </div>
             <div className="form-box">
               <span className="smallcaps">DESCRIPTION</span>
@@ -241,11 +250,15 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
                 data={campaignsData}
                 onSelect={(selectedItem) => {
                   setValue("campaign", selectedItem.id);
+                  trigger("campaign");
                 }}
                 placeholder={projectsData.campaign_name}
                 handleSearch={handleSearchChange}
                 displayKey="name"
               />
+              {errors.campaign && (
+                <span className="error-message">Campaign is required</span>
+              )}
             </div>
             <div className="form-box">
               <span className="smallcaps">SELECT CREATOR*</span>
@@ -253,52 +266,81 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
                 data={creatorsData}
                 onSelect={(selectedItem) => {
                   setValue("creator", selectedItem.id);
+                  trigger("creator");
                 }}
                 placeholder={projectsData.creator_name}
                 handleSearch={handleSearchChange}
                 displayKey="name"
               />
+              {errors.creator && (
+                <span className="error-message">Creator is required</span>
+              )}
             </div>
             <div className="form-box">
               <span className="smallcaps">CONTRACT VALUE*</span>
               <input
-                {...register("contract_value", { required: false })}
+                {...register("contract_value", { required: true })}
                 className="form-input"
                 type="text"
                 defaultValue={projectsData.contract_value}
               />
+              {errors.contract_value && (
+                <span className="error-message">
+                  {errors.contract_value.message}
+                </span>
+              )}
             </div>
             <div className="form-box">
               <span className="smallcaps">INVOICE STATUS*</span>
               <div className="select-wrap">
                 <select
-                  {...register("invoice_paid", { required: true })}
+                  {...register("invoice_paid")}
                   className="select-input"
                   defaultValue={projectsData.invoice_paid}
                 >
                   <option value="false">Unpaid</option>
                   <option value="true">Paid</option>
                 </select>
+                {/* {errors.invoice_paid && (<span className="error-message">Please select invoice status</span>)} */}
               </div>
             </div>
+
             <div className="form-box">
               <span className="smallcaps">START DATE*</span>
               <input
-                {...register("start_date", { required: true })}
+                {...register("start_date", {
+                  required: "Start date is required",
+                })}
                 className="form-input"
                 type="date"
                 defaultValue={projectsData.start_date}
               />
+              {errors.start_date && (
+                <span className="error-message">
+                  {errors.start_date.message}
+                </span>
+              )}
             </div>
             <div className="form-box">
               <span className="smallcaps">END DATE*</span>
               <input
-                {...register("deadline", { required: true })}
+                {...register("deadline", {
+                  required: "End date is required",
+                  validate: {
+                    isAfterStartDate: (value) =>
+                      new Date(value) >= new Date(startDate) ||
+                      "End date cannot be before start date",
+                  },
+                })}
                 className="form-input"
                 type="date"
                 defaultValue={projectsData.deadline}
               />
+              {errors.deadline && (
+                <span className="error-message">{errors.deadline.message}</span>
+              )}
             </div>
+
             <div className="button-group">
               <button
                 className="sec-button stone"
@@ -346,6 +388,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
                 data={campaignsData}
                 onSelect={(selectedItem) => {
                   setValue("campaign", selectedItem.id);
+                  trigger("campaign");
                 }}
                 placeholder="Select Campaign"
                 handleSearch={handleSearchChange}
@@ -362,15 +405,12 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
                 data={creatorsData}
                 onSelect={(selectedItem) => {
                   setValue("creator", selectedItem.id);
+                  trigger("creator");
                 }}
                 placeholder="Select Creator"
                 handleSearch={handleSearchChange}
                 displayKey="name"
-                {...register("creator", {
-                  required: "Contract value is required",
-                  validate: (value) =>
-                    (value !== "" && value != null) || "Creator is required",
-                })}
+                {...register("creator", { required: "true" })}
               />
               {errors.creator && (
                 <span className="error-message">Creator is required</span>
@@ -381,17 +421,17 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
               <input
                 {...register("contract_value", {
                   required: "Contract value is required",
-                  valueAsNumber: true, // Ensure the value is treated as a number
+                  valueAsNumber: true,
                   validate: {
                     notEmpty: (value) =>
                       value !== undefined || "Contract value cannot be empty",
                     isNumber: (value) =>
-                      !isNaN(value ?? 0) || "Please enter a number", // Check if the value is not NaN
+                      !isNaN(value ?? 0) || "Please enter a number",
                   },
                 })}
                 className="form-input"
-                type="text" // Using type="text" to handle input manually
-                placeholder="Add contract Value"
+                type="text"
+                placeholder="Enter contract value"
               />
               {errors.contract_value && (
                 <span className="error-message">
@@ -399,74 +439,62 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
                 </span>
               )}
             </div>
-
-            <div className="form-box">
-              <span className="smallcaps">INVOICE STATUS*</span>
-              <div className="select-wrap">
-                <select
-                  {...register("invoice_paid", { required: true })}
-                  onChange={handleInvoiceChange}
-                  value={invoicePaid.toString()}
-                  className="select-input"
-                >
-                  <option value="false">Unpaid</option>
-                  <option value="true">Paid</option>
-                </select>
-              </div>
-              {errors.invoice_paid && (
-                <span className="error-message">
-                  Please select invoice status
-                </span>
-              )}
+            <div>
+              <InvoiceDropdown
+                selectedValue={invoiceStatus}
+                onSelect={handleInvoiceSelect}
+              />
             </div>
             <div className="form-box">
               <span className="smallcaps">START DATE*</span>
               <input
-                {...register("start_date", { required: true })}
+                {...register("start_date", {
+                  required: "Start date is required",
+                })}
                 className="form-input"
                 type="date"
-                placeholder="YYYY-MM-DD"
               />
               {errors.start_date && (
-                <span className="error-message">Start date is required</span>
+                <span className="error-message">
+                  {errors.start_date.message}
+                </span>
               )}
             </div>
             <div className="form-box">
               <span className="smallcaps">END DATE*</span>
               <input
-                {...register("deadline", { required: true })}
+                {...register("deadline", {
+                  required: "End date is required",
+                  validate: {
+                    isAfterStartDate: (value) =>
+                      new Date(value) >= new Date(startDate) ||
+                      "End date cannot be before start date",
+                  },
+                })}
                 className="form-input"
                 type="date"
-                placeholder="YYYY-MM-DD"
               />
               {errors.deadline && (
-                <span className="error-message">End date is required</span>
+                <span className="error-message">{errors.deadline.message}</span>
               )}
             </div>
             <div className="form-box">
               <span className="smallcaps">SELECT STAGE*</span>
-              <div className="select-wrap">
-                <select
-                  {...register("project_stage", { required: true })}
-                  onChange={handleSelectStage}
-                  value={selectedStage}
-                  className="select-input"
-                >
-                  <option value="">Select Stage</option> {/* Default option */}
-                  {Array.isArray(projectStage) &&
-                    projectStage.map((stage) => {
-                      return (
-                        <option key={stage.stageID} value={stage.stageID}>
-                          {stage.stageName}
-                        </option>
-                      );
-                    })}
-                </select>
-              </div>
+              <SearchDropdown
+                data={projectStage}
+                onSelect={(selectedItem) => {
+                  setValue("project_stage", selectedItem.stageID);
+                  trigger("project_stage");
+                }}
+                placeholder="Select Stage"
+                handleSearch={handleSearchChange}
+                displayKey="stageName"
+                {...register("project_stage", {
+                  required: "Stage selection is required",
+                })}
+              />
               {errors.project_stage && (
-                <span className="error-message">
-                  Please select a project stage
-                </span>
+                <span className="error-message">Stage is required</span>
               )}
             </div>
 
@@ -481,3 +509,47 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
 };
 
 export default ProjectForm;
+
+{
+  /* <div className="form-box">
+              <span className="smallcaps">INVOICE STATUS*</span>
+              <div className="select-wrap">
+                <select
+                  {...register("invoice_paid", { required: true })}
+                  onChange={handleInvoiceChange}
+                  value={invoicePaid.toString()}
+                  className="select-input"
+                >
+                  <option value="false">Unpaid</option>
+                  <option value="true">Paid</option>
+                </select>
+              </div>
+              {errors.invoice_paid && (<span className="error-message">Please select invoice status</span>)}
+            </div> */
+}
+
+{
+  /* <div className="form-box">
+              <span className="smallcaps">SELECT STAGE*</span>
+              <div className="select-wrap">
+                <select
+                  {...register("project_stage", { required: true })}
+                  onChange={handleSelectStage}
+                  value={selectedStage}
+                  className="select-input"
+                >
+                  <option value="">Select Stage</option>
+                  {Array.isArray(projectStage) &&
+                    projectStage.map((stage) => {
+                      console.log("Stage Name:", stage.name);
+                      return (
+                        <option key={stage.stageID} value={stage.stageID}>
+                          {stage.stageName}
+                        </option>
+                      );
+                    })}
+                </select>
+              </div>
+              {errors.project_stage && (<span className="error-message">Please select a project stage</span>)}
+            </div> */
+}

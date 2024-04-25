@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import SearchIcon from "../../assets/icons/search.svg";
+import Arrow from "@/components/assets/svg/Arrow";
 
 interface SearchDropdownProps {
   data: any[];  // Generic data array
@@ -23,13 +24,17 @@ const SearchDropdown: React.FC<SearchDropdownProps> = ({
     const [filteredData, setFilteredData] = useState<any[]>([]);
     const dropdownRef = useRef<HTMLDivElement>(null);
 
+    // useEffect(() => {
+    //     if (inputTerm === '') {
+    //         setFilteredData(data.slice(0, 5)); // Show default items or some other logic
+    //     } else {
+    //         setFilteredData(data.filter(item => item[displayKey]?.toLowerCase().includes(inputTerm.toLowerCase())));
+    //     }
+    // }, [inputTerm, data, displayKey]);
+
     useEffect(() => {
-        if (inputTerm === '') {
-            setFilteredData(data.slice(0, 5)); // Show default items or some other logic
-        } else {
-            setFilteredData(data.filter(item => item[displayKey]?.toLowerCase().includes(inputTerm.toLowerCase())));
-        }
-    }, [inputTerm, data, displayKey]);
+      setFilteredData(data.filter(item => item[displayKey]?.toLowerCase().includes(inputTerm.toLowerCase())));
+  }, [inputTerm, data, displayKey]);
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -54,6 +59,7 @@ const SearchDropdown: React.FC<SearchDropdownProps> = ({
         <div ref={dropdownRef} className="dropdown-container">
             <div className="dropdown-header" onClick={() => setShowDropdown(!showDropdown)}>
                 {displayTerm || placeholder}
+                <Arrow className={`${showDropdown ? "" : "arrow-down"}`} />
             </div>
             {showDropdown && (
                 <div className="dropdown-list">
@@ -68,6 +74,7 @@ const SearchDropdown: React.FC<SearchDropdownProps> = ({
                         }}
                         placeholder="Search"
                     />
+
                     {filteredData.map((item, index) => (
                         <div key={index} className="dropdown-item" onClick={() => handleSelectItem(item)}>
                             {item[displayKey]}

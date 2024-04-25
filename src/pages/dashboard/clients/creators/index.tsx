@@ -12,6 +12,7 @@ import { getCreators, getCreatorsDetail } from "@/utils/httpCalls";
 import CreatorTable from "@/components/dashboard/table/CreatorTable";
 import CreatorSidepanel from "@/components/dashboard/profile/CreatorSidepanel";
 import Searchbox from "@/components/dashboard/table/Search";
+import CreatorForm from "@/components/dashboard/form/CreatorForm";
 
 // import BrandForm from "@/components/dashboard/form/BrandForm";
 
@@ -36,8 +37,9 @@ const CreatorsPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
   const [openSidepanel, setOpenSidepanel] = useState(false);
-  const [, setOpenFormSidepanel] = useState(false);
+  const [openFormSidepanel, setOpenFormSidepanel] = useState(false);
   const [selectedCreator, setSelectedCreator] = useState({} as any);
+  const [updateCreator, setUpdateCreator] = useState(false);
 
   const [originalData, setOriginalData] = useState<any[]>([]);
   const [filteredData, setFilteredData] = useState<any[]>([]);
@@ -50,7 +52,22 @@ const CreatorsPage = () => {
     { label: "Creators", link: "/dashboard/clients/creators", current: true },
   ];
 
-  /* BRANDS API CALL  */
+  useEffect(() => {
+    const originalDataCopy = [...originalData];
+    setFilteredData(originalDataCopy);
+    setDataToDisplay(
+      originalDataCopy.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+      )
+    );
+  }, [updateCreator]);
+
+  const updateCreatorData = () => {
+    setUpdateCreator((prevState) => !prevState);
+  };
+
+  /* CREATORS API CALL  */
 
   useEffect(() => {
     let provisionalCreatorsData: any[] = [];
@@ -211,13 +228,18 @@ const CreatorsPage = () => {
                 setOpenSidepanel={setOpenSidepanel}
                 creatorsData={selectedCreator}
                 setSelectedCreator={setSelectedCreator}
+                updateCreatorData={updateCreatorData}
               />
             )}
-            {/* {openFormSidepanel && (
-              <CreatorForm 
-                handleCloseFormSidepanel={handleCloseFormSidepanel} 
-              />
-            )} */}
+            {openFormSidepanel && (
+              <CreatorForm
+              creatorsData={selectedCreator}
+              isEditing={false}
+              closeEdit={handleCloseFormSidepanel}
+              handleCloseFormSidepanel={handleCloseFormSidepanel}
+              updateCreatorData={updateCreatorData}
+            />
+            )}
             <div className="filtersSearchContainer">
               <div>
                 {/* <Dropdown /> */}

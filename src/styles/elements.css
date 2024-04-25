@@ -57,6 +57,7 @@ button[disabled] {
   font-size: 14px;
   color: var(--white);
   cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 .app-button:hover {
@@ -86,12 +87,13 @@ button[disabled] {
   justify-content: center;
   align-items: center;
   width: 100%;
-  border-radius: var(--r4);
+  border-radius: var(--r3);
   color: black;
-  min-height: var(--btn-h);
+  height: 42px;
   font-family: "DMSansMedium";
   font-size: 15px;
   gap: var(--m2);
+  transition: all 0.3s ease;
 }
 
 .sec-tag {
@@ -110,6 +112,21 @@ button[disabled] {
 .sec-button:active img,
 .active-button img {
   filter: invert();
+}
+
+.sec-button.orange {
+  background-color: var(--light-orange);
+}
+.sec-button.orange:hover {
+  background-color: var(--orange);
+}
+
+.sec-button.red {
+  background-color: var(--red);
+  color: white;
+}
+.sec-button.red:hover {
+  background-color: var(--salmon);
 }
 
 .sec-button.linen:hover {
@@ -169,7 +186,6 @@ button[disabled] {
   filter: hue-rotate(-8deg);
 } */
 
-
 /* Tags */
 
 .square-tag {
@@ -218,7 +234,7 @@ green, blue, light-blue, ivory, pink */
 /* Color extensions */
 .status-tag.green {
   background-color: var(--green);
-  color: var(--darkgreen)
+  color: var(--darkgreen);
 }
 
 .status-tag.pink {
@@ -255,7 +271,7 @@ input:focus {
   padding: 0 38px;
   background-color: var(--gray);
   border-radius: 10px;
-  border: 1px solid var(--gray1);
+  border: 1px solid var(--gray2);
 }
 
 .search-icon {

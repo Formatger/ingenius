@@ -8,12 +8,7 @@ import SearchDropdown from "./SearchDropdown";
 import { profile } from "console";
 import { v4 as uuidv4 } from "uuid";
 import { useForm } from "react-hook-form";
-import FormSidepanel from "@/components/common/ProfileSidepanel";
-import {
-  CampaignInterface,
-  BrandInterface,
-  DealInterface,
-} from "@/interfaces/interfaces";
+import FormSidepanel from "@/components/common/FormSidepanel";
 import {
   getBrands,
   putCampaign,
@@ -22,6 +17,11 @@ import {
   lockCampaign,
   unlockCampaign,
 } from "@/utils/httpCalls";
+import {
+  CampaignInterface,
+  BrandInterface,
+  DealInterface,
+} from "@/interfaces/interfaces";
 import DateInput from "@/components/common/DateInput";
 import axios from "axios";
 import { useRouter } from "next/router";
@@ -101,6 +101,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({
     const selectedId = event.target.value;
     setSelectedStage(selectedId);
     setValue("campaign_stage", selectedId);
+    // trigger("campaign_stage");
   };
 
   const handleInvoiceChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -146,13 +147,11 @@ const CampaignForm: React.FC<CampaignFormProps> = ({
       if (isEditing) {
         const campaignId = campaignsData.id;
 
-        // Fusionamos los datos del formulario con los datos originales del proyecto
         const updatedData: FormData = {
-          ...campaignsData, // Datos originales del proyecto
-          ...data, // Datos del formulario
+          ...campaignsData,
+          ...data,
         };
 
-        // Realizamos una solicitud PUT con los datos fusionados
         await putCampaign(
           campaignId,
           updatedData,
@@ -166,7 +165,6 @@ const CampaignForm: React.FC<CampaignFormProps> = ({
           }
         );
       } else {
-        // Si no se está editando, realizamos una solicitud POST
         await postCampaigns(
           data,
           (response) => {
@@ -185,7 +183,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({
   };
 
   return (
-    <FormSidepanel handleClose={handleClose}>
+    <FormSidepanel handleCloseForm={handleClose}>
       <div className="sidepanel-header">
         <p
           className="row-wrap-2 text-brown"
@@ -238,7 +236,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({
               />
             </div>
             <div className="form-box">
-              <span className="smallcaps">CONTRACT VALUE</span>
+              <span className="smallcaps">CONTRACT VALUE*</span>
               <input
                 {...register("contract_value", { required: false })}
                 className="form-input"
@@ -260,7 +258,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({
               </div>
             </div>
             <div className="form-box">
-              <span className="smallcaps">START DATE</span>
+              <span className="smallcaps">START DATE*</span>
               <input
                 {...register("start_date", { required: true })}
                 className="form-input"
@@ -269,7 +267,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({
               />
             </div>
             <div className="form-box">
-              <span className="smallcaps">END DATE</span>
+              <span className="smallcaps">END DATE*</span>
               <input
                 {...register("deadline", { required: true })}
                 className="form-input"
@@ -339,7 +337,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({
                   {...register("invoice_paid", { required: true })}
                   onChange={handleInvoiceChange}
                   value={invoicePaid.toString()}
-                  className="form-input"
+                  className="select-input"
                 >
                   <option value="false">Unpaid</option>
                   <option value="true">Paid</option>

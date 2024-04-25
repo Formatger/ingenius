@@ -70,7 +70,7 @@ const CampaignDetails = ({ campaignsData }: CampaignDetailsProps) => {
         </div>
         <div>
           <p className="smallcaps">DESCRIPTION</p>
-          <span className="sec-button gray1" onClick={undefined}>
+          <span className="sec-tag gray1" onClick={undefined}>
             <p className="description">{campaignsData?.description}</p>
           </span>
         </div>
@@ -210,7 +210,7 @@ const CampaignInvoice = ({ campaignsData }: CampaignInvoiceProps) => {
               className="sec-button w-50 img-btn linen"
               onClick={undefined}
             >
-              <Image src={Download} alt="Icon" width={20} height={20} />
+              <Image src={Download} alt="Icon" width={18} height={18} />
               <p>Download as PDF</p>
             </button>
           </div>
@@ -240,7 +240,7 @@ const CampaignInvoice = ({ campaignsData }: CampaignInvoiceProps) => {
               className="sec-button w-50 img-btn linen"
               onClick={undefined}
             >
-              <Image src={Download} alt="Icon" width={20} height={20} />
+              <Image src={Download} alt="Icon" width={18} height={18} />
               <p>Download as PDF</p>
             </button>
           </div>

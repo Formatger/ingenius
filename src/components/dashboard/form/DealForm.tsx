@@ -4,7 +4,7 @@ import Link from "next/link";
 import HelpIcon from "@/components/assets/svg/Help";
 import SearchDropdown from "./SearchDropdown";
 import { useForm } from "react-hook-form";
-import FormSidepanel from "@/components/common/ProfileSidepanel";
+import FormSidepanel from "@/components/common/Sidepanel";
 import {
   CampaignInterface,
   BrandInterface,
@@ -20,12 +20,12 @@ import {
 import DateInput from "@/components/common/DateInput";
 import { useRouter } from "next/router";
 
-interface Stages {
-  id: number;
-  name: string;
-  order: number;
-  user: string;
-}
+// interface Stages {
+//   id: number;
+//   name: string;
+//   order: number;
+//   user: string;
+// }
 
 interface FormData {
   id?: number;
@@ -55,7 +55,7 @@ interface FormData {
 
 interface DealFormProps {
   dealsData: any;
-  dealStage: Stages[];
+  dealStage: any;
   handleCloseFormSidepanel: () => void;
   updateDealData: () => void;
   isEditing: boolean;
@@ -129,13 +129,11 @@ const DealForm: React.FC<DealFormProps> = ({
       if (isEditing) {
         const dealId = dealsData.id;
 
-        // Fusionamos los datos del formulario con los datos originales del proyecto
         const updatedData: FormData = {
-          ...dealsData, // Datos originales del proyecto
-          ...data, // Datos del formulario
+          ...dealsData,
+          ...data,
         };
 
-        // Realizamos una solicitud PUT con los datos fusionados
         await putDeal(
           dealId,
           updatedData,
@@ -175,7 +173,7 @@ const DealForm: React.FC<DealFormProps> = ({
           // href={{ pathname: "dashboard/partnerships/projects" }}
         >
           {/* <Arrow className="arrow-left orange-fill" /> */}
-          {`Add Deal`}
+          {isEditing ? "Edit Deal" : "Add Deal"}
         </p>
         <div className="sidepanel-button">
           <Link href="/dashboard/support" passHref>
@@ -218,7 +216,7 @@ const DealForm: React.FC<DealFormProps> = ({
             />
           </div>
           <div className="form-box">
-            <span className="smallcaps">CONTRACT VALUE</span>
+            <span className="smallcaps">CONTRACT VALUE*</span>
             <input
               {...register("contract_value", { required: true })}
               className="form-input"
@@ -226,22 +224,21 @@ const DealForm: React.FC<DealFormProps> = ({
               placeholder="Add contract Value"
             />
           </div>
-          <div className="form-box">
-            <span className="smallcaps">INVOICE STATUS*</span>
-            <div className="select-wrap">
-              <select
-                {...register("invoice_paid", { required: true })}
-                onChange={handleInvoiceChange}
-                value={invoicePaid.toString()}
-                className="form-input"
-              >
-                <option value="false">Unpaid</option>
-                <option value="true">Paid</option>
-              </select>
-            </div>
+          <div className="form-box" />
+          <span className="smallcaps">INVOICE STATUS*</span>
+          <div className="select-wrap">
+            <select
+              {...register("invoice_paid", { required: false })}
+              onChange={handleInvoiceChange}
+              value={invoicePaid.toString()}
+              className="form-input"
+            >
+              <option value="false">Unpaid</option>
+              <option value="true">Paid</option>
+            </select>
           </div>
           <div className="form-box">
-            <span className="smallcaps">START DATE</span>
+            <span className="smallcaps">START DATE*</span>
             <input
               {...register("start_date", { required: true })}
               className="form-input"
@@ -250,7 +247,7 @@ const DealForm: React.FC<DealFormProps> = ({
             />
           </div>
           <div className="form-box">
-            <span className="smallcaps">END DATE</span>
+            <span className="smallcaps">END DATE*</span>
             <input
               {...register("deadline", { required: true })}
               className="form-input"
@@ -271,7 +268,7 @@ const DealForm: React.FC<DealFormProps> = ({
                 {Array.isArray(dealStage) &&
                   dealStage.map((stage) => (
                     <option key={stage.id} value={stage.id}>
-                      {stage.name}
+                      {stage.stageName}
                     </option>
                   ))}
               </select>
@@ -283,6 +280,47 @@ const DealForm: React.FC<DealFormProps> = ({
           </button>
         </form>
       </div>
+      <div className="form-box">
+        <span className="smallcaps">START DATE</span>
+        <input
+          {...register("start_date", { required: true })}
+          className="form-input"
+          type="date"
+          placeholder="YYYY-MM-DD"
+        />
+      </div>
+      <div className="form-box">
+        <span className="smallcaps">END DATE</span>
+        <input
+          {...register("deadline", { required: true })}
+          className="form-input"
+          type="date"
+          placeholder="YYYY-MM-DD"
+        />
+      </div>
+      <div className="form-box">
+        <span className="smallcaps">SELECT STAGE*</span>
+        <div className="select-wrap">
+          <select
+            {...register("deal_stage")}
+            onChange={handleSelectStage}
+            value={selectedStage}
+            className="select-input"
+          >
+            <option value="">Select Stage</option>
+            {Array.isArray(dealStage) &&
+              dealStage.map((stage) => (
+                <option key={stage.id} value={stage.id}>
+                  {stage.name}
+                </option>
+              ))}
+          </select>
+        </div>
+      </div>
+
+      <button className="sec-button linen" type="submit">
+        <p>SAVE</p>
+      </button>
     </FormSidepanel>
   );
 };

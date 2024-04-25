@@ -225,7 +225,7 @@ export const putDeal = async (
 
 export const putBrand = async (
   brandId: string,
-  updatedData: any,
+  updatedData: FormData,
   callback: (data: any) => void,
   errorCallback?: (error: any) => void
 ) => {
@@ -235,10 +235,9 @@ export const putBrand = async (
     const response = await fetch(url, {
       method: "PUT",
       headers: {
-        "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.access_token}`,
       },
-      body: JSON.stringify(updatedData),
+      body: updatedData,
     });
 
     if (!response.ok) {
@@ -256,7 +255,7 @@ export const putBrand = async (
 
 export const putCreator = async (
   creatorId: string,
-  updatedData: any,
+  updatedData: FormData,
   callback: (data: any) => void,
   errorCallback?: (error: any) => void
 ) => {
@@ -266,10 +265,9 @@ export const putCreator = async (
     const response = await fetch(url, {
       method: "PUT",
       headers: {
-        "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.access_token}`,
       },
-      body: JSON.stringify(updatedData),
+      body: updatedData,
     });
 
     if (!response.ok) {
@@ -552,8 +550,38 @@ export const deleteBrand = async (
 
 /* POST TICKET*/
 
+// export const postTicket = async (
+//   requestData: any,
+//   callback: (data: any) => void,
+//   errorCallback?: (error: any) => void
+// ) => {
+//   const url = DEPLOYED_API_BASE_URL + 'tickets/';
+
+//   try {
+//     const response = await fetch(url, {
+//       method: 'POST',
+//       headers: {
+//         // 'Content-Type': 'application/json',
+//         'Authorization': `Bearer ${localStorage.access_token}`,
+//       },
+//       body: JSON.stringify(requestData),
+//     });
+
+//     if (!response.ok) {
+//       throw new Error('Network response was not ok');
+//     }
+
+//     const data = await response.json();
+//     callback(data);
+//   } catch (error) {
+//     errorCallback && errorCallback(error);
+//   }
+// };
+
+/* POST TICKET */
+
 export const postTicket = async (
-  requestData: any,
+  requestData: FormData, // Assuming requestData is a FormData object for file handling
   callback: (data: any) => void,
   errorCallback?: (error: any) => void
 ) => {
@@ -563,10 +591,10 @@ export const postTicket = async (
     const response = await fetch(url, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        // 'Content-Type': 'multipart/form-data' is not set because browsers will automatically set it correctly along with the boundary when using FormData
         Authorization: `Bearer ${localStorage.access_token}`,
       },
-      body: JSON.stringify(requestData),
+      body: requestData, // Directly using FormData here
     });
 
     if (!response.ok) {
@@ -763,7 +791,7 @@ export const postDeals = async (
 /* POST BRAND */
 
 export const postBrands = async (
-  requestData: any,
+  requestData: FormData,
   callback: (data: any) => void,
   errorCallback?: (error: any) => void
 ) => {
@@ -773,10 +801,9 @@ export const postBrands = async (
     const response = await fetch(url, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.access_token}`,
       },
-      body: JSON.stringify(requestData),
+      body: requestData,
     });
 
     if (!response.ok) {
@@ -793,7 +820,7 @@ export const postBrands = async (
 /* POST CREATOR */
 
 export const postCreators = async (
-  requestData: any,
+  requestData: FormData,
   callback: (data: any) => void,
   errorCallback?: (error: any) => void
 ) => {
@@ -803,10 +830,9 @@ export const postCreators = async (
     const response = await fetch(url, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.access_token}`,
       },
-      body: JSON.stringify(requestData),
+      body: requestData,
     });
 
     if (!response.ok) {

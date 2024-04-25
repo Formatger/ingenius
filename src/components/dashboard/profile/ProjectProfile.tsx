@@ -6,7 +6,7 @@ import Tiktok from "@/components/assets/images/tiktok.png";
 import Folder from "@/components/assets/icons/folder.svg";
 import Download from "@/components/assets/icons/download.svg";
 import Plus from "@/components/assets/icons/plus.svg";
-import Upload from "@/components/assets/icons/upload.svg";
+import Link from "@/components/assets/icons/link.svg";
 import Message from "@/components/assets/icons/message.svg";
 import Send from "@/components/assets/icons/send.svg";
 import { deleteProject } from "@/utils/httpCalls";
@@ -22,9 +22,9 @@ interface ProjectInvoiceProps {
   projectsData: any;
 }
 
-interface ProjectContractProps {
-  projectsData: any;
-}
+// interface ProjectContractProps {
+//   projectsData: any;
+// }
 
 const ProjectDetails = ({ projectsData }: ProjectDetailsProps) => {
   return (
@@ -84,7 +84,7 @@ const ProjectDetails = ({ projectsData }: ProjectDetailsProps) => {
 
         <div>
           <p className="smallcaps">description</p>
-          <span className="sec-button gray1">
+          <span className="sec-tag gray1">
             <p className="description">{projectsData?.description}</p>
           </span>
         </div>
@@ -227,10 +227,10 @@ const ProjectInvoice = ({ projectsData }: ProjectInvoiceProps) => {
           />
 
           <div className="button-group">
-            {/* <button className="sec-button linen" onClick={() => fileInputRef.current.click()}>
-              <Image src={Upload} alt="Icon" width={18} height={18} />
+            <button className="sec-button linen" onClick={undefined}>
+              <Image src={Link} alt="Icon" width={14} height={14} />
               <p>Upload Contract</p>
-            </button> */}
+            </button>
             <button
               className="sec-button w-50 img-btn linen"
               onClick={handleViewContract}
@@ -259,7 +259,7 @@ const ProjectInvoice = ({ projectsData }: ProjectInvoiceProps) => {
           <p className="smallcaps mt-5">MANAGE INVOICE</p>
           <div className="button-group">
             <button className="sec-button linen" onClick={undefined}>
-              <Image src={Upload} alt="Icon" width={18} height={18} />
+              <Image src={Link} alt="Icon" width={14} height={14} />
               <p>Upload Invoice</p>
             </button>
             <button

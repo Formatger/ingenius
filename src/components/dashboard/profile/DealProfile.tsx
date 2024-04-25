@@ -60,7 +60,7 @@ const DealDetails = ({ dealsData }: DealDetailsProps) => {
         </div>
         <div>
           <p className="smallcaps">DESCRIPTION</p>
-          <span className="sec-button gray1" onClick={undefined}>
+          <span className="sec-tag gray1" onClick={undefined}>
             <p className="description">{dealsData?.description}</p>
           </span>
         </div>
@@ -162,7 +162,7 @@ const DealInvoice = ({ dealsData }: DealInvoiceProps) => {
               <p>Send Contract</p>
             </button>
             <button className="sec-button w-50 img-btn linen" onClick={undefined}>
-              <Image src={Download} alt="Icon" width={20} height={20} />
+            <Image src={Download} alt="Icon" width={18} height={18} />
               <p>Download as PDF</p>
             </button>
           </div>

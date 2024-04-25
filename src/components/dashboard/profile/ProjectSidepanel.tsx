@@ -5,7 +5,7 @@ import { ProjectDetails } from "@/components/dashboard/profile/ProjectProfile";
 import HelpIcon from "@/components/assets/svg/Help";
 import Edit from "@/components/assets/icons/edit.svg";
 import { Arrow } from "@/components/assets/svg/Arrow";
-import ProfileSidepanel from "../../common/ProfileSidepanel";
+import ProfileSidepanel from "../../common/Sidepanel";
 import ProjectForm from "@/components/dashboard/form/ProjectForm";
 import ConfirmModal from "./ConfirmModal";
 import { deleteProject } from "@/utils/httpCalls";

@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { postTicket } from "@/utils/httpCalls";
 import { useForm } from "react-hook-form";
+import Image from "next/image";
+import Link from "@/components/assets/icons/link.svg";
 
 interface SupportFormProps {
-  // isOpen: boolean;
-  // onClose: () => void;
   title?: string;
-  //   updateProjectData: () => void;
 }
 
 interface FormData {
@@ -17,16 +16,31 @@ interface FormData {
 }
 
 const SupportForm: React.FC<SupportFormProps> = ({ title }) => {
-  const { register, handleSubmit, reset, setValue } = useForm<FormData>();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setValue,
+    formState: { errors },
+  } = useForm<FormData>();
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 
   const addTicket = async (data: FormData) => {
+    const formData = new FormData();
+    formData.append("subject", data.subject);
+    formData.append("message", data.message);
+    formData.append("email", data.email);
+    // Append each file to the 'screenshots' field
+    for (const file of selectedFiles) {
+      formData.append("screenshots", file);
+    }
+
     try {
       await postTicket(
-        data,
+        formData,
         (response) => {
-          console.log("Ticket ADD successfully:", response);
-          //   updateProjectData();
+          reset();
+          setSelectedFiles([]);
         },
         (error) => {
           console.error("Error creating ticket:", error);
@@ -54,14 +68,11 @@ const SupportForm: React.FC<SupportFormProps> = ({ title }) => {
   };
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-container" onClick={(e) => e.stopPropagation()}>
+    <div className="settings-page">
+      <div className="form-container" onClick={(e) => e.stopPropagation()}>
         {title && (
           <div className="modal-header">
             <h5 className="subtitle">{title}</h5>
-            <button type="button" className="close-button">
-              ×
-            </button>
           </div>
         )}
         <div className="modal-content">
@@ -69,30 +80,73 @@ const SupportForm: React.FC<SupportFormProps> = ({ title }) => {
             <div className="form-box">
               <p className="smallcaps">Subject</p>
               <input
-                {...register("subject", { required: true })}
+                {...register("subject", { required: "Subject is required" })}
                 type="text"
-                placeholder="Label (eg. Prospective)"
-                className="app-input"
+                placeholder="Enter subject"
+                className="form-input"
               />
+              {errors.subject && (
+                <p className="error-message">{errors.subject.message}</p>
+              )}
             </div>
             <div className="form-box">
               <p className="smallcaps">Email</p>
               <input
-                {...register("email", { required: true })}
+                {...register("email", { required: "Email is required" })}
                 type="text"
-                placeholder="Label (eg. Prospective)"
-                className="app-input"
+                placeholder="Enter email"
+                className="form-input"
               />
+              {errors.email && (
+                <p className="error-message">{errors.email.message}</p>
+              )}
             </div>
             <div className="form-box">
               <p className="smallcaps">Message</p>
               <textarea
-                {...register("message", { required: true })}
-                placeholder="Label (eg. Prospective)"
+                {...register("message", { required: "Message is required" })}
+                placeholder="Enter message"
                 className="form-textarea"
               />
+              {errors.message && (
+                <p className="error-message">{errors.message.message}</p>
+              )}
             </div>
             <div className="form-box">
+              <span className="smallcaps">FILES</span>
+              <input
+                id="fileInput"
+                style={{ display: "none" }}
+                type="file"
+                accept="image/jpeg, image/png, image/gif, image/jpg"
+                onChange={handleFiles}
+                multiple
+              />
+              <div className="upload-files-box">
+                <label htmlFor="fileInput" className="custom-file-upload">
+                  Select Files
+                </label>
+                {selectedFiles.length > 0 && (
+                  <ul>
+                    <li className="ticket-files">
+                      <Image src={Link} alt="Icon" width={15} height={15} />
+                      {selectedFiles[selectedFiles.length - 1].name}
+                    </li>
+                  </ul>
+                )}
+              </div>
+              {selectedFiles.length > 0 && (
+                <ul>
+                  {selectedFiles.map((file, index) => (
+                    <li className="ticket-files" key={index}>
+                      <Image src={Link} alt="Icon" width={15} height={15} />
+                      {file.name}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+            {/* <div className="form-box">
               <span className="smallcaps">FILES*</span>
               <input
                 className="form-input"
@@ -101,16 +155,10 @@ const SupportForm: React.FC<SupportFormProps> = ({ title }) => {
                 onChange={handleFiles}
                 multiple
               />
-              {selectedFiles.length > 0 && (
-                <ul>
-                  {selectedFiles.map((file, index) => (
-                    <li key={index}>{file.name}</li>
-                  ))}
-                </ul>
-              )}
-            </div>
+
+            </div> */}
             <div className="column-center">
-              <button className="app-button mt-4" type="submit">
+              <button className="sec-button red" type="submit">
                 Submit
               </button>
             </div>

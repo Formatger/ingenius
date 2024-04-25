@@ -521,7 +521,7 @@ function Dropdown({
                 <input
                   type="text"
                   placeholder="Search..."
-                  className="searchInput"
+                  className="dropdown-search"
                   value={searchValue.current}
                   onChange={(e) => {
                     searchValue.current = e.target.value;
@@ -611,7 +611,7 @@ function Dropdown({
                 <input
                   type="text"
                   placeholder="Search..."
-                  className="searchInput"
+                  className="dropdown-search"
                   value={searchNicheValue.current}
                   onChange={(e) => {
                     searchNicheValue.current = e.target.value;

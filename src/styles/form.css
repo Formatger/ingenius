@@ -70,6 +70,122 @@
   color: var(--red);
 }
 
+.upload-image-box {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--m3);
+  gap: var(--m4);
+  border: 1px dashed var(--gray3);
+  border-radius: var(--r2);
+}
+
+.upload-image {
+  width: 120px;
+  height: 120px;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+}
+
+.upload-image img {
+  min-width: 100%; 
+  min-height: 100%; 
+  object-fit: cover; 
+}
+
+.custom-image-upload {
+  display: flex;
+  width: 40%;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 30px;
+  cursor: pointer;
+  background-color: var(--linen);
+  border: none;
+  border-radius: var(--r3);
+  text-align: center;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  height: 42px;
+  font-family: "InterRegular";
+  margin-right: 10%;
+}
+
+.custom-image-upload:hover {
+  background-color: var(--light-orange);
+}
+
+.upload-files-box {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: var(--m3);
+  gap: var(--m4);
+  border: 1px dashed var(--gray3);
+  border-radius: var(--r2);
+  margin-bottom: 10px;
+}
+
+.custom-file-upload {
+  display: flex;
+  align-items: center;
+  padding: 10px 30px;
+  cursor: pointer;
+  background-color: var(--linen);
+  border: none;
+  border-radius: var(--r3);
+  text-align: center;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  height: 42px;
+  font-family: "InterRegular";
+}
+
+.settings-page {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10%;
+}
+
+.settings-page .sidepanel-form {
+  padding-top: 0;
+}
+
+.settings-page ul {
+  padding-left: 10px;
+  margin: 0;
+}
+
+.ticket-files {
+  font-family: "InterRegular";
+  font-size: 14px;
+  list-style-type: none;
+  display: flex;
+  gap: var(--m2);
+  align-items: center;
+  padding: 4px;
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--m2);
+  width: 100%;
+  max-width: 600px;
+  padding: var(--m5);
+  background-color: white;
+  border-radius: var(--r5);
+  padding: var(--m7);
+  border: 0.5px solid var(--gray3);
+  box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.05);
+}
+
 /* React Calendar */
 
 .react-calendar {
@@ -167,103 +283,3 @@ abbr:where([title]) {
   padding: 9px !important;
   font-weight: 600 !important;
 }
-
-
-
-
-
-/* 
-.description-text {
-  width: 100%;
-  height: 100%;
-  font-family: "DMSansRegular";
-  font-size: 12px;
-  color: var(--gray4);
-  display: flex;
-  justify-content: center;
-  overflow-y: scroll;
-  resize: none;
-  border: none;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  padding: var(--m2);
-} */
-
-
-/* .sidepanel-button-group {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.sidepanel-button {
-  display: flex;
-  flex-direction: row;
-}
-
-.sidepanel-button-style {
-  font-family: "InterRegular", sans-serif;
-  font-weight: 500;
-  font-size: 14px;
-  color: var(--gray6);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--m2);
-}
-
-.sidepanel-title {
-  font-family: "InterRegular";
-  font-size: 10px;
-  color: var(--gray4);
-}
-
-.description-box {
-  height: 120px;
-  display: flex;
-  flex-direction: column;
-}
-
-.title-text {
-  width: 100%;
-  height: 100%;
-  font-family: "DMSansBold";
-  font-size: 16px;
-  color: black;
-  display: flex;
-  justify-content: center;
-  text-align: center;
-  overflow-y: scroll;
-  resize: none;
-  border: none;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
-}
-
-*/
-
-/* .campaign-box {
-  height: auto;
-}
- */
-
-/* .sidepanel-projects-container {
-  width: 500px;
-  height: 100vh;
-  background-color: white;
-  border-radius: 30px 0 0 30px;
-  position: fixed;
-  right: 0;
-  top: 0;
-  padding: 40px;
-  z-index: 999;
-  border-top-left-radius: var(--r7);
-  border-bottom-left-radius: var(--r7);
-  box-shadow: var(--sh-xl);
-  transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
-  animation-name: showSidepanel;
-  animation-duration: .5s;
-  overflow-x: hidden;
-  display: flex;
-  flex-direction: column;
-  gap: 80px;
-} */

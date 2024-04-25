@@ -1,19 +1,12 @@
-import React, { useEffect, useState } from "react";
-import Image from "next/image";
+import React, { useState } from "react";
 import Link from "next/link";
 import { CampaignDetails } from "@/components/dashboard/profile/CampaignProfile";
 import HelpIcon from "@/components/assets/svg/Help";
-import Edit from "@/components/assets/icons/edit.svg";
 import { Arrow } from "@/components/assets/svg/Arrow";
-import ProfileSidepanel from "../../common/ProfileSidepanel";
 import CampaignForm from "../form/CampaignForm";
-import {
-  deleteCampaign,
-  lockCampaign,
-  unlockCampaign,
-} from "@/utils/httpCalls";
+import { deleteCampaign } from "@/utils/httpCalls";
+import ProfileSidepanel from "../../common/Sidepanel";
 import ConfirmModal from "./ConfirmModal";
-import { set } from "react-hook-form";
 import ErrorModal from "@/components/common/ErrorModal";
 
 type ProfileSidepanelProps = {
