@@ -7,10 +7,12 @@ import FormSidepanel from "@/components/common/Sidepanel";
 import { CampaignInterface, ProjectInterface } from "@/interfaces/interfaces";
 import {
   getBrands,
+  lockCreator,
   postBrands,
   postCreators,
   putBrand,
   putCreator,
+  unlockCreator,
 } from "@/utils/httpCalls";
 import { useRouter } from "next/router";
 import ProfilePic from "@/components/assets/images/creator.png";
@@ -56,6 +58,14 @@ const CreatorForm: React.FC<CreatorFormProps> = ({
   const [imageURL, setImageURL] = useState<string | null>(
     creatorsData.profile_picture_url || null
   );
+
+  useEffect(() => {
+    lockCreator(creatorsData.id);
+
+    return () => {
+      unlockCreator(creatorsData.id);
+    };
+  }, []);
 
   /* SIDEPANEL STATE */
   const handleClose = () => {

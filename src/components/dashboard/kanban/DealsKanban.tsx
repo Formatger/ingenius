@@ -6,6 +6,7 @@ import AddFieldModalDeal from "@/components/dashboard/kanban/AddFieldModalDeal";
 import { deleteDealStage, putDeal, putNewOrderDeal } from "@/utils/httpCalls";
 import ConfirmModal from "../profile/ConfirmModal";
 import ChangeDealColumn from "@/components/dashboard/kanban/ChangeDealColumn";
+import ErrorModal from "@/components/common/ErrorModal";
 
 // interface Stages2 {
 //   id: number;
@@ -45,6 +46,8 @@ const DealsKanban = ({
   const [deleteStageId, setDeleteStageId] = useState<string | null>(null);
   const colors = ["pink", "linen", "green", "blue", "yellow", "orange", "red"];
   const [changeStage, setChangeStage] = useState<string | null>(null);
+  const [lockedDeals, setLockedDeals] = useState<any>(false);
+  const [showLockModal, setShowLockModal] = useState<any>(false);
 
   /* ASSIGN COLOR TO STAGES */
 
@@ -64,6 +67,12 @@ const DealsKanban = ({
     localStorage.setItem("stageColors", JSON.stringify(colorsMap));
     return coloredStages;
   };
+
+  useEffect(() => {
+    const lockedDeals = DealData?.find((deal: any) => deal.is_locked);
+
+    setLockedDeals(lockedDeals ? true : false);
+  }, []);
 
   /* FETCH STAGE COLUMNS */
 
@@ -273,6 +282,14 @@ const DealsKanban = ({
       className="kanban-container"
       style={{ gridTemplateColumns: `repeat(${stages.length}, 1fr)` }}
     >
+      {showLockModal && (
+        <ErrorModal
+          isOpen={showLockModal}
+          onClose={() => setShowLockModal(false)}
+          title="Stages are locked"
+          message="A deal is currently being edited by another user. Please try again later."
+        />
+      )}
       {stages
         .sort((a, b) => a.stageIndex - b.stageIndex)
         .map((dealCol) => {
@@ -306,10 +323,26 @@ const DealsKanban = ({
 
                 <div className="addtags-wrap">
                   <div className="row-wrap-2">
-                    <button onClick={() => openChangeModal(dealCol)}>
+                    <button
+                      onClick={() => {
+                        if (lockedDeals) {
+                          setShowLockModal(true);
+                        } else {
+                          openChangeModal(dealCol);
+                        }
+                      }}
+                    >
                       <Image src={Edit} alt="Icon" width={12} height={12} />
                     </button>
-                    <button onClick={() => openDeleteModal(dealCol.stageID)}>
+                    <button
+                      onClick={() => {
+                        if (lockedDeals) {
+                          setShowLockModal(true);
+                        } else {
+                          openDeleteModal(dealCol.stageID);
+                        }
+                      }}
+                    >
                       <Image
                         className="exit-icon"
                         src={Plus}

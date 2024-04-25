@@ -13,6 +13,7 @@ import CreatorTable from "@/components/dashboard/table/CreatorTable";
 import CreatorSidepanel from "@/components/dashboard/profile/CreatorSidepanel";
 import Searchbox from "@/components/dashboard/table/Search";
 import CreatorForm from "@/components/dashboard/form/CreatorForm";
+import Reload from "@/components/assets/icons/reload.svg";
 
 // import BrandForm from "@/components/dashboard/form/BrandForm";
 
@@ -69,7 +70,9 @@ const CreatorsPage = () => {
 
   /* CREATORS API CALL  */
 
-  useEffect(() => {
+  useEffect(() => fetchCreators(), []);
+
+  const fetchCreators = () => {
     let provisionalCreatorsData: any[] = [];
     let provisionalCreatorsDetailData: any[] = [];
 
@@ -121,7 +124,12 @@ const CreatorsPage = () => {
 
       setLoader(false);
     });
-  }, []);
+  };
+
+  const handleReloadData = () => {
+    setLoader(true);
+    fetchCreators();
+  };
 
   useEffect(() => {
     setDataToDisplay(
@@ -233,12 +241,12 @@ const CreatorsPage = () => {
             )}
             {openFormSidepanel && (
               <CreatorForm
-              creatorsData={selectedCreator}
-              isEditing={false}
-              closeEdit={handleCloseFormSidepanel}
-              handleCloseFormSidepanel={handleCloseFormSidepanel}
-              updateCreatorData={updateCreatorData}
-            />
+                creatorsData={selectedCreator}
+                isEditing={false}
+                closeEdit={handleCloseFormSidepanel}
+                handleCloseFormSidepanel={handleCloseFormSidepanel}
+                updateCreatorData={updateCreatorData}
+              />
             )}
             <div className="filtersSearchContainer">
               <div>
@@ -258,6 +266,9 @@ const CreatorsPage = () => {
                 >
                   <Image src={PlusWhite} alt="Icon" width={14} height={14} />
                   Add Creator
+                </button>
+                <button className="reload-button" onClick={handleReloadData}>
+                  <Image src={Reload} alt="Icon" width={18} height={18} />
                 </button>
               </div>
             </div>

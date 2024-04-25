@@ -9,6 +9,7 @@ import Image from "next/image";
 import PlusWhite from "@/components/assets/icons/plus-white.svg";
 import Kanban from "@/components/assets/icons/kanban.svg";
 import Table from "@/components/assets/icons/table.svg";
+import Reload from "@/components/assets/icons/reload.svg";
 
 import Dropdown from "@/components/common/Dropdown";
 import Pagination from "@/components/dashboard/table/Pagination";
@@ -100,7 +101,9 @@ const DealsPage = () => {
 
   /* DEALS API CALL  */
 
-  useEffect(() => {
+  useEffect(() => fetchDeals(), [updateDeal, tableRows]);
+
+  const fetchDeals = () => {
     let provisionalDealsData: any[] = [];
     let provisionalDealsDetailData: any[] = [];
 
@@ -156,7 +159,12 @@ const DealsPage = () => {
 
       setLoader(false);
     });
-  }, [updateDeal, tableRows]);
+  };
+
+  const handleReloadData = () => {
+    setLoader(true);
+    fetchDeals();
+  };
 
   useEffect(() => {
     setDataToDisplay(
@@ -267,6 +275,9 @@ const DealsPage = () => {
                 >
                   <Image src={PlusWhite} alt="Icon" width={14} height={14} />
                   Add Deal
+                </button>
+                <button className="reload-button" onClick={handleReloadData}>
+                  <Image src={Reload} alt="Icon" width={18} height={18} />
                 </button>
               </div>
               <div className="row-wrap">

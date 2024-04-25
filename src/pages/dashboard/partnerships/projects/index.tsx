@@ -5,6 +5,7 @@ import Sidebar from "@/components/navigation/Sidebar";
 import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import Image from "next/image";
 import PlusWhite from "@/components/assets/icons/plus-white.svg";
+import Reload from "@/components/assets/icons/reload.svg";
 import Kanban from "@/components/assets/icons/kanban.svg";
 import Table from "@/components/assets/icons/table.svg";
 import Dropdown from "@/components/common/Dropdown";
@@ -104,7 +105,9 @@ const ProjectsPage = () => {
 
   /* PROJECTS API CALL  */
 
-  useEffect(() => {
+  useEffect(() => fetchProjects(), [updateProject, tableRows]);
+
+  const fetchProjects = () => {
     let provisionalProjectsData: any[] = [];
     let provisionalProjectsDetailData: any[] = [];
 
@@ -152,7 +155,12 @@ const ProjectsPage = () => {
 
       setLoader(false);
     });
-  }, [updateProject, tableRows]);
+  };
+
+  const handleReloadData = () => {
+    setLoader(true);
+    fetchProjects();
+  };
 
   useEffect(() => {
     setDataToDisplay(
@@ -266,6 +274,9 @@ const ProjectsPage = () => {
                 >
                   <Image src={PlusWhite} alt="Icon" width={14} height={14} />
                   Add Project
+                </button>
+                <button className="reload-button" onClick={handleReloadData}>
+                  <Image src={Reload} alt="Icon" width={18} height={18} />
                 </button>
               </div>
               <div className="row-wrap">

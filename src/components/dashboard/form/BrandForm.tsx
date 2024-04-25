@@ -1,10 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import HelpIcon from "@/components/assets/svg/Help";
 import { useForm } from "react-hook-form";
 import FormSidepanel from "@/components/common/Sidepanel";
-import { postBrands, putBrand } from "@/utils/httpCalls";
+import {
+  lockBrand,
+  postBrands,
+  putBrand,
+  unlockBrand,
+} from "@/utils/httpCalls";
 import { useRouter } from "next/router";
 import ProfilePic from "@/components/assets/images/creator.png";
 
@@ -47,6 +52,15 @@ const BrandForm: React.FC<BrandFormProps> = ({
     formState: { errors },
   } = useForm<FormData>();
   const [imageURL, setImageURL] = useState<string | null>(null);
+
+  useEffect(() => {
+    lockBrand(brandsData.id);
+
+    return () => {
+      unlockBrand(brandsData.id);
+    };
+  }, []);
+
   /* SIDEPANEL STATE */
   const handleClose = () => {
     handleCloseFormSidepanel();

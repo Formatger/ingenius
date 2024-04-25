@@ -65,8 +65,6 @@ interface CampaignFormProps {
   campaignsData: any;
   closeEdit: () => void;
   isEditing: boolean;
-  lockUpdates: boolean;
-  setLockUpdates: (isLocked: boolean) => void;
 }
 
 const CampaignForm: React.FC<CampaignFormProps> = ({
@@ -88,11 +86,9 @@ const CampaignForm: React.FC<CampaignFormProps> = ({
 
   useEffect(() => {
     lockCampaign(campaignsData.id);
-    console.log("Locking campaign", campaignsData.id);
 
     return () => {
       unlockCampaign(campaignsData.id);
-      console.log("Unlocking campaign", campaignsData.id);
     };
   }, []);
 

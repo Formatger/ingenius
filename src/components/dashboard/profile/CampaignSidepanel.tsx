@@ -26,7 +26,6 @@ const CampaignSidepanel: React.FC<ProfileSidepanelProps> = ({
 }) => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [editData, setEditData] = useState(false);
-  const [lockUpdates, setLockUpdates] = useState(false);
   const [showLockModal, setShowLockModal] = useState(false);
 
   const { is_locked } = campaignsData;
@@ -99,8 +98,6 @@ const CampaignSidepanel: React.FC<ProfileSidepanelProps> = ({
           // updateProjectData={updateProjectData}
           campaignStage={[]}
           updateCampaignData={() => {}}
-          setLockUpdates={setLockUpdates}
-          lockUpdates={lockUpdates}
         />
       ) : (
         <div className="sidepanel-wrap-space">

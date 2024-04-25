@@ -915,14 +915,14 @@ export const getStats = async (
   callback: (data: any) => void,
   errorCallback?: (error: any) => void
 ) => {
-  const url = DEPLOYED_API_BASE_URL + 'dashboard/';
+  const url = DEPLOYED_API_BASE_URL + "dashboard/";
 
   try {
     await fetch(url, {
-      method: 'GET',
+      method: "GET",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.access_token}`,
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.access_token}`,
       },
     })
       .then((response) => response.json())
@@ -933,7 +933,7 @@ export const getStats = async (
   } catch (error) {
     errorCallback && errorCallback(error);
   }
-}
+};
 
 // GET PROJECTS
 
@@ -1371,6 +1371,174 @@ export const lockCampaign = async (campaignId: any) => {
 
 export const unlockCampaign = async (campaignId: any) => {
   const url = DEPLOYED_API_BASE_URL + `campaigns/${campaignId}/unlock/`;
+
+  try {
+    await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.access_token}`,
+      },
+    })
+      .then((response) => response.json())
+      .catch((error: any) => {
+        console.error(error);
+      });
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+// LOCK / UNLOCK PROJECT
+
+export const lockProject = async (projectId: any) => {
+  const url = DEPLOYED_API_BASE_URL + `projects/${projectId}/lock/`;
+
+  try {
+    await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.access_token}`,
+      },
+    })
+      .then((response) => response.json())
+      .catch((error: any) => {
+        console.error(error);
+      });
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const unlockProject = async (projectId: any) => {
+  const url = DEPLOYED_API_BASE_URL + `projects/${projectId}/unlock/`;
+
+  try {
+    await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.access_token}`,
+      },
+    })
+      .then((response) => response.json())
+      .catch((error: any) => {
+        console.error(error);
+      });
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+// LOCK / UNLOCK DEAL
+
+export const lockDeal = async (dealId: any) => {
+  const url = DEPLOYED_API_BASE_URL + `deals/${dealId}/lock/`;
+
+  try {
+    await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.access_token}`,
+      },
+    })
+      .then((response) => response.json())
+      .catch((error: any) => {
+        console.error(error);
+      });
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const unlockDeal = async (dealId: any) => {
+  const url = DEPLOYED_API_BASE_URL + `deals/${dealId}/unlock/`;
+
+  try {
+    await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.access_token}`,
+      },
+    })
+      .then((response) => response.json())
+      .catch((error: any) => {
+        console.error(error);
+      });
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+// LOCK / UNLOCK BRAND
+
+export const lockBrand = async (brandId: any) => {
+  const url = DEPLOYED_API_BASE_URL + `brands/${brandId}/lock/`;
+
+  try {
+    await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.access_token}`,
+      },
+    })
+      .then((response) => response.json())
+      .catch((error: any) => {
+        console.error(error);
+      });
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const unlockBrand = async (brandId: any) => {
+  const url = DEPLOYED_API_BASE_URL + `brands/${brandId}/unlock/`;
+
+  try {
+    await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.access_token}`,
+      },
+    })
+      .then((response) => response.json())
+      .catch((error: any) => {
+        console.error(error);
+      });
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+// LOCK / UNLOCK CREATOR
+
+export const lockCreator = async (creatorId: any) => {
+  const url = DEPLOYED_API_BASE_URL + `creators/${creatorId}/lock/`;
+
+  try {
+    await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.access_token}`,
+      },
+    })
+      .then((response) => response.json())
+      .catch((error: any) => {
+        console.error(error);
+      });
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const unlockCreator = async (creatorId: any) => {
+  const url = DEPLOYED_API_BASE_URL + `creators/${creatorId}/unlock/`;
 
   try {
     await fetch(url, {

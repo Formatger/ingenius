@@ -11,6 +11,7 @@ import {
 } from "@/utils/httpCalls";
 import ConfirmModal from "../profile/ConfirmModal";
 import ChangeProjectColumn from "@/components/dashboard/kanban/ChangeProjectColumn";
+import ErrorModal from "@/components/common/ErrorModal";
 
 interface ProjectsKanbanProps {
   projectsData: any;
@@ -35,6 +36,16 @@ const ProjectsKanban = ({
   const [deleteStageId, setDeleteStageId] = useState<string | null>(null);
   const [changeStage, setChangeStage] = useState<string | null>(null);
   const colors = ["pink", "linen", "green", "blue", "yellow", "orange", "red"];
+  const [lockedProjects, setLockedProjects] = useState<any>(false);
+  const [showLockModal, setShowLockModal] = useState<any>(false);
+
+  useEffect(() => {
+    const lockedProjects = projectsData?.find(
+      (project: any) => project.is_locked
+    );
+
+    setLockedProjects(lockedProjects ? true : false);
+  }, []);
 
   /* ASSIGN COLOR TO STAGES */
 
@@ -284,6 +295,14 @@ const ProjectsKanban = ({
         gridTemplateColumns: `repeat(${stages.length}, 1fr)`,
       }}
     >
+      {showLockModal && (
+        <ErrorModal
+          isOpen={showLockModal}
+          onClose={() => setShowLockModal(false)}
+          title="Stages are locked"
+          message="A project is currently being edited by another user. Please try again later."
+        />
+      )}
       {stages
         .sort((a, b) => a.stageIndex - b.stageIndex)
         .map((projectCol, stagesIndex) => (
@@ -320,10 +339,26 @@ const ProjectsKanban = ({
               {/* {stagesIndex === stages.length - 1 && ( */}
               <div className="addtags-wrap">
                 <div className="row-wrap-2">
-                  <button onClick={() => openChangeModal(projectCol)}>
+                  <button
+                    onClick={() => {
+                      if (lockedProjects) {
+                        setShowLockModal(true);
+                      } else {
+                        openChangeModal(projectCol);
+                      }
+                    }}
+                  >
                     <Image src={Edit} alt="Icon" width={12} height={12} />
                   </button>
-                  <button onClick={() => openDeleteModal(projectCol.stageID)}>
+                  <button
+                    onClick={() => {
+                      if (lockedProjects) {
+                        setShowLockModal(true);
+                      } else {
+                        openDeleteModal(projectCol.stageID);
+                      }
+                    }}
+                  >
                     <Image
                       className="exit-icon"
                       src={Plus}

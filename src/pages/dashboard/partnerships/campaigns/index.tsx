@@ -17,9 +17,6 @@ import Kanban from "@/components/assets/icons/kanban.svg";
 import Table from "@/components/assets/icons/table.svg";
 import Dropdown from "@/components/common/Dropdown";
 import Pagination from "@/components/dashboard/table/Pagination";
-import { useWindowSize } from "@/utils/hooks/useWindowSize";
-import { transformDate } from "@/utils/dateManager";
-import { CampaignInterface } from "@/interfaces/interfaces";
 import CampaignTable from "@/components/dashboard/table/CampaignTable";
 import CampaignKanban from "@/components/dashboard/kanban/CampaignKanban";
 import CampaignSidepanel from "@/components/dashboard/profile/CampaignSidepanel";
@@ -124,7 +121,9 @@ const CampaignsPage = () => {
   };
 
   /* CAMPAIGNS API CALL */
-  useEffect(() => {
+  useEffect(() => fetchCampaigns(), [updateCampaign, tableRows]);
+
+  const fetchCampaigns = () => {
     let provisionalCampaignsData: any[] = [];
     let provisionalCampaignsDetailData: any[] = [];
 
@@ -180,7 +179,12 @@ const CampaignsPage = () => {
 
       setLoader(false);
     });
-  }, [updateCampaign, tableRows]);
+  };
+
+  const handleReloadData = () => {
+    setLoader(true);
+    fetchCampaigns();
+  };
 
   useEffect(() => {
     setDataToDisplay(
@@ -292,7 +296,6 @@ const CampaignsPage = () => {
                 origin="campaigns"
               />
               <div className="button-group">
-
                 <button className="app-button cream" onClick={undefined}>
                   CSV Upload
                 </button>
@@ -303,7 +306,7 @@ const CampaignsPage = () => {
                   <Image src={PlusWhite} alt="Icon" width={14} height={14} />
                   Add Campaign
                 </button>
-                <button className="reload-button" onClick={undefined}>
+                <button className="reload-button" onClick={handleReloadData}>
                   <Image src={Reload} alt="Icon" width={18} height={18} />
                 </button>
               </div>

@@ -8,6 +8,7 @@ import { deleteBrand } from "@/utils/httpCalls";
 import ConfirmModal from "./ConfirmModal";
 import { BrandDetails } from "./BrandProfile";
 import BrandForm from "@/components/dashboard/form/BrandForm";
+import ErrorModal from "@/components/common/ErrorModal";
 
 type SidepanelProps = {
   open: boolean;
@@ -25,6 +26,9 @@ const BrandSidepanel: React.FC<SidepanelProps> = ({
 }) => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [editData, setEditData] = useState(false);
+  const [showLockModal, setShowLockModal] = useState(false);
+
+  const { is_locked } = brandsData;
 
   const handleClose = () => {
     setSelectedBrand(null);
@@ -57,6 +61,14 @@ const BrandSidepanel: React.FC<SidepanelProps> = ({
 
   return (
     <ProfileSidepanel handleClose={handleClose}>
+      {showLockModal && (
+        <ErrorModal
+          isOpen={showLockModal}
+          onClose={() => setShowLockModal(false)}
+          title="Brand is locked"
+          message="This brand is currently being edited by another user. Please try again later."
+        />
+      )}
       <div className="sidepanel-header">
         <Link
           className="row-wrap-2 text-brown"
@@ -96,13 +108,25 @@ const BrandSidepanel: React.FC<SidepanelProps> = ({
             <div className="button-group">
               <button
                 className="sec-button linen"
-                onClick={() => setEditData(true)}
+                onClick={() => {
+                  if (is_locked) {
+                    setShowLockModal(true);
+                  } else {
+                    setEditData(true);
+                  }
+                }}
               >
                 <p>Edit</p>
               </button>
               <button
                 className="sec-button stone"
-                onClick={() => setModalOpen(true)}
+                onClick={() => {
+                  if (is_locked) {
+                    setShowLockModal(true);
+                  } else {
+                    setModalOpen(true);
+                  }
+                }}
               >
                 <p>Delete</p>
               </button>

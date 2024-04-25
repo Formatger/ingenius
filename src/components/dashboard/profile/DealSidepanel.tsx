@@ -9,6 +9,7 @@ import Sidepanel from "../../common/Sidepanel";
 import { deleteDeal } from "@/utils/httpCalls";
 import ConfirmModal from "./ConfirmModal";
 import DealForm from "../form/DealForm";
+import ErrorModal from "@/components/common/ErrorModal";
 
 type SidepanelProps = {
   open: boolean;
@@ -26,6 +27,9 @@ const DealSidepanel: React.FC<SidepanelProps> = ({
 }) => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [editData, setEditData] = useState(false);
+  const [showLockModal, setShowLockModal] = useState(false);
+
+  const { is_locked } = dealsData;
 
   const handleClose = () => {
     setSelectedDeal(null);
@@ -59,6 +63,14 @@ const DealSidepanel: React.FC<SidepanelProps> = ({
 
   return (
     <Sidepanel handleClose={handleClose}>
+      {showLockModal && (
+        <ErrorModal
+          isOpen={showLockModal}
+          onClose={() => setShowLockModal(false)}
+          title="Deal is locked"
+          message="This deal is currently being edited by another user. Please try again later."
+        />
+      )}
       <div className="sidepanel-header">
         <Link
           className="row-wrap-2 text-brown"
@@ -98,13 +110,25 @@ const DealSidepanel: React.FC<SidepanelProps> = ({
             <div className="button-group">
               <button
                 className="sec-button linen"
-                onClick={() => setEditData(true)}
+                onClick={() => {
+                  if (is_locked) {
+                    setShowLockModal(true);
+                  } else {
+                    setEditData(true);
+                  }
+                }}
               >
                 <p>Edit</p>
               </button>
               <button
                 className="sec-button stone"
-                onClick={() => setModalOpen(true)}
+                onClick={() => {
+                  if (is_locked) {
+                    setShowLockModal(true);
+                  } else {
+                    setModalOpen(true);
+                  }
+                }}
               >
                 <p>Delete</p>
               </button>

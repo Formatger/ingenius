@@ -9,6 +9,7 @@ import { CreatorDetails } from "./CreatorProfile";
 import CreatorForm from "@/components/dashboard/form/CreatorForm";
 import ConfirmModal from "./ConfirmModal";
 import { deleteCreator } from "@/utils/httpCalls";
+import ErrorModal from "@/components/common/ErrorModal";
 
 type SidepanelProps = {
   open: boolean;
@@ -26,6 +27,9 @@ const CreatorSidepanel: React.FC<SidepanelProps> = ({
 }) => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [editData, setEditData] = useState(false);
+  const [showLockModal, setShowLockModal] = useState(false);
+
+  const { is_locked } = creatorsData;
 
   const handleClose = () => {
     setSelectedCreator(null);
@@ -58,6 +62,14 @@ const CreatorSidepanel: React.FC<SidepanelProps> = ({
 
   return (
     <ProfileSidepanel handleClose={handleClose}>
+      {showLockModal && (
+        <ErrorModal
+          isOpen={showLockModal}
+          onClose={() => setShowLockModal(false)}
+          title="Creator is locked"
+          message="This creator is currently being edited by another user. Please try again later."
+        />
+      )}
       <div className="sidepanel-header">
         <Link
           className="row-wrap-2 text-brown"
@@ -96,14 +108,26 @@ const CreatorSidepanel: React.FC<SidepanelProps> = ({
             <div className="button-group">
               <button
                 className="sec-button linen"
-                onClick={() => setEditData(true)}
+                onClick={() => {
+                  if (is_locked) {
+                    setShowLockModal(true);
+                  } else {
+                    setEditData(true);
+                  }
+                }}
               >
                 {/* <Image src={Message} alt="Icon" width={15} height={15} /> */}
                 <p>Edit</p>
               </button>
               <button
                 className="sec-button stone"
-                onClick={() => setModalOpen(true)}
+                onClick={() => {
+                  if (is_locked) {
+                    setShowLockModal(true);
+                  } else {
+                    setModalOpen(true);
+                  }
+                }}
               >
                 <p>Delete</p>
               </button>

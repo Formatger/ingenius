@@ -9,8 +9,12 @@ import { CampaignInterface, ProjectInterface } from "@/interfaces/interfaces";
 import {
   getCampaigns,
   getCreators,
+  lockCampaign,
+  lockProject,
   postProjects,
   putProject,
+  unlockCampaign,
+  unlockProject,
 } from "@/utils/httpCalls";
 import DateInput from "@/components/common/DateInput";
 import { useRouter } from "next/router";
@@ -72,6 +76,14 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
   );
   const startDate = watch("start_date");
   const endDate = watch("deadline");
+
+  useEffect(() => {
+    lockProject(projectsData.id);
+
+    return () => {
+      unlockProject(projectsData.id);
+    };
+  }, []);
 
   /* INVOICE DROPDOWN */
 

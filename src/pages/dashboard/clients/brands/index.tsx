@@ -14,6 +14,7 @@ import BrandSidepanel from "@/components/dashboard/profile/BrandSidepanel";
 import Dropdown from "@/components/common/Dropdown";
 import BrandForm from "@/components/dashboard/form/BrandForm";
 import Searchbox from "@/components/dashboard/table/Search";
+import Reload from "@/components/assets/icons/reload.svg";
 
 const BrandsPage = () => {
   const router = useRouter();
@@ -45,7 +46,7 @@ const BrandsPage = () => {
 
   /* ACTUALIZAR EL RENDERIZADO API */
 
-   useEffect(() => {
+  useEffect(() => {
     const originalDataCopy = [...originalData];
     setFilteredData(originalDataCopy);
     setDataToDisplay(
@@ -62,7 +63,9 @@ const BrandsPage = () => {
 
   /* BRANDS API CALL  */
 
-  useEffect(() => {
+  useEffect(() => fetchBrands(), [updateBrand]);
+
+  const fetchBrands = () => {
     let provisionalBrandsData: any[] = [];
     let provisionalBrandsDetailData: any[] = [];
 
@@ -114,7 +117,12 @@ const BrandsPage = () => {
 
       setLoader(false);
     });
-  }, [updateBrand]);
+  };
+
+  const handleReloadData = () => {
+    setLoader(true);
+    fetchBrands();
+  };
 
   useEffect(() => {
     setDataToDisplay(
@@ -282,6 +290,9 @@ const BrandsPage = () => {
                 >
                   <Image src={PlusWhite} alt="Icon" width={14} height={14} />
                   Add Brand
+                </button>
+                <button className="reload-button" onClick={handleReloadData}>
+                  <Image src={Reload} alt="Icon" width={18} height={18} />
                 </button>
               </div>
             </div>
