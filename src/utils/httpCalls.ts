@@ -281,6 +281,36 @@ export const putCreator = async (
   }
 };
 
+/* PUT USER PROFILE */
+
+export const putUserProfile = async (
+  userId: string,
+  updatedData: FormData,
+  callback: (data: any) => void,
+  errorCallback?: (error: any) => void
+) => {
+  const url = `${DEPLOYED_API_BASE_URL}userprofiles/${userId}/`;
+
+  try {
+    const response = await fetch(url, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${localStorage.access_token}`,
+      },
+      body: updatedData,
+    });
+
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+
+    const data = await response.json();
+    callback(data);
+  } catch (error) {
+    errorCallback && errorCallback(error);
+  }
+};
+
 ////////////////////////////////////////////////////////////////////////
 /***************************  CHANGE CALLS  ***************************/
 ////////////////////////////////////////////////////////////////////////
@@ -846,6 +876,35 @@ export const postCreators = async (
   }
 };
 
+// POST USER PROFILE
+
+export const postUserProfile = async (
+  requestData: FormData,
+  callback: (data: any) => void,
+  errorCallback?: (error: any) => void
+) => {
+  const url = DEPLOYED_API_BASE_URL + "userprofiles/";
+
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${localStorage.access_token}`,
+      },
+      body: requestData,
+    });
+
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+
+    const data = await response.json();
+    callback(data);
+  } catch (error) {
+    errorCallback && errorCallback(error);
+  }
+};
+
 ////////////////////////////////////////////////////////////////////////
 /******************************  GET CALLS  ***************************/
 ////////////////////////////////////////////////////////////////////////
@@ -1214,6 +1273,32 @@ export const getCreatorsDetail = async (
   }
 };
 
+// GET USER PROFILE
+
+export const getUserProfile = async (
+  callback: (data: any) => void,
+  errorCallback?: (error: any) => void
+) => {
+  const url = DEPLOYED_API_BASE_URL + "userprofiles/";
+
+  try {
+    await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.access_token}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => callback(data))
+      .catch((error) => {
+        errorCallback && errorCallback(error);
+      });
+  } catch (error) {
+    errorCallback && errorCallback(error);
+  }
+};
+
 ////////////////////////////////////////////////////////////////////////
 /********************  PROFILE BUTTON CALLS  *************************/
 ////////////////////////////////////////////////////////////////////////
@@ -1257,6 +1342,12 @@ export const viewContract = (projectId: string) => {
 export const downloadContract = (projectId: string) => {
   return `${DEPLOYED_API_BASE_URL}projects/${projectId}/download-contract/`; // Assuming this endpoint sets 'Content-Disposition' to attachment in headers
 };
+
+////////////////////////////////////////////////////////////////////////
+/********************  LOCK CALLS  *************************/
+////////////////////////////////////////////////////////////////////////
+
+// LOCK / UNLOCK CAMPAIGN
 
 export const lockCampaign = async (campaignId: any) => {
   const url = DEPLOYED_API_BASE_URL + `campaigns/${campaignId}/lock/`;
