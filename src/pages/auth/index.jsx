@@ -20,11 +20,9 @@ export default function Login() {
         }
       }, (error) => {
         setLoginError(true);
-        throw error;
       });
     } catch (error) {
       setLoginError(true);
-      throw error;
     }
   };
 
@@ -51,15 +49,16 @@ export default function Login() {
           <label className="authLabel" htmlFor="username">
             Username
           </label>
-          <input className="authInput" type="text" name="username" id="username" placeholder="Username" {...register("username", {
+          <input className={errors.username ? "authInputError" : "authInput"} type="text" name="username" id="username" placeholder="Username" {...register("username", {
             required: 'Username is required',
           })} />
           <label className="authLabel" htmlFor="password">
             Password
           </label>
-          <input className="authInput" type="password" name="password" id="password" {...register("password", {
+          <input className={errors.password ? "authInputError" : "authInput"} type="password" name="password" id="password" {...register("password", {
             required: 'Password is required',
           })} />
+          {loginError && <p className="authInputErrorText">Invalid username or password</p>}
           <button className="authButton" type="submit">
             Login
           </button>

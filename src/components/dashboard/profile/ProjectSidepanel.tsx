@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import Image from 'next/image';
-import Link from 'next/link';
+import Image from "next/image";
+import Link from "next/link";
 import { ProjectDetails } from "@/components/dashboard/profile/ProjectProfile";
 import HelpIcon from "@/components/assets/svg/Help";
 import Edit from "@/components/assets/icons/edit.svg";
 import { Arrow } from "@/components/assets/svg/Arrow";
-import ProfileSidepanel from '../../common/Sidepanel';
+import ProfileSidepanel from "../../common/Sidepanel";
 import ProjectForm from "@/components/dashboard/form/ProjectForm";
 import ConfirmModal from "./ConfirmModal";
 import { deleteProject } from "@/utils/httpCalls";
@@ -16,7 +16,7 @@ type SidepanelProps = {
   setSelectedProject: (project: any | null) => void;
   setOpenSidepanel: (isOpen: boolean) => void;
   updateProjectData: () => void;
-}
+};
 
 const ProjectSidepanel: React.FC<SidepanelProps> = ({
   projectsData,
@@ -36,44 +36,46 @@ const ProjectSidepanel: React.FC<SidepanelProps> = ({
     setEditData(false);
     setOpenSidepanel(false);
     updateProjectData();
-  }
-
-  const handleDelete = () => {
-    deleteProject(projectsData.id, () => {
-      console.log("Project deleted successfully");
-      setModalOpen(false);
-      if (handleClose) {
-        handleClose();
-      }
-      if (updateProjectData) {
-        updateProjectData();
-      }
-    }, (error) => {
-      console.error("Failed to delete project:", error);
-    });
   };
 
-  console.log("PROJECTS DATA FORM", projectsData)
+  const handleDelete = () => {
+    deleteProject(
+      projectsData.id,
+      () => {
+        setModalOpen(false);
+        if (handleClose) {
+          handleClose();
+        }
+        if (updateProjectData) {
+          updateProjectData();
+        }
+      },
+      (error) => {
+        console.error("Failed to delete project:", error);
+      }
+    );
+  };
 
   return (
-    <ProfileSidepanel handleClose={handleClose} >
-      <div className='sidepanel-header'>
-        <Link className="row-wrap-2 text-brown"
+    <ProfileSidepanel handleClose={handleClose}>
+      <div className="sidepanel-header">
+        <Link
+          className="row-wrap-2 text-brown"
           href={{
-            pathname: '/dashboard/partnerships/projects/profile',
-            query: { projectId: projectsData.id }
+            pathname: "/dashboard/partnerships/projects/profile",
+            query: { projectId: projectsData.id },
           }}
         >
           <Arrow className="arrow-left orange-fill" />
           {`View Profile`}
         </Link>
-        <div className='button-group'>
-           <Link href="/dashboard/support" passHref>
-              <button className="sidepanel-button-style">
-                <HelpIcon />
-                Get help
-              </button>
-            </Link>
+        <div className="button-group">
+          <Link href="/dashboard/support" passHref>
+            <button className="sidepanel-button-style">
+              <HelpIcon />
+              Get help
+            </button>
+          </Link>
         </div>
       </div>
       {editData ? (
@@ -82,28 +84,35 @@ const ProjectSidepanel: React.FC<SidepanelProps> = ({
           closeEdit={closeEdit}
           isEditing={editData}
           handleCloseFormSidepanel={handleClose}
-          // updateProjectData={updateProjectData} 
-          projectStage={[]} 
-          updateProjectData={() => {}}     
-          />
+          // updateProjectData={updateProjectData}
+          projectStage={[]}
+          updateProjectData={() => {}}
+        />
       ) : (
-        <div className='sidepanel-wrap-space'>
-          <ProjectDetails projectsData={projectsData}
+        <div className="sidepanel-wrap-space">
+          <ProjectDetails
+            projectsData={projectsData}
             handleClose={handleClose}
-            updateProjectData={updateProjectData} 
+            updateProjectData={updateProjectData}
           />
           <div className="card-container">
             <p className="smallcaps">MANAGE PROJECT</p>
             <div className="button-group">
-              <button className="sec-button linen" onClick={() => setEditData(true)}>
+              <button
+                className="sec-button linen"
+                onClick={() => setEditData(true)}
+              >
                 {/* <Image src={Edit} alt="Icon" width={15} height={15} /> */}
                 <p>Edit</p>
               </button>
-              <button className="sec-button stone" onClick={() => setModalOpen(true)}>
+              <button
+                className="sec-button stone"
+                onClick={() => setModalOpen(true)}
+              >
                 <p>Delete</p>
               </button>
             </div>
-            
+
             <ConfirmModal
               isOpen={isModalOpen}
               onClose={() => setModalOpen(false)}
@@ -113,7 +122,7 @@ const ProjectSidepanel: React.FC<SidepanelProps> = ({
               button="Yes, delete this project"
             />
           </div>
-        </div> 
+        </div>
       )}
     </ProfileSidepanel>
   );

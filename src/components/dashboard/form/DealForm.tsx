@@ -1,14 +1,24 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import HelpIcon from "@/components/assets/svg/Help";
 import SearchDropdown from "./SearchDropdown";
 import { useForm } from "react-hook-form";
 import FormSidepanel from "@/components/common/Sidepanel";
-import { CampaignInterface, BrandInterface, DealInterface } from "@/interfaces/interfaces";
-import { getBrands, getCampaigns, postCampaigns, postDeals, putDeal } from "@/utils/httpCalls";
+import {
+  CampaignInterface,
+  BrandInterface,
+  DealInterface,
+} from "@/interfaces/interfaces";
+import {
+  getBrands,
+  getCampaigns,
+  postCampaigns,
+  postDeals,
+  putDeal,
+} from "@/utils/httpCalls";
 import DateInput from "@/components/common/DateInput";
-import { useRouter } from 'next/router';
+import { useRouter } from "next/router";
 
 // interface Stages {
 //   id: number;
@@ -25,7 +35,7 @@ interface FormData {
   brand_email?: string;
   brand_website?: string;
   representative?: string;
-  total_campaigns?:number;
+  total_campaigns?: number;
   invoice_number?: string;
   invoice_date?: string;
   deal_duration?: string;
@@ -40,7 +50,7 @@ interface FormData {
   created_at?: Date;
   campaigns?: string;
   deal_stage?: string;
-  brand?:string;
+  brand?: string;
 }
 
 interface DealFormProps {
@@ -48,11 +58,11 @@ interface DealFormProps {
   dealStage: any;
   handleCloseFormSidepanel: () => void;
   updateDealData: () => void;
-  isEditing: boolean; 
+  isEditing: boolean;
   closeEdit: () => void;
 }
 
-const DealForm: React.FC< DealFormProps> = ({
+const DealForm: React.FC<DealFormProps> = ({
   dealsData,
   dealStage,
   handleCloseFormSidepanel,
@@ -60,11 +70,13 @@ const DealForm: React.FC< DealFormProps> = ({
   isEditing,
   closeEdit,
 }) => {
-  const router = useRouter()
+  const router = useRouter();
   const { register, handleSubmit, reset, setValue } = useForm<FormData>();
-  const [selectedStage, setSelectedStage] = useState('');
+  const [selectedStage, setSelectedStage] = useState("");
   const [brandsData, setBrandsData] = useState<any>([]);
-  const [invoicePaid, setInvoicePaid] = useState<boolean>(dealsData.invoice_paid ?? false);
+  const [invoicePaid, setInvoicePaid] = useState<boolean>(
+    dealsData.invoice_paid ?? false
+  );
 
   /* SELECT DROPDOWNS */
 
@@ -72,11 +84,10 @@ const DealForm: React.FC< DealFormProps> = ({
     const selectedId = event.target.value;
     setSelectedStage(selectedId);
     setValue("deal_stage", selectedId);
-    console.log("Selected Deal Stage ID:", selectedId);
   };
 
   const handleInvoiceChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const isPaid = event.target.value === 'true';
+    const isPaid = event.target.value === "true";
     setInvoicePaid(isPaid);
     setValue("invoice_paid", isPaid);
   };
@@ -95,32 +106,31 @@ const DealForm: React.FC< DealFormProps> = ({
 
   /* BRANDS API CALL */
 
-  useEffect(() => { fetchBrands() }, [router]);
+  useEffect(() => {
+    fetchBrands();
+  }, [router]);
 
   const fetchBrands = () => {
     getBrands(
       (response: any) => {
-        
         setBrandsData(response || []);
       },
       (error: any) => {
-        console.error('Error fetching profile data:', error);
-        setBrandsData([]); 
+        console.error("Error fetching profile data:", error);
+        setBrandsData([]);
       }
-    ).finally(() => {
-    });
+    ).finally(() => {});
   };
 
   /* SUBMIT FORM - DEALS API */
 
   const onSubmit = async (data: FormData) => {
-    console.log("Form Data:", data);
     try {
       if (isEditing) {
         const dealId = dealsData.id;
 
         const updatedData: FormData = {
-          ...dealsData, 
+          ...dealsData,
           ...data,
         };
 
@@ -128,7 +138,6 @@ const DealForm: React.FC< DealFormProps> = ({
           dealId,
           updatedData,
           (response) => {
-            console.log("Project updated successfully:", response);
             reset();
             closeEdit();
             updateDealData();
@@ -142,7 +151,6 @@ const DealForm: React.FC< DealFormProps> = ({
         await postDeals(
           data,
           (response) => {
-            console.log("Deal created successfully:", response);
             reset();
             handleClose();
             updateDealData();
@@ -159,119 +167,160 @@ const DealForm: React.FC< DealFormProps> = ({
 
   return (
     <FormSidepanel handleClose={handleClose}>
-          <div className="sidepanel-header">
-            <p
-              className="row-wrap-2 text-brown"
-              // href={{ pathname: "dashboard/partnerships/projects" }}
+      <div className="sidepanel-header">
+        <p
+          className="row-wrap-2 text-brown"
+          // href={{ pathname: "dashboard/partnerships/projects" }}
+        >
+          {/* <Arrow className="arrow-left orange-fill" /> */}
+          {isEditing ? "Edit Deal" : "Add Deal"}
+        </p>
+        <div className="sidepanel-button">
+          <Link href="/dashboard/support" passHref>
+            <button className="sidepanel-button-style">
+              <HelpIcon />
+              Get help
+            </button>
+          </Link>
+        </div>
+      </div>
+      <div className="sidepanel-wrap">
+        <form className="sidepanel-form" onSubmit={handleSubmit(onSubmit)}>
+          <div className="form-box">
+            <span className="smallcaps">DEAL NAME*</span>
+            <input
+              {...register("name", { required: true })}
+              className="form-input"
+              type="text"
+              placeholder="Enter a name"
+            />
+          </div>
+          <div className="form-box">
+            <span className="smallcaps">DESCRIPTION</span>
+            <textarea
+              {...register("description")}
+              className="form-textarea"
+              placeholder="Add a description"
+            />
+          </div>
+          <div className="form-box">
+            <span className="smallcaps">SELECT PARTNER*</span>
+            <SearchDropdown
+              data={brandsData}
+              onSelect={(selectedItem) => {
+                setValue("brand", selectedItem.id);
+              }}
+              placeholder="Select Brand"
+              handleSearch={handleSearchChange}
+              displayKey="name"
+            />
+          </div>
+          <div className="form-box">
+            <span className="smallcaps">CONTRACT VALUE*</span>
+            <input
+              {...register("contract_value", { required: true })}
+              className="form-input"
+              type="text"
+              placeholder="Add contract Value"
+            />
+          </div>
+          <div className="form-box" />
+          <span className="smallcaps">INVOICE STATUS*</span>
+          <div className="select-wrap">
+            <select
+              {...register("invoice_paid", { required: false })}
+              onChange={handleInvoiceChange}
+              value={invoicePaid.toString()}
+              className="form-input"
             >
-              {/* <Arrow className="arrow-left orange-fill" /> */}
-              {isEditing ? "Edit Deal" : "Add Deal"}
-            </p>
-            <div className="sidepanel-button">
-            <Link href="/dashboard/support" passHref>
-              <button className="sidepanel-button-style">
-                <HelpIcon />
-                Get help
-              </button>
-            </Link>
-            </div>
+              <option value="false">Unpaid</option>
+              <option value="true">Paid</option>
+            </select>
           </div>
-          <div className="sidepanel-wrap">
-            <form className="sidepanel-form" onSubmit={handleSubmit(onSubmit)}>
-              <div className="form-box">
-                <span className="smallcaps">DEAL NAME*</span>
-                <input
-                  {...register("name", { required: true })}
-                  className="form-input"
-                  type="text"
-                  placeholder="Enter a name"
-                />
-              </div>
-              <div className="form-box">
-                <span className="smallcaps">DESCRIPTION</span>
-                <textarea
-                  {...register("description")}
-                  className="form-textarea"
-                  placeholder="Add a description"
-                />
-              </div>
-              <div className="form-box">
-                <span className="smallcaps">SELECT PARTNER*</span>
-                <SearchDropdown
-                  data={brandsData}
-                  onSelect={(selectedItem) => {
-                    setValue("brand", selectedItem.id);
-                  }}
-                  placeholder="Select Brand"
-                  handleSearch={handleSearchChange}
-                  displayKey="name"
-                />
-              </div>
-              <div className="form-box">
-                <span className="smallcaps">CONTRACT VALUE*</span>
-                <input
-                  {...register("contract_value", { required: true })}
-                  className="form-input"
-                  type="text"
-                  placeholder="Add contract Value"
-                />
-              </div>
-              <div className="form-box">
-              <span className="smallcaps">INVOICE STATUS*</span>
-              <div className="select-wrap">
-                <select
-                {...register("invoice_paid", { required: false })}
-                onChange={handleInvoiceChange}
-                value={invoicePaid.toString()}
-                className="form-input"
+          <div className="form-box">
+            <span className="smallcaps">START DATE*</span>
+            <input
+              {...register("start_date", { required: true })}
+              className="form-input"
+              type="date"
+              placeholder="YYYY-MM-DD"
+            />
+          </div>
+          <div className="form-box">
+            <span className="smallcaps">END DATE*</span>
+            <input
+              {...register("deadline", { required: true })}
+              className="form-input"
+              type="date"
+              placeholder="YYYY-MM-DD"
+            />
+          </div>
+          <div className="form-box">
+            <span className="smallcaps">SELECT STAGE*</span>
+            <div className="select-wrap">
+              <select
+                {...register("deal_stage")}
+                onChange={handleSelectStage}
+                value={selectedStage}
+                className="select-input"
               >
-                <option value="false">Unpaid</option>
-                <option value="true">Paid</option>
+                <option value="">Select Stage</option>
+                {Array.isArray(dealStage) &&
+                  dealStage.map((stage) => (
+                    <option key={stage.id} value={stage.id}>
+                      {stage.stageName}
+                    </option>
+                  ))}
               </select>
-              </div>
             </div>
-              <div className="form-box">
-                <span className="smallcaps">START DATE*</span>
-                <input
-                  {...register("start_date", { required: true })}
-                  className="form-input"
-                  type="date"
-                  placeholder="YYYY-MM-DD"
-                />
-              </div>
-              <div className="form-box">
-                <span className="smallcaps">END DATE*</span>
-                <input
-                  {...register("deadline", { required: true })}
-                  className="form-input"
-                  type="date"
-                  placeholder="YYYY-MM-DD"
-                />
-              </div>
-              <div className='form-box'>
-                  <span className='smallcaps'>SELECT STAGE*</span>
-                  <div className="select-wrap">
-                  <select
-                      {...register("deal_stage")}
-                      onChange={handleSelectStage}
-                      value={selectedStage}
-                      className="select-input"
-                    >
-                      <option value="">Select Stage</option>
-                      {Array.isArray(dealStage) && dealStage.map((stage) => (                        
-                      <option key={stage.id} value={stage.id}>
-                          {stage.stageName}
-                        </option>
-                      ))}
-                    </select>
-                    </div>
-              </div>
-
-              <button className="sec-button linen" type="submit">
-                <p>SAVE</p>
-              </button>
-            </form>
           </div>
+
+          <button className="sec-button linen" type="submit">
+            <p>SAVE</p>
+          </button>
+        </form>
+      </div>
+      <div className="form-box">
+        <span className="smallcaps">START DATE</span>
+        <input
+          {...register("start_date", { required: true })}
+          className="form-input"
+          type="date"
+          placeholder="YYYY-MM-DD"
+        />
+      </div>
+      <div className="form-box">
+        <span className="smallcaps">END DATE</span>
+        <input
+          {...register("deadline", { required: true })}
+          className="form-input"
+          type="date"
+          placeholder="YYYY-MM-DD"
+        />
+      </div>
+      <div className="form-box">
+        <span className="smallcaps">SELECT STAGE*</span>
+        <div className="select-wrap">
+          <select
+            {...register("deal_stage")}
+            onChange={handleSelectStage}
+            value={selectedStage}
+            className="select-input"
+          >
+            <option value="">Select Stage</option>
+            {Array.isArray(dealStage) &&
+              dealStage.map((stage) => (
+                <option key={stage.id} value={stage.id}>
+                  {stage.name}
+                </option>
+              ))}
+          </select>
+        </div>
+      </div>
+
+      <button className="sec-button linen" type="submit">
+        <p>SAVE</p>
+      </button>
     </FormSidepanel>
   );
 };

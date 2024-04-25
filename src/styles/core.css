@@ -586,3 +586,7 @@ h6 {
 .arrow.white-fill {
   --arrow-fill: #ffffff;
 }
+
+.input-file {
+  display: none;
+}

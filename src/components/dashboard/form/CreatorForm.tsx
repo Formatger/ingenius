@@ -5,29 +5,35 @@ import HelpIcon from "@/components/assets/svg/Help";
 import { useForm } from "react-hook-form";
 import FormSidepanel from "@/components/common/Sidepanel";
 import { CampaignInterface, ProjectInterface } from "@/interfaces/interfaces";
-import { getBrands, postBrands, postCreators, putBrand, putCreator } from "@/utils/httpCalls";
+import {
+  getBrands,
+  postBrands,
+  postCreators,
+  putBrand,
+  putCreator,
+} from "@/utils/httpCalls";
 import { useRouter } from "next/router";
 import ProfilePic from "@/components/assets/images/creator.png";
 
 interface FormData {
-    id?: number;
-    name: string;
-    representative: string;
-    email: string;
-    niche: string;
-    website?: string;
-    profile_picture_url?: string;
-    profile_picture?: File;
-    user?: string;
-    active_campaigns?: string;
-    active_campaigns_value?: string; 
-    created_at?: Date;
-  }
+  id?: number;
+  name: string;
+  representative: string;
+  email: string;
+  niche: string;
+  website?: string;
+  profile_picture_url?: string;
+  profile_picture?: File;
+  user?: string;
+  active_campaigns?: string;
+  active_campaigns_value?: string;
+  created_at?: Date;
+}
 
 interface CreatorFormProps {
   handleCloseFormSidepanel: () => void;
   updateCreatorData: () => void;
-  isEditing: boolean; 
+  isEditing: boolean;
   creatorsData: any;
   closeEdit: () => void;
 }
@@ -38,11 +44,18 @@ const CreatorForm: React.FC<CreatorFormProps> = ({
   isEditing,
   creatorsData,
   closeEdit,
-
 }) => {
-  const router = useRouter()
-  const { register, handleSubmit, reset, setValue,formState: { errors } } = useForm<FormData>();
-  const [imageURL, setImageURL] = useState<string | null>(creatorsData.profile_picture_url || null);
+  const router = useRouter();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setValue,
+    formState: { errors },
+  } = useForm<FormData>();
+  const [imageURL, setImageURL] = useState<string | null>(
+    creatorsData.profile_picture_url || null
+  );
 
   /* SIDEPANEL STATE */
   const handleClose = () => {
@@ -52,11 +65,11 @@ const CreatorForm: React.FC<CreatorFormProps> = ({
   /* UPLOAD PROFILE PICTURE */
 
   const handleUploadImage = (event: any) => {
-    const file = event.target.files[0];  // Get the first file
+    const file = event.target.files[0]; // Get the first file
     if (file) {
       setValue("profile_picture", file);
-      const url = URL.createObjectURL(file);  // Create a URL for the file
-      setImageURL(url);  // Update the imageURL state
+      const url = URL.createObjectURL(file); // Create a URL for the file
+      setImageURL(url); // Update the imageURL state
     }
   };
 
@@ -64,25 +77,23 @@ const CreatorForm: React.FC<CreatorFormProps> = ({
 
   const onSubmit = async (data: FormData) => {
     console.log("Form Data:", data);
-  
+
     const formData = new FormData();
-  
+
     Object.entries(data).forEach(([key, value]) => {
       if (value !== undefined && value !== null) {
         formData.append(key, value);
       }
     });
-  
+
     try {
       if (isEditing) {
         const creatorId = creatorsData.id;
-        console.log("Updated Data for PUT:", formData);
-  
+
         await putCreator(
           creatorId,
           formData,
           (response) => {
-            console.log("Brand updated successfully:", response);
             reset();
             closeEdit();
             updateCreatorData();
@@ -93,11 +104,10 @@ const CreatorForm: React.FC<CreatorFormProps> = ({
         );
       } else {
         console.log("Data for POST:", formData);
-  
+
         await postCreators(
           formData,
           (response) => {
-            console.log("Brand created successfully:", response);
             reset();
             handleClose();
             updateCreatorData();
@@ -116,7 +126,7 @@ const CreatorForm: React.FC<CreatorFormProps> = ({
     <FormSidepanel handleClose={handleClose}>
       <div className="sidepanel-header">
         <p className="row-wrap-2 text-brown">
-        {isEditing ? "Edit Creator" : "Add Creator"}
+          {isEditing ? "Edit Creator" : "Add Creator"}
         </p>
         <div className="sidepanel-button">
           <Link href="/dashboard/support" passHref>
@@ -129,26 +139,46 @@ const CreatorForm: React.FC<CreatorFormProps> = ({
       </div>
       {isEditing ? (
         <div className="sidepanel-wrap">
-          <form className="sidepanel-form" onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data">
+          <form
+            className="sidepanel-form"
+            onSubmit={handleSubmit(onSubmit)}
+            encType="multipart/form-data"
+          >
             <div className="form-box">
               <span className="smallcaps">PROFILE PICTURE*</span>
               <input
                 id="fileInput"
-                style={{ display: 'none' }}
+                style={{ display: "none" }}
                 type="file"
                 accept="image/jpeg, image/png, image/gif, image/jpg"
                 onChange={handleUploadImage}
               />
               <div className="upload-image-box">
                 <div className="upload-image">
-                {imageURL 
-                  ? <img src={imageURL} alt="Uploaded" style={{ width: '120px', height: '120px' }} />
-                  : <Image src={ProfilePic} alt="Icon" width={120} height={120} />
-                }
+                  {imageURL ? (
+                    <img
+                      src={imageURL}
+                      alt="Uploaded"
+                      style={{ width: "120px", height: "120px" }}
+                    />
+                  ) : (
+                    <Image
+                      src={ProfilePic}
+                      alt="Icon"
+                      width={120}
+                      height={120}
+                    />
+                  )}
                 </div>
-                {imageURL 
-                ? <label htmlFor="fileInput" className="custom-image-upload">Change Image</label>
-                :  <label htmlFor="fileInput" className="custom-image-upload">Upload Image</label>}
+                {imageURL ? (
+                  <label htmlFor="fileInput" className="custom-image-upload">
+                    Change Image
+                  </label>
+                ) : (
+                  <label htmlFor="fileInput" className="custom-image-upload">
+                    Upload Image
+                  </label>
+                )}
               </div>
             </div>
             <div className="form-box">
@@ -189,7 +219,11 @@ const CreatorForm: React.FC<CreatorFormProps> = ({
                 />
             </div> */}
             <div className="button-group">
-              <button className="sec-button stone" type="button" onClick={handleClose}>
+              <button
+                className="sec-button stone"
+                type="button"
+                onClick={handleClose}
+              >
                 <p>Cancel</p>
               </button>
               <button className="sec-button linen" type="submit">
@@ -200,39 +234,60 @@ const CreatorForm: React.FC<CreatorFormProps> = ({
         </div>
       ) : (
         <div className="sidepanel-wrap">
-         <form className="sidepanel-form" onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data">
-          <div className="form-box">
-            <span className="smallcaps">PROFILE PICTURE*</span>
-            <input
-              id="fileInput"
-              style={{ display: 'none' }}
-              type="file"
-              accept="image/jpeg, image/png, image/gif, image/jpg"
-              onChange={handleUploadImage}
-            />
-            <div className="upload-image-box">
-              <div className="upload-image">
-              {imageURL 
-                ? <img src={imageURL} alt="Uploaded" style={{ width: '120px', height: '120px' }} />
-                : <Image src={ProfilePic} alt="Icon" width={120} height={120} />
-              }
+          <form
+            className="sidepanel-form"
+            onSubmit={handleSubmit(onSubmit)}
+            encType="multipart/form-data"
+          >
+            <div className="form-box">
+              <span className="smallcaps">PROFILE PICTURE*</span>
+              <input
+                id="fileInput"
+                style={{ display: "none" }}
+                type="file"
+                accept="image/jpeg, image/png, image/gif, image/jpg"
+                onChange={handleUploadImage}
+              />
+              <div className="upload-image-box">
+                <div className="upload-image">
+                  {imageURL ? (
+                    <img
+                      src={imageURL}
+                      alt="Uploaded"
+                      style={{ width: "120px", height: "120px" }}
+                    />
+                  ) : (
+                    <Image
+                      src={ProfilePic}
+                      alt="Icon"
+                      width={120}
+                      height={120}
+                    />
+                  )}
+                </div>
+                {imageURL ? (
+                  <label htmlFor="fileInput" className="custom-image-upload">
+                    Change Image
+                  </label>
+                ) : (
+                  <label htmlFor="fileInput" className="custom-image-upload">
+                    Upload Image
+                  </label>
+                )}
               </div>
-              {imageURL 
-              ? <label htmlFor="fileInput" className="custom-image-upload">Change Image</label>
-              :  <label htmlFor="fileInput" className="custom-image-upload">Upload Image</label>}
             </div>
-          </div>
 
             <div className="form-box">
               <span className="smallcaps">CREATOR NAME*</span>
               <input
                 {...register("name", {
                   required: "Brand name is required",
-                  validate: value => value.trim() !== "" || "Brand name is required"
+                  validate: (value) =>
+                    value.trim() !== "" || "Brand name is required",
                 })}
                 className="form-input"
                 type="text"
-                placeholder="Enter a name" 
+                placeholder="Enter a name"
               />
             </div>
             <div className="form-box">
@@ -240,7 +295,8 @@ const CreatorForm: React.FC<CreatorFormProps> = ({
               <input
                 {...register("email", {
                   required: "Email is required",
-                  validate: value => value.trim() !== "" || "Email is required"
+                  validate: (value) =>
+                    value.trim() !== "" || "Email is required",
                 })}
                 className="form-input"
                 onChange={(e) => setValue("email", e.target.value)}
@@ -251,13 +307,14 @@ const CreatorForm: React.FC<CreatorFormProps> = ({
               <input
                 {...register("niche", {
                   required: "Niche is required",
-                  validate: value => value.trim() !== "" || "Niche is required"
+                  validate: (value) =>
+                    value.trim() !== "" || "Niche is required",
                 })}
                 className="form-input"
                 type="text"
               />
             </div>
-          
+
             <button className="sec-button linen" type="submit">
               <p>SAVE</p>
             </button>
@@ -266,7 +323,6 @@ const CreatorForm: React.FC<CreatorFormProps> = ({
       )}
     </FormSidepanel>
   );
-
-};  
+};
 
 export default CreatorForm;

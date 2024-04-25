@@ -8,9 +8,20 @@ import SearchDropdown from "./SearchDropdown";
 import { profile } from "console";
 import { v4 as uuidv4 } from "uuid";
 import { useForm } from "react-hook-form";
-import FormSidepanel from "@/components/common/Sidepanel";
-import { CampaignInterface, BrandInterface, DealInterface } from "@/interfaces/interfaces";
-import { getBrands, putCampaign, getDeals, postCampaigns } from "@/utils/httpCalls";
+import FormSidepanel from "@/components/common/FormSidepanel";
+import {
+  getBrands,
+  putCampaign,
+  getDeals,
+  postCampaigns,
+  lockCampaign,
+  unlockCampaign,
+} from "@/utils/httpCalls";
+import {
+  CampaignInterface,
+  BrandInterface,
+  DealInterface,
+} from "@/interfaces/interfaces";
 import DateInput from "@/components/common/DateInput";
 import axios from "axios";
 import { useRouter } from "next/router";
@@ -30,7 +41,7 @@ interface FormData {
   brand_email?: string;
   brand_website?: string;
   representative?: string;
-  total_projects?:number;
+  total_projects?: number;
   invoice_number?: string;
   invoice_date?: string;
   campaign_duration?: string;
@@ -53,10 +64,12 @@ interface CampaignFormProps {
   updateCampaignData: () => void;
   campaignsData: any;
   closeEdit: () => void;
-  isEditing: boolean; 
+  isEditing: boolean;
+  lockUpdates: boolean;
+  setLockUpdates: (isLocked: boolean) => void;
 }
 
-const  CampaignForm: React.FC< CampaignFormProps> = ({
+const CampaignForm: React.FC<CampaignFormProps> = ({
   campaignStage,
   handleCloseFormSidepanel,
   updateCampaignData,
@@ -64,13 +77,24 @@ const  CampaignForm: React.FC< CampaignFormProps> = ({
   isEditing,
   closeEdit,
 }) => {
-  const router = useRouter()
-  const { register, handleSubmit, reset, setValue, trigger, watch, formState: { errors }} = useForm<FormData>();
-  const [selectedStage, setSelectedStage] = useState('');
+  const router = useRouter();
+  const { register, handleSubmit, reset, setValue, trigger } =
+    useForm<FormData>();
+  const [selectedStage, setSelectedStage] = useState("");
   const [dealsData, setDealsData] = useState<any>([]);
-  const [invoicePaid, setInvoicePaid] = useState<boolean>(campaignsData.invoice_paid ?? false);
-  const startDate = watch("start_date");
-  const endDate = watch("deadline");
+  const [invoicePaid, setInvoicePaid] = useState<boolean>(
+    campaignsData?.invoice_paid ?? false
+  );
+
+  useEffect(() => {
+    lockCampaign(campaignsData.id);
+    console.log("Locking campaign", campaignsData.id);
+
+    return () => {
+      unlockCampaign(campaignsData.id);
+      console.log("Unlocking campaign", campaignsData.id);
+    };
+  }, []);
 
   /* SELECT DROPDOWNS */
 
@@ -78,12 +102,11 @@ const  CampaignForm: React.FC< CampaignFormProps> = ({
     const selectedId = event.target.value;
     setSelectedStage(selectedId);
     setValue("campaign_stage", selectedId);
-    console.log("Selected Campaign Stage ID:", selectedId);
     trigger("campaign_stage");
   };
 
   const handleInvoiceChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const isPaid = event.target.value === 'true';
+    const isPaid = event.target.value === "true";
     setInvoicePaid(isPaid);
     setValue("invoice_paid", isPaid);
   };
@@ -102,41 +125,38 @@ const  CampaignForm: React.FC< CampaignFormProps> = ({
 
   /* GET DEALS API CALL */
 
-  useEffect(() => { fetchDeals() }, [router]);
+  useEffect(() => {
+    fetchDeals();
+  }, [router]);
 
   const fetchDeals = () => {
     getDeals(
       (response: any) => {
-        console.log("fetch deals", response)
-
         setDealsData(response || []);
       },
       (error: any) => {
-        console.error('Error fetching profile data:', error);
-        setDealsData([]); 
+        console.error("Error fetching profile data:", error);
+        setDealsData([]);
       }
-    ).finally(() => {
-    });
+    ).finally(() => {});
   };
 
   /* SUBMIT FORM - POST CAMPAIGNS API CALL */
 
   const onSubmit = async (data: FormData) => {
-    console.log("Form Data:", data);
     try {
       if (isEditing) {
         const campaignId = campaignsData.id;
 
         const updatedData: FormData = {
-          ...campaignsData, 
-          ...data, 
+          ...campaignsData,
+          ...data,
         };
 
         await putCampaign(
           campaignId,
           updatedData,
           (response) => {
-            console.log("Project updated successfully:", response);
             reset();
             closeEdit();
             updateCampaignData();
@@ -146,11 +166,9 @@ const  CampaignForm: React.FC< CampaignFormProps> = ({
           }
         );
       } else {
-
         await postCampaigns(
           data,
           (response) => {
-            console.log("Project created successfully:", response);
             reset();
             handleClose();
             updateCampaignData();
@@ -166,25 +184,25 @@ const  CampaignForm: React.FC< CampaignFormProps> = ({
   };
 
   return (
-    <FormSidepanel handleClose={handleClose}>
-          <div className="sidepanel-header">
-            <p
-              className="row-wrap-2 text-brown"
-              // href={{ pathname: "dashboard/partnerships/projects" }}
-            >
-              {/* <Arrow className="arrow-left orange-fill" /> */}
-              {isEditing ? "Edit Campaign" : "Add Campaign"}
-            </p>
-            <div className="sidepanel-button">
-            <Link href="/dashboard/support" passHref>
-              <button className="sidepanel-button-style">
-                <HelpIcon />
-                Get help
-              </button>
-            </Link>
-            </div>
-          </div>
-          {isEditing ? (
+    <FormSidepanel handleCloseForm={handleClose}>
+      <div className="sidepanel-header">
+        <p
+          className="row-wrap-2 text-brown"
+          // href={{ pathname: "dashboard/partnerships/projects" }}
+        >
+          {/* <Arrow className="arrow-left orange-fill" /> */}
+          {`Add Campaign`}
+        </p>
+        <div className="sidepanel-button">
+          <Link href="/dashboard/support" passHref>
+            <button className="sidepanel-button-style">
+              <HelpIcon />
+              Get help
+            </button>
+          </Link>
+        </div>
+      </div>
+      {isEditing ? (
         <div className="sidepanel-wrap">
           <form className="sidepanel-form" onSubmit={handleSubmit(onSubmit)}>
             <div className="form-box">
@@ -230,14 +248,14 @@ const  CampaignForm: React.FC< CampaignFormProps> = ({
             <div className="form-box">
               <span className="smallcaps">INVOICE STATUS*</span>
               <div className="select-wrap">
-              <select
-                {...register("invoice_paid", { required: true })}
-                className="select-input"
-                defaultValue={campaignsData.invoice_paid}
-              >
-              <option value="false">Unpaid</option> 
-              <option value="true">Paid</option>
-              </select>
+                <select
+                  {...register("invoice_paid", { required: true })}
+                  className="select-input"
+                  defaultValue={campaignsData.invoice_paid}
+                >
+                  <option value="false">Unpaid</option>
+                  <option value="true">Paid</option>
+                </select>
               </div>
             </div>
             <div className="form-box">
@@ -259,7 +277,11 @@ const  CampaignForm: React.FC< CampaignFormProps> = ({
               />
             </div>
             <div className="button-group">
-              <button className="sec-button stone" type="button" onClick={handleClose}>
+              <button
+                className="sec-button stone"
+                type="button"
+                onClick={handleClose}
+              >
                 <p>Cancel</p>
               </button>
               <button className="sec-button linen" type="submit">
@@ -268,9 +290,7 @@ const  CampaignForm: React.FC< CampaignFormProps> = ({
             </div>
           </form>
         </div>
-
       ) : (
-
         <div className="sidepanel-wrap">
           <form className="sidepanel-form" onSubmit={handleSubmit(onSubmit)}>
             <div className="form-box">
@@ -295,7 +315,7 @@ const  CampaignForm: React.FC< CampaignFormProps> = ({
               <SearchDropdown
                 data={dealsData}
                 onSelect={(selectedItem) => {
-                  setValue("deal", selectedItem.id); 
+                  setValue("deal", selectedItem.id);
                 }}
                 placeholder="Select Deal"
                 handleSearch={handleSearchChange}
@@ -315,14 +335,14 @@ const  CampaignForm: React.FC< CampaignFormProps> = ({
               <span className="smallcaps">INVOICE STATUS*</span>
               <div className="select-wrap">
                 <select
-                {...register("invoice_paid", { required: true })}
-                onChange={handleInvoiceChange}
-                value={invoicePaid.toString()}
-                className="select-input"
-              >
-                <option value="false">Unpaid</option>
-                <option value="true">Paid</option>
-              </select>
+                  {...register("invoice_paid", { required: true })}
+                  onChange={handleInvoiceChange}
+                  value={invoicePaid.toString()}
+                  className="select-input"
+                >
+                  <option value="false">Unpaid</option>
+                  <option value="true">Paid</option>
+                </select>
               </div>
             </div>
             <div className="form-box">
@@ -343,24 +363,24 @@ const  CampaignForm: React.FC< CampaignFormProps> = ({
                 placeholder="YYYY-MM-DD"
               />
             </div>
-            <div className='form-box'>
-                <span className='smallcaps'>SELECT STAGE*</span>
-                <select
-                    {...register("campaign_stage")}
-                    onChange={handleSelectStage}
-                    value={selectedStage}
-                    className="form-input"
-                  >
-                    <option value="">Select Stage</option> {/* Default option */}
-                    {Array.isArray(campaignStage) && campaignStage.map((stage) => {
-                    
-                    return (                        
-                    <option key={stage.stageID} value={stage.stageID}>
+            <div className="form-box">
+              <span className="smallcaps">SELECT STAGE*</span>
+              <select
+                {...register("campaign_stage")}
+                onChange={handleSelectStage}
+                value={selectedStage}
+                className="form-input"
+              >
+                <option value="">Select Stage</option> {/* Default option */}
+                {Array.isArray(campaignStage) &&
+                  campaignStage.map((stage) => {
+                    return (
+                      <option key={stage.stageID} value={stage.stageID}>
                         {stage.stageName}
                       </option>
                     );
-                    })}
-                  </select>
+                  })}
+              </select>
             </div>
 
             <button className="sec-button linen" type="submit">
@@ -368,12 +388,9 @@ const  CampaignForm: React.FC< CampaignFormProps> = ({
             </button>
           </form>
         </div>
-
       )}
-
     </FormSidepanel>
   );
 };
-          
 
-export default  CampaignForm;
+export default CampaignForm;

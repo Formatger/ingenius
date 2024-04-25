@@ -56,8 +56,10 @@ button[disabled] {
   font-family: "InterMedium";
   font-size: 14px;
   color: var(--white);
+  cursor: pointer;
   transition: all 0.3s ease;
 }
+
 .app-button:hover {
   filter: brightness(150%);
 }
@@ -73,8 +75,28 @@ button[disabled] {
 .app-button.cream {
   background-color: var(--cream);
 }
+
 .app-button.cream:hover {
   filter: brightness(105%);
+}
+
+.reload-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border-radius: var(--r6);
+  gap: var(--m2);
+  background: var(--orange);
+  font-family: "InterMedium";
+  font-size: 14px;
+  color: var(--white);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.reload-button:hover {
+  filter: brightness(115%);
 }
 
 /* Secondary Button */
@@ -126,7 +148,6 @@ button[disabled] {
   background-color: var(--salmon);
 }
 
-
 .sec-button.linen:hover {
   background-color: var(--light-orange);
 }
@@ -146,7 +167,7 @@ button[disabled] {
   font-size: 12px;
   font-family: "InterRegular";
   width: fit-content;
-  padding: 0 10px ;
+  padding: 0 10px;
 }
 
 /* Submit Button */
@@ -183,7 +204,6 @@ button[disabled] {
   filter: saturate(80%);
   filter: hue-rotate(-8deg);
 } */
-
 
 /* Tags */
 
@@ -233,8 +253,9 @@ green, blue, light-blue, ivory, pink */
 /* Color extensions */
 .status-tag.green {
   background-color: var(--green);
-  color: var(--darkgreen)
+  color: var(--darkgreen);
 }
+
 .status-tag.pink {
   background-color: var(--pink);
   color: var(--firebrick);

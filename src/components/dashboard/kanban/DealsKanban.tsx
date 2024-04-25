@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import Image from 'next/image';
+import React, { useEffect, useState } from "react";
+import Image from "next/image";
 import Plus from "@/components/assets/icons/plus.svg";
 import Edit from "@/components/assets/icons/edit.svg";
 import AddFieldModalDeal from "@/components/dashboard/kanban/AddFieldModalDeal";
@@ -27,33 +27,41 @@ interface DealsKanbanProps {
   updateDealData: () => void;
 }
 
-const DealsKanban = ({ DealData, httpError, data, handleOpenSidepanel, Dealstage, updateDealData }: DealsKanbanProps) => {
+const DealsKanban = ({
+  DealData,
+  httpError,
+  data,
+  handleOpenSidepanel,
+  Dealstage,
+  updateDealData,
+}: DealsKanbanProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [isAddModalOpen, setAddModalOpen] = useState(false);
-  const [draggedOverStageIndex, setDraggedOverStageIndex] = useState<string | null>(null); // Estado para almacenar el ID de la columna sobre la que se arrastra
+  const [draggedOverStageIndex, setDraggedOverStageIndex] = useState<
+    string | null
+  >(null); // Estado para almacenar el ID de la columna sobre la que se arrastra
   const [stages, setStages] = useState<any[]>([]);
   const [deleteStageId, setDeleteStageId] = useState<string | null>(null);
   const colors = ["pink", "linen", "green", "blue", "yellow", "orange", "red"];
   const [changeStage, setChangeStage] = useState<string | null>(null);
 
-  console.log("DEAL STAGE", Dealstage)
-  console.log("DEAL STAGE", DealData)
-
   /* ASSIGN COLOR TO STAGES */
 
   const assignColorsToStages = (stages: any[]) => {
-    const storedColors = localStorage.getItem('stageColors');
+    const storedColors = localStorage.getItem("stageColors");
     const colorsMap = storedColors ? JSON.parse(storedColors) : {};
 
-    const coloredStages = stages.map(stage => {
+    const coloredStages = stages.map((stage) => {
       if (!colorsMap[stage.stageID]) {
-        colorsMap[stage.stageID] = `color-${colors[Math.floor(Math.random() * colors.length)]}`;
+        colorsMap[stage.stageID] = `color-${
+          colors[Math.floor(Math.random() * colors.length)]
+        }`;
       }
       return { ...stage, color: colorsMap[stage.stageID] };
     });
 
-    localStorage.setItem('stageColors', JSON.stringify(colorsMap));
+    localStorage.setItem("stageColors", JSON.stringify(colorsMap));
     return coloredStages;
   };
 
@@ -67,8 +75,6 @@ const DealsKanban = ({ DealData, httpError, data, handleOpenSidepanel, Dealstage
         const stageDeals = DealData.filter((deal: any) => {
           return deal.deal_stage === stage.stageID;
         });
-        console.log("STAGE DEALS", stageDeals);
-        console.log("STAGE ID:", stage.stageID);
 
         return { ...stage, deals: stageDeals };
       },
@@ -78,8 +84,6 @@ const DealsKanban = ({ DealData, httpError, data, handleOpenSidepanel, Dealstage
     stagesWithDeals = assignColorsToStages(stagesWithDeals);
     setStages(stagesWithDeals);
   }, [DealData, Dealstage]);
-
-  console.log("Deals column", stages);
 
   /* EDIT STAGE */
 
@@ -91,49 +95,57 @@ const DealsKanban = ({ DealData, httpError, data, handleOpenSidepanel, Dealstage
   /* DELETE STAGE */
 
   const openDeleteModal = (stageID: any) => {
-    const stage = stages.find(stage => stage.stageID === stageID);
+    const stage = stages.find((stage) => stage.stageID === stageID);
     if (stage && stage.deals.length > 0) {
-      alert("Please move all deals from this stage to another stage before deleting it.");
+      alert(
+        "Please move all deals from this stage to another stage before deleting it."
+      );
       return;
     }
-    console.log("Setting deleteStageId to:", stageID);
     setDeleteStageId(stageID);
     setIsModalOpen(true);
   };
 
   const handleDelete = async () => {
     if (deleteStageId) {
-      const stage = stages.find(stage => stage.stageID === deleteStageId);
+      const stage = stages.find((stage) => stage.stageID === deleteStageId);
       if (stage && stage.deals.length > 0) {
-        alert("Please move all deals from this stage to another stage before deleting it.");
+        alert(
+          "Please move all deals from this stage to another stage before deleting it."
+        );
         return;
       }
 
-      deleteDealStage(parseInt(deleteStageId), async () => {
-        console.log("Stage deleted successfully");
-        const remainingStages = stages.filter(stage => stage.stageID !== deleteStageId);
-        const updatedStages = remainingStages.map((stage, index) => ({
-          ...stage,
-          stageIndex: index + 1
-        }));
-        setStages(updatedStages);
-
-        for (const stage of updatedStages) {
-          await putNewOrderDeal(
-            stage.stageID,
-            { name: stage.stageName, order: stage.stageIndex },
-            () => { },
-            (error) => console.error("Failed to update stage order:", error)
+      deleteDealStage(
+        parseInt(deleteStageId),
+        async () => {
+          const remainingStages = stages.filter(
+            (stage) => stage.stageID !== deleteStageId
           );
-        }
+          const updatedStages = remainingStages.map((stage, index) => ({
+            ...stage,
+            stageIndex: index + 1,
+          }));
+          setStages(updatedStages);
 
-        updateDealData();
-        setIsModalOpen(false);
-        setDeleteStageId(null);
-      }, (error) => {
-        console.error("Failed to delete stage:", error);
-        alert("Failed to delete stage. Please try again.");
-      });
+          for (const stage of updatedStages) {
+            await putNewOrderDeal(
+              stage.stageID,
+              { name: stage.stageName, order: stage.stageIndex },
+              () => {},
+              (error) => console.error("Failed to update stage order:", error)
+            );
+          }
+
+          updateDealData();
+          setIsModalOpen(false);
+          setDeleteStageId(null);
+        },
+        (error) => {
+          console.error("Failed to delete stage:", error);
+          alert("Failed to delete stage. Please try again.");
+        }
+      );
     }
   };
 
@@ -142,7 +154,6 @@ const DealsKanban = ({ DealData, httpError, data, handleOpenSidepanel, Dealstage
   const handleDragStartColumn = (e: React.DragEvent, stage: any) => {
     e.dataTransfer.setData("text/plain", stage.stageIndex);
     e.dataTransfer.setData("stage", JSON.stringify({ stage }));
-    console.log("START DATA STAGES", stage);
   };
 
   const handleDropColumn = async (e: React.DragEvent, newColumn: any) => {
@@ -156,13 +167,13 @@ const DealsKanban = ({ DealData, httpError, data, handleOpenSidepanel, Dealstage
           putNewOrderDeal(
             oldColumn.stageID,
             { name: oldColumn.stageName, order: newColumn.stageIndex },
-            () => { },
+            () => {},
             undefined
           ),
           putNewOrderDeal(
             newColumn.stageID,
             { name: newColumn.stageName, order: oldColumn.stageIndex },
-            () => { },
+            () => {},
             undefined
           ),
         ]);
@@ -192,7 +203,6 @@ const DealsKanban = ({ DealData, httpError, data, handleOpenSidepanel, Dealstage
 
   const handleDragStart = (e: any, deals: any, stages: any) => {
     e.dataTransfer.setData("deals", JSON.stringify({ ...deals, stages }));
-    console.log("DEALS START DATA", deals, stages);
   };
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>, stageID: any) => {
@@ -219,9 +229,7 @@ const DealsKanban = ({ DealData, httpError, data, handleOpenSidepanel, Dealstage
                 if (stage.stageID === deal.deal_stage) {
                   return {
                     ...stage,
-                    deals: stage.deals.filter(
-                      (p: any) => p.id !== deal.id
-                    ),
+                    deals: stage.deals.filter((p: any) => p.id !== deal.id),
                   };
                 }
                 if (stage.stageID === stageID) {
@@ -231,10 +239,7 @@ const DealsKanban = ({ DealData, httpError, data, handleOpenSidepanel, Dealstage
                   if (existingDealIndex === -1) {
                     return {
                       ...stage,
-                      deals: [
-                        ...stage.deals,
-                        { ...deal, deal_stage: stageID },
-                      ],
+                      deals: [...stage.deals, { ...deal, deal_stage: stageID }],
                     };
                   } else {
                     const updatedDeal = [...stage.deals];
@@ -263,20 +268,21 @@ const DealsKanban = ({ DealData, httpError, data, handleOpenSidepanel, Dealstage
     }
   };
 
-
-
-
   return (
     <div
       className="kanban-container"
-      style={{ gridTemplateColumns: `repeat(${stages.length}, 1fr)`, }}
+      style={{ gridTemplateColumns: `repeat(${stages.length}, 1fr)` }}
     >
       {stages
         .sort((a, b) => a.stageIndex - b.stageIndex)
         .map((dealCol) => {
           return (
             <div
-              className={`kanban-column ${draggedOverStageIndex === dealCol.stageID ? 'drag-over-column' : ''}`}
+              className={`kanban-column ${
+                draggedOverStageIndex === dealCol.stageID
+                  ? "drag-over-column"
+                  : ""
+              }`}
               onDrop={(e) => handleDrop(e, dealCol.stageID)}
               onDragOver={(e) => handleDragOver(e, dealCol.stageID)}
               onDragLeave={handleDragLeave}
@@ -304,7 +310,13 @@ const DealsKanban = ({ DealData, httpError, data, handleOpenSidepanel, Dealstage
                       <Image src={Edit} alt="Icon" width={12} height={12} />
                     </button>
                     <button onClick={() => openDeleteModal(dealCol.stageID)}>
-                      <Image className="exit-icon" src={Plus} alt="Icon" width={15} height={15} />
+                      <Image
+                        className="exit-icon"
+                        src={Plus}
+                        alt="Icon"
+                        width={15}
+                        height={15}
+                      />
                     </button>
                   </div>
 
@@ -332,7 +344,6 @@ const DealsKanban = ({ DealData, httpError, data, handleOpenSidepanel, Dealstage
                     onConfirm={handleDelete}
                     button="Yes, delete this stage"
                   />
-
                 </div>
               </div>
               {dealCol.deals?.map((dealCard: any) => {
@@ -355,9 +366,7 @@ const DealsKanban = ({ DealData, httpError, data, handleOpenSidepanel, Dealstage
                       <p className="brandTitle">{dealCard.brand_name}</p>
                     </div>
                     <p className="dealName">{dealCard.name}</p>
-                    <p className="dealDescription">
-                      {dealCard.description}
-                    </p>
+                    <p className="dealDescription">{dealCard.description}</p>
                     <div className="card-tags mt-4">
                       <span className="square-tag green">
                         Due: {dealCard.deadline}

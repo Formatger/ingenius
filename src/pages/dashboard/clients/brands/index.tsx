@@ -204,6 +204,30 @@ const BrandsPage = () => {
     throw new Error("Function not implemented.");
   }
 
+  /* CSV UPLOAD */
+  const handleUploadCSV = async (e: any) => {
+    const file = e.target.files[0];
+    if (file) {
+      try {
+        const formData = new FormData();
+        formData.append("file", file);
+        const response = await fetch("/file", {
+          method: "POST",
+          body: formData,
+        });
+        if (response.ok) {
+          // File uploaded successfully
+          console.log("File uploaded successfully");
+        } else {
+          // Error uploading file
+          console.error("Error uploading file");
+        }
+      } catch (error) {
+        console.error("Error uploading file:", error);
+      }
+    }
+  };
+
   return (
     <div className="main-container">
       <div className="breadcrumb-nav">
@@ -242,9 +266,16 @@ const BrandsPage = () => {
               <div className="button-group">
                 <Searchbox handleSearch={handleSearch} />
 
-                <button className="app-button cream" onClick={undefined}>
+                <label htmlFor="file-upload" className="app-button cream">
                   CSV Upload
-                </button>
+                </label>
+                <input
+                  className="input-file"
+                  id="file-upload"
+                  type="file"
+                  onChange={handleUploadCSV}
+                />
+
                 <button
                   className="app-button"
                   onClick={handleOpenFormSidepanel}

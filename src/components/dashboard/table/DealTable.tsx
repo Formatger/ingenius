@@ -55,7 +55,6 @@ const DealTable = ({
   const findFieldAsc = (name: string) => {
     return sortDirection.find((sd) => sd.name === name)?.isSortAsc;
   };
-  console.log(data);
 
   return (
     <div className="table-container">

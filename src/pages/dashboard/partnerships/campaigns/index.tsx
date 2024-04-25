@@ -11,6 +11,7 @@ import MainLoader from "@/components/common/Loader";
 import Sidebar from "@/components/navigation/Sidebar";
 import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import Image from "next/image";
+import Reload from "@/components/assets/icons/reload.svg";
 import PlusWhite from "@/components/assets/icons/plus-white.svg";
 import Kanban from "@/components/assets/icons/kanban.svg";
 import Table from "@/components/assets/icons/table.svg";
@@ -291,6 +292,7 @@ const CampaignsPage = () => {
                 origin="campaigns"
               />
               <div className="button-group">
+
                 <button className="app-button cream" onClick={undefined}>
                   CSV Upload
                 </button>
@@ -300,6 +302,9 @@ const CampaignsPage = () => {
                 >
                   <Image src={PlusWhite} alt="Icon" width={14} height={14} />
                   Add Campaign
+                </button>
+                <button className="reload-button" onClick={undefined}>
+                  <Image src={Reload} alt="Icon" width={18} height={18} />
                 </button>
               </div>
               <div className="row-wrap">
@@ -387,14 +392,12 @@ export default withAuth(Campaigns);
 
 //  // Save Form Data
 //  const handleSaveFormData = (data: FormData) => {
-//     console.log("Data from form:", data);
 //     setSavedData(data);
 //     setOpenSidepanel(false);
 //     setSavedDataList(currentList => [...currentList, data]);
 //   };
 //   // Save Creator Data
 //  const handleSaveCreatorData = (profile: any) => {
-//      console.log("Data from form:", profile);
 //     //  setCreatorSavedData(profile)
 //   };
 //  // Generate Card

@@ -8,19 +8,19 @@ import { DEPLOYED_API_BASE_URL } from "./apiConfig";
 
 export const refreshToken = async (errorCallback?: (error: any) => void) => {
   if (localStorage.refresh_token) {
-    const url = DEPLOYED_API_BASE_URL + 'token/refresh/';
+    const url = DEPLOYED_API_BASE_URL + "token/refresh/";
 
     try {
       fetch(url, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ refresh: localStorage.refresh_token }),
       })
         .then((response) => response.json())
         .then((data) => {
-          localStorage.setItem('access_token', data.access);
+          localStorage.setItem("access_token", data.access);
         })
         .catch((error) => {
           errorCallback && errorCallback(error);
@@ -29,7 +29,7 @@ export const refreshToken = async (errorCallback?: (error: any) => void) => {
       errorCallback && errorCallback(error);
     }
   }
-}
+};
 
 ////////////////////////////////////////////////////////////////////////
 /******************************  PUT CALLS  ***************************/
@@ -43,21 +43,20 @@ export const putNewOrderDeal = async (
   callback: (data: any) => void,
   errorCallback?: (error: any) => void
 ) => {
-  console.log("PUT successful", updatedData)
   const url = `${DEPLOYED_API_BASE_URL}deal-stages/${stageId}/`;
 
   try {
     const response = await fetch(url, {
-      method: 'PUT',
+      method: "PUT",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.access_token}`,
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.access_token}`,
       },
       body: JSON.stringify(updatedData),
     });
 
     if (!response.ok) {
-      throw new Error('Network response was not ok');
+      throw new Error("Network response was not ok");
     }
 
     const data = await response.json();
@@ -75,21 +74,20 @@ export const putNewOrderProject = async (
   callback: (data: any) => void,
   errorCallback?: (error: any) => void
 ) => {
-  console.log("PUT successful", updatedData)
   const url = `${DEPLOYED_API_BASE_URL}project-stages/${stageId}/`;
 
   try {
     const response = await fetch(url, {
-      method: 'PUT',
+      method: "PUT",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.access_token}`,
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.access_token}`,
       },
       body: JSON.stringify(updatedData),
     });
 
     if (!response.ok) {
-      throw new Error('Network response was not ok');
+      throw new Error("Network response was not ok");
     }
 
     const data = await response.json();
@@ -107,21 +105,20 @@ export const putNewOrderCampaign = async (
   callback: (data: any) => void,
   errorCallback?: (error: any) => void
 ) => {
-  console.log("PUT successful", updatedData)
   const url = `${DEPLOYED_API_BASE_URL}campaign-stages/${stageId}/`;
 
   try {
     const response = await fetch(url, {
-      method: 'PUT',
+      method: "PUT",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.access_token}`,
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.access_token}`,
       },
       body: JSON.stringify(updatedData),
     });
 
     if (!response.ok) {
-      throw new Error('Network response was not ok');
+      throw new Error("Network response was not ok");
     }
 
     const data = await response.json();
@@ -139,21 +136,20 @@ export const putProject = async (
   callback: (data: any) => void,
   errorCallback?: (error: any) => void
 ) => {
-  console.log("PUT successful", updatedData)
   const url = `${DEPLOYED_API_BASE_URL}projects/${projectId}/`;
 
   try {
     const response = await fetch(url, {
-      method: 'PUT',
+      method: "PUT",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.access_token}`,
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.access_token}`,
       },
       body: JSON.stringify(updatedData),
     });
 
     if (!response.ok) {
-      throw new Error('Network response was not ok');
+      throw new Error("Network response was not ok");
     }
 
     const data = await response.json();
@@ -171,22 +167,20 @@ export const putCampaign = async (
   callback: (data: any) => void,
   errorCallback?: (error: any) => void
 ) => {
-  console.log("CAMAPIGN ID", campaignId)
-  console.log("PUT successful", updatedData)
   const url = `${DEPLOYED_API_BASE_URL}campaigns/${campaignId}/`;
 
   try {
     const response = await fetch(url, {
-      method: 'PUT',
+      method: "PUT",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.access_token}`,
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.access_token}`,
       },
       body: JSON.stringify(updatedData),
     });
 
     if (!response.ok) {
-      throw new Error('Network response was not ok');
+      throw new Error("Network response was not ok");
     }
 
     const data = await response.json();
@@ -204,21 +198,20 @@ export const putDeal = async (
   callback: (data: any) => void,
   errorCallback?: (error: any) => void
 ) => {
-  console.log("PUT successful", dealId)
   const url = `${DEPLOYED_API_BASE_URL}deals/${dealId}/`;
 
   try {
     const response = await fetch(url, {
-      method: 'PUT',
+      method: "PUT",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.access_token}`,
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.access_token}`,
       },
       body: JSON.stringify(updatedData),
     });
 
     if (!response.ok) {
-      throw new Error('Network response was not ok');
+      throw new Error("Network response was not ok");
     }
 
     const data = await response.json();
@@ -240,15 +233,15 @@ export const putBrand = async (
 
   try {
     const response = await fetch(url, {
-      method: 'PUT',
+      method: "PUT",
       headers: {
-        'Authorization': `Bearer ${localStorage.access_token}`,
+        Authorization: `Bearer ${localStorage.access_token}`,
       },
       body: updatedData,
     });
 
     if (!response.ok) {
-      throw new Error('Network response was not ok');
+      throw new Error("Network response was not ok");
     }
 
     const data = await response.json();
@@ -270,15 +263,15 @@ export const putCreator = async (
 
   try {
     const response = await fetch(url, {
-      method: 'PUT',
+      method: "PUT",
       headers: {
-        'Authorization': `Bearer ${localStorage.access_token}`,
+        Authorization: `Bearer ${localStorage.access_token}`,
       },
       body: updatedData,
     });
 
     if (!response.ok) {
-      throw new Error('Network response was not ok');
+      throw new Error("Network response was not ok");
     }
 
     const data = await response.json();
@@ -288,11 +281,9 @@ export const putCreator = async (
   }
 };
 
-
 ////////////////////////////////////////////////////////////////////////
 /***************************  CHANGE CALLS  ***************************/
 ////////////////////////////////////////////////////////////////////////
-
 
 /* CHANGE PROJECT-STAGE NAME ------------------>   ES IDENTICO A putNewOrderProject */
 
@@ -302,7 +293,6 @@ export const putCreator = async (
 //   callback: (data: any) => void,
 //   errorCallback?: (error: any) => void
 // ) => {
-//   console.log("PUT successful",updatedData)
 //   const url = `${DEPLOYED_API_BASE_URL}project-stages/${projectId}/`;
 
 //   try {
@@ -326,13 +316,9 @@ export const putCreator = async (
 //   }
 // };
 
-
-
-
 ////////////////////////////////////////////////////////////////////////
 /***************************  DELETE CALLS  ***************************/
 ////////////////////////////////////////////////////////////////////////
-
 
 /* DELETE PROJECT */
 
@@ -345,10 +331,10 @@ export const deleteProject = async (
 
   try {
     const response = await fetch(url, {
-      method: 'DELETE',
+      method: "DELETE",
       headers: {
-        'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
-        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        "Content-Type": "application/json",
       },
     });
 
@@ -373,10 +359,10 @@ export const deleteProjectStage = async (
 
   try {
     const response = await fetch(url, {
-      method: 'DELETE',
+      method: "DELETE",
       headers: {
-        'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
-        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        "Content-Type": "application/json",
       },
     });
 
@@ -401,10 +387,10 @@ export const deleteCampaign = async (
 
   try {
     const response = await fetch(url, {
-      method: 'DELETE',
+      method: "DELETE",
       headers: {
-        'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
-        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        "Content-Type": "application/json",
       },
     });
 
@@ -429,10 +415,10 @@ export const deleteCampaignStage = async (
 
   try {
     const response = await fetch(url, {
-      method: 'DELETE',
+      method: "DELETE",
       headers: {
-        'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
-        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        "Content-Type": "application/json",
       },
     });
 
@@ -457,10 +443,10 @@ export const deleteDeal = async (
 
   try {
     const response = await fetch(url, {
-      method: 'DELETE',
+      method: "DELETE",
       headers: {
-        'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
-        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        "Content-Type": "application/json",
       },
     });
 
@@ -481,14 +467,14 @@ export const deleteDealStage = async (
   callback: () => void,
   errorCallback: (error: any) => void
 ) => {
-  const url = `${DEPLOYED_API_BASE_URL}deal-stages/${stageId}/`; 
-  
+  const url = `${DEPLOYED_API_BASE_URL}deal-stages/${stageId}/`;
+
   try {
     const response = await fetch(url, {
-      method: 'DELETE',
+      method: "DELETE",
       headers: {
-        'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
-        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        "Content-Type": "application/json",
       },
     });
 
@@ -513,10 +499,10 @@ export const deleteCreator = async (
 
   try {
     const response = await fetch(url, {
-      method: 'DELETE',
+      method: "DELETE",
       headers: {
-        'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
-        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        "Content-Type": "application/json",
       },
     });
 
@@ -541,10 +527,10 @@ export const deleteBrand = async (
 
   try {
     const response = await fetch(url, {
-      method: 'DELETE',
+      method: "DELETE",
       headers: {
-        'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
-        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        "Content-Type": "application/json",
       },
     });
 
@@ -561,7 +547,6 @@ export const deleteBrand = async (
 ////////////////////////////////////////////////////////////////////////
 /******************************  POST CALLS  ***************************/
 ////////////////////////////////////////////////////////////////////////
-
 
 /* POST TICKET*/
 
@@ -596,24 +581,24 @@ export const deleteBrand = async (
 /* POST TICKET */
 
 export const postTicket = async (
-  requestData: FormData,  // Assuming requestData is a FormData object for file handling
+  requestData: FormData, // Assuming requestData is a FormData object for file handling
   callback: (data: any) => void,
   errorCallback?: (error: any) => void
 ) => {
-  const url = DEPLOYED_API_BASE_URL + 'tickets/';
+  const url = DEPLOYED_API_BASE_URL + "tickets/";
 
   try {
     const response = await fetch(url, {
-      method: 'POST',
+      method: "POST",
       headers: {
         // 'Content-Type': 'multipart/form-data' is not set because browsers will automatically set it correctly along with the boundary when using FormData
-        'Authorization': `Bearer ${localStorage.access_token}`,
+        Authorization: `Bearer ${localStorage.access_token}`,
       },
-      body: requestData,  // Directly using FormData here
+      body: requestData, // Directly using FormData here
     });
 
     if (!response.ok) {
-      throw new Error('Network response was not ok');
+      throw new Error("Network response was not ok");
     }
 
     const data = await response.json();
@@ -623,8 +608,6 @@ export const postTicket = async (
   }
 };
 
-
-
 /* POST PROJECT */
 
 export const postProjects = async (
@@ -632,20 +615,20 @@ export const postProjects = async (
   callback: (data: any) => void,
   errorCallback?: (error: any) => void
 ) => {
-  const url = DEPLOYED_API_BASE_URL + 'projects/';
+  const url = DEPLOYED_API_BASE_URL + "projects/";
 
   try {
     const response = await fetch(url, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.access_token}`,
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.access_token}`,
       },
       body: JSON.stringify(requestData),
     });
 
     if (!response.ok) {
-      throw new Error('Network response was not ok');
+      throw new Error("Network response was not ok");
     }
 
     const data = await response.json();
@@ -662,20 +645,20 @@ export const postDealStage = async (
   callback: (data: any) => void,
   errorCallback?: (error: any) => void
 ) => {
-  const url = DEPLOYED_API_BASE_URL + 'deal-stages/';
+  const url = DEPLOYED_API_BASE_URL + "deal-stages/";
 
   try {
     const response = await fetch(url, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.access_token}`,
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.access_token}`,
       },
       body: JSON.stringify(requestData),
     });
 
     if (!response.ok) {
-      throw new Error('Network response was not ok');
+      throw new Error("Network response was not ok");
     }
 
     const data = await response.json();
@@ -685,7 +668,6 @@ export const postDealStage = async (
   }
 };
 
-
 /* POST CAMPAIGN-STAGE */
 
 export const postCampaignStage = async (
@@ -693,20 +675,20 @@ export const postCampaignStage = async (
   callback: (data: any) => void,
   errorCallback?: (error: any) => void
 ) => {
-  const url = DEPLOYED_API_BASE_URL + 'campaign-stages/';
+  const url = DEPLOYED_API_BASE_URL + "campaign-stages/";
 
   try {
     const response = await fetch(url, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.access_token}`,
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.access_token}`,
       },
       body: JSON.stringify(requestData),
     });
 
     if (!response.ok) {
-      throw new Error('Network response was not ok');
+      throw new Error("Network response was not ok");
     }
 
     const data = await response.json();
@@ -723,20 +705,20 @@ export const postProjectStage = async (
   callback: (data: any) => void,
   errorCallback?: (error: any) => void
 ) => {
-  const url = DEPLOYED_API_BASE_URL + 'project-stages/';
+  const url = DEPLOYED_API_BASE_URL + "project-stages/";
 
   try {
     const response = await fetch(url, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.access_token}`,
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.access_token}`,
       },
       body: JSON.stringify(requestData),
     });
 
     if (!response.ok) {
-      throw new Error('Network response was not ok');
+      throw new Error("Network response was not ok");
     }
 
     const data = await response.json();
@@ -753,20 +735,20 @@ export const postCampaigns = async (
   callback: (data: any) => void,
   errorCallback?: (error: any) => void
 ) => {
-  const url = DEPLOYED_API_BASE_URL + 'campaigns/';
+  const url = DEPLOYED_API_BASE_URL + "campaigns/";
 
   try {
     const response = await fetch(url, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.access_token}`,
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.access_token}`,
       },
       body: JSON.stringify(requestData),
     });
 
     if (!response.ok) {
-      throw new Error('Network response was not ok');
+      throw new Error("Network response was not ok");
     }
 
     const data = await response.json();
@@ -783,20 +765,20 @@ export const postDeals = async (
   callback: (data: any) => void,
   errorCallback?: (error: any) => void
 ) => {
-  const url = DEPLOYED_API_BASE_URL + 'deals/';
+  const url = DEPLOYED_API_BASE_URL + "deals/";
 
   try {
     const response = await fetch(url, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.access_token}`,
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.access_token}`,
       },
       body: JSON.stringify(requestData),
     });
 
     if (!response.ok) {
-      throw new Error('Network response was not ok');
+      throw new Error("Network response was not ok");
     }
 
     const data = await response.json();
@@ -813,19 +795,19 @@ export const postBrands = async (
   callback: (data: any) => void,
   errorCallback?: (error: any) => void
 ) => {
-  const url = DEPLOYED_API_BASE_URL + 'brands/';
+  const url = DEPLOYED_API_BASE_URL + "brands/";
 
   try {
     const response = await fetch(url, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Authorization': `Bearer ${localStorage.access_token}`,
+        Authorization: `Bearer ${localStorage.access_token}`,
       },
       body: requestData,
     });
 
     if (!response.ok) {
-      throw new Error('Network response was not ok');
+      throw new Error("Network response was not ok");
     }
 
     const data = await response.json();
@@ -842,19 +824,19 @@ export const postCreators = async (
   callback: (data: any) => void,
   errorCallback?: (error: any) => void
 ) => {
-  const url = DEPLOYED_API_BASE_URL + 'creators/';
+  const url = DEPLOYED_API_BASE_URL + "creators/";
 
   try {
     const response = await fetch(url, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Authorization': `Bearer ${localStorage.access_token}`,
+        Authorization: `Bearer ${localStorage.access_token}`,
       },
       body: requestData,
     });
 
     if (!response.ok) {
-      throw new Error('Network response was not ok');
+      throw new Error("Network response was not ok");
     }
 
     const data = await response.json();
@@ -900,14 +882,14 @@ export const getProjects = async (
   callback: (data: any) => void,
   errorCallback?: (error: any) => void
 ) => {
-  const url = DEPLOYED_API_BASE_URL + 'projects/';
+  const url = DEPLOYED_API_BASE_URL + "projects/";
 
   try {
     await fetch(url, {
-      method: 'GET',
+      method: "GET",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.access_token}`,
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.access_token}`,
       },
     })
       .then((response) => response.json())
@@ -918,7 +900,7 @@ export const getProjects = async (
   } catch (error) {
     errorCallback && errorCallback(error);
   }
-}
+};
 
 // GET PROJECT DETAILS
 
@@ -926,14 +908,14 @@ export const getProjectsDetail = async (
   callback: (data: any) => void,
   errorCallback?: (error: any) => void
 ) => {
-  const url = DEPLOYED_API_BASE_URL + 'projects/';
+  const url = DEPLOYED_API_BASE_URL + "projects/";
 
   try {
     await fetch(url, {
-      method: 'GET',
+      method: "GET",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.access_token}`,
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.access_token}`,
       },
     })
       .then((response) => response.json())
@@ -944,7 +926,7 @@ export const getProjectsDetail = async (
   } catch (error) {
     errorCallback && errorCallback(error);
   }
-}
+};
 
 // GET PROJECT-STAGE
 
@@ -952,14 +934,14 @@ export const getProjectStages = async (
   callback: (data: any) => void,
   errorCallback?: (error: any) => void
 ) => {
-  const url = DEPLOYED_API_BASE_URL + 'project-stages/';
+  const url = DEPLOYED_API_BASE_URL + "project-stages/";
 
   try {
     await fetch(url, {
-      method: 'GET',
+      method: "GET",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.access_token}`,
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.access_token}`,
       },
     })
       .then((response) => response.json())
@@ -970,7 +952,7 @@ export const getProjectStages = async (
   } catch (error) {
     errorCallback && errorCallback(error);
   }
-}
+};
 
 // GET CAMPAIGNS
 
@@ -978,14 +960,14 @@ export const getCampaigns = async (
   callback: (data: any) => void,
   errorCallback?: (error: any) => void
 ) => {
-  const url = DEPLOYED_API_BASE_URL + 'campaigns/';
+  const url = DEPLOYED_API_BASE_URL + "campaigns/";
 
   try {
     await fetch(url, {
-      method: 'GET',
+      method: "GET",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.access_token}`,
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.access_token}`,
       },
     })
       .then((response) => response.json())
@@ -996,7 +978,7 @@ export const getCampaigns = async (
   } catch (error) {
     errorCallback && errorCallback(error);
   }
-}
+};
 
 // GET CAMPAIGNS DETAIL
 
@@ -1004,14 +986,14 @@ export const getCampaignsDetail = async (
   callback: (data: any) => void,
   errorCallback?: (error: any) => void
 ) => {
-  const url = DEPLOYED_API_BASE_URL + 'campaigns/';
+  const url = DEPLOYED_API_BASE_URL + "campaigns/";
 
   try {
     await fetch(url, {
-      method: 'GET',
+      method: "GET",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.access_token}`,
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.access_token}`,
       },
     })
       .then((response) => response.json())
@@ -1022,7 +1004,7 @@ export const getCampaignsDetail = async (
   } catch (error) {
     errorCallback && errorCallback(error);
   }
-}
+};
 
 // GET CAMPAIGN-STAGE
 
@@ -1030,14 +1012,14 @@ export const getCampaignStages = async (
   callback: (data: any) => void,
   errorCallback?: (error: any) => void
 ) => {
-  const url = DEPLOYED_API_BASE_URL + 'campaign-stages/';
+  const url = DEPLOYED_API_BASE_URL + "campaign-stages/";
 
   try {
     await fetch(url, {
-      method: 'GET',
+      method: "GET",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.access_token}`,
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.access_token}`,
       },
     })
       .then((response) => response.json())
@@ -1048,8 +1030,7 @@ export const getCampaignStages = async (
   } catch (error) {
     errorCallback && errorCallback(error);
   }
-}
-
+};
 
 // GET DEALS
 
@@ -1057,14 +1038,14 @@ export const getDeals = async (
   callback: (data: any) => void,
   errorCallback?: (error: any) => void
 ) => {
-  const url = DEPLOYED_API_BASE_URL + 'deals/';
+  const url = DEPLOYED_API_BASE_URL + "deals/";
 
   try {
     await fetch(url, {
-      method: 'GET',
+      method: "GET",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.access_token}`,
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.access_token}`,
       },
     })
       .then((response) => response.json())
@@ -1075,7 +1056,7 @@ export const getDeals = async (
   } catch (error) {
     errorCallback && errorCallback(error);
   }
-}
+};
 
 // GET DEALS DETAIL
 
@@ -1083,14 +1064,14 @@ export const getDealsDetail = async (
   callback: (data: any) => void,
   errorCallback?: (error: any) => void
 ) => {
-  const url = DEPLOYED_API_BASE_URL + 'deals/';
+  const url = DEPLOYED_API_BASE_URL + "deals/";
 
   try {
     await fetch(url, {
-      method: 'GET',
+      method: "GET",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.access_token}`,
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.access_token}`,
       },
     })
       .then((response) => response.json())
@@ -1101,7 +1082,7 @@ export const getDealsDetail = async (
   } catch (error) {
     errorCallback && errorCallback(error);
   }
-}
+};
 
 // GET DEAL-STAGE
 
@@ -1109,14 +1090,14 @@ export const getDealStages = async (
   callback: (data: any) => void,
   errorCallback?: (error: any) => void
 ) => {
-  const url = DEPLOYED_API_BASE_URL + 'deal-stages/';
+  const url = DEPLOYED_API_BASE_URL + "deal-stages/";
 
   try {
     await fetch(url, {
-      method: 'GET',
+      method: "GET",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.access_token}`,
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.access_token}`,
       },
     })
       .then((response) => response.json())
@@ -1127,23 +1108,22 @@ export const getDealStages = async (
   } catch (error) {
     errorCallback && errorCallback(error);
   }
-}
+};
 
-
-// GET BRANDS 
+// GET BRANDS
 
 export const getBrands = async (
   callback: (data: any) => void,
   errorCallback?: (error: any) => void
 ) => {
-  const url = DEPLOYED_API_BASE_URL + 'brands/';
+  const url = DEPLOYED_API_BASE_URL + "brands/";
 
   try {
     await fetch(url, {
-      method: 'GET',
+      method: "GET",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.access_token}`,
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.access_token}`,
       },
     })
       .then((response) => response.json())
@@ -1154,7 +1134,7 @@ export const getBrands = async (
   } catch (error) {
     errorCallback && errorCallback(error);
   }
-}
+};
 
 // GET BRANDS DETAIL
 
@@ -1162,14 +1142,14 @@ export const getBrandsDetail = async (
   callback: (data: any) => void,
   errorCallback?: (error: any) => void
 ) => {
-  const url = DEPLOYED_API_BASE_URL + 'brands/';
+  const url = DEPLOYED_API_BASE_URL + "brands/";
 
   try {
     await fetch(url, {
-      method: 'GET',
+      method: "GET",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.access_token}`,
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.access_token}`,
       },
     })
       .then((response) => response.json())
@@ -1180,7 +1160,7 @@ export const getBrandsDetail = async (
   } catch (error) {
     errorCallback && errorCallback(error);
   }
-}
+};
 
 // GET CREATORS
 
@@ -1188,14 +1168,14 @@ export const getCreators = async (
   callback: (data: any) => void,
   errorCallback?: (error: any) => void
 ) => {
-  const url = DEPLOYED_API_BASE_URL + 'creators/';
+  const url = DEPLOYED_API_BASE_URL + "creators/";
 
   try {
     await fetch(url, {
-      method: 'GET',
+      method: "GET",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.access_token}`,
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.access_token}`,
       },
     })
       .then((response) => response.json())
@@ -1206,7 +1186,7 @@ export const getCreators = async (
   } catch (error) {
     errorCallback && errorCallback(error);
   }
-}
+};
 
 // GET CREATORS DETAIL
 
@@ -1214,14 +1194,14 @@ export const getCreatorsDetail = async (
   callback: (data: any) => void,
   errorCallback?: (error: any) => void
 ) => {
-  const url = DEPLOYED_API_BASE_URL + 'creators/';
+  const url = DEPLOYED_API_BASE_URL + "creators/";
 
   try {
     await fetch(url, {
-      method: 'GET',
+      method: "GET",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.access_token}`,
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.access_token}`,
       },
     })
       .then((response) => response.json())
@@ -1232,13 +1212,11 @@ export const getCreatorsDetail = async (
   } catch (error) {
     errorCallback && errorCallback(error);
   }
-}
-
+};
 
 ////////////////////////////////////////////////////////////////////////
 /********************  PROFILE BUTTON CALLS  *************************/
 ////////////////////////////////////////////////////////////////////////
-
 
 // PROJECT PROFILE BUTTONS
 
@@ -1250,19 +1228,19 @@ export const uploadContract = async (
 ) => {
   const url = `${DEPLOYED_API_BASE_URL}projects/${projectId}/upload-contract/`;
   const formData = new FormData();
-  formData.append('file', file);
+  formData.append("file", file);
 
   try {
     const response = await fetch(url, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
       },
-      body: formData
+      body: formData,
     });
 
     if (!response.ok) {
-      throw new Error('Network response was not ok');
+      throw new Error("Network response was not ok");
     }
 
     const data = await response.json();
@@ -1278,4 +1256,44 @@ export const viewContract = (projectId: string) => {
 
 export const downloadContract = (projectId: string) => {
   return `${DEPLOYED_API_BASE_URL}projects/${projectId}/download-contract/`; // Assuming this endpoint sets 'Content-Disposition' to attachment in headers
+};
+
+export const lockCampaign = async (campaignId: any) => {
+  const url = DEPLOYED_API_BASE_URL + `campaigns/${campaignId}/lock/`;
+
+  try {
+    await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.access_token}`,
+      },
+    })
+      .then((response) => response.json())
+      .catch((error: any) => {
+        console.error(error);
+      });
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const unlockCampaign = async (campaignId: any) => {
+  const url = DEPLOYED_API_BASE_URL + `campaigns/${campaignId}/unlock/`;
+
+  try {
+    await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.access_token}`,
+      },
+    })
+      .then((response) => response.json())
+      .catch((error: any) => {
+        console.error(error);
+      });
+  } catch (error) {
+    console.error(error);
+  }
 };
