@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { getCampaignStages,postCampaignStage } from "@/utils/httpCalls";
+import React, { useEffect, useState } from "react";
+import { getCampaignStages, postCampaignStage } from "@/utils/httpCalls";
 
 interface AddFieldModalCampaignProps {
   isOpen: boolean;
@@ -8,23 +8,28 @@ interface AddFieldModalCampaignProps {
   updateCampaignData: () => void;
 }
 
-const AddFieldModalCampaign: React.FC<AddFieldModalCampaignProps> = ({ isOpen, onClose, title, updateCampaignData }) => {
+const AddFieldModalCampaign: React.FC<AddFieldModalCampaignProps> = ({
+  isOpen,
+  onClose,
+  title,
+  updateCampaignData,
+}) => {
   if (!isOpen) return null;
 
   const [newLabel, setNewLabel] = useState<{
-    name: string,
-    order: number
-  }>({ name: '', order: -1 });
-  console.log(newLabel)
+    name: string;
+    order: number;
+  }>({ name: "", order: -1 });
 
   useEffect(() => {
     const fetchMaxOrderCampaign = async () => {
       try {
         await getCampaignStages(
           (response) => {
-            console.log("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",response)
-            const maxOrder = Math.max(...response.map((stage: any) => stage.order));
-            setNewLabel(prevLabel => ({ ...prevLabel, order: maxOrder + 1 }));
+            const maxOrder = Math.max(
+              ...response.map((stage: any) => stage.order)
+            );
+            setNewLabel((prevLabel) => ({ ...prevLabel, order: maxOrder + 1 }));
           },
           (error) => {
             console.error("Error fetching campaign stages:", error);
@@ -39,7 +44,7 @@ const AddFieldModalCampaign: React.FC<AddFieldModalCampaignProps> = ({ isOpen, o
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newName = event.target.value;
-    setNewLabel(prevLabel => ({ ...prevLabel, name: newName }));
+    setNewLabel((prevLabel) => ({ ...prevLabel, name: newName }));
   };
 
   const addCampaignStage = async () => {
@@ -47,7 +52,6 @@ const AddFieldModalCampaign: React.FC<AddFieldModalCampaignProps> = ({ isOpen, o
       await postCampaignStage(
         newLabel,
         (response) => {
-          console.log("Campaign stage ADD successfully:", response);
           onClose();
           updateCampaignData();
         },
@@ -62,20 +66,20 @@ const AddFieldModalCampaign: React.FC<AddFieldModalCampaignProps> = ({ isOpen, o
 
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-container" onClick={e => e.stopPropagation()}>
+      <div className="modal-container" onClick={(e) => e.stopPropagation()}>
         {title && (
           <div className="modal-header">
             <h5 className="subtitle">{title}</h5>
-            <button type="button" onClick={onClose} className="close-button">×</button>
+            <button type="button" onClick={onClose} className="close-button">
+              ×
+            </button>
           </div>
         )}
         <div className="modal-content">
           {/* <p className='text'>
             Add a new field to your kanban board here
           </p> */}
-          <p className='smallcaps'>
-            Add Label
-          </p>
+          <p className="smallcaps">Add Label</p>
           <input
             type="text"
             placeholder="Label (eg. Prospective)"
@@ -83,8 +87,12 @@ const AddFieldModalCampaign: React.FC<AddFieldModalCampaignProps> = ({ isOpen, o
             value={newLabel.name}
             onChange={handleInputChange}
           />
-          <div className='column-center'>
-            <button className="app-button mt-4" type="submit" onClick={addCampaignStage}>
+          <div className="column-center">
+            <button
+              className="app-button mt-4"
+              type="submit"
+              onClick={addCampaignStage}
+            >
               Save
             </button>
           </div>

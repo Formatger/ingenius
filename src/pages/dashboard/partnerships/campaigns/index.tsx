@@ -387,14 +387,12 @@ export default withAuth(Campaigns);
 
 //  // Save Form Data
 //  const handleSaveFormData = (data: FormData) => {
-//     console.log("Data from form:", data);
 //     setSavedData(data);
 //     setOpenSidepanel(false);
 //     setSavedDataList(currentList => [...currentList, data]);
 //   };
 //   // Save Creator Data
 //  const handleSaveCreatorData = (profile: any) => {
-//      console.log("Data from form:", profile);
 //     //  setCreatorSavedData(profile)
 //   };
 //  // Generate Card

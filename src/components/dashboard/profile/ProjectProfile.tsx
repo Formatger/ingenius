@@ -27,21 +27,25 @@ interface ProjectContractProps {
 }
 
 const ProjectDetails = ({ projectsData }: ProjectDetailsProps) => {
-
   return (
     <div className="card-container">
-      <div className="head-card mb-1" >
+      <div className="head-card mb-1">
         <div className="profile-info">
           <div className="profile-info-image">
-            <img src={projectsData?.creator_profile_picture} alt="Creator" className="profile-image" loading="lazy" />
+            <img
+              src={projectsData?.creator_profile_picture}
+              alt="Creator"
+              className="profile-image"
+              loading="lazy"
+            />
           </div>
         </div>
         <div className="profile-info">
           <div className="profile-info-box">
             <div className="profile-info-wrap">
               <div className="viewprofile-wrap">
-              <p className="smallcaps">CREATOR</p>
-              {/* <button className="sec-button small linen mb-2" onClick={undefined}>
+                <p className="smallcaps">CREATOR</p>
+                {/* <button className="sec-button small linen mb-2" onClick={undefined}>
                 <Image className="" src={Export} alt="Icon" width={10} height={10} />
                  <p>View Profile</p>
               </button> */}
@@ -50,7 +54,9 @@ const ProjectDetails = ({ projectsData }: ProjectDetailsProps) => {
             </div>
             <div className="profile-info-wrap">
               <p className="smallcaps">CONTACT</p>
-              <p className="profile-text ml-2 text-14">{projectsData?.creator_email}</p>
+              <p className="profile-text ml-2 text-14">
+                {projectsData?.creator_email}
+              </p>
             </div>
             <div className="profile-info-wrap">
               <p className="smallcaps">SOCIALS</p>
@@ -65,20 +71,20 @@ const ProjectDetails = ({ projectsData }: ProjectDetailsProps) => {
       <div className="card-text">
         <div>
           <p className="smallcaps">PROJECT</p>
-          <span className="sec-button gray1" >
+          <span className="sec-button gray1">
             <p className="sec-tag">{projectsData?.name}</p>
           </span>
         </div>
         <div>
           <p className="smallcaps">CAMPAIGN</p>
-          <span className="sec-button gray1" >
+          <span className="sec-button gray1">
             <p className="sec-tag">{projectsData?.campaign_name}</p>
           </span>
         </div>
 
         <div>
           <p className="smallcaps">description</p>
-          <span className="sec-button gray1" >
+          <span className="sec-button gray1">
             <p className="description">{projectsData?.description}</p>
           </span>
         </div>
@@ -90,7 +96,7 @@ const ProjectDetails = ({ projectsData }: ProjectDetailsProps) => {
         </div> */}
         <div>
           <p className="smallcaps">CONTRACT VALUE</p>
-          <span className="sec-button gray1" >
+          <span className="sec-button gray1">
             <p className="sec-tag">${projectsData?.contract_value}</p>
           </span>
         </div>
@@ -105,18 +111,24 @@ const ProjectDetails = ({ projectsData }: ProjectDetailsProps) => {
         <div className="sidepanel-hidden">
           <p className="smallcaps">MANAGE CREATOR</p>
           <div className="button-group">
-          <button className="sec-button linen" onClick={undefined}>
+            <button className="sec-button linen" onClick={undefined}>
               <Image src={Message} alt="Icon" width={15} height={15} />
               <p>Message</p>
             </button>
             <button className="sec-button linen" onClick={undefined}>
-              <Image className="" src={Export} alt="Icon" width={14} height={14} />
+              <Image
+                className=""
+                src={Export}
+                alt="Icon"
+                width={14}
+                height={14}
+              />
               <p>View Profile</p>
             </button>
           </div>
         </div>
       </div>
-    </div >
+    </div>
   );
 };
 
@@ -130,49 +142,45 @@ const ProjectInvoice = ({ projectsData }: ProjectInvoiceProps) => {
 
     setLoading(true);
     const formData = new FormData();
-    formData.append('contract', file);
-    formData.append('projectId', projectsData.id);
+    formData.append("contract", file);
+    formData.append("projectId", projectsData.id);
 
     try {
-      const response = await fetch('/api/contract/upload', {
-        method: 'POST',
+      const response = await fetch("/api/contract/upload", {
+        method: "POST",
         body: formData,
       });
       setLoading(false);
       if (response.ok) {
-        console.log('File uploaded successfully');
         // Optionally refresh or update parent component data
       } else {
-        throw new Error('Failed to upload file');
+        throw new Error("Failed to upload file");
       }
     } catch (error) {
       setLoading(false);
-      console.error('Error uploading file:', error);
+      console.error("Error uploading file:", error);
     }
   };
 
   const handleViewContract = () => {
     const url = `/api/projects/${projectsData.id}/view`;
-    window.open(url, '_blank');
+    window.open(url, "_blank");
   };
 
   const handleDownloadContract = () => {
     const url = `/api/projects/${projectsData.id}/download`;
-    const link = document.createElement('a');
+    const link = document.createElement("a");
     link.href = url;
     // link.setAttribute('download', 'Project_Contract.pdf');  // Optionally set a filename
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
   };
-  
+
   return (
     <div className="card-container">
-
       <div className="agency-invoice">
-        <p className="smallcaps">
-          CONTRACT DETAILS
-        </p>
+        <p className="smallcaps">CONTRACT DETAILS</p>
         <div className="invoice-data">
           <ul>
             {/* <li className="invoice-data-list">
@@ -189,33 +197,47 @@ const ProjectInvoice = ({ projectsData }: ProjectInvoiceProps) => {
             </li>
             <li className="invoice-data-list">
               <p>Delivery Period</p>
-              <span className="invoice-tag">{projectsData?.project_duration}</span>
+              <span className="invoice-tag">
+                {projectsData?.project_duration}
+              </span>
             </li>
             <li className="invoice-data-list">
               <p>Contract Value</p>
-              <span className="invoice-tag">${projectsData?.contract_value}</span>
+              <span className="invoice-tag">
+                ${projectsData?.contract_value}
+              </span>
             </li>
             <li className="invoice-data-list">
               <p>Invoice Status</p>
-              <span className="invoice-tag">{projectsData?.invoice_paid ? "Paid" : "Unpaid"}</span>
+              <span className="invoice-tag">
+                {projectsData?.invoice_paid ? "Paid" : "Unpaid"}
+              </span>
             </li>
           </ul>
         </div>
 
         <div className="mt-5">
-          <p className="smallcaps" >MANAGE CONTRACT</p>
+          <p className="smallcaps">MANAGE CONTRACT</p>
 
-          <input type="file" onChange={handleFileUpload} style={{ display: 'none' }} ref={fileInputRef} />
+          <input
+            type="file"
+            onChange={handleFileUpload}
+            style={{ display: "none" }}
+            ref={fileInputRef}
+          />
 
           <div className="button-group">
             {/* <button className="sec-button linen" onClick={() => fileInputRef.current.click()}>
               <Image src={Upload} alt="Icon" width={18} height={18} />
               <p>Upload Contract</p>
             </button> */}
-            <button className="sec-button w-50 img-btn linen" onClick={handleViewContract}>
+            <button
+              className="sec-button w-50 img-btn linen"
+              onClick={handleViewContract}
+            >
               <Image src={Folder} alt="Icon" width={15} height={15} />
               <p>View Contract</p>
-            </button>      
+            </button>
           </div>
 
           <div className="button-group mt-3">
@@ -223,7 +245,10 @@ const ProjectInvoice = ({ projectsData }: ProjectInvoiceProps) => {
               <Image src={Send} alt="Icon" width={15} height={15} />
               <p>Send Contract</p>
             </button> */}
-            <button className="sec-button w-50 img-btn linen" onClick={handleDownloadContract}>
+            <button
+              className="sec-button w-50 img-btn linen"
+              onClick={handleDownloadContract}
+            >
               <Image src={Download} alt="Icon" width={18} height={18} />
               <p>Download as PDF</p>
             </button>
@@ -231,31 +256,36 @@ const ProjectInvoice = ({ projectsData }: ProjectInvoiceProps) => {
         </div>
 
         <div className="">
-          <p className="smallcaps mt-5" >MANAGE INVOICE</p>
+          <p className="smallcaps mt-5">MANAGE INVOICE</p>
           <div className="button-group">
             <button className="sec-button linen" onClick={undefined}>
               <Image src={Upload} alt="Icon" width={18} height={18} />
               <p>Upload Invoice</p>
             </button>
-            <button className="sec-button w-50 img-btn linen" onClick={undefined}>
+            <button
+              className="sec-button w-50 img-btn linen"
+              onClick={undefined}
+            >
               <Image src={Folder} alt="Icon" width={15} height={15} />
               <p>View Invoice</p>
-            </button>      
+            </button>
           </div>
           <div className="button-group mt-3">
             {/* <button className="sec-button linen" onClick={undefined}>
               <Image src={Send} alt="Icon" width={15} height={15} />
               <p>Send Invoice</p>
             </button> */}
-            <button className="sec-button w-50 img-btn linen" onClick={undefined}>
-            <Image src={Download} alt="Icon" width={18} height={18} />
+            <button
+              className="sec-button w-50 img-btn linen"
+              onClick={undefined}
+            >
+              <Image src={Download} alt="Icon" width={18} height={18} />
               <p>Download as PDF</p>
-            </button>      
+            </button>
           </div>
         </div>
-
       </div>
-    </div >
+    </div>
   );
 };
 

@@ -45,11 +45,8 @@ function Dropdown({
   const timeframeRef = useRef(null);
   const nicheRef = useRef(null);
 
-  console.log(originalData)
-
   // Handle click filter when clicking outside of it
   useEffect(() => {
-    console.log(originalData);
     const handleClickOutside = (event: any) => {
       if (
         filterRef.current &&
@@ -381,7 +378,10 @@ function Dropdown({
     handleSelectTimeframe(timeframes[0]);
     searchNicheValue.current = "";
     setShowSuggestionDropdown(false);
-    selectedNicheFiltersRef.current = [...selectedNicheFiltersRef.current, value];
+    selectedNicheFiltersRef.current = [
+      ...selectedNicheFiltersRef.current,
+      value,
+    ];
     selectedFiltersRef.current = [];
 
     const filteredData = originalData.filter((item: any) => {
@@ -393,7 +393,7 @@ function Dropdown({
     });
 
     setFilteredData(filteredData);
-  }
+  };
 
   const handleRemoveNicheFilter = (value: string) => {
     setCurrentPage(1);
@@ -417,7 +417,7 @@ function Dropdown({
       ];
       setFilteredData(filteredData);
     }
-  }
+  };
 
   const displayPeopleFilter = () => {
     return (
@@ -426,12 +426,13 @@ function Dropdown({
           className={isPeopleOpen ? "dropdownButtonOpen" : "dropdownButton"}
           onClick={() => handleOpenFilter("people")}
         >
-          {`Group: ${selectedFiltersRef.current.length === 1
-            ? selectedFiltersRef.current[0]
-            : selectedFiltersRef.current.length === 0
+          {`Group: ${
+            selectedFiltersRef.current.length === 1
+              ? selectedFiltersRef.current[0]
+              : selectedFiltersRef.current.length === 0
               ? `All`
               : "Multiple Selected"
-            }`}
+          }`}
           <Arrow className={`${isPeopleOpen ? "" : "arrow-down"}`} />
         </button>
         {isPeopleOpen && (
@@ -574,12 +575,13 @@ function Dropdown({
           className={isNicheOpen ? "dropdownButtonOpen" : "dropdownButton"}
           onClick={() => handleOpenFilter("niche")}
         >
-          {`Niche: ${selectedNicheFiltersRef.current.length === 1
-            ? selectedNicheFiltersRef.current[0]
-            : selectedNicheFiltersRef.current.length === 0
+          {`Niche: ${
+            selectedNicheFiltersRef.current.length === 1
+              ? selectedNicheFiltersRef.current[0]
+              : selectedNicheFiltersRef.current.length === 0
               ? `All`
               : "Multiple Selected"
-            }`}
+          }`}
           <Arrow className={`${isNicheOpen ? "" : "arrow-down"}`} />
         </button>
         {isNicheOpen && (

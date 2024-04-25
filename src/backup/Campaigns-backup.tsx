@@ -90,7 +90,6 @@ const CampaignsPage = () => {
   const updateCampaignData = () => {
     setUpdateCampaign((prevState) => !prevState);
   };
-  console.log("UPDATE STAGE", updateCampaign);
 
   /* CAMPAIGN-STAGE API CALL  */
 
@@ -102,7 +101,6 @@ const CampaignsPage = () => {
     setLoader(true);
     getCampaignStages(
       (response: any) => {
-        console.log("Campaign Stages:", campaignStage);
         setCampaignStage(
           response.map((stage: any) => ({
             stageID: stage.id,
@@ -113,7 +111,6 @@ const CampaignsPage = () => {
         );
 
         setUpdateCampaign(false);
-        console.log(campaignStage);
       },
 
       (error: any) => {
@@ -136,9 +133,6 @@ const CampaignsPage = () => {
       getCampaignsDetail(
         (response: any) => {
           provisionalCampaignsDetailData = response;
-          console.log("===========================");
-          console.log("primer", response);
-          console.log("===========================");
         },
         (error: any) => {
           setHttpError({
@@ -151,9 +145,6 @@ const CampaignsPage = () => {
       getCampaigns(
         (response: any[]) => {
           provisionalCampaignsData = response;
-          console.log("===========================");
-          console.log("segon", response);
-          console.log("===========================");
         },
         (error: any) => {
           setHttpError({
@@ -449,14 +440,12 @@ export default withAuth(Campaigns);
 
 //  // Save Form Data
 //  const handleSaveFormData = (data: FormData) => {
-//     console.log("Data from form:", data);
 //     setSavedData(data);
 //     setOpenSidepanel(false);
 //     setSavedDataList(currentList => [...currentList, data]);
 //   };
 //   // Save Creator Data
 //  const handleSaveCreatorData = (profile: any) => {
-//      console.log("Data from form:", profile);
 //     //  setCreatorSavedData(profile)
 //   };
 //  // Generate Card

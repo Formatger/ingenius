@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import { postTicket } from "@/utils/httpCalls";
 import { useForm } from "react-hook-form";
 
@@ -6,7 +6,7 @@ interface SupportFormProps {
   // isOpen: boolean;
   // onClose: () => void;
   title?: string;
-  //   updateProjectData: () => void; 
+  //   updateProjectData: () => void;
 }
 
 interface FormData {
@@ -25,7 +25,7 @@ const SupportForm: React.FC<SupportFormProps> = ({ title }) => {
       await postTicket(
         data,
         (response) => {
-          console.log("Ticket ADD successfully:", response)
+          console.log("Ticket ADD successfully:", response);
           //   updateProjectData();
         },
         (error) => {
@@ -42,32 +42,32 @@ const SupportForm: React.FC<SupportFormProps> = ({ title }) => {
     if (files) {
       const filesArray = Array.from(files);
       setSelectedFiles((prevFiles) => [...prevFiles, ...filesArray]);
-  
+
       // Crear un nuevo FileList
       const fileList = filesArray.reduce((fileList, file) => {
         fileList.items.add(file);
         return fileList;
       }, new DataTransfer());
-  
+
       setValue("screenshots", fileList.files); // Utiliza fileList en lugar de selectedFiles
     }
   };
 
   return (
-    <div className="modal-overlay" >
-      <div className="modal-container" onClick={e => e.stopPropagation()}>
+    <div className="modal-overlay">
+      <div className="modal-container" onClick={(e) => e.stopPropagation()}>
         {title && (
           <div className="modal-header">
             <h5 className="subtitle">{title}</h5>
-            <button type="button" className="close-button">×</button>
+            <button type="button" className="close-button">
+              ×
+            </button>
           </div>
         )}
         <div className="modal-content">
           <form className="sidepanel-form" onSubmit={handleSubmit(addTicket)}>
             <div className="form-box">
-              <p className='smallcaps'>
-                Subject
-              </p>
+              <p className="smallcaps">Subject</p>
               <input
                 {...register("subject", { required: true })}
                 type="text"
@@ -76,9 +76,7 @@ const SupportForm: React.FC<SupportFormProps> = ({ title }) => {
               />
             </div>
             <div className="form-box">
-              <p className='smallcaps'>
-                Email
-              </p>
+              <p className="smallcaps">Email</p>
               <input
                 {...register("email", { required: true })}
                 type="text"
@@ -87,9 +85,7 @@ const SupportForm: React.FC<SupportFormProps> = ({ title }) => {
               />
             </div>
             <div className="form-box">
-              <p className='smallcaps'>
-                Message
-              </p>
+              <p className="smallcaps">Message</p>
               <textarea
                 {...register("message", { required: true })}
                 placeholder="Label (eg. Prospective)"
@@ -113,7 +109,7 @@ const SupportForm: React.FC<SupportFormProps> = ({ title }) => {
                 </ul>
               )}
             </div>
-            <div className='column-center'>
+            <div className="column-center">
               <button className="app-button mt-4" type="submit">
                 Submit
               </button>

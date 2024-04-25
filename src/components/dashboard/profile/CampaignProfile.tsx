@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Image from "next/image";
 import Folder from "@/components/assets/icons/folder.svg";
 import Download from "@/components/assets/icons/download.svg";
@@ -20,10 +20,15 @@ interface CampaignInvoiceProps {
 const CampaignDetails = ({ campaignsData }: CampaignDetailsProps) => {
   return (
     <div className="card-container">
-      <div className="head-card mb-1" >
+      <div className="head-card mb-1">
         <div className="profile-info">
           <div className="profile-info-image">
-            <img src={campaignsData?.brand_image_url} alt="Brand" className="profile-image" loading="lazy" />
+            <img
+              src={campaignsData?.brand_image_url}
+              alt="Brand"
+              className="profile-image"
+              loading="lazy"
+            />
           </div>
         </div>
         <div className="profile-info">
@@ -34,7 +39,9 @@ const CampaignDetails = ({ campaignsData }: CampaignDetailsProps) => {
             </div>
             <div className="profile-info-wrap">
               <p className="smallcaps">CONTACT</p>
-              <p className="profile-text ml-2 text-14">{campaignsData?.brand_email}</p>
+              <p className="profile-text ml-2 text-14">
+                {campaignsData?.brand_email}
+              </p>
             </div>
             <div className="profile-info-wrap">
               <p className="smallcaps">WEBSITE</p>
@@ -44,7 +51,9 @@ const CampaignDetails = ({ campaignsData }: CampaignDetailsProps) => {
                   href={campaignsData?.brand_website}
                   className="profile-text text-12"
                   target="_blank"
-                >View Website</a>
+                >
+                  View Website
+                </a>
               </div>
             </div>
           </div>
@@ -54,7 +63,9 @@ const CampaignDetails = ({ campaignsData }: CampaignDetailsProps) => {
         <div>
           <p className="smallcaps mb-2">CAMPAIGN</p>
           <span className="sec-button gray1" onClick={undefined}>
-            <p className="sec-tag">{campaignsData.campaign_name || campaignsData.name}</p>
+            <p className="sec-tag">
+              {campaignsData.campaign_name || campaignsData.name}
+            </p>
           </span>
         </div>
         <div>
@@ -81,25 +92,29 @@ const CampaignDetails = ({ campaignsData }: CampaignDetailsProps) => {
             <p className="sec-tag">{campaignsData?.campaign_stage_name}</p>
           </span>
         </div>
-        
+
         {/* Hidden on Sidepanel */}
         <div className="sidepanel-hidden">
           <p className="smallcaps">MANAGE BRAND</p>
           <div className="button-group">
-          <button className="sec-button linen" onClick={undefined}>
+            <button className="sec-button linen" onClick={undefined}>
               <Image src={Message} alt="Icon" width={15} height={15} />
               <p>Message</p>
             </button>
             <button className="sec-button linen" onClick={undefined}>
-              <Image className="" src={Export} alt="Icon" width={14} height={14} />
+              <Image
+                className=""
+                src={Export}
+                alt="Icon"
+                width={14}
+                height={14}
+              />
               <p>View Profile</p>
             </button>
           </div>
         </div>
-
       </div>
-
-    </div >
+    </div>
   );
 };
 
@@ -107,9 +122,7 @@ const CampaignInvoice = ({ campaignsData }: CampaignInvoiceProps) => {
   return (
     <div className="card-container">
       <div className="agency-invoice">
-        <p className="smallcaps mb-2">
-          CONTRACT DETAILS
-        </p>
+        <p className="smallcaps mb-2">CONTRACT DETAILS</p>
         <div className="invoice-data">
           <ul>
             {/* <li className="invoice-data-list">
@@ -126,7 +139,9 @@ const CampaignInvoice = ({ campaignsData }: CampaignInvoiceProps) => {
             </li>
             <li className="invoice-data-list">
               <p>Representative</p>
-              <span className="invoice-tag">{campaignsData.representative}</span>
+              <span className="invoice-tag">
+                {campaignsData.representative}
+              </span>
             </li>
             <li className="invoice-data-list">
               <p>Scope of Work</p>
@@ -134,7 +149,9 @@ const CampaignInvoice = ({ campaignsData }: CampaignInvoiceProps) => {
             </li>
             <li className="invoice-data-list">
               <p>Campaign Duration</p>
-              <span className="invoice-tag">{campaignsData.campaign_duration}</span>
+              <span className="invoice-tag">
+                {campaignsData.campaign_duration}
+              </span>
             </li>
             {/* <li className="invoice-data-list">
               <p className="mr-8">Deliverables</p>
@@ -147,29 +164,41 @@ const CampaignInvoice = ({ campaignsData }: CampaignInvoiceProps) => {
             </li> */}
             <li className="invoice-data-list">
               <p>Contract Value</p>
-              <span className="invoice-tag">${campaignsData.contract_value}</span>
+              <span className="invoice-tag">
+                ${campaignsData.contract_value}
+              </span>
             </li>
             <li className="invoice-data-list">
               <p>Invoice Status</p>
-              <span className="invoice-tag">{campaignsData?.invoice_paid ? "Paid" : "Unpaid"}</span>
+              <span className="invoice-tag">
+                {campaignsData?.invoice_paid ? "Paid" : "Unpaid"}
+              </span>
             </li>
           </ul>
         </div>
 
         <div className="mt-5">
-          <p className="smallcaps" >MANAGE CONTRACT</p>
+          <p className="smallcaps">MANAGE CONTRACT</p>
 
-          <input type="file" onChange={undefined} style={{ display: 'none' }} ref={undefined} />
+          <input
+            type="file"
+            onChange={undefined}
+            style={{ display: "none" }}
+            ref={undefined}
+          />
 
           <div className="button-group">
             <button className="sec-button linen" onClick={undefined}>
               {/* <Image src={Send} alt="Icon" width={15} height={15} /> */}
               <p>Upload Contract</p>
             </button>
-            <button className="sec-button w-50 img-btn linen" onClick={undefined}>
+            <button
+              className="sec-button w-50 img-btn linen"
+              onClick={undefined}
+            >
               <Image src={Folder} alt="Icon" width={15} height={15} />
               <p>View Contract</p>
-            </button>      
+            </button>
           </div>
 
           <div className="button-group mt-3">
@@ -177,7 +206,10 @@ const CampaignInvoice = ({ campaignsData }: CampaignInvoiceProps) => {
               <Image src={Send} alt="Icon" width={15} height={15} />
               <p>Send Contract</p>
             </button>
-            <button className="sec-button w-50 img-btn linen" onClick={undefined}>
+            <button
+              className="sec-button w-50 img-btn linen"
+              onClick={undefined}
+            >
               <Image src={Download} alt="Icon" width={20} height={20} />
               <p>Download as PDF</p>
             </button>
@@ -185,30 +217,36 @@ const CampaignInvoice = ({ campaignsData }: CampaignInvoiceProps) => {
         </div>
 
         <div className="">
-          <p className="smallcaps mt-5" >MANAGE INVOICE</p>
+          <p className="smallcaps mt-5">MANAGE INVOICE</p>
           <div className="button-group">
             <button className="sec-button linen" onClick={undefined}>
               {/* <Image src={Send} alt="Icon" width={15} height={15} /> */}
               <p>Upload Invoice</p>
             </button>
-            <button className="sec-button w-50 img-btn linen" onClick={undefined}>
+            <button
+              className="sec-button w-50 img-btn linen"
+              onClick={undefined}
+            >
               <Image src={Folder} alt="Icon" width={15} height={15} />
               <p>View Invoice</p>
-            </button>      
+            </button>
           </div>
           <div className="button-group mt-3">
             <button className="sec-button linen" onClick={undefined}>
               <Image src={Send} alt="Icon" width={15} height={15} />
               <p>Send Invoice</p>
             </button>
-            <button className="sec-button w-50 img-btn linen" onClick={undefined}>
+            <button
+              className="sec-button w-50 img-btn linen"
+              onClick={undefined}
+            >
               <Image src={Download} alt="Icon" width={20} height={20} />
               <p>Download as PDF</p>
-            </button>      
+            </button>
           </div>
         </div>
       </div>
-    </div >
+    </div>
   );
 };
 

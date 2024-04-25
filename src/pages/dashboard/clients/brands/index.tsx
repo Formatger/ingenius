@@ -226,8 +226,7 @@ const BrandsPage = () => {
         console.error("Error uploading file:", error);
       }
     }
-
-  }
+  };
 
   return (
     <div className="main-container">
@@ -270,7 +269,12 @@ const BrandsPage = () => {
                 <label htmlFor="file-upload" className="app-button cream">
                   CSV Upload
                 </label>
-                <input className="input-file" id="file-upload" type="file" onChange={handleUploadCSV} />
+                <input
+                  className="input-file"
+                  id="file-upload"
+                  type="file"
+                  onChange={handleUploadCSV}
+                />
 
                 <button
                   className="app-button"
