@@ -6,25 +6,25 @@ import { Arrow } from "@/components/assets/svg/Arrow";
 import HelpIcon from '../../assets/svg/Help';
 import Add from "@/components/assets/icons/add.svg";
 import CreatorSidepanel from "@/components/dashboard/profile/CreatorSidepanel";
-import CreatorDetails from "@/components/dashboard/profile/CreatorProfile"; // Corrección aquí
+import ProfilePic from "@/components/assets/images/creator.png";
 
 interface DashboardCreatorsProps {
-  creatorsData: any; // Estructura de datos de la API para los creadores
+  projectsData: any; // Estructura de datos de la API para los creadores
 }
 
-const DashboardCreators = ({ creatorsData }: DashboardCreatorsProps) => {
-  const [selectedCreator, setSelectedCreator] = useState(null); // Estado para el creador seleccionado
+const DashboardCreators = ({ projectsData }: DashboardCreatorsProps) => {
+  const [selectedProject, setSelectedProject] = useState(null);
 
   // Función para manejar el clic en una fila
-  const openCreatorDetail = (creator) => {
-    setSelectedCreator(creator); // Establece el creador seleccionado
+  const openProjectDetail = (project: any) => {
+    setSelectedProject(project); // Establece el creador seleccionado
   };
 
   return (
-    <div className="dashboard-box">
+    <div className="dashboard-box scrollable">
       <div className="row-between">
-        <h2 className="dashboard-title">Creators</h2>
-        <HelpIcon />
+        <h2 className="dashboard-title">Contractor Invoices</h2>
+        {/* <HelpIcon /> */}
       </div>
   
       <table className="app-table" id="dashboard-table">
@@ -32,7 +32,7 @@ const DashboardCreators = ({ creatorsData }: DashboardCreatorsProps) => {
           <tr className="table-header">
             <th>
               <div className="table-header-content">
-                <p>Name</p>
+                <p>Invoice</p>
                 <button className="header-button" onClick={undefined}>
                   <Arrow className="gray-fill arrow-down" />
                 </button>
@@ -66,37 +66,61 @@ const DashboardCreators = ({ creatorsData }: DashboardCreatorsProps) => {
         </thead>
   
         <tbody className="table-body">
-          {creatorsData.map((creator) => (
-            <tr className="table-row" key={creator.id}>
+          {projectsData.map((project: any) => (
+            <tr className="table-row" key={project.id}>
               <td className="table-cell">
-                <div className='row-wrap-1'>
+              <Link
+                href={{
+                  pathname: '/dashboard/partnerships/projects/profile',
+                  query: { projectId: project.id }
+                }}
+                passHref
+              >
+                <div className="row-wrap-3">
+          
+                  <div className="">
+                    <img
+                        src={project.creator_profile_picture}
+                        alt={project.creator_name}
+                        className="partner-image"
+                        width={40}
+                        height={40}
+                      />
+                  </div>
+                  <div>
+                    <p className="track-title">{project.creator_name}</p>
+                    <p className="track-subtitle">{project.name}</p>
+                  </div>
+                </div>
+              </Link>
+                {/* <div className='row-wrap-1'>
                   <Link
                     href={{
-                      pathname: '/dashboard/clients/creators/profile',
-                      query: { creatorId: creator.id }
+                      pathname: '/dashboard/partnerships/projects/profile',
+                      query: { projectId: project.id }
                     }}
-                    passHref // Importante agregar esto para que el Link pase las props al elemento anidado
+                    passHref
                   >
-                    <p>{creator.name}</p>
+                    <p>{project.name}</p>
                   </Link>
-                </div>
+                </div> */}
               </td>
-              <td className="table-cell-center-full">
-                <span className={`status-tag ${creator.active_projects ? 'green' : 'pink'}`}>
-                  {creator.active_campaigns ? 'Paid' : 'Unpaid'}
+              <td className="table-cell-center">
+                <span className={`status-tag ${project.invoice_paid ? 'green' : 'pink'}`}>
+                  {project.invoice_paid ? 'Paid' : 'Unpaid'}
                 </span>
               </td>
-              <td className="table-cell-center">12/30/2023</td>
-              <td className="table-cell-center">${creator.active_projects_value}</td>
+              <td className="table-cell-center">{project.deadline}</td>
+              <td className="table-cell-center">${project.contract_value}</td>
             </tr>
           ))}
         </tbody>
       </table>
   
       {/* Renderiza el componente de detalles del creador si hay uno seleccionado */}
-      {selectedCreator && (
+      {/* {selectedCreator && (
         <CreatorSidepanel creatorsData={selectedCreator} />
-      )}
+      )} */}
     </div>
   );
 };

@@ -8,25 +8,18 @@ import Add from "@/components/assets/icons/add.svg";
 import BrandSidepanel from "@/components/dashboard/profile/BrandSidepanel";
 
 interface DashboardBrandsProps {
-  brandsData: any; // Estructura de datos de la API para el gráfico de pastel
+  campaignsData: any; 
 }
 
-const DashboardBrands = ({ brandsData }: DashboardBrandsProps) => {
+const DashboardBrands = ({ campaignsData }: DashboardBrandsProps) => {
 
-  console.log("BRANDS DATA", brandsData);
-
-  const [selectedCreator, setSelectedCreator] = useState(null); // Estado para el creador seleccionado
-
-  // Función para manejar el clic en una fila
-  const openCreatorDetail = (brand) => {
-    setSelectedCreator(brand); // Establece el creador seleccionado
-  };
+  const [selectedCampaign, setSelectedCampaign] = useState(null);
 
   return (
-    <div className="dashboard-box">
+    <div className="dashboard-box scrollable">
       <div className="row-between">
-        <h2 className="dashboard-title">Creators</h2>
-        <HelpIcon />
+        <h2 className="dashboard-title">Client Invoices</h2>
+        {/* <HelpIcon /> */}
       </div>
   
       <table className="app-table" id="dashboard-table">
@@ -34,7 +27,7 @@ const DashboardBrands = ({ brandsData }: DashboardBrandsProps) => {
           <tr className="table-header">
             <th>
               <div className="table-header-content">
-                <p>Name</p>
+                <p>Invoice</p>
                 <button className="header-button" onClick={undefined}>
                   <Arrow className="gray-fill arrow-down" />
                 </button>
@@ -68,37 +61,63 @@ const DashboardBrands = ({ brandsData }: DashboardBrandsProps) => {
         </thead>
   
         <tbody className="table-body">
-          {brandsData.map((brand) => (
-            <tr className="table-row" key={brand.id}>
+          {campaignsData.map((campaign: any) => (
+            <tr className="table-row" key={campaign.brand_name}>
               <td className="table-cell">
-                <div className='row-wrap-1'>
+                <Link
+                  href={{
+                    pathname: '/dashboard/partnerships/campaigns/profile',
+                    query: { campaignId: campaign.id }
+                  }}
+                  passHref
+                >
+                  <div className="row-wrap-3">
+            
+                    <div className="">
+                      <img
+                          src={campaign.brand_image_url}
+                          alt={campaign.brand_name}
+                          className="partner-image"
+                          width={40}
+                          height={40}
+                        />
+                    </div>
+                    <div>
+                      <p className="track-title">{campaign.brand_name}</p>
+                      <p className="track-subtitle">{campaign.name}</p>
+                    </div>
+                  </div>
+                </Link>
+                {/* <div className='row-wrap-1'>
                   <Link
                     href={{
-                      pathname: '/dashboard/clients/brands/profile',
-                      query: { brandId: brand.id }
+                      pathname: '/dashboard/partnerships/campaigns/profile',
+                      query: { campaignId: campaign.id }
                     }}
-                    passHref // Importante agregar esto para que el Link pase las props al elemento anidado
+                    passHref
                   >
-                    <p>{brand.name}</p>
+                    <p>{campaign.name}</p>
                   </Link>
-                </div>
+                </div> */}
               </td>
-              <td className="table-cell-center-full">
-                <span className={`status-tag ${brand.active_projects ? 'green' : 'pink'}`}>
-                  {brand.active_campaigns ? 'Paid' : 'Unpaid'}
+              <td className="table-cell-center">
+                <span className={`status-tag ${campaign.invoice_paid ? 'green' : 'pink'}`}>
+                  {campaign.invoice_paid ? 'Paid' : 'Unpaid'}
                 </span>
               </td>
-              <td className="table-cell-center">12/30/2023</td>
-              <td className="table-cell-center">${brand.active_projects_value}</td>
+              <td className="table-cell-center">{campaign.deadline}</td>
+              <td className="table-cell-center">${campaign.contract_value}</td>
             </tr>
           ))}
         </tbody>
       </table>
   
       {/* Renderiza el componente de detalles del creador si hay uno seleccionado */}
-      {selectedCreator && (
-        <BrandSidepanel brandsData={selectedCreator} />
-      )}
+      {/* {selectedCreator && (
+        <BrandSidepanel brandsData={selectedCreator} 
+        
+        />
+      )} */}
     </div>
   );
 };

@@ -11,7 +11,7 @@ import DashboardStats from "@/components/dashboard/dashboard/DashboardStats";
 import InvoiceChart from "@/components/dashboard/dashboard/InvoiceChart";
 import InvoiceChartProjects from "@/components/dashboard/dashboard/InvoiceChartProjects";
 import PendingInvoices from "@/components/dashboard/dashboard/PendingInvoices";
-import { getStats, getCreators, getBrands } from "@/utils/httpCalls";
+import { getStats, getCreators, getBrands, getProjects, getCampaigns } from "@/utils/httpCalls";
 import { useRouter } from "next/router";
 
 const DashboardPage = () => {
@@ -20,8 +20,8 @@ const DashboardPage = () => {
   const [pieChartData, setPieChartData] = useState<any>(null); // Inicializa pieChartData como null
   const [updateStats, setUpdateStats] = useState(false);
   const router = useRouter();
-  const [brandsData, setBrandsData] = useState<any[]>([]);
-  const [creatorsData, setCreatorsData] = useState<any[]>([]);
+  const [campaignsData, setCampaignsData] = useState<any[]>([]);
+  const [projectsData, setProjectsData] = useState<any[]>([]);
 
   const breadcrumbLinks = [
     { label: "Home", link: "/" },
@@ -60,66 +60,44 @@ const DashboardPage = () => {
     );
   };
 
-  console.log("???????????", stats);
-  console.log("???????", pieChartData);
-
-
-   /* BRANDS API CALL  */
-
-  //  useEffect(() => {
-  //   setLoader(true);
-  //   getBrands(
-  //     (response) => {
-  //       setBrandsData(response);
-  //       setLoader(false);
-  //     },
-  //     (error) => {
-  //       console.error("Error fetching brands data:", error);
-  //       setLoader(false);
-  //     }
-  //   );
-  // },[]);
-
-
   useEffect(() => {
-    fetchBrandsData();
+    fetchCampaignsData();
   }, [router]);
   
-  const fetchBrandsData = () => {
+  const fetchCampaignsData = () => {
     setLoader(true);
-    getBrands(
+    getCampaigns(
       (response: any) => {
-        setBrandsData(response); // Aquí elimina el objeto adicional alrededor de response
+        setCampaignsData(response);
         setUpdateStats(false);
-        setLoader(false); // Establece loader en false después de recibir los datos
+        setLoader(false);
       },
       (error: any) => {
         console.error("Error fetching profile data:", error);
-        setLoader(false); // Establece loader en false en caso de error
+        setLoader(false); 
       }
     );
   };
 
   useEffect(() => {
-    fetchCreatorsData();
+    fetchProjectsData();
   }, [router]);
   
-  const fetchCreatorsData = () => {
+  const fetchProjectsData = () => {
     setLoader(true);
-    getCreators(
+    getProjects(
       (response: any) => {
-        setCreatorsData(response); // Aquí elimina el objeto adicional alrededor de response
+        setProjectsData(response);
         setUpdateStats(false);
-        setLoader(false); // Establece loader en false después de recibir los datos
+        setLoader(false); 
       },
       (error: any) => {
         console.error("Error fetching profile data:", error);
-        setLoader(false); // Establece loader en false en caso de error
+        setLoader(false); 
       }
     );
   };
 
-  // Renderiza el componente DashboardStats solo si stats y pieChartData no son nulos
   return (
     <div className="main-container">
       <div className="fixed-heading">
@@ -137,9 +115,9 @@ const DashboardPage = () => {
               />
             </div>
             <div className="brands-clients">
-            <DashboardBrands 
-            brandsData={brandsData} 
-            />
+              <DashboardBrands 
+                campaignsData={campaignsData} 
+              />
               <div className="invoice-stats">
                 <InvoiceChart 
                 pieChartData={pieChartData}/>
@@ -148,7 +126,7 @@ const DashboardPage = () => {
             </div>
             <div className="brands-clients">
               <DashboardCreators 
-              creatorsData={creatorsData} 
+              projectsData={projectsData} 
               />
               <div className="invoice-stats">
                 <InvoiceChartProjects
@@ -159,7 +137,7 @@ const DashboardPage = () => {
             </div>
           </div>
         </div>
-      ) : null} {/* Si stats o pieChartData son nulos, no renderiza nada */}
+      ) : null} 
     </div>
   );
 };

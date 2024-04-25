@@ -13,20 +13,20 @@ const PieChartComponent = ({ pieChartData }: PieChartProps) => {
   // Estructura de datos para el gráfico de pastel
   const dataCampaigns = [
     { name: 'Paid Invoices', value: pieChartData.campaigns.total_paid_value, fillColor: '#82ca9d' },
-    { name: 'Unpaid Invoices', value: pieChartData.campaigns.total_unpaid_value, fillColor: '#ffcd58' },
+    { name: 'Unpaid Invoices', value: pieChartData.campaigns.total_unpaid_value, fillColor: '#ffa584' },
   ];
 
   console.log(dataCampaigns)
 
-  const dataProjects = [
-    { name: 'Paid Invoices', value: pieChartData.paidInvoices, fillColor: '#82ca9d' },
-    { name: 'Unpaid Invoices', value: pieChartData.unpaidInvoices, fillColor: '#ffcd58' },
-  ];
+  // const dataProjects = [
+  //   { name: 'Paid Invoices', value: pieChartData.paidInvoices, fillColor: '#82ca9d' },
+  //   { name: 'Unpaid Invoices', value: pieChartData.unpaidInvoices, fillColor: '#ff8e84' },
+  // ];
 
   return (
     <div className="dashboard-box">
       <div className="chart-header">
-        <h5 className="dashboard-title">Clients Invoices</h5>
+        <h5 className="dashboard-title">Total Invoices Value</h5>
       </div>
       <div className="chart-wrap">
         <PieChart width={400} height={320}>

@@ -24,14 +24,14 @@ const DashboardStats =  ({ stats,  updateStatsData }: DashboardStatsProps)=> {
             <div className="stats-tag-negative">
               <Image src={StatsUp} alt="icon" className="arrow-down" />
               <p className="h9">
-                {stats.total_contracts.change}
+                {stats.total_contracts.change}%
               </p>
             </div>
           ) : (
             <div className="stats-tag">
               <Image src={StatsUp} alt="icon" className="arrow-up" />
               <p className="h9">
-                {stats.total_contracts.change}
+                {stats.total_contracts.change}%
               </p>
             </div>
           )}
@@ -49,14 +49,14 @@ const DashboardStats =  ({ stats,  updateStatsData }: DashboardStatsProps)=> {
             <div className="stats-tag-negative">
               <Image src={StatsUp} alt="icon" className="arrow-down" />
               <p className="h9">
-                {stats.total_profit.change}
+                {stats.total_profit.change}%
               </p>
             </div>
           ) : (
             <div className="stats-tag">
               <Image src={StatsUp} alt="icon" className="arrow-up" />
               <p className="h9">
-                {stats.total_profit.change}
+                {stats.total_profit.change}%
               </p>
             </div>
           )}
@@ -74,23 +74,17 @@ const DashboardStats =  ({ stats,  updateStatsData }: DashboardStatsProps)=> {
             <div className="stats-tag-negative">
               <Image src={StatsUp} alt="icon" className="arrow-down" />
               <p className="h9">
-                {stats.total_clients.change}
+                {stats.total_clients.change}%
               </p>
             </div>
           ) : (
             <div className="stats-tag">
               <Image src={StatsUp} alt="icon" className="arrow-up" />
               <p className="h9">
-                {stats.total_clients.change}
+                {stats.total_clients.change}%
               </p>
             </div>
           )}
-          <div className="stats-tag">
-            <Image src={StatsUp} alt="icon" className="arrow-up" />
-            <p className="stats-tag-text">
-              2 more
-            </p>
-          </div>
         </div>
         <div><h2 className="stats-result">{stats.total_clients.current}</h2></div>
         <div>
@@ -105,14 +99,14 @@ const DashboardStats =  ({ stats,  updateStatsData }: DashboardStatsProps)=> {
             <div className="stats-tag-negative">
               <Image src={StatsUp} alt="icon" className="arrow-down" />
               <p className="h9">
-                {stats.expense_total.change}
+                {stats.expense_total.change}%
               </p>
             </div>
           ) : (
             <div className="stats-tag">
               <Image src={StatsUp} alt="icon" className="arrow-up" />
               <p className="h9">
-                {stats.expense_total.change}
+                {stats.expense_total.change}%
               </p>
             </div>
           )}
