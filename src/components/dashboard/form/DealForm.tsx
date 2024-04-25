@@ -65,7 +65,7 @@ const DealForm: React.FC< DealFormProps> = ({
   const [selectedStage, setSelectedStage] = useState('');
   const [brandsData, setBrandsData] = useState<any>([]);
   const [invoicePaid, setInvoicePaid] = useState<boolean>(dealsData.invoice_paid ?? false);
-
+  const startDate = watch("start_date");
   /* SELECT DROPDOWNS */
 
   // const handleSelectStage = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -176,6 +176,108 @@ const DealForm: React.FC< DealFormProps> = ({
             </Link>
             </div>
           </div>
+          {isEditing ? (
+        <div className="sidepanel-wrap">
+        <form className="sidepanel-form" onSubmit={handleSubmit(onSubmit)}>
+          <div className="form-box">
+            <span className="smallcaps">DEAL NAME*</span>
+            <input
+              {...register("name", { required: true })}
+              className="form-input"
+              type="text"
+              placeholder="Enter a name"
+              defaultValue={dealsData.name}
+                onChange={(e) => setValue("name", e.target.value)}
+              />
+              {errors.name && (
+                <span className="error-message">Deal name is required</span>
+              )}
+          </div>
+          <div className="form-box">
+            <span className="smallcaps">DESCRIPTION</span>
+            <textarea
+              {...register("description")}
+              className="form-textarea"
+              defaultValue={dealsData.description}
+                onChange={(e) => setValue("description", e.target.value)}
+              />
+          </div>
+          <div className="form-box">
+            {/* <span className="smallcaps">SELECT PARTNER*</span> */}
+            {/* <SearchDropdown
+              data={brandsData}
+              onSelect={(selectedItem) => {
+                setValue("brand", selectedItem.id);
+              }}
+              handleSearch={handleSearchChange}
+              displayKey="name"
+            /> */}
+            {/* {errors.brand && (
+                <span className="error-message">Partner is required</span>
+              )} */}
+          </div>
+          <div className="form-box">
+            <span className="smallcaps">CONTRACT VALUE*</span>
+            <input
+              {...register("contract_value", { required: true })}
+              className="form-input"
+              type="number"
+              defaultValue={dealsData.contract_value}
+            />
+            {errors.contract_value && (
+                <span className="error-message">
+                  {errors.contract_value.message}
+                </span>
+              )}
+          </div>
+          <div className="form-box">
+          <span className="smallcaps">INVOICE STATUS*</span>
+          <div className="select-wrap">
+            <select
+            {...register("invoice_paid", { required: false })}
+            onChange={handleInvoiceChange}
+            defaultValue={dealsData.invoice_paid}
+            className="form-input"
+          >
+            <option value="false">Unpaid</option>
+            <option value="true">Paid</option>
+          </select>
+          </div>
+        </div>
+          <div className="form-box">
+            <span className="smallcaps">START DATE*</span>
+            <input
+              {...register("start_date", { required: true })}
+              className="form-input"
+              type="date"
+              defaultValue={dealsData.start_date}
+            />
+          </div>
+          <div className="form-box">
+            <span className="smallcaps">END DATE*</span>
+            <input
+              {...register("deadline", {
+                required: "End date is required",
+                validate: {
+                  isAfterStartDate: (value) =>
+                    new Date(value) >= new Date(startDate) ||
+                    "End date cannot be before start date",
+                },
+              })}
+              className="form-input"
+              type="date"
+              defaultValue={dealsData.deadline}
+            />
+            {errors.deadline && (
+                <span className="error-message">{errors.deadline.message}</span>
+              )}
+          </div>
+          <button className="sec-button linen" type="submit">
+            <p>SAVE</p>
+          </button>
+        </form>
+      </div>
+      ) : (
           <div className="sidepanel-wrap">
             <form className="sidepanel-form" onSubmit={handleSubmit(onSubmit)}>
               <div className="form-box">
@@ -287,6 +389,7 @@ const DealForm: React.FC< DealFormProps> = ({
               </button>
             </form>
           </div>
+          )}
     </FormSidepanel>
   );
 };
