@@ -850,6 +850,32 @@ export const postCreators = async (
 /******************************  GET CALLS  ***************************/
 ////////////////////////////////////////////////////////////////////////
 
+// GET STATS
+
+export const getStats = async (
+  callback: (data: any) => void,
+  errorCallback?: (error: any) => void
+) => {
+  const url = DEPLOYED_API_BASE_URL + 'dashboard/';
+
+  try {
+    await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.access_token}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => callback(data))
+      .catch((error) => {
+        errorCallback && errorCallback(error);
+      });
+  } catch (error) {
+    errorCallback && errorCallback(error);
+  }
+}
+
 // GET PROJECTS
 
 export const getProjects = async (

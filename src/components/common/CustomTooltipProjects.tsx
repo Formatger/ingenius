@@ -16,9 +16,9 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload, pieChart
 
     let percentage;
     if (payload[0].name === 'Paid Invoices') {
-      percentage = pieChartData.campaigns.total_paid_percentage.toFixed(2);
+      percentage = pieChartData.projects.total_paid_percentage.toFixed(2);
     } else if (payload[0].name === 'Unpaid Invoices') {
-      percentage = pieChartData.campaigns.total_unpaid_percentage.toFixed(2);
+      percentage = pieChartData.projects.total_unpaid_percentage.toFixed(2);
     }
 
     return (
