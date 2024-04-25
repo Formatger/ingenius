@@ -1,6 +1,6 @@
 import React from 'react';
 import { PieChart, Pie, Cell, Tooltip } from 'recharts';
-import CustomTooltip from '../../common/CustomTooltip';
+import CustomTooltipProjects from '../../common/CustomTooltipProjects';
 
 interface PieChartProps {
   pieChartData: any; // Estructura de datos de la API para el gráfico de pastel
@@ -11,27 +11,22 @@ const PieChartComponent = ({ pieChartData }: PieChartProps) => {
   if (!pieChartData) return null;
 
   // Estructura de datos para el gráfico de pastel
-  const dataCampaigns = [
-    { name: 'Paid Invoices', value: pieChartData.campaigns.total_paid_value, fillColor: '#82ca9d' },
-    { name: 'Unpaid Invoices', value: pieChartData.campaigns.total_unpaid_value, fillColor: '#ffcd58' },
-  ];
-
-  console.log(dataCampaigns)
-
   const dataProjects = [
-    { name: 'Paid Invoices', value: pieChartData.paidInvoices, fillColor: '#82ca9d' },
-    { name: 'Unpaid Invoices', value: pieChartData.unpaidInvoices, fillColor: '#ffcd58' },
+    { name: 'Paid Invoices', value: pieChartData.projects.total_paid_value, fillColor: '#82ca9d' },
+    { name: 'Unpaid Invoices', value: pieChartData.projects.total_unpaid_value, fillColor: '#ffcd58' },
   ];
+
+  console.log(dataProjects)
 
   return (
     <div className="dashboard-box">
       <div className="chart-header">
-        <h5 className="dashboard-title">Clients Invoices</h5>
+        <h5 className="dashboard-title">Projects Invoices</h5>
       </div>
       <div className="chart-wrap">
         <PieChart width={400} height={320}>
           <Pie
-            data={dataCampaigns}
+            data={dataProjects}
             cx={200}
             cy={200}
             labelLine={true}
@@ -41,20 +36,20 @@ const PieChartComponent = ({ pieChartData }: PieChartProps) => {
             nameKey="name"
             label={({ percent }) => `${(percent * 100).toFixed(2)}%`}
           >
-            {dataCampaigns.map((entry, index) => (
+            {dataProjects.map((entry, index) => (
               <Cell key={`cell-${index}`} fill={entry.fillColor} />
             ))}
           </Pie>
           <Tooltip 
           content={
-              <CustomTooltip
+              <CustomTooltipProjects
               pieChartData={pieChartData}
               />} 
           />
         </PieChart>
 
         <div className="chart-legend">
-          {dataCampaigns.map((entry, index) => (
+          {dataProjects.map((entry, index) => (
             <div key={index} className="legend-item">
               <span className="legend-dot" style={{ backgroundColor: entry.fillColor }}></span>
               <span>{entry.name}</span>

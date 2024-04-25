@@ -1,37 +1,42 @@
-import React from "react";
 import Image from "next/image";
 import StatsUp from "@/components/assets/icons/stats-up.svg";
 import StatsDown from "@/components/assets/icons/stats-down.svg";
+import { getStats } from "@/utils/httpCalls";
+import React, { Fragment, useEffect, useState } from "react";
+import MainLoader from "@/components/common/Loader";
+import { useRouter } from "next/router";
 
-const DashboardStats = ({ sections }: any) => {
+interface DashboardStatsProps {
+  stats: any;
+  updateStatsData:() => void;
+}
+
+
+const DashboardStats =  ({ stats,  updateStatsData }: DashboardStatsProps)=> {
+
+
   return (
     <div className="dash-stats">
       <div className="dash-stats-box">
         <div className="row-wrap-3">
           <h5 className="dash-stats-title">Total Contracts</h5>
-          {/* {dataContractor < 0 ? (
+          {stats.total_contracts.change < 0 ? (
             <div className="stats-tag-negative">
               <Image src={StatsUp} alt="icon" className="arrow-down" />
               <p className="h9">
-                10.0%
+                {stats.total_contracts.change}
               </p>
             </div>
           ) : (
             <div className="stats-tag">
               <Image src={StatsUp} alt="icon" className="arrow-up" />
               <p className="h9">
-                10.0%
+                {stats.total_contracts.change}
               </p>
             </div>
-          )} */}
-          <div className="stats-tag">
-            <Image src={StatsUp} alt="icon" className="arrow-up" />
-            <p className="stats-tag-text">
-              10.0%
-            </p>
-          </div>
+          )}
         </div>
-        <div><h2 className="stats-result">56</h2></div>
+        <div><h2 className="stats-result">{stats.total_contracts.current}</h2></div>
         <div>
           <p className="stats-footer-text">Contracts this Year</p>
         </div>
@@ -40,29 +45,23 @@ const DashboardStats = ({ sections }: any) => {
       <div className="dash-stats-box">
         <div className="row-wrap-3">
           <h5 className="dash-stats-title">Total Profit</h5>
-          {/* {dataProfit < 0 ? (
+          {stats.total_profit.change < 0 ? (
             <div className="stats-tag-negative">
               <Image src={StatsUp} alt="icon" className="arrow-down" />
               <p className="h9">
-                10.0%
+                {stats.total_profit.change}
               </p>
             </div>
           ) : (
             <div className="stats-tag">
               <Image src={StatsUp} alt="icon" className="arrow-up" />
               <p className="h9">
-                10.0%
+                {stats.total_profit.change}
               </p>
             </div>
-          )} */}
-          <div className="stats-tag">
-            <Image src={StatsUp} alt="icon" className="arrow-up" />
-            <p className="stats-tag-text">
-              7.0%
-            </p>
-          </div>
+          )}
         </div>
-        <div><h2 className="stats-result">$80,230</h2></div>
+        <div><h2 className="stats-result">{stats.total_profit.current}</h2></div>
         <div>
           <p className="stats-footer-text">Yearly Profits</p>
         </div>
@@ -71,21 +70,21 @@ const DashboardStats = ({ sections }: any) => {
       <div className="dash-stats-box">
         <div className="row-wrap-3">
           <h5 className="dash-stats-title">Total Clients</h5>
-          {/* {dataClients < 0 ? (
+          {stats.total_clients.change < 0 ? (
             <div className="stats-tag-negative">
               <Image src={StatsUp} alt="icon" className="arrow-down" />
               <p className="h9">
-                10.0%
+                {stats.total_clients.change}
               </p>
             </div>
           ) : (
             <div className="stats-tag">
               <Image src={StatsUp} alt="icon" className="arrow-up" />
               <p className="h9">
-                10.0%
+                {stats.total_clients.change}
               </p>
             </div>
-          )} */}
+          )}
           <div className="stats-tag">
             <Image src={StatsUp} alt="icon" className="arrow-up" />
             <p className="stats-tag-text">
@@ -93,7 +92,7 @@ const DashboardStats = ({ sections }: any) => {
             </p>
           </div>
         </div>
-        <div><h2 className="stats-result">+/- 4</h2></div>
+        <div><h2 className="stats-result">{stats.total_clients.current}</h2></div>
         <div>
           <p className="stats-footer-text">Brands & Creators</p>
         </div>
@@ -102,29 +101,23 @@ const DashboardStats = ({ sections }: any) => {
       <div className="dash-stats-box">
         <div className="row-wrap-3">
           <h5 className="dash-stats-title">Total Expenses</h5>
-          {/* {dataExpenseTotal < 0 ? (
+          {stats.expense_total.change < 0 ? (
             <div className="stats-tag-negative">
-              <Image src={StatsDown} alt="icon"  />
+              <Image src={StatsUp} alt="icon" className="arrow-down" />
               <p className="h9">
-                10.0%
+                {stats.expense_total.change}
               </p>
             </div>
           ) : (
             <div className="stats-tag">
-              <Image src={StatsUp} alt="icon" />
+              <Image src={StatsUp} alt="icon" className="arrow-up" />
               <p className="h9">
-                10.0%
+                {stats.expense_total.change}
               </p>
             </div>
-          )} */}
-          <div className="stats-tag-negative">
-            <Image src={StatsDown} alt="icon" />
-            <p className="stats-tag-text">
-              1.10%
-            </p>
-          </div>
+          )}
         </div>
-        <div><h2 className="stats-result">56</h2></div>
+        <div><h2 className="stats-result">{stats.expense_total.current}</h2></div>
         <div>
           <p className="stats-footer-text">Yearly Expenses</p>
         </div>
