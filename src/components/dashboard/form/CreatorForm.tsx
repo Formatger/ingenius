@@ -83,6 +83,8 @@ const CreatorForm: React.FC<CreatorFormProps> = ({
     }
   };
 
+    /* RELOAD */
+
   /* SUBMIT FORM - POST CREATOR API CALL  */
 
   const onSubmit = async (data: FormData) => {
@@ -109,7 +111,7 @@ const CreatorForm: React.FC<CreatorFormProps> = ({
             updateCreatorData();
           },
           (error) => {
-            console.error("Error updating brand:", error);
+            console.error("Error updating creator:", error);
           }
         );
       } else {
@@ -123,7 +125,7 @@ const CreatorForm: React.FC<CreatorFormProps> = ({
             updateCreatorData();
           },
           (error) => {
-            console.error("Error creating brand:", error);
+            console.error("Error creating creator:", error);
           }
         );
       }
@@ -202,7 +204,7 @@ const CreatorForm: React.FC<CreatorFormProps> = ({
                 className="form-input"
                 type="text"
                 defaultValue={creatorsData.name}
-                onChange={(e) => setValue("name", e.target.value)}
+                placeholder="Enter a name"
               />
               {errors.name && (
                 <span className="error-message">{errors.name.message}</span>
@@ -211,30 +213,38 @@ const CreatorForm: React.FC<CreatorFormProps> = ({
             <div className="form-box">
               <span className="smallcaps">EMAIL*</span>
               <input
-                {...register("email")}
+                {...register("email", {
+                  required: "Email is required",
+                  pattern: {
+                    value: /^\S+@\S+\.\S+$/,
+                    message: "Invalid email address"
+                  }
+                })}
                 className="form-input"
+                placeholder="Enter email"
                 defaultValue={creatorsData.email}
-                onChange={(e) => setValue("email", e.target.value)}
               />
+              {errors.email && (
+                <span className="error-message">{errors.email.message}</span>
+              )}
             </div>
             <div className="form-box">
               <span className="smallcaps">NICHE*</span>
               <input
-                {...register("niche", { required: false })}
+                {...register("niche", {
+                  required: "Niche is required",
+                  validate: (value) =>
+                    value.trim() !== "" || "Niche is required",
+                })}
                 className="form-input"
                 type="text"
+                placeholder="Enter brand niche"
                 defaultValue={creatorsData.niche}
               />
-            </div>
-            {/* <div className="form-box">
-            <span className="smallcaps">PROFILE PICTURE*</span>
-                <input
-                    className="form-input"
-                    type="file"
-                    accept="image/jpeg"
-                    onChange={handleUploadImage}
-                />
-            </div> */}
+              {errors.niche && (
+                <span className="error-message">{errors.niche.message}</span>
+              )}
+              </div>
             <div className="button-group">
               <button
                 className="sec-button stone"
@@ -308,19 +318,25 @@ const CreatorForm: React.FC<CreatorFormProps> = ({
               />
               {errors.name && (
                 <span className="error-message">{errors.name.message}</span>
-              )}             </div>
+              )}             
+            </div>
             <div className="form-box">
               <span className="smallcaps">EMAIL*</span>
               <input
                 {...register("email", {
                   required: "Email is required",
-                  validate: (value) =>
-                    value.trim() !== "" || "Email is required",
+                  pattern: {
+                    value: /^\S+@\S+\.\S+$/,
+                    message: "Invalid email address"
+                  }
                 })}
                 className="form-input"
-                onChange={(e) => setValue("email", e.target.value)}
+                placeholder="Enter email"
               />
-            </div>
+              {errors.email && (
+                <span className="error-message">{errors.email.message}</span>
+              )}
+            </div>           
             <div className="form-box">
               <span className="smallcaps">NICHE*</span>
               <input
@@ -331,8 +347,12 @@ const CreatorForm: React.FC<CreatorFormProps> = ({
                 })}
                 className="form-input"
                 type="text"
+                placeholder="Enter brand niche"
               />
-            </div>
+              {errors.niche && (
+                <span className="error-message">{errors.niche.message}</span>
+              )}
+              </div>
 
             <button className="sec-button linen" type="submit">
               <p>SAVE</p>

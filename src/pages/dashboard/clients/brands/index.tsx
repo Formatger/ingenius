@@ -48,6 +48,7 @@ const BrandsPage = () => {
 
   useEffect(() => {
     const originalDataCopy = [...originalData];
+    console.log("originalDataCopy:", originalDataCopy);
     setFilteredData(originalDataCopy);
     setDataToDisplay(
       originalDataCopy.slice(
@@ -58,6 +59,7 @@ const BrandsPage = () => {
   }, [updateBrand]);
 
   const updateBrandData = () => {
+    console.log("Reloading brand data...");
     setUpdateBrand((prevState) => !prevState);
   };
 
@@ -208,9 +210,9 @@ const BrandsPage = () => {
     setOpenFormSidepanel(false);
   };
 
-  function filterByDate(type: string): void {
-    throw new Error("Function not implemented.");
-  }
+  // function filterByDate(type: string): void {
+  //   throw new Error("Function not implemented.");
+  // }
 
   /* CSV EXPORT */
   const handleExportCSV = async (e: any) => {

@@ -83,9 +83,9 @@ const DealForm: React.FC<DealFormProps> = ({
   } = useForm<FormData>();
   const [selectedStage, setSelectedStage] = useState("");
   const [brandsData, setBrandsData] = useState<any>([]);
-  const [invoiceStatus, setInvoiceStatus] = useState(
-    dealsData?.invoice_paid ? "Paid" : "Unpaid"
-  );
+  // const [invoiceStatus, setInvoiceStatus] = useState(
+  //   dealsData?.invoice_paid ? "Paid" : "Unpaid"
+  // );
   const startDate = watch("start_date");
 
   /* LOCK FORM */
@@ -100,11 +100,11 @@ const DealForm: React.FC<DealFormProps> = ({
 
   /* INVOICE DROPDOWN */
 
-  const handleInvoiceSelect = (value: string) => {
-    setInvoiceStatus(value);
-    setValue("invoice_paid", value === "Paid");
-    trigger("invoice_paid");
-  };
+  // const handleInvoiceSelect = (value: string) => {
+  //   setInvoiceStatus(value);
+  //   setValue("invoice_paid", value === "Paid");
+  //   trigger("invoice_paid");
+  // };
 
   /* SEARCH DROPDOWN */
   const [searchTerm, setSearchTerm] = useState("");
@@ -261,12 +261,12 @@ const DealForm: React.FC<DealFormProps> = ({
                 </span>
               )}
             </div>
-            <div>
+            {/* <div>
               <InvoiceDropdown
                 selectedValue={invoiceStatus}
                 onSelect={handleInvoiceSelect}
               />
-            </div>
+            </div> */}
             <div className="form-box">
               <span className="smallcaps">START DATE*</span>
               <input
@@ -377,12 +377,12 @@ const DealForm: React.FC<DealFormProps> = ({
                 </span>
               )}
             </div>
-            <div>
+            {/* <div>
               <InvoiceDropdown
                 selectedValue={invoiceStatus}
                 onSelect={handleInvoiceSelect}
               />
-            </div>
+            </div> */}
             <div className="form-box">
               <span className="smallcaps">START DATE*</span>
               <input
@@ -435,24 +435,6 @@ const DealForm: React.FC<DealFormProps> = ({
                 <span className="error-message">Stage is required</span>
               )}
             </div>
-            {/* <div className='form-box'>
-                  <span className='smallcaps'>SELECT STAGE*</span>
-                  <div className="select-wrap">
-                  <select
-                      {...register("deal_stage")}
-                      onChange={handleSelectStage}
-                      value={selectedStage}
-                      className="select-input"
-                    >
-                      <option value="">Select Stage</option>
-                      {Array.isArray(dealStage) && dealStage.map((stage) => (                        
-                      <option key={stage.id} value={stage.id}>
-                          {stage.stageName}
-                        </option>
-                      ))}
-                    </select>
-                    </div>
-              </div> */}
 
             <button className="sec-button linen" type="submit">
               <p>SAVE</p>

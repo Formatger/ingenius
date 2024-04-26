@@ -55,6 +55,7 @@ const CreatorsPage = () => {
 
   useEffect(() => {
     const originalDataCopy = [...originalData];
+    console.log("originalDataCopy:", originalDataCopy);
     setFilteredData(originalDataCopy);
     setDataToDisplay(
       originalDataCopy.slice(
@@ -65,6 +66,7 @@ const CreatorsPage = () => {
   }, [updateCreator]);
 
   const updateCreatorData = () => {
+    console.log("Reloading creator data...");
     setUpdateCreator((prevState) => !prevState);
   };
 
@@ -216,9 +218,9 @@ const CreatorsPage = () => {
     setOpenFormSidepanel(false);
   };
 
-  function filterByDate(type: string): void {
-    throw new Error("Function not implemented.");
-  }
+  // function filterByDate(type: string): void {
+  //   throw new Error("Function not implemented.");
+  // }
 
   return (
     <div className="main-container">
@@ -278,6 +280,7 @@ const CreatorsPage = () => {
                 sortBy={sortBy}
                 handleOpenSidepanel={handleOpenSidepanel}
                 data={dataToDisplay}
+
               />
               <Pagination
                 currentPage={currentPage}

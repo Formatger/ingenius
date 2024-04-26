@@ -249,7 +249,7 @@ green, blue, light-blue, ivory, pink */
 
 .status-tag {
   font-family: "DMSansRegular";
-  display: flex;
+  display: inline-block;
   align-items: center;
   justify-content: center;
   width: fit-content;

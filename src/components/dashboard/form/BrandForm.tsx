@@ -50,6 +50,7 @@ const BrandForm: React.FC<BrandFormProps> = ({
     reset,
     setValue,
     formState: { errors },
+    trigger,
   } = useForm<FormData>();
   const [imageURL, setImageURL] = useState<string | null>(null);
 
@@ -67,14 +68,6 @@ const BrandForm: React.FC<BrandFormProps> = ({
   };
 
   /* UPLOAD PROFILE PICTURE */
-  // const handleUploadImage = (event:any) => {
-  //   const files = event.currentTarget.files; // Obtén todos los archivos seleccionados
-  //   const lastFile = files[files.length - 1]; // Obtiene el último archivo seleccionado
-  //   if (lastFile) {
-  //     setValue("profile_picture", lastFile);
-  //     console.log("Último archivo seleccionado:", lastFile);
-  //   }
-  // };
 
   const handleUploadImage = (event: any) => {
     const file = event.target.files[0]; // Get the first file
@@ -107,6 +100,7 @@ const BrandForm: React.FC<BrandFormProps> = ({
           brandId,
           formData,
           (response) => {
+            console.log("Item updated successfully:", response);
             reset();
             closeEdit();
             updateBrandData();
@@ -121,6 +115,7 @@ const BrandForm: React.FC<BrandFormProps> = ({
         await postBrands(
           formData,
           (response) => {
+            console.log("Item updated successfully:", response);
             reset();
             handleClose();
             updateBrandData();
@@ -197,52 +192,90 @@ const BrandForm: React.FC<BrandFormProps> = ({
             <div className="form-box">
               <span className="smallcaps">BRAND NAME*</span>
               <input
-                {...register("name", { required: true })}
+                {...register("name", {
+                  required: "Brand name is required",
+                  validate: (value) =>
+                    value.trim() !== "" || "Brand name is required",
+                })}
                 className="form-input"
                 type="text"
+                placeholder="Enter a name"
                 defaultValue={brandsData.name}
-                onChange={(e) => setValue("name", e.target.value)}
-              />
+              />        
               {errors.name && (
                 <span className="error-message">{errors.name.message}</span>
-              )}           
+              )}    
             </div>
             <div className="form-box">
-              <span className="smallcaps">WEBSITE*</span>
+              <span className="smallcaps">REPRESENTATIVE*</span>
               <input
-                {...register("website")}
+                {...register("representative", {
+                  required: "Representative name is required",
+                  validate: (value) =>
+                    value.trim() !== "" || "Representative name is required",
+                })}        
                 className="form-input"
-                defaultValue={brandsData.website}
-                onChange={(e) => setValue("website", e.target.value)}
-              />
-            </div>
-            <div className="form-box">
-              <span className="smallcaps">REPRESENTATIVE</span>
-              <input
-                {...register("representative")}
-                className="form-input"
+                type="text"
+                placeholder="Enter representative name"
                 defaultValue={brandsData.representative}
-                onChange={(e) => setValue("representative", e.target.value)}
               />
+              {errors.representative && (
+                <span className="error-message">{errors.representative.message}</span>
+              )}               
             </div>
             <div className="form-box">
               <span className="smallcaps">EMAIL*</span>
               <input
-                {...register("email")}
+                {...register("email", {
+                  required: "Email is required",
+                  pattern: {
+                    value: /^\S+@\S+\.\S+$/,
+                    message: "Invalid email address"
+                  }
+                })}
                 className="form-input"
+                placeholder="Enter email"
                 defaultValue={brandsData.email}
-                onChange={(e) => setValue("email", e.target.value)}
               />
+              {errors.email && (
+                <span className="error-message">{errors.email.message}</span>
+              )}
+            </div>
+            <div className="form-box">
+              <span className="smallcaps">WEBSITE*</span>
+              <input
+                {...register("website", {
+                  required: "Website is required",
+                  pattern: {
+                    value: /^(http:\/\/|https:\/\/)(www\.)?[\w\-]+(\.[\w\-]+)+([\w\-\.,@?^=%&:/~\+#]*)*$/i,
+                    message: "Website must start with http:// or https:// and be a valid format"
+                  }
+                })}
+                className="form-input"
+                defaultValue={brandsData.website}
+                placeholder="https://"
+              />
+              {errors.website && (
+                <span className="error-message">{errors.website.message}</span>
+              )}
             </div>
             <div className="form-box">
               <span className="smallcaps">NICHE*</span>
               <input
-                {...register("niche", { required: false })}
+                {...register("niche", {
+                  required: "Niche is required",
+                  validate: (value) =>
+                    value.trim() !== "" || "Niche is required",
+                })}
                 className="form-input"
                 type="text"
+                placeholder="Enter brand niche"
                 defaultValue={brandsData.niche}
               />
-            </div>
+              {errors.niche && (
+                <span className="error-message">{errors.niche.message}</span>
+              )}
+              </div>
             <div className="button-group">
               <button
                 className="sec-button stone"
@@ -316,38 +349,57 @@ const BrandForm: React.FC<BrandFormProps> = ({
               />
               {errors.name && (
                 <span className="error-message">{errors.name.message}</span>
-              )}            </div>
+              )}            
+            </div>
             <div className="form-box">
-              <span className="smallcaps">REPRESENTATIVE</span>
+              <span className="smallcaps">REPRESENTATIVE*</span>
               <input
                 {...register("representative", {
-                  required: "Representative is required",
+                  required: "Representative name is required",
                   validate: (value) =>
                     value.trim() !== "" || "Representative is required",
-                })}
+                })}                
                 className="form-input"
-                onChange={(e) => setValue("representative", e.target.value)}
+                type="text"
+                placeholder="Enter representative name"
               />
+              {errors.representative && (
+                <span className="error-message">{errors.representative.message}</span>
+              )}  
             </div>
             <div className="form-box">
               <span className="smallcaps">EMAIL*</span>
               <input
                 {...register("email", {
                   required: "Email is required",
-                  validate: (value) =>
-                    value.trim() !== "" || "Email is required",
+                  pattern: {
+                    value: /^\S+@\S+\.\S+$/,
+                    message: "Invalid email address"
+                  }
                 })}
                 className="form-input"
-                onChange={(e) => setValue("email", e.target.value)}
+                placeholder="Enter email"
               />
+              {errors.email && (
+                <span className="error-message">{errors.email.message}</span>
+              )}
             </div>
             <div className="form-box">
               <span className="smallcaps">WEBSITE*</span>
               <input
-                {...register("website")}
+                {...register("website", {
+                  required: "Website is required",
+                  pattern: {
+                    value: /^(http:\/\/|https:\/\/)(www\.)?[\w\-]+(\.[\w\-]+)+([\w\-\.,@?^=%&:/~\+#]*)*$/i,
+                    message: "Website must start with http:// or https:// and be a valid format"
+                  }
+                })}
                 className="form-input"
-                onChange={(e) => setValue("website", e.target.value)}
+                placeholder="https://"
               />
+              {errors.website && (
+                <span className="error-message">{errors.website.message}</span>
+              )}
             </div>
             <div className="form-box">
               <span className="smallcaps">NICHE*</span>
@@ -359,9 +411,13 @@ const BrandForm: React.FC<BrandFormProps> = ({
                 })}
                 className="form-input"
                 type="text"
+                placeholder="Enter brand niche"
               />
-            </div>
-
+            
+              {errors.niche && (
+                <span className="error-message">{errors.niche.message}</span>
+              )}
+              </div>
             <button className="sec-button linen" type="submit">
               <p>SAVE</p>
             </button>

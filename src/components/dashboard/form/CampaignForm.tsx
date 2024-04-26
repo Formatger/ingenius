@@ -390,22 +390,37 @@ const CampaignForm: React.FC<CampaignFormProps> = ({
               />
             </div>
             <div className="form-box">
-              <span className="smallcaps">START DATE</span>
+              <span className="smallcaps">START DATE*</span>
               <input
-                {...register("start_date", { required: true })}
+                {...register("start_date", {
+                  required: "Start date is required",
+                })}
                 className="form-input"
                 type="date"
-                placeholder="YYYY-MM-DD"
               />
+              {errors.start_date && (
+                <span className="error-message">
+                  {errors.start_date.message}
+                </span>
+              )}
             </div>
             <div className="form-box">
-              <span className="smallcaps">END DATE</span>
+              <span className="smallcaps">END DATE*</span>
               <input
-                {...register("deadline", { required: true })}
+                {...register("deadline", {
+                  required: "End date is required",
+                  validate: {
+                    isAfterStartDate: (value) =>
+                      new Date(value) >= new Date(startDate) ||
+                      "End date cannot be before start date",
+                  },
+                })}
                 className="form-input"
                 type="date"
-                placeholder="YYYY-MM-DD"
               />
+              {errors.deadline && (
+                <span className="error-message">{errors.deadline.message}</span>
+              )}
             </div>
             <div className="form-box">
               <span className="smallcaps">SELECT STAGE*</span>
@@ -438,17 +453,3 @@ const CampaignForm: React.FC<CampaignFormProps> = ({
 };
 
 export default CampaignForm;
-
-            {/* <div className="form-box">
-              <span className="smallcaps">INVOICE STATUS*</span>
-              <div className="select-wrap">
-                <select
-                  {...register("invoice_paid", { required: true })}
-                  className="select-input"
-                  defaultValue={campaignsData.invoice_paid}
-                >
-                  <option value="false">Unpaid</option>
-                  <option value="true">Paid</option>
-                </select>
-              </div>
-            </div> */}
