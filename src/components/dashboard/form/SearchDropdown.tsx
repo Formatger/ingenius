@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, forwardRef } from "react";
 import Image from "next/image";
 import SearchIcon from "../../assets/icons/search.svg";
 import Arrow from "@/components/assets/svg/Arrow";
@@ -11,19 +11,20 @@ interface SearchDropdownProps {
   displayKey: string;  // Key to display and search in data objects
 }
 
-const SearchDropdown: React.FC<SearchDropdownProps> = ({
-    data,
-    onSelect,
-    placeholder = "Search...",
-    handleSearch,
-    displayKey
-}) => {
+const SearchDropdown: React.ForwardRefRenderFunction<HTMLDivElement, SearchDropdownProps> = ({
+  data,
+  onSelect,
+  placeholder = "Search...",
+  handleSearch,
+  displayKey
+}, ref) => {
     const [inputTerm, setInputTerm] = useState('');
     const [displayTerm, setDisplayTerm] = useState('');
     const [showDropdown, setShowDropdown] = useState(false);
     const [filteredData, setFilteredData] = useState<any[]>([]);
     const dropdownRef = useRef<HTMLDivElement>(null);
-
+    const inputRef = useRef<HTMLInputElement>(null);
+    
     // useEffect(() => {
     //     if (inputTerm === '') {
     //         setFilteredData(data.slice(0, 5)); // Show default items or some other logic
@@ -73,6 +74,7 @@ const SearchDropdown: React.FC<SearchDropdownProps> = ({
                             handleSearch(e.target.value);
                         }}
                         placeholder="Search"
+                        ref={inputRef}
                     />
 
                     {filteredData.map((item, index) => (
@@ -86,4 +88,4 @@ const SearchDropdown: React.FC<SearchDropdownProps> = ({
     );
 };
 
-export default SearchDropdown;
+export default forwardRef(SearchDropdown);

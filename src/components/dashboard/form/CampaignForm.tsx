@@ -8,9 +8,8 @@ import SearchDropdown from "./SearchDropdown";
 import { profile } from "console";
 import { v4 as uuidv4 } from "uuid";
 import { useForm } from "react-hook-form";
-import FormSidepanel from "@/components/common/FormSidepanel";
+import FormSidepanel from "@/components/common/Sidepanel";
 import {
-  getBrands,
   putCampaign,
   getDeals,
   postCampaigns,
@@ -23,8 +22,8 @@ import {
   DealInterface,
 } from "@/interfaces/interfaces";
 import DateInput from "@/components/common/DateInput";
-import axios from "axios";
 import { useRouter } from "next/router";
+import InvoiceDropdown from "@/components/common/InvoiceDropdown";
 
 // interface Stages {
 //   id: number;
@@ -76,13 +75,16 @@ const CampaignForm: React.FC<CampaignFormProps> = ({
   closeEdit,
 }) => {
   const router = useRouter();
-  const { register, handleSubmit, reset, setValue, trigger } =
+  const { register, handleSubmit, reset, setValue, trigger, watch, formState: { errors }, } =
     useForm<FormData>();
   const [selectedStage, setSelectedStage] = useState("");
   const [dealsData, setDealsData] = useState<any>([]);
-  const [invoicePaid, setInvoicePaid] = useState<boolean>(
-    campaignsData?.invoice_paid ?? false
+  const [invoiceStatus, setInvoiceStatus] = useState(
+    campaignsData?.invoice_paid ? "Paid" : "Unpaid"
   );
+  const startDate = watch("start_date");
+
+  /* LOCK FORM */
 
   useEffect(() => {
     lockCampaign(campaignsData.id);
@@ -92,19 +94,12 @@ const CampaignForm: React.FC<CampaignFormProps> = ({
     };
   }, []);
 
-  /* SELECT DROPDOWNS */
+  /* INVOICE DROPDOWN */
 
-  const handleSelectStage = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedId = event.target.value;
-    setSelectedStage(selectedId);
-    setValue("campaign_stage", selectedId);
-    trigger("campaign_stage");
-  };
-
-  const handleInvoiceChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const isPaid = event.target.value === "true";
-    setInvoicePaid(isPaid);
-    setValue("invoice_paid", isPaid);
+  const handleInvoiceSelect = (value: string) => {
+    setInvoiceStatus(value);
+    setValue("invoice_paid", value === "Paid");
+    trigger("invoice_paid");
   };
 
   /* SEARCH DROPDOWN */
@@ -140,6 +135,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({
   /* SUBMIT FORM - POST CAMPAIGNS API CALL */
 
   const onSubmit = async (data: FormData) => {
+    console.log("Form Data:", data);
     try {
       if (isEditing) {
         const campaignId = campaignsData.id;
@@ -153,6 +149,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({
           campaignId,
           updatedData,
           (response) => {
+            console.log("Project updated successfully:", response);
             reset();
             closeEdit();
             updateCampaignData();
@@ -165,6 +162,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({
         await postCampaigns(
           data,
           (response) => {
+            console.log("Project updated successfully:", response);
             reset();
             handleClose();
             updateCampaignData();
@@ -180,7 +178,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({
   };
 
   return (
-    <FormSidepanel handleCloseForm={handleClose}>
+    <FormSidepanel handleClose={handleClose}>
       <div className="sidepanel-header">
         <p
           className="row-wrap-2 text-brown"
@@ -204,12 +202,20 @@ const CampaignForm: React.FC<CampaignFormProps> = ({
             <div className="form-box">
               <span className="smallcaps">CAMPAIGN NAME*</span>
               <input
-                {...register("name", { required: true })}
+                {...register("name", {
+                  required: "Campaign name is required",
+                  validate: (value) =>
+                    value.trim() !== "" || "Campaign name is required",
+                })}               
                 className="form-input"
                 type="text"
+                placeholder="Enter campaign name"
                 defaultValue={campaignsData.name}
                 onChange={(e) => setValue("name", e.target.value)}
               />
+              {errors.name && (
+                <span className="error-message">Name is required</span>
+              )}
             </div>
             <div className="form-box">
               <span className="smallcaps">DESCRIPTION</span>
@@ -226,51 +232,78 @@ const CampaignForm: React.FC<CampaignFormProps> = ({
                 data={dealsData}
                 onSelect={(selectedItem) => {
                   setValue("deal", selectedItem.id);
+                  trigger("deal");
                 }}
-                placeholder={campaignsData.deal}
+                placeholder={campaignsData.deal_name}
                 handleSearch={handleSearchChange}
                 displayKey="name"
               />
-            </div>
-            <div className="form-box">
+              {errors.deal && (
+                <span className="error-message">Deal is required</span>
+              )}            </div>
+                        <div className="form-box">
               <span className="smallcaps">CONTRACT VALUE*</span>
               <input
-                {...register("contract_value", { required: false })}
+                {...register("contract_value", {
+                  required: "Contract value is required",
+                  valueAsNumber: true,
+                  validate: {
+                    notEmpty: (value) =>
+                      value !== undefined || "Contract value cannot be empty",
+                    isNumber: (value) =>
+                      !isNaN(value ?? 0) || "Please enter a number",
+                  },
+                })}
                 className="form-input"
                 type="text"
                 defaultValue={campaignsData.contract_value}
               />
+              {errors.contract_value && (
+                <span className="error-message">
+                  {errors.contract_value.message}
+                </span>
+              )}
             </div>
-            <div className="form-box">
-              <span className="smallcaps">INVOICE STATUS*</span>
-              <div className="select-wrap">
-                <select
-                  {...register("invoice_paid", { required: true })}
-                  className="select-input"
-                  defaultValue={campaignsData.invoice_paid}
-                >
-                  <option value="false">Unpaid</option>
-                  <option value="true">Paid</option>
-                </select>
-              </div>
+            <div>
+              <InvoiceDropdown
+                selectedValue={invoiceStatus}
+                onSelect={handleInvoiceSelect}
+              />
             </div>
             <div className="form-box">
               <span className="smallcaps">START DATE*</span>
               <input
-                {...register("start_date", { required: true })}
+                {...register("start_date", {
+                  required: "Start date is required",
+                })}
                 className="form-input"
                 type="date"
                 defaultValue={campaignsData.start_date}
               />
+              {errors.start_date && (
+                <span className="error-message">
+                  {errors.start_date.message}
+                </span>
+              )}
             </div>
             <div className="form-box">
               <span className="smallcaps">END DATE*</span>
               <input
-                {...register("deadline", { required: true })}
+                {...register("deadline", {
+                  required: "End date is required",
+                  validate: {
+                    isAfterStartDate: (value) =>
+                      new Date(value) >= new Date(startDate) ||
+                      "End date cannot be before start date",
+                  },
+                })}
                 className="form-input"
                 type="date"
                 defaultValue={campaignsData.deadline}
               />
+              {errors.deadline && (
+                <span className="error-message">{errors.deadline.message}</span>
+              )}
             </div>
             <div className="button-group">
               <button
@@ -292,11 +325,18 @@ const CampaignForm: React.FC<CampaignFormProps> = ({
             <div className="form-box">
               <span className="smallcaps">CAMPAIGN NAME*</span>
               <input
-                {...register("name", { required: true })}
+                {...register("name", {
+                  required: "Campaign name is required",
+                  validate: (value) =>
+                    value.trim() !== "" || "Campaign name is required",
+                })}     
                 className="form-input"
                 type="text"
                 placeholder="Enter a name"
               />
+              {errors.name && (
+                <span className="error-message">{errors.name.message}</span>
+              )}
             </div>
             <div className="form-box">
               <span className="smallcaps">DESCRIPTION</span>
@@ -309,9 +349,11 @@ const CampaignForm: React.FC<CampaignFormProps> = ({
             <div className="form-box">
               <span className="smallcaps">SELECT DEAL*</span>
               <SearchDropdown
+                {...register("deal", { required: true })}
                 data={dealsData}
                 onSelect={(selectedItem) => {
                   setValue("deal", selectedItem.id);
+                  trigger("deal");
                 }}
                 placeholder="Select Deal"
                 handleSearch={handleSearchChange}
@@ -319,27 +361,33 @@ const CampaignForm: React.FC<CampaignFormProps> = ({
               />
             </div>
             <div className="form-box">
-              <span className="smallcaps">CONTRACT VALUE</span>
+              <span className="smallcaps">CONTRACT VALUE*</span>
               <input
-                {...register("contract_value", { required: true })}
+                {...register("contract_value", {
+                  required: "Contract value is required",
+                  valueAsNumber: true,
+                  validate: {
+                    notEmpty: (value) =>
+                      value !== undefined || "Contract value cannot be empty",
+                    isNumber: (value) =>
+                      !isNaN(value ?? 0) || "Please enter a number",
+                  },
+                })}
                 className="form-input"
                 type="text"
-                placeholder="Add contract Value"
+                placeholder="Enter contract value"
               />
+              {errors.contract_value && (
+                <span className="error-message">
+                  {errors.contract_value.message}
+                </span>
+              )}
             </div>
-            <div className="form-box">
-              <span className="smallcaps">INVOICE STATUS*</span>
-              <div className="select-wrap">
-                <select
-                  {...register("invoice_paid", { required: true })}
-                  onChange={handleInvoiceChange}
-                  value={invoicePaid.toString()}
-                  className="select-input"
-                >
-                  <option value="false">Unpaid</option>
-                  <option value="true">Paid</option>
-                </select>
-              </div>
+            <div>
+              <InvoiceDropdown
+                selectedValue={invoiceStatus}
+                onSelect={handleInvoiceSelect}
+              />
             </div>
             <div className="form-box">
               <span className="smallcaps">START DATE</span>
@@ -361,22 +409,22 @@ const CampaignForm: React.FC<CampaignFormProps> = ({
             </div>
             <div className="form-box">
               <span className="smallcaps">SELECT STAGE*</span>
-              <select
-                {...register("campaign_stage")}
-                onChange={handleSelectStage}
-                value={selectedStage}
-                className="form-input"
-              >
-                <option value="">Select Stage</option> {/* Default option */}
-                {Array.isArray(campaignStage) &&
-                  campaignStage.map((stage) => {
-                    return (
-                      <option key={stage.stageID} value={stage.stageID}>
-                        {stage.stageName}
-                      </option>
-                    );
-                  })}
-              </select>
+              <SearchDropdown
+                data={campaignStage}
+                onSelect={(selectedItem) => {
+                  setValue("campaign_stage", selectedItem.stageID);
+                  trigger("campaign_stage");
+                }}
+                placeholder="Select Stage"
+                handleSearch={handleSearchChange}
+                displayKey="stageName"
+                {...register("campaign_stage", {
+                  required: "Stage selection is required",
+                })}
+              />
+              {errors.campaign_stage && (
+                <span className="error-message">Stage is required</span>
+              )}
             </div>
 
             <button className="sec-button linen" type="submit">
@@ -390,3 +438,17 @@ const CampaignForm: React.FC<CampaignFormProps> = ({
 };
 
 export default CampaignForm;
+
+            {/* <div className="form-box">
+              <span className="smallcaps">INVOICE STATUS*</span>
+              <div className="select-wrap">
+                <select
+                  {...register("invoice_paid", { required: true })}
+                  className="select-input"
+                  defaultValue={campaignsData.invoice_paid}
+                >
+                  <option value="false">Unpaid</option>
+                  <option value="true">Paid</option>
+                </select>
+              </div>
+            </div> */}

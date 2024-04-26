@@ -203,6 +203,9 @@ const BrandForm: React.FC<BrandFormProps> = ({
                 defaultValue={brandsData.name}
                 onChange={(e) => setValue("name", e.target.value)}
               />
+              {errors.name && (
+                <span className="error-message">{errors.name.message}</span>
+              )}           
             </div>
             <div className="form-box">
               <span className="smallcaps">WEBSITE*</span>
@@ -240,15 +243,6 @@ const BrandForm: React.FC<BrandFormProps> = ({
                 defaultValue={brandsData.niche}
               />
             </div>
-            {/* <div className="form-box">
-            <span className="smallcaps">PROFILE PICTURE*</span>
-                <input
-                    className="form-input"
-                    type="file"
-                    accept="image/jpeg"
-                    onChange={handleUploadImage}
-                />
-            </div> */}
             <div className="button-group">
               <button
                 className="sec-button stone"
@@ -320,7 +314,9 @@ const BrandForm: React.FC<BrandFormProps> = ({
                 type="text"
                 placeholder="Enter a name"
               />
-            </div>
+              {errors.name && (
+                <span className="error-message">{errors.name.message}</span>
+              )}            </div>
             <div className="form-box">
               <span className="smallcaps">REPRESENTATIVE</span>
               <input

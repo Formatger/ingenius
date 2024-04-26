@@ -12,15 +12,14 @@ import {
 } from "@/interfaces/interfaces";
 import {
   getBrands,
-  getCampaigns,
   lockDeal,
-  postCampaigns,
   postDeals,
   putDeal,
   unlockDeal,
 } from "@/utils/httpCalls";
 import DateInput from "@/components/common/DateInput";
 import { useRouter } from "next/router";
+import InvoiceDropdown from "@/components/common/InvoiceDropdown";
 
 // interface Stages {
 //   id: number;
@@ -84,18 +83,12 @@ const DealForm: React.FC<DealFormProps> = ({
   } = useForm<FormData>();
   const [selectedStage, setSelectedStage] = useState("");
   const [brandsData, setBrandsData] = useState<any>([]);
-  const [invoicePaid, setInvoicePaid] = useState<boolean>(
-    dealsData.invoice_paid ?? false
+  const [invoiceStatus, setInvoiceStatus] = useState(
+    dealsData?.invoice_paid ? "Paid" : "Unpaid"
   );
   const startDate = watch("start_date");
-  /* SELECT DROPDOWNS */
 
-  // const handleSelectStage = (event: React.ChangeEvent<HTMLSelectElement>) => {
-  //   const selectedId = event.target.value;
-  //   setSelectedStage(selectedId);
-  //   setValue("deal_stage", selectedId);
-  //   console.log("Selected Deal Stage ID:", selectedId);
-  // };
+  /* LOCK FORM */
 
   useEffect(() => {
     lockDeal(dealsData.id);
@@ -105,10 +98,12 @@ const DealForm: React.FC<DealFormProps> = ({
     };
   }, []);
 
-  const handleInvoiceChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const isPaid = event.target.value === "true";
-    setInvoicePaid(isPaid);
-    setValue("invoice_paid", isPaid);
+  /* INVOICE DROPDOWN */
+
+  const handleInvoiceSelect = (value: string) => {
+    setInvoiceStatus(value);
+    setValue("invoice_paid", value === "Paid");
+    trigger("invoice_paid");
   };
 
   /* SEARCH DROPDOWN */
@@ -212,15 +207,18 @@ const DealForm: React.FC<DealFormProps> = ({
             <div className="form-box">
               <span className="smallcaps">DEAL NAME*</span>
               <input
-                {...register("name", { required: true })}
+                {...register("name", {
+                  required: "Deal name is required",
+                  validate: (value) =>
+                    value.trim() !== "" || "Deal name is required",
+                })}     
                 className="form-input"
                 type="text"
-                placeholder="Enter a name"
                 defaultValue={dealsData.name}
                 onChange={(e) => setValue("name", e.target.value)}
               />
               {errors.name && (
-                <span className="error-message">Deal name is required</span>
+                <span className="error-message">{errors.name.message}</span>
               )}
             </div>
             <div className="form-box">
@@ -233,18 +231,21 @@ const DealForm: React.FC<DealFormProps> = ({
               />
             </div>
             <div className="form-box">
-              {/* <span className="smallcaps">SELECT PARTNER*</span> */}
-              {/* <SearchDropdown
+              <span className="smallcaps">SELECT PARTNER*</span>
+              <SearchDropdown
+              // {...register("brand")}
               data={brandsData}
               onSelect={(selectedItem) => {
                 setValue("brand", selectedItem.id);
+                trigger("brand");
               }}
               handleSearch={handleSearchChange}
               displayKey="name"
-            /> */}
-              {/* {errors.brand && (
+              placeholder={dealsData.brand_name}
+            />
+              {errors.brand && (
                 <span className="error-message">Partner is required</span>
-              )} */}
+              )}
             </div>
             <div className="form-box">
               <span className="smallcaps">CONTRACT VALUE*</span>
@@ -260,28 +261,27 @@ const DealForm: React.FC<DealFormProps> = ({
                 </span>
               )}
             </div>
-            <div className="form-box">
-              <span className="smallcaps">INVOICE STATUS*</span>
-              <div className="select-wrap">
-                <select
-                  {...register("invoice_paid", { required: false })}
-                  onChange={handleInvoiceChange}
-                  defaultValue={dealsData.invoice_paid}
-                  className="form-input"
-                >
-                  <option value="false">Unpaid</option>
-                  <option value="true">Paid</option>
-                </select>
-              </div>
+            <div>
+              <InvoiceDropdown
+                selectedValue={invoiceStatus}
+                onSelect={handleInvoiceSelect}
+              />
             </div>
             <div className="form-box">
               <span className="smallcaps">START DATE*</span>
               <input
-                {...register("start_date", { required: true })}
+                {...register("start_date", {
+                  required: "Start date is required",
+                })}
                 className="form-input"
                 type="date"
                 defaultValue={dealsData.start_date}
               />
+              {errors.start_date && (
+                <span className="error-message">
+                  {errors.start_date.message}
+                </span>
+              )}
             </div>
             <div className="form-box">
               <span className="smallcaps">END DATE*</span>
@@ -302,9 +302,18 @@ const DealForm: React.FC<DealFormProps> = ({
                 <span className="error-message">{errors.deadline.message}</span>
               )}
             </div>
-            <button className="sec-button linen" type="submit">
-              <p>SAVE</p>
-            </button>
+            <div className="button-group">
+              <button
+                className="sec-button stone"
+                type="button"
+                onClick={handleClose}
+              >
+                <p>Cancel</p>
+              </button>
+              <button className="sec-button linen" type="submit">
+                <p>Save</p>
+              </button>
+            </div>
           </form>
         </div>
       ) : (
@@ -313,7 +322,11 @@ const DealForm: React.FC<DealFormProps> = ({
             <div className="form-box">
               <span className="smallcaps">DEAL NAME*</span>
               <input
-                {...register("name", { required: true })}
+                {...register("name", {
+                  required: "Deal name is required",
+                  validate: (value) =>
+                    value.trim() !== "" || "Deal name is required",
+                })}  
                 className="form-input"
                 type="text"
                 placeholder="Enter a name"
@@ -330,9 +343,11 @@ const DealForm: React.FC<DealFormProps> = ({
             <div className="form-box">
               <span className="smallcaps">SELECT PARTNER*</span>
               <SearchDropdown
+                // {...register("brand", { required: true })}
                 data={brandsData}
                 onSelect={(selectedItem) => {
                   setValue("brand", selectedItem.id);
+                  trigger("brand");
                 }}
                 placeholder="Select Brand"
                 handleSearch={handleSearchChange}
@@ -342,43 +357,64 @@ const DealForm: React.FC<DealFormProps> = ({
             <div className="form-box">
               <span className="smallcaps">CONTRACT VALUE*</span>
               <input
-                {...register("contract_value", { required: true })}
+                {...register("contract_value", {
+                  required: "Contract value is required",
+                  valueAsNumber: true,
+                  validate: {
+                    notEmpty: (value) =>
+                      value !== undefined || "Contract value cannot be empty",
+                    isNumber: (value) =>
+                      !isNaN(value ?? 0) || "Please enter a number",
+                  },
+                })}
                 className="form-input"
-                type="number"
-                placeholder="Add contract Value"
+                type="text"
+                placeholder="Enter contract value"
               />
+              {errors.contract_value && (
+                <span className="error-message">
+                  {errors.contract_value.message}
+                </span>
+              )}
             </div>
-            <div className="form-box">
-              <span className="smallcaps">INVOICE STATUS*</span>
-              <div className="select-wrap">
-                <select
-                  {...register("invoice_paid", { required: false })}
-                  onChange={handleInvoiceChange}
-                  value={invoicePaid.toString()}
-                  className="form-input"
-                >
-                  <option value="false">Unpaid</option>
-                  <option value="true">Paid</option>
-                </select>
-              </div>
+            <div>
+              <InvoiceDropdown
+                selectedValue={invoiceStatus}
+                onSelect={handleInvoiceSelect}
+              />
             </div>
             <div className="form-box">
               <span className="smallcaps">START DATE*</span>
               <input
-                {...register("start_date", { required: true })}
+                {...register("start_date", {
+                  required: "Start date is required",
+                })}
                 className="form-input"
                 type="date"
-                placeholder="YYYY-MM-DD"
               />
+              {errors.start_date && (
+                <span className="error-message">
+                  {errors.start_date.message}
+                </span>
+              )}
             </div>
             <div className="form-box">
               <span className="smallcaps">END DATE*</span>
               <input
-                {...register("deadline", { required: true })}
+                {...register("deadline", {
+                  required: "End date is required",
+                  validate: {
+                    isAfterStartDate: (value) =>
+                      new Date(value) >= new Date(startDate) ||
+                      "End date cannot be before start date",
+                  },
+                })}
                 className="form-input"
                 type="date"
-                placeholder="YYYY-MM-DD"
               />
+              {errors.deadline && (
+                <span className="error-message">{errors.deadline.message}</span>
+              )}
             </div>
             <div className="form-box">
               <span className="smallcaps">SELECT STAGE*</span>

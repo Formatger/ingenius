@@ -77,6 +77,8 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
   const startDate = watch("start_date");
   const endDate = watch("deadline");
 
+  /* LOCK FORM */
+
   useEffect(() => {
     lockProject(projectsData.id);
 
@@ -92,20 +94,6 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
     setValue("invoice_paid", value === "Paid");
     trigger("invoice_paid");
   };
-
-  // const handleSelectStage = (event: React.ChangeEvent<HTMLSelectElement>) => {
-  //   const selectedId = parseInt(event.target.value);
-  //   setSelectedStage(selectedId);
-  //   setValue("project_stage", selectedId);
-  //   console.log("Selected Project Stage ID:", selectedId);
-  //   trigger("project_stage");
-  // };
-
-  // const handleInvoiceChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-  //   const isPaid = event.target.value === "true";
-  //   setInvoicePaid(isPaid);
-  //   setValue("invoice_paid", isPaid);
-  // };
 
   /* SEARCH DROPDOWN */
   const [searchTerm, setSearchTerm] = useState("");
@@ -173,6 +161,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
   /* SUBMIT FORM - POST PROJECTS API CALL  */
 
   const onSubmit = async (data: FormData) => {
+    console.log("Form Data:", data);
     try {
       if (isEditing) {
         const projectId = projectsData.id;
@@ -186,6 +175,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
           projectId,
           updatedData,
           (response) => {
+            console.log("Project updated successfully:", response);
             reset();
             closeEdit();
             updateProjectData();
@@ -198,6 +188,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
         await postProjects(
           data,
           (response) => {
+            console.log("Project updated successfully:", response);
             reset();
             handleClose();
             updateProjectData();
@@ -237,14 +228,19 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
             <div className="form-box">
               <span className="smallcaps">PROJECT NAME*</span>
               <input
-                {...register("name", { required: true })}
+                {...register("name", {
+                  required: "Project name is required",
+                  validate: (value) =>
+                    value.trim() !== "" || "Project name is required",
+                })}
                 className="form-input"
                 type="text"
+                placeholder="Enter project name"
                 defaultValue={projectsData.name}
                 onChange={(e) => setValue("name", e.target.value)}
               />
               {errors.name && (
-                <span className="error-message">Project name is required</span>
+                <span className="error-message">{errors.name.message}</span>
               )}
             </div>
             <div className="form-box">
@@ -252,6 +248,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
               <textarea
                 {...register("description")}
                 className="form-textarea"
+                placeholder="Add a description"
                 defaultValue={projectsData.description}
                 onChange={(e) => setValue("description", e.target.value)}
               />
@@ -259,6 +256,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
             <div className="form-box">
               <span className="smallcaps">SELECT CAMPAIGN*</span>
               <SearchDropdown
+                // {...register("campaign")}
                 data={campaignsData}
                 onSelect={(selectedItem) => {
                   setValue("campaign", selectedItem.id);
@@ -268,13 +266,11 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
                 handleSearch={handleSearchChange}
                 displayKey="name"
               />
-              {errors.campaign && (
-                <span className="error-message">Campaign is required</span>
-              )}
             </div>
             <div className="form-box">
               <span className="smallcaps">SELECT CREATOR*</span>
               <SearchDropdown
+                // {...register("creator")}
                 data={creatorsData}
                 onSelect={(selectedItem) => {
                   setValue("creator", selectedItem.id);
@@ -284,14 +280,20 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
                 handleSearch={handleSearchChange}
                 displayKey="name"
               />
-              {errors.creator && (
-                <span className="error-message">Creator is required</span>
-              )}
             </div>
             <div className="form-box">
               <span className="smallcaps">CONTRACT VALUE*</span>
               <input
-                {...register("contract_value", { required: true })}
+                {...register("contract_value", {
+                  required: "Contract value is required",
+                  valueAsNumber: true,
+                  validate: {
+                    notEmpty: (value) =>
+                      value !== undefined || "Contract value cannot be empty",
+                    isNumber: (value) =>
+                      !isNaN(value ?? 0) || "Please enter a number",
+                  },
+                })}
                 className="form-input"
                 type="text"
                 defaultValue={projectsData.contract_value}
@@ -302,21 +304,12 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
                 </span>
               )}
             </div>
-            <div className="form-box">
-              <span className="smallcaps">INVOICE STATUS*</span>
-              <div className="select-wrap">
-                <select
-                  {...register("invoice_paid")}
-                  className="select-input"
-                  defaultValue={projectsData.invoice_paid}
-                >
-                  <option value="false">Unpaid</option>
-                  <option value="true">Paid</option>
-                </select>
-                {/* {errors.invoice_paid && (<span className="error-message">Please select invoice status</span>)} */}
-              </div>
+            <div>
+              <InvoiceDropdown
+                selectedValue={invoiceStatus}
+                onSelect={handleInvoiceSelect}
+              />
             </div>
-
             <div className="form-box">
               <span className="smallcaps">START DATE*</span>
               <input
@@ -383,7 +376,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
                 placeholder="Enter a name"
               />
               {errors.name && (
-                <span className="error-message">Project name is required</span>
+                <span className="error-message">{errors.name.message}</span>
               )}
             </div>
             <div className="form-box">
@@ -397,6 +390,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
             <div className="form-box">
               <span className="smallcaps">SELECT CAMPAIGN*</span>
               <SearchDropdown
+                {...register("campaign", { required: true })}
                 data={campaignsData}
                 onSelect={(selectedItem) => {
                   setValue("campaign", selectedItem.id);
@@ -405,7 +399,6 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
                 placeholder="Select Campaign"
                 handleSearch={handleSearchChange}
                 displayKey="name"
-                {...register("campaign", { required: true })}
               />
               {errors.campaign && (
                 <span className="error-message">Campaign is required</span>
@@ -414,6 +407,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
             <div className="form-box">
               <span className="smallcaps">SELECT CREATOR*</span>
               <SearchDropdown
+                {...register("creator", { required: "true" })}
                 data={creatorsData}
                 onSelect={(selectedItem) => {
                   setValue("creator", selectedItem.id);
@@ -422,7 +416,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
                 placeholder="Select Creator"
                 handleSearch={handleSearchChange}
                 displayKey="name"
-                {...register("creator", { required: "true" })}
+                
               />
               {errors.creator && (
                 <span className="error-message">Creator is required</span>
@@ -565,3 +559,30 @@ export default ProjectForm;
               {errors.project_stage && (<span className="error-message">Please select a project stage</span>)}
             </div> */
 }
+  // const handleSelectStage = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  //   const selectedId = parseInt(event.target.value);
+  //   setSelectedStage(selectedId);
+  //   setValue("project_stage", selectedId);
+  //   console.log("Selected Project Stage ID:", selectedId);
+  //   trigger("project_stage");
+  // };
+
+  // const handleInvoiceChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  //   const isPaid = event.target.value === "true";
+  //   setInvoicePaid(isPaid);
+  //   setValue("invoice_paid", isPaid);
+  // };
+
+              {/* <div className="form-box">
+              <span className="smallcaps">INVOICE STATUS*</span>
+              <div className="select-wrap">
+                <select
+                  {...register("invoice_paid", { required: true })}
+                  className="select-input"
+                  defaultValue={projectsData.invoice_paid}
+                >
+                  <option value="false">Unpaid</option>
+                  <option value="true">Paid</option>
+                </select>
+              </div>
+            </div> */}

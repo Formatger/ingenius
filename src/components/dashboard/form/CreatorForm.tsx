@@ -194,12 +194,19 @@ const CreatorForm: React.FC<CreatorFormProps> = ({
             <div className="form-box">
               <span className="smallcaps">CREATOR NAME*</span>
               <input
-                {...register("name", { required: true })}
+                {...register("name", {
+                  required: "Creator name is required",
+                  validate: (value) =>
+                    value.trim() !== "" || "Creator name is required",
+                })}
                 className="form-input"
                 type="text"
                 defaultValue={creatorsData.name}
                 onChange={(e) => setValue("name", e.target.value)}
               />
+              {errors.name && (
+                <span className="error-message">{errors.name.message}</span>
+              )}
             </div>
             <div className="form-box">
               <span className="smallcaps">EMAIL*</span>
@@ -291,15 +298,17 @@ const CreatorForm: React.FC<CreatorFormProps> = ({
               <span className="smallcaps">CREATOR NAME*</span>
               <input
                 {...register("name", {
-                  required: "Brand name is required",
+                  required: "Creator name is required",
                   validate: (value) =>
-                    value.trim() !== "" || "Brand name is required",
+                    value.trim() !== "" || "Creator name is required",
                 })}
                 className="form-input"
                 type="text"
                 placeholder="Enter a name"
               />
-            </div>
+              {errors.name && (
+                <span className="error-message">{errors.name.message}</span>
+              )}             </div>
             <div className="form-box">
               <span className="smallcaps">EMAIL*</span>
               <input
