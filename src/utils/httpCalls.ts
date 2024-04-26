@@ -4,6 +4,33 @@ import { DEPLOYED_API_BASE_URL } from "./apiConfig";
 /****************************  AUTH CALLS  ****************************/
 ////////////////////////////////////////////////////////////////////////
 
+export const login = async (
+  data: any,
+  callback: (resp: any) => void,
+  errorCallback?: (error: any) => void
+) => {
+  const url = DEPLOYED_API_BASE_URL + "token/";
+
+  try {
+    fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => response.json())
+      .then((resp) => {
+        callback(resp);
+      })
+      .catch((error) => {
+        errorCallback && errorCallback(error);
+      });
+  } catch (error) {
+    errorCallback && errorCallback(error);
+  }
+};
+
 // REFRESH TOKEN
 
 export const refreshToken = async (errorCallback?: (error: any) => void) => {
@@ -1539,6 +1566,30 @@ export const lockCreator = async (creatorId: any) => {
 
 export const unlockCreator = async (creatorId: any) => {
   const url = DEPLOYED_API_BASE_URL + `creators/${creatorId}/unlock/`;
+
+  try {
+    await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.access_token}`,
+      },
+    })
+      .then((response) => response.json())
+      .catch((error: any) => {
+        console.error(error);
+      });
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+////////////////////////////////////////////////////////////////////////
+/************************  CSV EXPORT CALLS  **************************/
+////////////////////////////////////////////////////////////////////////
+
+export const exportBrandsCSV = async (teamId: any) => {
+  const url = DEPLOYED_API_BASE_URL + `brands/${teamId}/export/`;
 
   try {
     await fetch(url, {

@@ -107,10 +107,18 @@
   color: white;
   font-family: "DMSansRegular", sans-serif;
   font-size: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .authButton:hover {
   background-color: var(--dark-hover-orange);
+}
+
+.authButton:hover .spinner-white {
+  border: 4px solid var(--dark-hover-orange);
+  border-top-color: white;
 }
 
 .authCircle {

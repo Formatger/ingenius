@@ -2,28 +2,60 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import Image from 'next/image';
 import LogoText from '../../components/assets/brand/logo-text.png';
-import { httpLoginPOST } from '@/utils/http';
+import { login } from '@/utils/httpCalls';
 
 export default function Login() {
   const { register, handleSubmit, watch, formState: { errors } } = useForm();
-  const [loginError, setLoginError] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [loginError, setLoginError] = useState({
+    hasError: false,
+    status: undefined,
+    message: undefined,
+  });
 
   const onSubmit = (data) => {
+    setLoading(true)
     try {
-      httpLoginPOST('token/', JSON.stringify(data), (response) => {
+      login(data, (response) => {
         if (response.status === 200) {
           localStorage.setItem('access_token', response.data.access);
           localStorage.setItem('refresh_token', response.data.refresh);
           window.location.href = '/';
-        } else {
-          setLoginError(true);
+          setLoginError({
+            hasError: false,
+            status: undefined,
+            message: undefined,
+          });
+        } else if (response.status >= 500 && response.status < 600) {
+          setLoginError({
+            hasError: true,
+            status: response.status,
+            message: 'There is a problem with the server. Please try again later.',
+          });
+        } else if (response.status >= 400 && response.status < 500) {
+          setLoginError({
+            hasError: true,
+            status: response.status,
+            message: 'Invalid username or password.',
+          });
         }
+        setLoading(false);
       }, (error) => {
-        setLoginError(true);
+        setLoginError({
+          hasError: true,
+          status: undefined,
+          message: 'There is a problem with the server. Please try again later.',
+        });
+        setLoading(false);
       });
     } catch (error) {
-      setLoginError(true);
-    }
+      setLoginError({
+        hasError: true,
+        status: undefined,
+        message: 'There was an error with your login. Please try again.',
+      });
+      setLoading(false);
+    } 
   };
 
 
@@ -58,9 +90,9 @@ export default function Login() {
           <input className={errors.password ? "authInputError" : "authInput"} type="password" name="password" id="password" {...register("password", {
             required: 'Password is required',
           })} />
-          {loginError && <p className="authInputErrorText">Invalid username or password</p>}
+          {loginError.hasError && <p className="authInputErrorText">{loginError.message}</p>}
           <button className="authButton" type="submit">
-            Login
+            {loading ? <div className='spinner-white' /> : 'Login'}
           </button>
         </form>
         <button className="gsi-material-button" onClick={handleGoogleLogin}>

@@ -161,6 +161,7 @@ const CreatorTable = ({
                       src={creator.profile_picture}
                       alt={creator.name}
                       className="partner-image"
+                      loading="lazy"
                     />
                     {creator.name}
                   </td>

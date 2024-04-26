@@ -15,7 +15,6 @@
   padding: var(--m7);
 }
 
-
 @media (min-width: 1024px) {
   .fixed-heading {
     left: var(--sidebar-w);
@@ -283,7 +282,7 @@
   align-items: center;
   border-bottom: var(--sborder);
   background-color: white;
-  padding-left: var(--m9)
+  padding-left: var(--m9);
 }
 
 .bread-arrow {
@@ -313,6 +312,16 @@
   animation: spin 1s infinite linear;
 }
 
+.spinner-white {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  border: 4px solid var(--dark-orange);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 1s infinite linear;
+}
+
 @keyframes spin {
   0% {
     transform: rotate(0deg);
@@ -326,7 +335,7 @@
 /* Settings */
 
 .settings-form-box {
-  padding: 0 20px ;
+  padding: 0 20px;
   width: 100%;
   /* max-width: 500px; */
 }
@@ -340,7 +349,7 @@
   margin-bottom: var(--m4);
   padding-top: var(--m5);
   padding-bottom: var(--m3);
-  border-bottom: 1px solid #E5E9EB;
+  border-bottom: 1px solid #e5e9eb;
 }
 
 .settings-box .first-column {
@@ -372,7 +381,7 @@
 .team-table {
   width: 100%;
   border-collapse: collapse;
-  overflow: hidden; 
+  overflow: hidden;
   border-radius: 12px;
 }
 
@@ -408,7 +417,8 @@
   height: 50px;
 }
 
-.team-table th, .team-table td {
+.team-table th,
+.team-table td {
   border: none; /* Removes all borders inside the table */
 }
 
@@ -418,7 +428,7 @@
 
 .manage-account {
   margin-bottom: 100px;
-} 
+}
 
 .settings-text {
   font-family: "InterRegular";
