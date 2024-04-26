@@ -8,9 +8,10 @@ interface ChangeCampaignColumnProps {
   button: string;
   updateCampaignData: () => void;
   changeStage: any;
+  campaignStage: any;
 }
 
-const ChangeCampaignColumn: React.FC<ChangeCampaignColumnProps> = ({ isOpen, changeStage, onClose, title, button, updateCampaignData }) => {
+const ChangeCampaignColumn: React.FC<ChangeCampaignColumnProps> = ({ isOpen, changeStage, onClose, title, button, updateCampaignData, campaignStage }) => {
   const [newName, setNewName] = useState<string>('');
 
   const handleChangeCampaign = async () => {
@@ -36,7 +37,11 @@ const ChangeCampaignColumn: React.FC<ChangeCampaignColumnProps> = ({ isOpen, cha
           <button type="button" onClick={onClose} className="close-button">×</button>
         </div>
         <div className="modal-content">
-          <input className="form-input" type="text" value={newName} onChange={(e) => setNewName(e.target.value)} />
+          <input className="form-input" 
+            type="text" value={newName} 
+            onChange={(e) => setNewName(e.target.value)} 
+            // placeholder={campaignStage.name}
+          />
           <div className='button-group row-between mt-5'>
             <button className="app-button cream mt-4" type="button" onClick={onClose}>
               Cancel

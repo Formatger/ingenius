@@ -372,6 +372,7 @@ const CampaignKanban = ({
                     title="Edit Stage Name"
                     button="Save"
                     updateCampaignData={updateCampaignData}
+                    campaignStage={campaignStage}
                   />
 
                   <ConfirmModal
