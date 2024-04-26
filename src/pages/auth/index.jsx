@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import Image from 'next/image';
 import LogoText from '../../components/assets/brand/logo-text.png';
-import { login } from '@/utils/httpCalls';
+import { httpLoginPOST } from '@/utils/http';
 
 export default function Login() {
   const { register, handleSubmit, watch, formState: { errors } } = useForm();
@@ -16,7 +16,7 @@ export default function Login() {
   const onSubmit = (data) => {
     setLoading(true)
     try {
-      login(data, (response) => {
+      httpLoginPOST('token/', JSON.stringify(data), (response) => {
         if (response.status === 200) {
           localStorage.setItem('access_token', response.data.access);
           localStorage.setItem('refresh_token', response.data.refresh);
@@ -26,17 +26,11 @@ export default function Login() {
             status: undefined,
             message: undefined,
           });
-        } else if (response.status >= 500 && response.status < 600) {
+        } else {
           setLoginError({
             hasError: true,
-            status: response.status,
+            status: undefined,
             message: 'There is a problem with the server. Please try again later.',
-          });
-        } else if (response.status >= 400 && response.status < 500) {
-          setLoginError({
-            hasError: true,
-            status: response.status,
-            message: 'Invalid username or password.',
           });
         }
         setLoading(false);
@@ -44,9 +38,8 @@ export default function Login() {
         setLoginError({
           hasError: true,
           status: undefined,
-          message: 'There is a problem with the server. Please try again later.',
+          message: 'There was an error with your login. Please try again.',
         });
-        setLoading(false);
       });
     } catch (error) {
       setLoginError({
@@ -55,7 +48,7 @@ export default function Login() {
         message: 'There was an error with your login. Please try again.',
       });
       setLoading(false);
-    } 
+    }
   };
 
 

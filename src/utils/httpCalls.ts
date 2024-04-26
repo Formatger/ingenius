@@ -4,33 +4,6 @@ import { DEPLOYED_API_BASE_URL } from "./apiConfig";
 /****************************  AUTH CALLS  ****************************/
 ////////////////////////////////////////////////////////////////////////
 
-export const login = async (
-  data: any,
-  callback: (resp: any) => void,
-  errorCallback?: (error: any) => void
-) => {
-  const url = DEPLOYED_API_BASE_URL + "token/";
-
-  try {
-    fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    })
-      .then((response) => response.json())
-      .then((resp) => {
-        callback(resp);
-      })
-      .catch((error) => {
-        errorCallback && errorCallback(error);
-      });
-  } catch (error) {
-    errorCallback && errorCallback(error);
-  }
-};
-
 // REFRESH TOKEN
 
 export const refreshToken = async (errorCallback?: (error: any) => void) => {
@@ -1588,21 +1561,77 @@ export const unlockCreator = async (creatorId: any) => {
 /************************  CSV EXPORT CALLS  **************************/
 ////////////////////////////////////////////////////////////////////////
 
-export const exportBrandsCSV = async (teamId: any) => {
+/* export const exportBrandsCSV = async (teamId: any) => {
   const url = DEPLOYED_API_BASE_URL + `brands/${teamId}/export/`;
 
   try {
+    const convertJsonToCsv = (data: any) => {
+      const csvRows = [];
+      const headers = Object.keys(data[0]);
+      csvRows.push(headers.join(","));
+
+      for (const row of data) {
+        const values = headers.map((header) => {
+          const cellValue = row[header];
+          const escapedValue = cellValue.toString().replace(/"/g, '""');
+          return `"${escapedValue}"`;
+        });
+        csvRows.push(values.join(","));
+      }
+
+      return csvRows.join("\n");
+    };
+
+    const downloadCsv = (csvData: any, filename: string) => {
+      const blob = new Blob([csvData], { type: "text/csv" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = filename;
+      link.click();
+      URL.revokeObjectURL(url);
+    };
+
     await fetch(url, {
-      method: "POST",
+      method: "GET",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.access_token}`,
       },
-    })
-      .then((response) => response.json())
-      .catch((error: any) => {
-        console.error(error);
-      });
+    }).catch((error: any) => {
+      console.error(error);
+    });
+  } catch (error) {
+    console.error(error);
+  }
+};
+ */
+
+export const exportBrandsCSV = async (teamId: any) => {
+  try {
+    const exportUrl = DEPLOYED_API_BASE_URL + `brands/${teamId}/export/`;
+
+    const response = await fetch(exportUrl, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.access_token}`,
+      },
+    });
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+
+    const csvData = await response.text();
+
+    const blob = new Blob([csvData], { type: "text/csv" });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", "brands.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   } catch (error) {
     console.error(error);
   }

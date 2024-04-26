@@ -8,7 +8,7 @@ import Image from "next/image";
 import PlusWhite from "@/components/assets/icons/plus-white.svg";
 import Pagination from "@/components/dashboard/table/Pagination";
 import { useWindowSize } from "@/utils/hooks/useWindowSize";
-import { getBrands, getBrandsDetail } from "@/utils/httpCalls";
+import { getBrands, getBrandsDetail, exportBrandsCSV } from "@/utils/httpCalls";
 import BrandTable from "@/components/dashboard/table/BrandTable";
 import BrandSidepanel from "@/components/dashboard/profile/BrandSidepanel";
 import Dropdown from "@/components/common/Dropdown";
@@ -212,28 +212,14 @@ const BrandsPage = () => {
     throw new Error("Function not implemented.");
   }
 
-  /* CSV UPLOAD */
-  const handleUploadCSV = async (e: any) => {
-    const file = e.target.files[0];
-    if (file) {
+  /* CSV EXPORT */
+  const handleExportCSV = async (e: any) => {
+    const teamId = originalData[0].team;
       try {
-        const formData = new FormData();
-        formData.append("file", file);
-        const response = await fetch("/file", {
-          method: "POST",
-          body: formData,
-        });
-        if (response.ok) {
-          // File uploaded successfully
-          console.log("File uploaded successfully");
-        } else {
-          // Error uploading file
-          console.error("Error uploading file");
-        }
+        exportBrandsCSV(teamId)
       } catch (error) {
-        console.error("Error uploading file:", error);
+        console.error("Error exporting file:", error);
       }
-    }
   };
 
   return (
@@ -273,17 +259,15 @@ const BrandsPage = () => {
               /> */}
               <div className="button-group">
                 <Searchbox handleSearch={handleSearch} />
-
                 <label htmlFor="file-upload" className="app-button cream">
-                  CSV Upload
+                  CSV Export
                 </label>
-                <input
+                <button
                   className="input-file"
                   id="file-upload"
-                  type="file"
-                  onChange={handleUploadCSV}
+                  type="button"
+                  onClick={handleExportCSV}
                 />
-
                 <button
                   className="app-button"
                   onClick={handleOpenFormSidepanel}
