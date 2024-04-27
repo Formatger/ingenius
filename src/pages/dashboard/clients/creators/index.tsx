@@ -8,7 +8,7 @@ import Image from "next/image";
 import PlusWhite from "@/components/assets/icons/plus-white.svg";
 import Pagination from "@/components/dashboard/table/Pagination";
 import { useWindowSize } from "@/utils/hooks/useWindowSize";
-import { getCreators, getCreatorsDetail } from "@/utils/httpCalls";
+import { exportCSV, getCreators, getCreatorsDetail } from "@/utils/httpCalls";
 import CreatorTable from "@/components/dashboard/table/CreatorTable";
 import CreatorSidepanel from "@/components/dashboard/profile/CreatorSidepanel";
 import Searchbox from "@/components/dashboard/table/Search";
@@ -198,6 +198,16 @@ const CreatorsPage = () => {
     );
   };
 
+  /* CSV EXPORT */
+  const handleExportCSV = async (e: any) => {
+    const teamId = originalData[0].team;
+      try {
+        exportCSV("creators", teamId, "creators")
+      } catch (error) {
+        console.error("Error exporting file:", error);
+      }
+  };
+
   /* SIDEPANEL */
 
   const handleOpenSidepanel = (brand: object) => {
@@ -258,10 +268,15 @@ const CreatorsPage = () => {
 
               <div className="button-group">
                 <Searchbox handleSearch={handleSearch} />
-
-                <button className="app-button cream" onClick={undefined}>
-                  CSV Upload
-                </button>
+                <label htmlFor="file-upload" className="app-button cream">
+                  CSV Export
+                </label>
+                <button
+                  className="input-file"
+                  id="file-upload"
+                  type="button"
+                  onClick={handleExportCSV}
+                />
                 <button
                   className="app-button"
                   onClick={handleOpenFormSidepanel}

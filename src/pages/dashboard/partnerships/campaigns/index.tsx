@@ -1,5 +1,6 @@
 import React, { Fragment, useEffect, useState } from "react";
 import {
+  exportCSV,
   getBrands,
   getCampaignStages,
   getCampaigns,
@@ -238,6 +239,16 @@ const CampaignsPage = () => {
     setFilteredData(sortedDataFinal);
   };
 
+  /* CSV EXPORT */
+  const handleExportCSV = async (e: any) => {
+    const teamId = originalData[0].team;
+      try {
+        exportCSV("campaigns", teamId, "campaigns")
+      } catch (error) {
+        console.error("Error exporting file:", error);
+      }
+  };
+
   /* SIDEPANEL LOGIC */
   const handleOpenSidepanel = (campaign: any) => {
     setSelectedCampaign(campaign);
@@ -296,9 +307,15 @@ const CampaignsPage = () => {
                 origin="campaigns"
               />
               <div className="button-group">
-                <button className="app-button cream" onClick={undefined}>
-                  CSV Upload
-                </button>
+                <label htmlFor="file-upload" className="app-button cream">
+                  CSV Export
+                </label>
+                <button
+                  className="input-file"
+                  id="file-upload"
+                  type="button"
+                  onClick={handleExportCSV}
+                />
                 <button
                   className="app-button"
                   onClick={handleOpenFormSidepanel}

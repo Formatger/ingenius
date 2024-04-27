@@ -54,7 +54,7 @@ export default function Login() {
 
   function handleGoogleLogin() {
     // Redirect to the backend endpoint that starts the OAuth flow
-    window.location.href = "https://ingenius-api-f948e80544f9.herokuapp.com/accounts/google/login/";
+    window.location.href = "https://ingenius-api-f948e80544f9.herokuapp.com/google/login/";
   };
 
 

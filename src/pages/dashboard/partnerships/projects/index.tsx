@@ -11,6 +11,7 @@ import Table from "@/components/assets/icons/table.svg";
 import Dropdown from "@/components/common/Dropdown";
 import Pagination from "@/components/dashboard/table/Pagination";
 import {
+  exportCSV,
   getProjectStages,
   getProjects,
   getProjectsDetail,
@@ -208,6 +209,16 @@ const ProjectsPage = () => {
     setFilteredData(sortedDataFinal);
   };
 
+  /* CSV EXPORT */
+  const handleExportCSV = async (e: any) => {
+    const teamId = originalData[0].team;
+      try {
+        exportCSV("projects", teamId, "projects")
+      } catch (error) {
+        console.error("Error exporting file:", error);
+      }
+  };
+
   /* SIDEPANEL */
 
   const handleOpenSidepanel = (project: object) => {
@@ -265,9 +276,15 @@ const ProjectsPage = () => {
                 origin="projects"
               />
               <div className="button-group">
-                <button className="app-button cream" onClick={undefined}>
-                  CSV Upload
-                </button>
+                <label htmlFor="file-upload" className="app-button cream">
+                  CSV Export
+                </label>
+                <button
+                  className="input-file"
+                  id="file-upload"
+                  type="button"
+                  onClick={handleExportCSV}
+                />
                 <button
                   className="app-button"
                   onClick={handleOpenFormSidepanel}

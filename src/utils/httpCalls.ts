@@ -1561,55 +1561,9 @@ export const unlockCreator = async (creatorId: any) => {
 /************************  CSV EXPORT CALLS  **************************/
 ////////////////////////////////////////////////////////////////////////
 
-/* export const exportBrandsCSV = async (teamId: any) => {
-  const url = DEPLOYED_API_BASE_URL + `brands/${teamId}/export/`;
-
+export const exportCSV = async (category: string, teamId: any, filename: string) => {
   try {
-    const convertJsonToCsv = (data: any) => {
-      const csvRows = [];
-      const headers = Object.keys(data[0]);
-      csvRows.push(headers.join(","));
-
-      for (const row of data) {
-        const values = headers.map((header) => {
-          const cellValue = row[header];
-          const escapedValue = cellValue.toString().replace(/"/g, '""');
-          return `"${escapedValue}"`;
-        });
-        csvRows.push(values.join(","));
-      }
-
-      return csvRows.join("\n");
-    };
-
-    const downloadCsv = (csvData: any, filename: string) => {
-      const blob = new Blob([csvData], { type: "text/csv" });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = filename;
-      link.click();
-      URL.revokeObjectURL(url);
-    };
-
-    await fetch(url, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.access_token}`,
-      },
-    }).catch((error: any) => {
-      console.error(error);
-    });
-  } catch (error) {
-    console.error(error);
-  }
-};
- */
-
-export const exportBrandsCSV = async (teamId: any) => {
-  try {
-    const exportUrl = DEPLOYED_API_BASE_URL + `brands/${teamId}/export/`;
+    const exportUrl = DEPLOYED_API_BASE_URL + `${category}/${teamId}/export/`;
 
     const response = await fetch(exportUrl, {
       method: "GET",
@@ -1628,7 +1582,7 @@ export const exportBrandsCSV = async (teamId: any) => {
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.setAttribute("download", "brands.csv");
+    link.setAttribute("download", `${filename}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);

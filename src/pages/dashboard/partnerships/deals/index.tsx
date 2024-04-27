@@ -17,7 +17,7 @@ import { useWindowSize } from "@/utils/hooks/useWindowSize";
 import { transformDate } from "@/utils/dateManager";
 
 import { DealInterface } from "@/interfaces/interfaces";
-import { getDealStages, getDeals, getDealsDetail } from "@/utils/httpCalls";
+import { exportCSV, getDealStages, getDeals, getDealsDetail } from "@/utils/httpCalls";
 import DealTable from "@/components/dashboard/table/DealTable";
 import DealSidepanel from "@/components/dashboard/profile/DealSidepanel";
 import DealsKanban from "@/components/dashboard/kanban/DealsKanban";
@@ -210,6 +210,16 @@ const DealsPage = () => {
     setFilteredData(sortedDataFinal);
   };
 
+  /* CSV EXPORT */
+  const handleExportCSV = async (e: any) => {
+    const teamId = originalData[0].team;
+      try {
+        exportCSV("deals", teamId, "deals")
+      } catch (error) {
+        console.error("Error exporting file:", error);
+      }
+  };
+
   /* SIDEPANEL */
   const handleOpenSidepanel = (deal: object) => {
     setSelectedDeal(deal);
@@ -266,9 +276,15 @@ const DealsPage = () => {
                 origin="deals"
               />
               <div className="button-group">
-                <button className="app-button cream" onClick={undefined}>
-                  CSV Upload
-                </button>
+                <label htmlFor="file-upload" className="app-button cream">
+                  CSV Export
+                </label>
+                <button
+                  className="input-file"
+                  id="file-upload"
+                  type="button"
+                  onClick={handleExportCSV}
+                />
                 <button
                   className="app-button"
                   onClick={handleOpenFormSidepanel}

@@ -8,7 +8,7 @@ import Image from "next/image";
 import PlusWhite from "@/components/assets/icons/plus-white.svg";
 import Pagination from "@/components/dashboard/table/Pagination";
 import { useWindowSize } from "@/utils/hooks/useWindowSize";
-import { getBrands, getBrandsDetail, exportBrandsCSV } from "@/utils/httpCalls";
+import { getBrands, getBrandsDetail, exportCSV } from "@/utils/httpCalls";
 import BrandTable from "@/components/dashboard/table/BrandTable";
 import BrandSidepanel from "@/components/dashboard/profile/BrandSidepanel";
 import Dropdown from "@/components/common/Dropdown";
@@ -218,7 +218,7 @@ const BrandsPage = () => {
   const handleExportCSV = async (e: any) => {
     const teamId = originalData[0].team;
       try {
-        exportBrandsCSV(teamId)
+        exportCSV("brands", teamId, "brands")
       } catch (error) {
         console.error("Error exporting file:", error);
       }
