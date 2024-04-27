@@ -257,13 +257,13 @@ const ProjectInvoice = ({ projectsData }: ProjectInvoiceProps) => {
           />
 
           <div className="button-group">
-             <button
+              <button
                 className="sec-button linen"
                 onClick={() => {
                   if (is_locked) {
                     setShowLockModal(true);
                   } else {
-                    setFileModalOpen(true);
+                    setFileModalOpen(true); 
                   }
                 }}
               >
@@ -274,12 +274,9 @@ const ProjectInvoice = ({ projectsData }: ProjectInvoiceProps) => {
               isOpen={isFileModalOpen}
               onClose={() => setFileModalOpen(false)}
               title="Upload Invoice"
-              // onConfirm={handleDelete}
               message="Upload an Invoice File"
-              button="Upload File" onConfirm={function (): void {
-                throw new Error("Function not implemented.");
-              } }            />
-
+              button="Upload File" 
+           />
             <button
               className="sec-button w-50 img-btn linen"
               onClick={handleViewContract}

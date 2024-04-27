@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { postTicket } from "@/utils/httpCalls";
+import { postProjects, postTicket } from "@/utils/httpCalls";
 import { useForm } from "react-hook-form";
 import Image from "next/image";
 import Link from "@/components/assets/icons/link.svg";
@@ -8,7 +8,7 @@ interface UploadFileModalProps {
   isOpen: boolean;
   onClose: () => void;
   title?: string;
-  onConfirm: () => void;
+  // onConfirm: () => void;
   message: string;
   button: string;
 }
@@ -21,7 +21,7 @@ interface FormData {
 }
 
 const UploadFileModal: React.FC<UploadFileModalProps> = ({ 
-  isOpen, onClose, onConfirm, title, message, button }) => {
+  isOpen, onClose, title, message, button }) => {
   const {
     register,
     handleSubmit,
@@ -31,7 +31,7 @@ const UploadFileModal: React.FC<UploadFileModalProps> = ({
   } = useForm<FormData>();
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 
-  const addTicket = async (data: FormData) => {
+  const uploadFile = async (data: FormData) => {
     const formData = new FormData();
     formData.append("subject", data.subject);
     formData.append("message", data.message);
@@ -42,7 +42,7 @@ const UploadFileModal: React.FC<UploadFileModalProps> = ({
     }
 
     try {
-      await postTicket(
+      await postProjects(
         formData,
         (response) => {
           reset();
@@ -78,11 +78,12 @@ const UploadFileModal: React.FC<UploadFileModalProps> = ({
         {title && (
           <div className="modal-header">
             <h5 className="subtitle">{title}</h5>
+            <button type="button" onClick={onClose} className="close-button">×</button>
           </div>
         )}
         <div className="modal-content">
           {message}
-          <form className="sidepanel-form" onSubmit={handleSubmit(addTicket)}>
+          <form className="sidepanel-form" onSubmit={handleSubmit(uploadFile)}>
             <div className="form-box">
               <span className="smallcaps">FILES</span>
               <input
@@ -91,7 +92,7 @@ const UploadFileModal: React.FC<UploadFileModalProps> = ({
                 type="file"
                 accept="image/jpeg, image/png, image/gif, image/jpg"
                 onChange={handleFiles}
-                multiple
+                
               />
               <div className="upload-files-box">
                 <label htmlFor="fileInput" className="custom-file-upload">
