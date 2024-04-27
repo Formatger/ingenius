@@ -12,7 +12,9 @@
 .page-container {
   width: 100%;
   height: 100%;
-  padding: var(--m7);
+  padding: var(--m7) var(--m9);
+  /* border: 1px solid red; */
+  overflow-y: auto;
 }
 
 @media (min-width: 1024px) {
@@ -337,7 +339,7 @@
 .settings-form-box {
   padding: 0 20px;
   width: 100%;
-  /* max-width: 500px; */
+  max-width: 800px;
 }
 
 .section-title {
@@ -350,6 +352,7 @@
   padding-top: var(--m5);
   padding-bottom: var(--m3);
   border-bottom: 1px solid #e5e9eb;
+  font-family: "DMSansSemiBold"
 }
 
 .settings-box .first-column {
@@ -427,7 +430,7 @@
 }
 
 .manage-account {
-  margin-bottom: 100px;
+  margin-bottom: 50px;
 }
 
 .settings-text {
@@ -441,4 +444,8 @@
 
 .track-title {
   font-family: "InterMedium";
+}
+
+.margintop30 {
+  margin-top: 30px;
 }

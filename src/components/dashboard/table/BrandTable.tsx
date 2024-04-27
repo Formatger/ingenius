@@ -158,7 +158,7 @@ const BrandTable = ({
                 >
                   <td className="table-brand-cell">
                     <img
-                      src={brand.profile_picture}
+                      src={brand.profile_picture_url}
                       alt={brand.name}
                       className="partner-image"
                     />

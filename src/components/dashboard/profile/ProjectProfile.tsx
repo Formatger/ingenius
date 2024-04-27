@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import ConfirmModal from "./ConfirmModal";
 import Image from "next/image";
 import Insta from "@/components/assets/images/insta.png";
@@ -11,6 +11,12 @@ import Message from "@/components/assets/icons/message.svg";
 import Send from "@/components/assets/icons/send.svg";
 import { deleteProject } from "@/utils/httpCalls";
 import Export from "@/components/assets/icons/export.svg";
+import ErrorModal from "@/components/common/ErrorModal";
+import {
+  lockProject,
+  unlockProject,
+} from "@/utils/httpCalls";
+import UploadFileModal from "@/components/common/UploadFileModal";
 
 interface ProjectDetailsProps {
   projectsData: any;
@@ -27,6 +33,7 @@ interface ProjectInvoiceProps {
 // }
 
 const ProjectDetails = ({ projectsData }: ProjectDetailsProps) => {
+
   return (
     <div className="card-container">
       <div className="head-card mb-1">
@@ -135,6 +142,21 @@ const ProjectDetails = ({ projectsData }: ProjectDetailsProps) => {
 const ProjectInvoice = ({ projectsData }: ProjectInvoiceProps) => {
   const fileInputRef = useRef(null);
   const [loading, setLoading] = useState(false);
+  const [showLockModal, setShowLockModal] = useState(false);
+  const { is_locked } = projectsData;
+  const [isFileModalOpen, setFileModalOpen] = useState(false);
+  const [editData, setEditData] = useState(false);
+
+    /* LOCK FORM */
+
+    useEffect(() => {
+      lockProject(projectsData.id);
+  
+      return () => {
+        unlockProject(projectsData.id);
+      };
+    }, []);
+
 
   const handleFileUpload = async (event: any) => {
     const file = event.target.files[0];
@@ -179,6 +201,14 @@ const ProjectInvoice = ({ projectsData }: ProjectInvoiceProps) => {
 
   return (
     <div className="card-container">
+      {showLockModal && (
+        <ErrorModal
+          isOpen={showLockModal}
+          onClose={() => setShowLockModal(false)}
+          title="Project is locked"
+          message="This project is currently being edited by another user. Please try again later."
+        />
+      )}
       <div className="agency-invoice">
         <p className="smallcaps">CONTRACT DETAILS</p>
         <div className="invoice-data">
@@ -227,10 +257,28 @@ const ProjectInvoice = ({ projectsData }: ProjectInvoiceProps) => {
           />
 
           <div className="button-group">
-            <button className="sec-button linen" onClick={undefined}>
+             <button
+                className="sec-button linen"
+                onClick={() => {
+                  if (is_locked) {
+                    setShowLockModal(true);
+                  } else {
+                    setFileModalOpen(true);
+                  }
+                }}
+              >
               <Image src={Link} alt="Icon" width={14} height={14} />
               <p>Upload Contract</p>
             </button>
+            <UploadFileModal
+              isOpen={isFileModalOpen}
+              onClose={() => setFileModalOpen(false)}
+              title="Upload Invoice"
+              // onConfirm={handleDelete}
+              message="Upload an Invoice File"
+              button="Upload File"
+            />
+
             <button
               className="sec-button w-50 img-btn linen"
               onClick={handleViewContract}

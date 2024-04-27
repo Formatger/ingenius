@@ -51,17 +51,19 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
     userData.profile_picture_url || null
   );
 
+  console.log("Data for POST:", userData);
+  console.log("User's first name:", userData?.first_name);
 
   /* UPLOAD PROFILE PICTURE */
 
-  const handleUploadImage = (event: any) => {
-    const file = event.target.files[0]; // Get the first file
-    if (file) {
-      setValue("profile_picture", file);
-      const url = URL.createObjectURL(file); // Create a URL for the file
-      setImageURL(url); // Update the imageURL state
-    }
-  };
+  // const handleUploadImage = (event: any) => {
+  //   const file = event.target.files[0];
+  //   if (file) {
+  //     setValue("profile_picture", file);
+  //     const url = URL.createObjectURL(file);
+  //     setImageURL(url); 
+  //   }
+  // };
 
   /* SUBMIT FORM - POST CREATOR API CALL  */
 
@@ -78,10 +80,10 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
 
     try {
       if (isEditing) {
-        const creatorId = userData.id;
+        const userId = userData.id;
 
         await putUserProfile(
-          creatorId,
+          userId,
           formData,
           (response) => {
             reset();
@@ -113,6 +115,7 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
   };
 
   return (
+    
     <div>
       {isEditing ? (
         <div className="">
@@ -121,7 +124,7 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
             onSubmit={handleSubmit(onSubmit)}
             encType="multipart/form-data"
           >
-            <div className="form-box">
+            {/* <div className="form-box">
               <span className="smallcaps">PROFILE PICTURE</span>
               <input
                 id="fileInput"
@@ -157,25 +160,33 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
                   </label>
                 )}
               </div>
-            </div>
+            </div>*/}
             <div className="form-box">
               <span className="smallcaps">NAME</span>
               <input
-                {...register("name", { required: true })}
+                {...register("name", {
+                  required: "Name is required",
+                  validate: (value) =>
+                    value.trim() !== "" || "Name is required",
+                })}
                 className="form-input"
                 type="text"
-                defaultValue={userData.name}
-                onChange={(e) => setValue("name", e.target.value)}
+                placeholder="Enter name"
+                defaultValue={userData.first_name}
               />
-            </div>
+              {errors.name && (
+                <span className="error-message">{errors.name.message}</span>
+              )}
+            </div> 
             <div className="form-box">
               <span className="smallcaps">LAST NAME</span>
               <input
-                {...register("name")}
+                {...register("last_name")}
                 className="form-input"
                 type="text"
-                defaultValue={userData.name}
-                onChange={(e) => setValue("name", e.target.value)}
+                defaultValue={userData.last_name}
+                placeholder="Enter last name"
+                // onChange={(e) => setValue("last_name", e.target.value)}
               />
             </div>
             <div className="form-box">
@@ -203,8 +214,7 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
       ) : (
         <div>
           <div className="sidepanel-form">
-            <div className="form-box">
-              {/* <span className="smallcaps">PROFILE PICTURE</span> */}
+            {/* <div className="form-box">
               <div className="">
                 <div className="upload-image">
                   {imageURL ? (
@@ -223,24 +233,24 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
                   )}
                 </div>
               </div>
-            </div>
+            </div> */}
             <div className="card-text mt-4">
               <div>
                 <p className="smallcaps">NAME</p>
                 <span className="sec-button gray1 ">
-                  <p className="sec-tag">{userData?.name} LaTecia</p>
+                  <p className="sec-tag">{userData.first_name}</p>
                 </span>
               </div> 
               <div>
                 <p className="smallcaps">LAST NAME</p>
                 <span className="sec-button gray1">
-                  <p className="sec-tag">{userData?.lastname}Johnson</p>
+                  <p className="sec-tag">{userData.last_name}</p>
                 </span>
               </div> 
               <div>
                 <p className="smallcaps">EMAIL</p>
                 <span className="sec-button gray1">
-                  <p className="sec-tag">{userData?.email}latecia@gmail.com</p>
+                  <p className="sec-tag">{userData.email}</p>
                 </span>
               </div> 
             </div> 

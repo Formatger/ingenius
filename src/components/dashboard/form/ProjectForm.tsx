@@ -237,7 +237,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
                 type="text"
                 placeholder="Enter project name"
                 defaultValue={projectsData.name}
-                onChange={(e) => setValue("name", e.target.value)}
+                // onChange={(e) => setValue("name", e.target.value)}
               />
               {errors.name && (
                 <span className="error-message">{errors.name.message}</span>
@@ -250,7 +250,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
                 className="form-textarea"
                 placeholder="Add a description"
                 defaultValue={projectsData.description}
-                onChange={(e) => setValue("description", e.target.value)}
+                // onChange={(e) => setValue("description", e.target.value)}
               />
             </div>
             <div className="form-box">

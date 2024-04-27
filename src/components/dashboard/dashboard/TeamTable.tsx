@@ -8,12 +8,18 @@ import Add from "@/components/assets/icons/add.svg";
 import CreatorSidepanel from "@/components/dashboard/profile/CreatorSidepanel";
 import ProfilePic from "@/components/assets/images/creator.png";
 
-interface TeamTableProps {
-  userData: any;
+interface Member {
+  id: number;
+  first_name: string;
+  last_name: string;
+  email: string;
 }
 
-const TeamTable = ({ userData }: TeamTableProps) => {
-  const [selectedCreator, setSelectedCreator] = useState(null); 
+interface TeamTableProps {
+  teamMembers: Member[];
+}
+
+const TeamTable = ({ teamMembers }: TeamTableProps) => {
 
   return (
     <div className="team-table-wrap">
@@ -45,40 +51,19 @@ const TeamTable = ({ userData }: TeamTableProps) => {
         </thead>
   
         <tbody className="team-table-body">
-          {/* {userData.map((user: any) => ( */}
+          {teamMembers?.map((member) => (
             <tr className="table-row" 
-            // key={user.id}
+            key={member.id}
             >
               <td className="team-table-cell profile">
                  <Image src={ProfilePic} alt="Icon" width={34} height={34} />
               </td>
-              <td className="team-table-cell name">name</td>
-              <td className="team-table-cell lastname">lastname</td>
-              <td className="team-table-cell email">email</td>
+              <td className="team-table-cell name">{member.first_name}</td>
+              <td className="team-table-cell lastname">{member.last_name}</td>
+              <td className="team-table-cell email">{member.email}</td>
             </tr>
-          {/* ))} */}
+          ))}
 
-
-          <tr className="table-row" 
-            // key={user.id}
-            >
-              <td className="table-cell-center">
-                 <Image src={ProfilePic} alt="Icon" width={34} height={34} />
-              </td>
-              <td className="table-cell-center">name</td>
-              <td className="table-cell-center">lastname</td>
-              <td className="table-cell-center"> email</td>
-            </tr>
-            <tr className="table-row" 
-            // key={user.id}
-            >
-              <td className="table-cell-center">
-                 <Image src={ProfilePic} alt="Icon" width={34} height={34} />
-              </td>
-              <td className="table-cell-center">name</td>
-              <td className="table-cell-center">lastname</td>
-              <td className="table-cell-center"> email</td>
-            </tr>
         </tbody>
       </table>
   

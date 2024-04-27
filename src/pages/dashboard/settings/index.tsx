@@ -12,20 +12,41 @@ import { UserProfile } from "@clerk/nextjs";
 import UserProfileForm from "@/components/dashboard/form/UserProfileForm";
 import TeamTable from "@/components/dashboard/dashboard/TeamTable";
 
-interface FormData {
-  id?: number;
-  name: string;
-  representative: string;
+interface Member {
+  id: number;
+  first_name: string;
+  last_name: string;
   email: string;
-  niche: string;
-  website?: string;
-  profile_picture_url?: string;
-  profile_picture?: File;
-  user?: string;
-  active_campaigns?: string;
-  active_campaigns_value?: string;
-  created_at?: Date;
 }
+
+interface TeamInfo {
+  name: string;
+  members: Member[];
+}
+
+interface UserData {
+  id: number;
+  first_name: string;
+  last_name: string;
+  email: string;
+  team_info: TeamInfo;
+  team_picture_url: string;
+}
+
+// interface FormData {
+//   id?: number;
+//   name: string;
+//   representative: string;
+//   email: string;
+//   niche: string;
+//   website?: string;
+//   profile_picture_url?: string;
+//   profile_picture?: File;
+//   user?: string;
+//   active_campaigns?: string;
+//   active_campaigns_value?: string;
+//   created_at?: Date;
+// }
 
 interface SettingsPageProps {
 }
@@ -33,18 +54,18 @@ interface SettingsPageProps {
 const SettingsPage: React.FC<SettingsPageProps> = ({
 }) => {
   const router = useRouter();
-  const {
-    register,
-    handleSubmit,
-    reset,
-    setValue,
-    formState: { errors },
-  } = useForm<FormData>();
+  // const {
+  //   register,
+  //   handleSubmit,
+  //   reset,
+  //   setValue,
+  //   formState: { errors },
+  // } = useForm<FormData>();
   const [loader, setLoader] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   // const [imageURL, setImageURL] = useState<string | null>(userData.profile_picture_url || null);
   const [imageURL, setImageURL] = useState<any[]>([]);
-  const [userData, setUserData] = useState<any[]>([]);
+  const [userData, setUserData] = useState({});
   const [editData, setEditData] = useState(false);
   const [updateUser, setUpdateUser] = useState(false);
 
@@ -59,7 +80,6 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
     setUpdateUser((prevState) => !prevState);
   };
   
-
   /* GET USER API CALL */
 
     useEffect(() => {
@@ -69,11 +89,12 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
     const fetchUserProfile = () => {
       getUserProfile(
         (response: any) => {
-          setUserData(response || []);
+          console.log("User profile data:", response); 
+          setUserData(response[0] || []);
         },
         (error: any) => {
           console.error("Error fetching profile data:", error);
-          setUserData([]);
+          setUserData({});
         }
       ).finally(() => {});
     };
@@ -106,28 +127,49 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                 />
               </div>
 
-              <div className="section-title mt-4">
+              <div className="section-title mt-5">
                 <h4 className="">
                   Team Profile
                 </h4>
               </div>
-              <div className="settings-form-box">
-                <div className="card-text mt-4">
+          <div className="settings-form-box">
+            <div className="form-box">
+              <div className="">
+                <div className="upload-image mt-4">
+                  {imageURL ? (
+                    <img
+                      src={userData?.team_picture_url}
+                      alt="Uploaded"
+                      style={{ width: "120px", height: "120px" }}
+                    />
+                  ) : (
+                    <Image
+                      src={ProfilePic}
+                      alt="Icon"
+                      width={120}
+                      height={120}
+                    />
+                  )}
+                </div>
+              </div>
+            </div>
+                <div className="card-text mt-8">
                   <div>
-                    <p className="smallcaps">BUSINESS NAME</p>
+                    <p className="smallcaps">TEAM NAME</p>
                     <span className="sec-button gray1 ">
-                      <p className="sec-tag">Ingenius</p>
+                      <p className="sec-tag">{userData?.team_info?.name}</p>
                     </span>
                   </div> 
-                  <div>
+                  {/* <div>
                     <p className="smallcaps">BUSINESS EMAIL</p>
                     <span className="sec-button gray1">
-                      <p className="sec-tag">latecia@gmail.com</p>
+                      <p className="sec-tag">{userData?.team_info?.email}</p>
                     </span>
-                  </div> 
+                  </div>  */}
                   <div>
                     <p className="smallcaps">TEAM MEMBERS</p>
-                    <TeamTable userData={userData} />
+                    <TeamTable
+                    teamMembers={userData?.team_info?.members}/>
                   </div> 
                 </div>
                </div>
@@ -139,12 +181,10 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                   </h4>
                 </div>
 
-                <div className="card-text mt-4">
+                <div className="settings-form-box margintop30">
                   <div>
                       <p className="smallcaps">MANAGE ACCOUNT</p>
-                  
                       <p className="settings-text">If you need to manage your account username, email or password or you want to close your account, please contact support.</p>
-                    
                     <div className="button-group mt-6">
                       <button className="app-button orange" onClick={() => {
                         localStorage.clear();
@@ -160,15 +200,6 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                       </button>
                     </div>
                   </div> 
-                  {/* <div className="mt-4">
-                      <p className="smallcaps">ACCOUNT LOGOUT</p>
-                      <button className="app-button" onClick={() => {
-                        localStorage.clear();
-                        router.push('/auth');
-                        }} aria-label="Close" type="button">
-                        Logout
-                      </button>
-                  </div>  */}
                 </div> 
 
               </div>

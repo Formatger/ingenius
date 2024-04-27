@@ -18,7 +18,7 @@ const BrandDetails = ({ brandsData, updateBrandData }: BrandDetailsProps) => {
       <div className="head-card mb-1" >
         <div className="profile-info">
           <div className="profile-info-image">
-            <img src={brandsData?.profile_picture} alt="Brand" className="profile-image" loading="lazy" />
+            <img src={brandsData?.profile_picture_url} alt="Brand" className="profile-image" loading="lazy" />
           </div>
         </div>
         <div className="profile-info">

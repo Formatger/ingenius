@@ -158,7 +158,7 @@ const CreatorTable = ({
                 >
                   <td className="table-brand-cell">
                     <img
-                      src={creator.profile_picture}
+                      src={creator.profile_picture_url}
                       alt={creator.name}
                       className="partner-image"
                       loading="lazy"

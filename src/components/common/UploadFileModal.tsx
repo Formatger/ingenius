@@ -4,8 +4,13 @@ import { useForm } from "react-hook-form";
 import Image from "next/image";
 import Link from "@/components/assets/icons/link.svg";
 
-interface SupportFormProps {
+interface UploadFileModalProps {
+  isOpen: boolean;
+  onClose: () => void;
   title?: string;
+  onConfirm: () => void;
+  message: string;
+  button: string;
 }
 
 interface FormData {
@@ -15,7 +20,8 @@ interface FormData {
   email: string;
 }
 
-const SupportForm: React.FC<SupportFormProps> = ({ title }) => {
+const UploadFileModal: React.FC<UploadFileModalProps> = ({ 
+  isOpen, onClose, onConfirm, title, message, button }) => {
   const {
     register,
     handleSubmit,
@@ -67,50 +73,16 @@ const SupportForm: React.FC<SupportFormProps> = ({ title }) => {
   };
 
   return (
-    <div className="settings-page">
-      <div className="form-container" onClick={(e) => e.stopPropagation()}>
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-container" onClick={e => e.stopPropagation()}>
         {title && (
           <div className="modal-header">
             <h5 className="subtitle">{title}</h5>
           </div>
         )}
         <div className="modal-content">
+          {message}
           <form className="sidepanel-form" onSubmit={handleSubmit(addTicket)}>
-            <div className="form-box">
-              <p className="smallcaps">Subject</p>
-              <input
-                {...register("subject", { required: "Subject is required" })}
-                type="text"
-                placeholder="Enter subject"
-                className="form-input"
-              />
-              {errors.subject && (
-                <p className="error-message">{errors.subject.message}</p>
-              )}
-            </div>
-            <div className="form-box">
-              <p className="smallcaps">Email</p>
-              <input
-                {...register("email", { required: "Email is required" })}
-                type="text"
-                placeholder="Enter email"
-                className="form-input"
-              />
-              {errors.email && (
-                <p className="error-message">{errors.email.message}</p>
-              )}
-            </div>
-            <div className="form-box">
-              <p className="smallcaps">Message</p>
-              <textarea
-                {...register("message", { required: "Message is required" })}
-                placeholder="Enter message"
-                className="form-textarea"
-              />
-              {errors.message && (
-                <p className="error-message">{errors.message.message}</p>
-              )}
-            </div>
             <div className="form-box">
               <span className="smallcaps">FILES</span>
               <input
@@ -145,17 +117,6 @@ const SupportForm: React.FC<SupportFormProps> = ({ title }) => {
                 </ul>
               )}
             </div>
-            {/* <div className="form-box">
-              <span className="smallcaps">FILES*</span>
-              <input
-                className="form-input"
-                type="file"
-                accept="image/jpeg"
-                onChange={handleFiles}
-                multiple
-              />
-
-            </div> */}
             <div className="column-center">
               <button className="sec-button red" type="submit">
                 Submit
@@ -168,4 +129,4 @@ const SupportForm: React.FC<SupportFormProps> = ({ title }) => {
   );
 };
 
-export default SupportForm;
+export default UploadFileModal;

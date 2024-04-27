@@ -289,7 +289,7 @@ export const putUserProfile = async (
   callback: (data: any) => void,
   errorCallback?: (error: any) => void
 ) => {
-  const url = `${DEPLOYED_API_BASE_URL}userprofiles/${userId}/`;
+  const url = `${DEPLOYED_API_BASE_URL}users/${userId}/`;
 
   try {
     const response = await fetch(url, {
@@ -883,7 +883,7 @@ export const postUserProfile = async (
   callback: (data: any) => void,
   errorCallback?: (error: any) => void
 ) => {
-  const url = DEPLOYED_API_BASE_URL + "userprofiles/";
+  const url = DEPLOYED_API_BASE_URL + "users/";
 
   try {
     const response = await fetch(url, {
@@ -1279,7 +1279,7 @@ export const getUserProfile = async (
   callback: (data: any) => void,
   errorCallback?: (error: any) => void
 ) => {
-  const url = DEPLOYED_API_BASE_URL + "userprofiles/";
+  const url = DEPLOYED_API_BASE_URL + "users/";
 
   try {
     await fetch(url, {
