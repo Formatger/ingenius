@@ -659,7 +659,7 @@ function Dropdown({
   };
 
   return (
-    <div className="filtersContainer">
+    <div className="filtersBox">
       {displayTimeframeFilter()}
       {displayPeopleFilter()}
       {displayNicheFilter()}

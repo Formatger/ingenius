@@ -16,7 +16,7 @@ const DashboardBrands = ({ campaignsData }: DashboardBrandsProps) => {
   const [selectedCampaign, setSelectedCampaign] = useState(null);
 
   return (
-    <div className="dashboard-box scrollable">
+    <div className="dashboard-box tables">
       <div className="row-between">
         <h2 className="dashboard-title">Client Invoices</h2>
         {/* <HelpIcon /> */}
@@ -74,13 +74,23 @@ const DashboardBrands = ({ campaignsData }: DashboardBrandsProps) => {
                   <div className="row-wrap-3">
             
                     <div className="">
-                      <img
-                          src={campaign.brand_image_url}
-                          alt={campaign.brand_name}
-                          className="partner-image"
-                          width={40}
-                          height={40}
-                        />
+                    <Image
+                      src={campaign.brand_image_url}
+                      alt={campaign.brand_name}
+                      width={40}
+                      height={40}
+                      layout="fixed"
+                      className="partner-image"
+                      loading="lazy"
+                      quality={75}
+                    /> 
+                    {/* <img
+                        src={campaign.brand_image_url}
+                        alt={campaign.brand_name}
+                        className="partner-image"
+                        width={40}
+                        height={40}
+                      /> */}
                     </div>
                     <div>
                       <p className="track-title">{campaign.brand_name}</p>

@@ -178,11 +178,21 @@ const CreatorForm: React.FC<CreatorFormProps> = ({
               <div className="upload-image-box">
                 <div className="upload-image">
                   {imageURL ? (
-                    <img
-                      src={imageURL}
-                      alt="Uploaded"
-                      style={{ width: "120px", height: "120px" }}
-                    />
+                    // <img
+                    //   src={imageURL}
+                    //   alt="Uploaded"
+                    //   style={{ width: "120px", height: "120px" }}
+                    // />
+                    <Image
+                    src={imageURL}
+                    alt="image"
+                    width={120}
+                    height={120}
+                    layout="fixed"
+                    className="partner-image"
+                    loading="lazy"
+                    quality={75}
+                  /> 
                   ) : (
                     <Image
                       src={ProfilePic}

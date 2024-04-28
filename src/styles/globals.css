@@ -232,6 +232,19 @@
   cursor: pointer;
 }
 
+.sidebar-image-wrap {
+  display: flex;
+}
+
+.sidebar-profile {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 10px;
+  background-color: var(--gray1);
+}
+
 /* Mobile Button */
 
 .mobile-toolbar {

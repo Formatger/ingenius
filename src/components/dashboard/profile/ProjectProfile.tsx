@@ -9,7 +9,7 @@ import Plus from "@/components/assets/icons/plus.svg";
 import Link from "@/components/assets/icons/link.svg";
 import Message from "@/components/assets/icons/message.svg";
 import Send from "@/components/assets/icons/send.svg";
-import { deleteProject } from "@/utils/httpCalls";
+import { deleteProject, getCreators } from "@/utils/httpCalls";
 import Export from "@/components/assets/icons/export.svg";
 import ErrorModal from "@/components/common/ErrorModal";
 import {
@@ -17,6 +17,14 @@ import {
   unlockProject,
 } from "@/utils/httpCalls";
 import UploadFileModal from "@/components/common/UploadFileModal";
+import { useRouter } from "next/router";
+
+interface Creators {
+  id: string;
+  name: string;
+  profile_picture_url: string;
+  email: string;
+}
 
 interface ProjectDetailsProps {
   projectsData: any;
@@ -33,18 +41,49 @@ interface ProjectInvoiceProps {
 // }
 
 const ProjectDetails = ({ projectsData }: ProjectDetailsProps) => {
+  const router = useRouter();
+  const [creatorsData, setCreatorsData] = useState<Creators[]>([]);
+
+
+  /* GET CREATORS API CALL */
+
+  useEffect(() => {
+    fetchCreators();
+  }, [router]);
+
+  const fetchCreators = () => {
+    getCreators(
+      (response: any) => {
+        setCreatorsData(response || []);
+      },
+      (error: any) => {
+        console.error("Error fetching profile data:", error);
+        setCreatorsData([]);
+      }
+    ).finally(() => { });
+  };
 
   return (
     <div className="card-container">
       <div className="head-card mb-1">
         <div className="profile-info">
           <div className="profile-info-image">
-            <img
+             <Image
+                src={projectsData?.creator_profile_picture}
+                alt="Creator"
+                width={160}
+                height={160}
+                layout="fixed"
+                className="profile-image"
+                loading="lazy"
+                quality={75}
+              /> 
+            {/* <img
               src={projectsData?.creator_profile_picture}
               alt="Creator"
               className="profile-image"
               loading="lazy"
-            />
+            /> */}
           </div>
         </div>
         <div className="profile-info">
@@ -122,6 +161,14 @@ const ProjectDetails = ({ projectsData }: ProjectDetailsProps) => {
               <Image src={Message} alt="Icon" width={15} height={15} />
               <p>Message</p>
             </button>
+
+            <Link
+                  href={{
+                    pathname: '/dashboard/clients/creators/profile',
+                    query: { creatorId: creatorsData.id }
+                  }}
+                  passHref
+                >
             <button className="sec-button linen" onClick={undefined}>
               <Image
                 className=""
@@ -132,6 +179,7 @@ const ProjectDetails = ({ projectsData }: ProjectDetailsProps) => {
               />
               <p>View Profile</p>
             </button>
+            </Link>
           </div>
         </div>
       </div>

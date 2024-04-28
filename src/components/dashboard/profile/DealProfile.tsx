@@ -8,6 +8,7 @@ import Message from "@/components/assets/icons/message.svg";
 import Send from "@/components/assets/icons/send.svg";
 import { DealInterface } from "@/interfaces/interfaces";
 import UploadFileModal from "@/components/common/UploadFileModal";
+import Link from "@/components/assets/icons/link.svg";
 
 interface DealDetailsProps {
   dealsData: any;
@@ -25,7 +26,17 @@ const DealDetails = ({ dealsData }: DealDetailsProps) => {
       <div className="head-card mb-1" >
         <div className="profile-info">
           <div className="profile-info-image">
-            <img src={dealsData?.brand_image_url} alt="Brand" className="profile-image" loading="lazy" />
+              <Image
+                src={dealsData?.brand_image_url}
+                alt="Creator"
+                width={160}
+                height={160}
+                layout="fixed"
+                className="profile-image"
+                loading="lazy"
+                quality={75}
+              /> 
+            {/* <img src={dealsData?.brand_image_url} alt="Brand" className="profile-image" loading="lazy" /> */}
           </div>
         </div>
         <div className="profile-info">
@@ -155,6 +166,7 @@ const DealInvoice = ({ dealsData }: DealInvoiceProps) => {
                 setFileModalOpen(true);
               }}
             >
+             <Image src={Link} alt="Icon" width={15} height={15} />
               <p>Upload Contract</p>
             </button>
             <UploadFileModal
@@ -178,10 +190,10 @@ const DealInvoice = ({ dealsData }: DealInvoiceProps) => {
           </div>
 
           <div className="button-group mt-3">
-            <button className="sec-button linen" onClick={undefined}>
+            {/* <button className="sec-button linen" onClick={undefined}>
               <Image src={Send} alt="Icon" width={15} height={15} />
               <p>Send Contract</p>
-            </button>
+            </button> */}
             <a
               target="_blank"
               className="sec-button w-50 img-btn linen"

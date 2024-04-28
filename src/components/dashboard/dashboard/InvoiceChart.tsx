@@ -24,7 +24,7 @@ const PieChartComponent = ({ pieChartData }: PieChartProps) => {
   // ];
 
   return (
-    <div className="dashboard-box">
+    <div className="dashboard-box piechart">
       <div className="chart-header">
         <h5 className="dashboard-title">Total Invoices Value</h5>
       </div>
@@ -39,7 +39,8 @@ const PieChartComponent = ({ pieChartData }: PieChartProps) => {
             fill="#8884d8"
             dataKey="value"
             nameKey="name"
-            label={({ percent }) => `${(percent * 100).toFixed(2)}%`}
+            label={({ value }) => `$${value.toLocaleString()}`}
+            // label={({ percent }) => `${(percent * 100).toFixed(2)}%`}
           >
             {dataCampaigns.map((entry, index) => (
               <Cell key={`cell-${index}`} fill={entry.fillColor} />

@@ -7,6 +7,7 @@ import Plus from "@/components/assets/icons/plus.svg";
 import Message from "@/components/assets/icons/message.svg";
 import Send from "@/components/assets/icons/send.svg";
 import UploadFileModal from "@/components/common/UploadFileModal";
+import Link from "@/components/assets/icons/link.svg";
 
 interface CampaignDetailsProps {
   campaignsData: any;
@@ -24,12 +25,22 @@ const CampaignDetails = ({ campaignsData }: CampaignDetailsProps) => {
       <div className="head-card mb-1">
         <div className="profile-info">
           <div className="profile-info-image">
-            <img
+            <Image
+              src={campaignsData?.brand_image_url}
+              alt="Creator"
+              width={160}
+              height={160}
+              layout="fixed"
+              className="profile-image"
+              loading="lazy"
+              quality={75}
+            /> 
+            {/* <img
               src={campaignsData?.brand_image_url}
               alt="Brand"
               className="profile-image"
               loading="lazy"
-            />
+            /> */}
           </div>
         </div>
         <div className="profile-info">
@@ -190,6 +201,7 @@ const CampaignInvoice = ({ campaignsData }: CampaignInvoiceProps) => {
                 setFileModalOpenContract(true);
               }}
             >
+             <Image src={Link} alt="Icon" width={15} height={15} />
               <p>Upload Contract</p>
             </button>
             <UploadFileModal
@@ -213,10 +225,10 @@ const CampaignInvoice = ({ campaignsData }: CampaignInvoiceProps) => {
           </div>
 
           <div className="button-group mt-3">
-            {/* <button className="sec-button linen" onClick={undefined}>
+           {/* <button className="sec-button linen" onClick={undefined}>
               <Image src={Send} alt="Icon" width={15} height={15} />
               <p>Send Contract</p>
-            </button>
+            </button> */}
             <a
               target="_blank"
               className="sec-button w-50 img-btn linen"
@@ -238,6 +250,7 @@ const CampaignInvoice = ({ campaignsData }: CampaignInvoiceProps) => {
                 setFileModalOpenInvoice(true);
               }}
             >
+             <Image src={Link} alt="Icon" width={15} height={15} />
               <p>Upload Invoice</p>
             </button>
             <UploadFileModal
@@ -260,10 +273,10 @@ const CampaignInvoice = ({ campaignsData }: CampaignInvoiceProps) => {
             </a>
           </div>
           <div className="button-group mt-3">
-            {/* <button className="sec-button linen" onClick={undefined}>
+          {/* <button className="sec-button linen" onClick={undefined}>
               <Image src={Send} alt="Icon" width={15} height={15} />
               <p>Send Invoice</p>
-            </button>
+            </button> */}
             <a
               target="_blank"
               className="sec-button w-50 img-btn linen"

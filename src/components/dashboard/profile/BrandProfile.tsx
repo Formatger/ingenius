@@ -4,7 +4,6 @@ import Insta from "@/components/assets/images/insta.png";
 import Tiktok from "@/components/assets/images/tiktok.png";
 import Message from "@/components/assets/icons/message.svg";
 
-
 interface BrandDetailsProps {
   brandsData: any;
   updateBrandData?: () => void;
@@ -18,7 +17,16 @@ const BrandDetails = ({ brandsData, updateBrandData }: BrandDetailsProps) => {
       <div className="head-card mb-1" >
         <div className="profile-info">
           <div className="profile-info-image">
-            <img src={brandsData?.profile_picture_url} alt="Brand" className="profile-image" loading="lazy" />
+            <Image
+              src={brandsData?.profile_picture_url}
+              alt="Brand"
+              width={160}
+              height={160}
+              layout="fixed"
+              className="profile-image"
+              loading="lazy"
+              quality={75}
+            />          
           </div>
         </div>
         <div className="profile-info">

@@ -1,5 +1,6 @@
 import Arrow from "@/components/assets/svg/Arrow";
 import React, { useState } from "react";
+import Image from "next/image";
 
 interface DealTableProps {
   httpError: {
@@ -170,13 +171,23 @@ const DealTable = ({
                   onClick={() => handleOpenSidepanel(deal)}
                 >
                   <td className="table-brand-cell">
-                    <img
+                  <Image
+                      src={deal.brand_image_url}
+                      alt={deal.brand_name}
+                      width={40}
+                      height={40}
+                      layout="fixed"
+                      className="partner-image"
+                      loading="lazy"
+                      quality={75}
+                    /> 
+                    {/* <img
                       src={deal.brand_image_url}
                       alt={deal.brand_name}
                       className="partner-image"
                       width={40}
                       height={40}
-                    />
+                    /> */}
                     {deal.brand_name}
                   </td>
 
@@ -188,7 +199,7 @@ const DealTable = ({
                   {/* canviar per deal contract value */}
                   <td className="table-cell-center">{`$${deal.contract_value}`}</td>
                   <td className="table-cell-center">
-                    <span className="round-tag green">
+                    <span className="stage-tag green">
                       {deal.deal_stage_name}
                     </span>
                   </td>

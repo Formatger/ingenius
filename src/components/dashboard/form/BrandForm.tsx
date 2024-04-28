@@ -52,7 +52,9 @@ const BrandForm: React.FC<BrandFormProps> = ({
     formState: { errors },
     trigger,
   } = useForm<FormData>();
-  const [imageURL, setImageURL] = useState<string | null>(null);
+  const [imageURL, setImageURL] = useState<string | null>(
+    brandsData.profile_picture_url || null
+  );
   const [submitting, setSubmitting] = useState<boolean>(false);
 
   useEffect(() => {
@@ -175,11 +177,21 @@ const BrandForm: React.FC<BrandFormProps> = ({
               <div className="upload-image-box">
                 <div className="upload-image">
                   {imageURL ? (
-                    <img
+                      <Image
                       src={imageURL}
-                      alt="Uploaded"
-                      style={{ width: "120px", height: "120px" }}
-                    />
+                      alt="image"
+                      width={120}
+                      height={120}
+                      layout="fixed"
+                      className="partner-image"
+                      loading="lazy"
+                      quality={75}
+                    /> 
+                    // <img
+                    //   src={imageURL}
+                    //   alt="Uploaded"
+                    //   style={{ width: "120px", height: "120px" }}
+                    // />
                   ) : (
                     <Image
                       src={ProfilePic}

@@ -1,5 +1,6 @@
 import Arrow from "@/components/assets/svg/Arrow";
 import React, { useState } from "react";
+import Image from "next/image";
 
 interface CreatorTableProps {
   httpError: {
@@ -157,12 +158,22 @@ const CreatorTable = ({
                   onClick={() => handleOpenSidepanel(creator)}
                 >
                   <td className="table-brand-cell">
-                    <img
+                    <Image
+                      src={creator.profile_picture_url}
+                      alt={creator.name}
+                      width={40}
+                      height={40}
+                      layout="fixed"
+                      className="partner-image"
+                      loading="lazy"
+                      quality={75}
+                    /> 
+                    {/* <img
                       src={creator.profile_picture_url}
                       alt={creator.name}
                       className="partner-image"
                       loading="lazy"
-                    />
+                    /> */}
                     {creator.name}
                   </td>
                   <td className="table-cell-center">{creator.email}</td>

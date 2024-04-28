@@ -1,5 +1,6 @@
 import Arrow from "@/components/assets/svg/Arrow";
 import React, { useState } from "react";
+import Image from "next/image";
 
 interface BrandTableProps {
   httpError: {
@@ -157,11 +158,21 @@ const BrandTable = ({
                   onClick={() => handleOpenSidepanel(brand)}
                 >
                   <td className="table-brand-cell">
-                    <img
+                    <Image
+                      src={brand.profile_picture_url}
+                      alt={brand.name}
+                      width={40}
+                      height={40}
+                      layout="fixed"
+                      className="partner-image"
+                      loading="lazy"
+                      quality={75}
+                    /> 
+                    {/* <img
                       src={brand.profile_picture_url}
                       alt={brand.name}
                       className="partner-image"
-                    />
+                    /> */}
                     {brand.name}
                   </td>
                   <td className="table-cell-center">{brand.website}</td>

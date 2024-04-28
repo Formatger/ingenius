@@ -1,5 +1,6 @@
 import Arrow from "@/components/assets/svg/Arrow";
 import React, { useState } from "react";
+import Image from "next/image";
 
 interface CampaignTableProps {
   httpError: {
@@ -159,11 +160,21 @@ const CampaignTable = ({
                   onClick={() => handleOpenSidepanel(campaign)}
                 >
                   <td className="table-brand-cell">
-                    <img
+                    <Image
+                      src={campaign.brand_image_url}
+                      alt={campaign.brand_name}
+                      width={40}
+                      height={40}
+                      layout="fixed"
+                      className="partner-image"
+                      loading="lazy"
+                      quality={75}
+                    /> 
+                    {/* <img
                       src={campaign.brand_image_url}
                       alt={campaign.brand_name}
                       className="partner-image"
-                    />
+                    /> */}
                     {campaign.brand_name}
                   </td>
                   <td className="table-cell">
@@ -176,7 +187,7 @@ const CampaignTable = ({
                   </td>
                   <td className="table-cell-center">{`$${campaign.contract_value}`}</td>
                   <td className="table-cell-center">
-                    <span className="round-tag green">
+                    <span className="stage-tag green">
                       {campaign.campaign_stage_name}
                     </span>
                   </td>

@@ -161,13 +161,12 @@ const Sidebar: React.FC<SidebarProps> = ({ layout }) => {
 
           <div className="">
             <div className="row-wrap-3">
-              <div>
+              <div className="sidebar-image-wrap">
                 <img
                   src={userData?.team_picture_url}
                   alt="Uploaded"
-                  style={{ width: "30px", height: "30px" }}
+                  className="sidebar-profile"
                 />
-                {/* <Image src={userData?.team_picture_url} alt="Profile" width={30} height={30} className="image" /> */}
               </div>
               <div>
                 <p>{userData?.first_name}{" "}{userData?.last_name}</p>

@@ -1,6 +1,7 @@
 import Arrow from "@/components/assets/svg/Arrow";
 import { profile } from "console";
 import React, { useState } from "react";
+import Image from "next/image";
 
 interface ProjectTableProps {
   httpError: {
@@ -180,16 +181,26 @@ const ProjectTable = ({
                   onClick={() => handleOpenSidepanel(project)}
                 >
                   <td className="table-brand-cell">
-                    <img
+                    <Image
+                      src={project.creator_profile_picture}
+                      alt={project.creator_name}
+                      width={40}
+                      height={40}
+                      layout="fixed"
+                      className="partner-image"
+                      loading="lazy"
+                      quality={75}
+                    /> 
+                    {/* <img
                       src={project.creator_profile_picture}
                       alt={project.creator_name}
                       className="partner-image"
                       width={40}
                       height={40}
-                    />
+                    /> */}
                     {project.creator_name}
                   </td>
-                  <td className="table-cell-center">
+                  <td className="table-cell">
                     <span>{project.name}</span>
                   </td>
                   <td className="table-cell">
@@ -198,16 +209,26 @@ const ProjectTable = ({
                     </span>{" "}
                   </td>
                   <td className="table-brand-cell">
-                    <img
+                    <Image
+                        src={project.brand_image_url}
+                        alt={project.brand_name}
+                        width={40}
+                        height={40}
+                        layout="fixed"
+                        className="partner-image"
+                        loading="lazy"
+                        quality={75}
+                      /> 
+                    {/* <img
                       src={project.brand_image_url}
                       alt={project.brand_name}
                       className="partner-image"
-                    />
+                    /> */}
                     {project.brand_name}
                   </td>
                   <td className="table-cell-center">{`$${project.contract_value}`}</td>
                   <td className="table-cell-center">
-                    <span className="round-tag green">
+                    <span className="stage-tag green">
                       {project.project_stage_name}
                     </span>
                   </td>
