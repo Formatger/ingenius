@@ -11,7 +11,7 @@ interface SupportFormProps {
 interface FormData {
   subject: string;
   message: string;
-  screenshots: FileList;
+  screenshot: any;
   email: string;
 }
 
@@ -25,15 +25,36 @@ const SupportForm: React.FC<SupportFormProps> = ({ title }) => {
   } = useForm<FormData>();
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 
-  const addTicket = async (data: FormData) => {
-    const formData = new FormData();
-    formData.append("subject", data.subject);
-    formData.append("message", data.message);
-    formData.append("email", data.email);
-    // Append each file to the 'screenshots' field
-    for (const file of selectedFiles) {
-      formData.append("screenshots", file);
+  // const handleFiles = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   const files = event.target.files;
+  //   if (files) {
+  //     const filesArray = Array.from(files);
+  //     setSelectedFiles(filesArray);  // Directly set the new array
+  
+  //     setValue("screenshots", files);  // Directly use the FileList from the input
+  //   }
+  // };
+  
+  const handleFiles = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (files && files.length > 0) {
+        setSelectedFiles(Array.from(files)); 
+        setValue("screenshot", files[0]); 
     }
+};
+
+  const onSubmit = async (data: FormData) => {
+    const formData = new FormData();
+
+    if (selectedFiles.length > 0) {
+      formData.append('screenshot', selectedFiles[0]);
+    }
+
+    Object.entries(data).forEach(([key, value]) => {
+      if (value !== undefined && value !== null && key !== 'screenshot') {
+          formData.append(key, value);
+      }
+    });
 
     try {
       await postTicket(
@@ -51,21 +72,6 @@ const SupportForm: React.FC<SupportFormProps> = ({ title }) => {
     }
   };
 
-  const handleFiles = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files;
-    if (files) {
-      const filesArray = Array.from(files);
-      setSelectedFiles((prevFiles) => [...prevFiles, ...filesArray]);
-
-      const fileList = filesArray.reduce((fileList, file) => {
-        fileList.items.add(file);
-        return fileList;
-      }, new DataTransfer());
-
-      setValue("screenshots", fileList.files);
-    }
-  };
-
   return (
     <div className="settings-page">
       <div className="form-container" onClick={(e) => e.stopPropagation()}>
@@ -75,7 +81,7 @@ const SupportForm: React.FC<SupportFormProps> = ({ title }) => {
           </div>
         )}
         <div className="modal-content">
-          <form className="sidepanel-form" onSubmit={handleSubmit(addTicket)}>
+          <form className="sidepanel-form" onSubmit={handleSubmit(onSubmit)}>
             <div className="form-box">
               <p className="smallcaps">Subject</p>
               <input

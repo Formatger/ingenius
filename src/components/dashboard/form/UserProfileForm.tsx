@@ -47,12 +47,9 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
     setValue,
     formState: { errors },
   } = useForm<FormData>();
-  const [imageURL, setImageURL] = useState<string | null>(
-    userData.profile_picture_url || null
-  );
-
-  console.log("Data for POST:", userData);
-  console.log("User's first name:", userData?.first_name);
+  // const [imageURL, setImageURL] = useState<string | null>(
+  //   userData.profile_picture_url || null
+  // );
 
   /* UPLOAD PROFILE PICTURE */
 
