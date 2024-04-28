@@ -109,7 +109,10 @@ const CampaignDetails = ({ campaignsData }: CampaignDetailsProps) => {
         <div className="sidepanel-hidden">
           <p className="smallcaps">MANAGE BRAND</p>
           <div className="button-group">
-            <button className="sec-button linen" onClick={undefined}>
+            <button
+              className="sec-button linen"
+              onClick={() => window.location.href = `mailto:${campaignsData?.brand_email}?subject=Subject&body=Body`}
+            >
               <Image src={Message} alt="Icon" width={15} height={15} />
               <p>Message</p>
             </button>
