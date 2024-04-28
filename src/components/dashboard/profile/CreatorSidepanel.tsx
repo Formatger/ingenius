@@ -93,7 +93,7 @@ const CreatorSidepanel: React.FC<SidepanelProps> = ({
               className="row-wrap-2 text-brown"
               href={{
                 pathname: "/dashboard/clients/creators/profile",
-                query: { creatorId: projectsData.creator },
+                query: { creatorId: creatorsData.id },
               }}
             >
               <Arrow className="arrow-left orange-fill" />
