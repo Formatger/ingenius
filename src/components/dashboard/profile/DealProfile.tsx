@@ -152,6 +152,12 @@ const DealInvoice = ({ dealsData }: DealInvoiceProps) => {
               <p>Contract Value</p>
               <span className="invoice-tag">${dealsData?.contract_value}</span>
             </li>
+            <li className="invoice-data-list">
+              <p>Invoice Status</p>
+              <span className="invoice-tag">
+                {dealsData?.invoice_paid ? "Paid" : "Unpaid"}
+              </span>
+            </li>
           </ul>
         </div>
 

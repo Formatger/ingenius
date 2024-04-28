@@ -101,12 +101,22 @@ const DashboardBrands = ({ campaignsData }: DashboardBrandsProps) => {
                 </div> */}
               </td>
               <td className="table-cell-center">
+              <Link href={{ pathname: '/dashboard/partnerships/campaigns/profile', query: { campaignId: campaign.id }}} passHref>
                 <span className={`status-tag ${campaign.invoice_paid ? 'green' : 'pink'}`}>
                   {campaign.invoice_paid ? 'Paid' : 'Unpaid'}
                 </span>
+                </Link>
               </td>
-              <td className="table-cell-center">{campaign.deadline}</td>
-              <td className="table-cell-center">${campaign.contract_value}</td>
+              <td className="table-cell-center">
+              <Link href={{ pathname: '/dashboard/partnerships/campaigns/profile', query: { campaignId: campaign.id }}} passHref>
+                {campaign.deadline}
+                </Link>
+                </td>
+              <td className="table-cell-center">
+              <Link href={{ pathname: '/dashboard/partnerships/campaigns/profile', query: { campaignId: campaign.id }}} passHref>
+                ${campaign.contract_value}
+                </Link>
+              </td>
             </tr>
           ))}
         </tbody>

@@ -106,12 +106,22 @@ const DashboardCreators = ({ projectsData }: DashboardCreatorsProps) => {
                 </div> */}
               </td>
               <td className="table-cell-center">
+              <Link href={{ pathname: '/dashboard/partnerships/projects/profile', query: { projectId: project.id }}} passHref>
                 <span className={`status-tag ${project.invoice_paid ? 'green' : 'pink'}`}>
                   {project.invoice_paid ? 'Paid' : 'Unpaid'}
                 </span>
+                </Link>
               </td>
-              <td className="table-cell-center">{project.deadline}</td>
-              <td className="table-cell-center">${project.contract_value}</td>
+              <td className="table-cell-center">
+              <Link href={{ pathname: '/dashboard/partnerships/projects/profile', query: { projectId: project.id }}} passHref>
+                {project.deadline}
+                </Link>
+                </td>
+              <td className="table-cell-center">
+              <Link href={{ pathname: '/dashboard/partnerships/projects/profile', query: { projectId: project.id }}} passHref>
+                ${project.contract_value}
+                </Link>
+                </td>
             </tr>
           ))}
         </tbody>

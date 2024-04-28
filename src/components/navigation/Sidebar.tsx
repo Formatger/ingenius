@@ -159,6 +159,8 @@ const Sidebar: React.FC<SidebarProps> = ({ layout }) => {
 
 
           <div className="">
+          <Link href="/dashboard/settings"
+                  className={`${router.pathname == "/dashboard/settings" ? "" : ""}`}>
             <div className="row-wrap-3">
               <div className="sidebar-image-wrap">
                 <img
@@ -171,7 +173,9 @@ const Sidebar: React.FC<SidebarProps> = ({ layout }) => {
                 <p>{userData?.first_name}{" "}{userData?.last_name}</p>
                 <p className="account-subtitle">{userData?.team_info?.name}</p>
               </div>
+              
             </div>
+            </Link>
 
             {/* <button className="" onClick={() => {
               localStorage.clear();

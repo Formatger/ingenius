@@ -84,10 +84,9 @@ const DealForm: React.FC<DealFormProps> = ({
   const [selectedStage, setSelectedStage] = useState("");
   const [brandsData, setBrandsData] = useState<any>([]);
   const [submitting, setSubmitting] = useState<boolean>(false);
-
-  // const [invoiceStatus, setInvoiceStatus] = useState(
-  //   dealsData?.invoice_paid ? "Paid" : "Unpaid"
-  // );
+  const [invoiceStatus, setInvoiceStatus] = useState(
+    dealsData?.invoice_paid ? "Paid" : "Unpaid"
+  );
   const startDate = watch("start_date");
 
   /* LOCK FORM */
@@ -110,11 +109,11 @@ const DealForm: React.FC<DealFormProps> = ({
 
   /* INVOICE DROPDOWN */
 
-  // const handleInvoiceSelect = (value: string) => {
-  //   setInvoiceStatus(value);
-  //   setValue("invoice_paid", value === "Paid");
-  //   trigger("invoice_paid");
-  // };
+  const handleInvoiceSelect = (value: string) => {
+    setInvoiceStatus(value);
+    setValue("invoice_paid", value === "Paid");
+    trigger("invoice_paid");
+  };
 
   /* SEARCH DROPDOWN */
   const [searchTerm, setSearchTerm] = useState("");
@@ -271,12 +270,12 @@ const DealForm: React.FC<DealFormProps> = ({
                 </span>
               )}
             </div>
-            {/* <div>
+            <div>
               <InvoiceDropdown
                 selectedValue={invoiceStatus}
                 onSelect={handleInvoiceSelect}
               />
-            </div> */}
+            </div>
             <div className="form-box">
               <span className="smallcaps">START DATE*</span>
               <input
@@ -393,12 +392,12 @@ const DealForm: React.FC<DealFormProps> = ({
                 </span>
               )}
             </div>
-            {/* <div>
+            <div>
               <InvoiceDropdown
                 selectedValue={invoiceStatus}
                 onSelect={handleInvoiceSelect}
               />
-            </div> */}
+            </div>
             <div className="form-box">
               <span className="smallcaps">START DATE*</span>
               <input

@@ -19,12 +19,12 @@ import {
 import UploadFileModal from "@/components/common/UploadFileModal";
 import { useRouter } from "next/router";
 
-interface Creators {
-  id: string;
-  name: string;
-  profile_picture_url: string;
-  email: string;
-}
+// interface Creators {
+//   id: string;
+//   name: string;
+//   profile_picture_url: string;
+//   email: string;
+// }
 
 interface ProjectDetailsProps {
   projectsData: any;
@@ -42,26 +42,26 @@ interface ProjectInvoiceProps {
 
 const ProjectDetails = ({ projectsData }: ProjectDetailsProps) => {
   const router = useRouter();
-  const [creatorsData, setCreatorsData] = useState<Creators[]>([]);
+  // const [creatorsData, setCreatorsData] = useState<Creators[]>([]);
 
 
-  /* GET CREATORS API CALL */
+  // /* GET CREATORS API CALL */
 
-  useEffect(() => {
-    fetchCreators();
-  }, [router]);
+  // useEffect(() => {
+  //   fetchCreators();
+  // }, [router]);
 
-  const fetchCreators = () => {
-    getCreators(
-      (response: any) => {
-        setCreatorsData(response || []);
-      },
-      (error: any) => {
-        console.error("Error fetching profile data:", error);
-        setCreatorsData([]);
-      }
-    ).finally(() => { });
-  };
+  // const fetchCreators = () => {
+  //   getCreators(
+  //     (response: any) => {
+  //       setCreatorsData(response || []);
+  //     },
+  //     (error: any) => {
+  //       console.error("Error fetching profile data:", error);
+  //       setCreatorsData([]);
+  //     }
+  //   ).finally(() => { });
+  // };
 
   return (
     <div className="card-container">
@@ -162,13 +162,13 @@ const ProjectDetails = ({ projectsData }: ProjectDetailsProps) => {
               <p>Message</p>
             </button>
 
-            <Link
+            {/* <Link
                   href={{
                     pathname: '/dashboard/clients/creators/profile',
                     query: { creatorId: creatorsData.id }
                   }}
                   passHref
-                >
+                > */}
             <button className="sec-button linen" onClick={undefined}>
               <Image
                 className=""
@@ -179,7 +179,7 @@ const ProjectDetails = ({ projectsData }: ProjectDetailsProps) => {
               />
               <p>View Profile</p>
             </button>
-            </Link>
+            {/* </Link> */}
           </div>
         </div>
       </div>
