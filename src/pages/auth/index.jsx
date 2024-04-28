@@ -32,6 +32,7 @@ export default function Login() {
             status: undefined,
             message: 'There is a problem with the server. Please try again later.',
           });
+          setLoading(false);
         }
         setLoading(false);
       }, (error) => {
@@ -40,6 +41,7 @@ export default function Login() {
           status: undefined,
           message: 'There was an error with your login. Please try again.',
         });
+        setLoading(false);
       });
     } catch (error) {
       setLoginError({

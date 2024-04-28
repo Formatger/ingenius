@@ -26,7 +26,7 @@ const DashboardCreators = ({ projectsData }: DashboardCreatorsProps) => {
         <h2 className="dashboard-title">Contractor Invoices</h2>
         {/* <HelpIcon /> */}
       </div>
-  
+
       <table className="app-table" id="dashboard-table">
         <thead>
           <tr className="table-header">
@@ -64,45 +64,35 @@ const DashboardCreators = ({ projectsData }: DashboardCreatorsProps) => {
             </th>
           </tr>
         </thead>
-  
+
         <tbody className="table-body">
-          {projectsData.map((project: any) => (
+          {projectsData?.map((project: any) => (
             <tr className="table-row" key={project.id}>
               <td className="table-cell">
-              <Link
-                href={{
-                  pathname: '/dashboard/partnerships/projects/profile',
-                  query: { projectId: project.id }
-                }}
-                passHref
-              >
-                <div className="row-wrap-3">
-          
-                  <div className="">
-                    <Image
-                        src={project.creator_profile_picture}
-                        alt={project.creator_name}
-                        width={40}
-                        height={40}
-                        layout="fixed"
-                        className="partner-image"
-                        loading="lazy"
-                        quality={75}
-                      /> 
-                    {/* <img
+                <Link
+                  href={{
+                    pathname: '/dashboard/partnerships/projects/profile',
+                    query: { projectId: project.id }
+                  }}
+                  passHref
+                >
+                  <div className="row-wrap-3">
+
+                    <div className="">
+                      <img
                         src={project.creator_profile_picture}
                         alt={project.creator_name}
                         className="partner-image"
                         width={40}
                         height={40}
-                      /> */}
+                      />
+                    </div>
+                    <div>
+                      <p className="track-title">{project.creator_name}</p>
+                      <p className="track-subtitle">{project.name}</p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="track-title">{project.creator_name}</p>
-                    <p className="track-subtitle">{project.name}</p>
-                  </div>
-                </div>
-              </Link>
+                </Link>
                 {/* <div className='row-wrap-1'>
                   <Link
                     href={{
@@ -126,7 +116,7 @@ const DashboardCreators = ({ projectsData }: DashboardCreatorsProps) => {
           ))}
         </tbody>
       </table>
-  
+
       {/* Renderiza el componente de detalles del creador si hay uno seleccionado */}
       {/* {selectedCreator && (
         <CreatorSidepanel creatorsData={selectedCreator} />

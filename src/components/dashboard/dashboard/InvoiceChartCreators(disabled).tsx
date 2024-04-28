@@ -40,7 +40,7 @@ const PieChartComponent = () => {
             nameKey="name"
             label={({ percent }) => `${(percent * 100).toFixed(0)}%`}
           >
-            {data.map((entry, index) => (
+            {data?.map((entry, index) => (
               <Cell key={`cell-${index}`} fill={entry.fillColor} />
             ))}
           </Pie>
@@ -48,8 +48,8 @@ const PieChartComponent = () => {
         </PieChart>
 
         <div className="chart-legend">
-          {data.map((entry, index) => (
-            <div key={index} className="legend-item">
+          {data?.map((entry, index) => (
+            <div key={`${entry.name}-entry-${index}`} className="legend-item">
               <span className="legend-dot" style={{ backgroundColor: entry.fillColor }}></span>
               <span>{entry.name}</span>
             </div>

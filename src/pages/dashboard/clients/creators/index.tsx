@@ -96,7 +96,7 @@ const CreatorsPage = () => {
         }
       ),
     ]).finally(() => {
-      const CreatorsFullData = provisionalCreatorsData.map((item) => {
+      const CreatorsFullData = provisionalCreatorsData?.map((item) => {
         const detail = provisionalCreatorsDetailData.find(
           (detail) => detail.id === item.id
         );

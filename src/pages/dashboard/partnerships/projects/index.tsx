@@ -85,7 +85,7 @@ const ProjectsPage = () => {
     getProjectStages(
       (response: any) => {
         setProjectStage(
-          response.map((stage: any) => ({
+          response?.map((stage: any) => ({
             stageID: stage.id,
             stageName: stage.name,
             stageIndex: stage.order,
@@ -135,7 +135,7 @@ const ProjectsPage = () => {
         }
       ),
     ]).finally(() => {
-      const ProjectsFullData = provisionalProjectsData.map((item) => {
+      const ProjectsFullData = provisionalProjectsData?.map((item) => {
         const detail = provisionalProjectsDetailData.find(
           (detail) => detail.id === item.id
         );

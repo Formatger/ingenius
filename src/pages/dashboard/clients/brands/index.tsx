@@ -96,7 +96,7 @@ const BrandsPage = () => {
         }
       ),
     ]).finally(() => {
-      const BrandsFullData = provisionalBrandsData.map((item) => {
+      const BrandsFullData = provisionalBrandsData?.map((item) => {
         const detail = provisionalBrandsDetailData.find(
           (detail) => detail.id === item.id
         );
@@ -215,11 +215,11 @@ const BrandsPage = () => {
   /* CSV EXPORT */
   const handleExportCSV = async (e: any) => {
     const teamId = originalData[0].team;
-      try {
-        exportCSV("brands", teamId, "brands")
-      } catch (error) {
-        console.error("Error exporting file:", error);
-      }
+    try {
+      exportCSV("brands", teamId, "brands")
+    } catch (error) {
+      console.error("Error exporting file:", error);
+    }
   };
 
   return (

@@ -8,7 +8,7 @@ import Add from "@/components/assets/icons/add.svg";
 import BrandSidepanel from "@/components/dashboard/profile/BrandSidepanel";
 
 interface DashboardBrandsProps {
-  campaignsData: any; 
+  campaignsData: any;
 }
 
 const DashboardBrands = ({ campaignsData }: DashboardBrandsProps) => {
@@ -21,7 +21,7 @@ const DashboardBrands = ({ campaignsData }: DashboardBrandsProps) => {
         <h2 className="dashboard-title">Client Invoices</h2>
         {/* <HelpIcon /> */}
       </div>
-  
+
       <table className="app-table" id="dashboard-table">
         <thead>
           <tr className="table-header">
@@ -59,10 +59,10 @@ const DashboardBrands = ({ campaignsData }: DashboardBrandsProps) => {
             </th>
           </tr>
         </thead>
-  
+
         <tbody className="table-body">
-          {campaignsData.map((campaign: any) => (
-            <tr className="table-row" key={campaign.brand_name}>
+          {campaignsData?.map((campaign: any) => (
+            <tr className="table-row" key={campaign.id}>
               <td className="table-cell">
                 <Link
                   href={{
@@ -72,25 +72,15 @@ const DashboardBrands = ({ campaignsData }: DashboardBrandsProps) => {
                   passHref
                 >
                   <div className="row-wrap-3">
-            
+
                     <div className="">
-                    <Image
-                      src={campaign.brand_image_url}
-                      alt={campaign.brand_name}
-                      width={40}
-                      height={40}
-                      layout="fixed"
-                      className="partner-image"
-                      loading="lazy"
-                      quality={75}
-                    /> 
-                    {/* <img
+                      <img
                         src={campaign.brand_image_url}
                         alt={campaign.brand_name}
                         className="partner-image"
                         width={40}
                         height={40}
-                      /> */}
+                      />
                     </div>
                     <div>
                       <p className="track-title">{campaign.brand_name}</p>
@@ -121,7 +111,7 @@ const DashboardBrands = ({ campaignsData }: DashboardBrandsProps) => {
           ))}
         </tbody>
       </table>
-  
+
       {/* Renderiza el componente de detalles del creador si hay uno seleccionado */}
       {/* {selectedCreator && (
         <BrandSidepanel brandsData={selectedCreator} 

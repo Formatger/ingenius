@@ -44,7 +44,7 @@ const DealTable = ({
 
   const handleSort = (type: string) => {
     sortBy(type);
-    const newSortDirection = sortDirection.map((item: any) => {
+    const newSortDirection = sortDirection?.map((item: any) => {
       if (item.name === type) {
         return { name: item.name, isSortAsc: !item.isSortAsc };
       }
@@ -118,7 +118,7 @@ const DealTable = ({
                 <div className="table-header-content">
                   <button
                     className="header-button"
-                    // onClick={() => handleSort("total_campaigns")}
+                  // onClick={() => handleSort("total_campaigns")}
                   >
                     <Arrow className={"arrow-down"} />
                   </button>

@@ -101,7 +101,7 @@ const CampaignsPage = () => {
     getCampaignStages(
       (response: any) => {
         setCampaignStage(
-          response.map((stage: any) => ({
+          response?.map((stage: any) => ({
             stageID: stage.id,
             stageName: stage.name,
             stageIndex: stage.order,
@@ -151,7 +151,7 @@ const CampaignsPage = () => {
         }
       ),
     ]).finally(() => {
-      const campaignsFullData = provisionalCampaignsData.map((item) => {
+      const campaignsFullData = provisionalCampaignsData?.map((item) => {
         const item2 = provisionalCampaignsDetailData.find(
           (item2) => item2.id === item.id
         );

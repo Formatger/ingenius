@@ -80,7 +80,7 @@ const DealsPage = () => {
     getDealStages(
       (response: any) => {
         setDealStage(
-          response.map((stage: any) => ({
+          response?.map((stage: any) => ({
             stageID: stage.id,
             stageName: stage.name,
             stageIndex: stage.order,
@@ -130,7 +130,7 @@ const DealsPage = () => {
         }
       ),
     ]).finally(() => {
-      const dealsFullData = provisionalDealsData.map((item) => {
+      const dealsFullData = provisionalDealsData?.map((item) => {
         const item2 = provisionalDealsDetailData.find(
           (item2) => item2.id === item.id
         );

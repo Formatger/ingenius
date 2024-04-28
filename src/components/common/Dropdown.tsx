@@ -310,7 +310,7 @@ function Dropdown({
         {isTimeframeOpen && (
           <ul className="dropdownListStick">
             <div className="hr-line"></div>
-            {timeframes.map((tf) => (
+            {timeframes?.map((tf) => (
               <li className="dropdownListItem" key={tf.id}>
                 <button
                   className="dropdownItem"
@@ -426,13 +426,12 @@ function Dropdown({
           className={isPeopleOpen ? "dropdownButtonOpen" : "dropdownButton"}
           onClick={() => handleOpenFilter("people")}
         >
-          {`Group: ${
-            selectedFiltersRef.current.length === 1
-              ? selectedFiltersRef.current[0]
-              : selectedFiltersRef.current.length === 0
+          {`Group: ${selectedFiltersRef.current.length === 1
+            ? selectedFiltersRef.current[0]
+            : selectedFiltersRef.current.length === 0
               ? `All`
               : "Multiple Selected"
-          }`}
+            }`}
           <Arrow className={`${isPeopleOpen ? "" : "arrow-down"}`} />
         </button>
         {isPeopleOpen && (
@@ -440,8 +439,8 @@ function Dropdown({
             <div className="hr-line"></div>
             <div className="peopleFiltersSection">
               <div className="dropdownSection">
-                {selectedFiltersRef.current.map((filter: string) => (
-                  <div className="chip">
+                {selectedFiltersRef.current?.map((filter: string, index: number) => (
+                  <div className="chip" key={`${filter}-${index}`}>
                     {filter}
                     <button
                       className="chipClose"
@@ -548,7 +547,7 @@ function Dropdown({
                 />
                 {showSuggestionDropdown && (
                   <ul className="suggestionDropdown">
-                    {partnerSearchFilter.map((option: any) => (
+                    {partnerSearchFilter?.map((option: any) => (
                       <li className="dropdownSearchRow" key={option}>
                         <button
                           className="dropdownSearchItem"
@@ -575,13 +574,12 @@ function Dropdown({
           className={isNicheOpen ? "dropdownButtonOpen" : "dropdownButton"}
           onClick={() => handleOpenFilter("niche")}
         >
-          {`Niche: ${
-            selectedNicheFiltersRef.current.length === 1
-              ? selectedNicheFiltersRef.current[0]
-              : selectedNicheFiltersRef.current.length === 0
+          {`Niche: ${selectedNicheFiltersRef.current.length === 1
+            ? selectedNicheFiltersRef.current[0]
+            : selectedNicheFiltersRef.current.length === 0
               ? `All`
               : "Multiple Selected"
-          }`}
+            }`}
           <Arrow className={`${isNicheOpen ? "" : "arrow-down"}`} />
         </button>
         {isNicheOpen && (
@@ -589,8 +587,8 @@ function Dropdown({
             <div className="hr-line"></div>
             <div className="peopleFiltersSection">
               <div className="dropdownSection">
-                {selectedNicheFiltersRef.current.map((filter: string) => (
-                  <div className="chip">
+                {selectedNicheFiltersRef.current?.map((filter: string, index: number) => (
+                  <div className="chip" key={`${filter}-${index}`}>
                     {filter}
                     <button
                       className="chipClose"
@@ -638,7 +636,7 @@ function Dropdown({
                 />
                 {showSuggestionDropdown && (
                   <ul className="suggestionDropdown">
-                    {nicheSearchFilter.map((option: any) => (
+                    {nicheSearchFilter?.map((option: any) => (
                       <li className="dropdownSearchRow" key={option}>
                         <button
                           className="dropdownSearchItem"

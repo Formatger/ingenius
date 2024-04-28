@@ -35,21 +35,21 @@ const PieChartComponent = ({ pieChartData }: PieChartProps) => {
             // label={({ percent }) => `${(percent * 100).toFixed(2)}%`}
             label={({ value }) => `$${value.toLocaleString()}`}
           >
-            {dataProjects.map((entry, index) => (
+            {dataProjects?.map((entry, index) => (
               <Cell key={`cell-${index}`} fill={entry.fillColor} />
             ))}
           </Pie>
-          <Tooltip 
-          content={
+          <Tooltip
+            content={
               <CustomTooltipProjects
-              pieChartData={pieChartData}
-              />} 
+                pieChartData={pieChartData}
+              />}
           />
         </PieChart>
 
         <div className="chart-legend">
-          {dataProjects.map((entry, index) => (
-            <div key={index} className="legend-item">
+          {dataProjects?.map((entry, index) => (
+            <div key={`${entry.name}-ent-${index}`} className="legend-item">
               <span className="legend-dot" style={{ backgroundColor: entry.fillColor }}></span>
               <span>{entry.name}</span>
             </div>

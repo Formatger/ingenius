@@ -4,19 +4,19 @@ import SearchIcon from "../../assets/icons/search.svg";
 import Arrow from "@/components/assets/svg/Arrow";
 
 interface SearchDropdownProps {
-  data: any[];  // Generic data array
-  onSelect: (selectedItem: any) => void;  // Generic selection handler
-  placeholder?: string;
-  handleSearch: (search: string) => void;  // Function to handle search input changes
-  displayKey: string;  // Key to display and search in data objects
+    data: any[];  // Generic data array
+    onSelect: (selectedItem: any) => void;  // Generic selection handler
+    placeholder?: string;
+    handleSearch: (search: string) => void;  // Function to handle search input changes
+    displayKey: string;  // Key to display and search in data objects
 }
 
 const SearchDropdown: React.ForwardRefRenderFunction<HTMLDivElement, SearchDropdownProps> = ({
-  data,
-  onSelect,
-  placeholder = "Search...",
-  handleSearch,
-  displayKey
+    data,
+    onSelect,
+    placeholder = "Search...",
+    handleSearch,
+    displayKey
 }, ref) => {
     const [inputTerm, setInputTerm] = useState('');
     const [displayTerm, setDisplayTerm] = useState('');
@@ -24,7 +24,7 @@ const SearchDropdown: React.ForwardRefRenderFunction<HTMLDivElement, SearchDropd
     const [filteredData, setFilteredData] = useState<any[]>([]);
     const dropdownRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
-    
+
     // useEffect(() => {
     //     if (inputTerm === '') {
     //         setFilteredData(data.slice(0, 5)); // Show default items or some other logic
@@ -34,8 +34,8 @@ const SearchDropdown: React.ForwardRefRenderFunction<HTMLDivElement, SearchDropd
     // }, [inputTerm, data, displayKey]);
 
     useEffect(() => {
-      setFilteredData(data.filter(item => item[displayKey]?.toLowerCase().includes(inputTerm.toLowerCase())));
-  }, [inputTerm, data, displayKey]);
+        setFilteredData(data.filter(item => item[displayKey]?.toLowerCase().includes(inputTerm.toLowerCase())));
+    }, [inputTerm, data, displayKey]);
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -64,7 +64,7 @@ const SearchDropdown: React.ForwardRefRenderFunction<HTMLDivElement, SearchDropd
             </div>
             {showDropdown && (
                 <div className="dropdown-list">
-                  
+
                     <input
                         type="text"
                         className="dropdown-search"
@@ -77,8 +77,8 @@ const SearchDropdown: React.ForwardRefRenderFunction<HTMLDivElement, SearchDropd
                         ref={inputRef}
                     />
 
-                    {filteredData.map((item, index) => (
-                        <div key={index} className="dropdown-item" onClick={() => handleSelectItem(item)}>
+                    {filteredData?.map((item, index) => (
+                        <div key={`fd-${index}`} className="dropdown-item" onClick={() => handleSelectItem(item)}>
                             {item[displayKey]}
                         </div>
                     ))}

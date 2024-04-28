@@ -55,7 +55,7 @@ const DealsKanban = ({
     const storedColors = localStorage.getItem("stageColors");
     const colorsMap = storedColors ? JSON.parse(storedColors) : {};
 
-    const coloredStages = stages.map((stage) => {
+    const coloredStages = stages?.map((stage) => {
       if (!colorsMap[stage.stageID]) {
         colorsMap[stage.stageID] = `color-${colors[Math.floor(Math.random() * colors.length)]
           }`;
@@ -78,7 +78,7 @@ const DealsKanban = ({
   useEffect(() => {
     if (Dealstage.length === 0) return;
 
-    let stagesWithDeals = Dealstage.map(
+    let stagesWithDeals = Dealstage?.map(
       (stage: any) => {
         const stageDeals = DealData.filter((deal: any) => {
           return deal.deal_stage === stage.stageID;
@@ -130,7 +130,7 @@ const DealsKanban = ({
           const remainingStages = stages.filter(
             (stage) => stage.stageID !== deleteStageId
           );
-          const updatedStages = remainingStages.map((stage, index) => ({
+          const updatedStages = remainingStages?.map((stage, index) => ({
             ...stage,
             stageIndex: index + 1,
           }));
@@ -187,7 +187,7 @@ const DealsKanban = ({
         ]);
 
         setStages((currentStages) => {
-          return currentStages.map((stage) => {
+          return currentStages?.map((stage) => {
             if (stage.stageID === oldColumn.stageID) {
               return {
                 ...stage,
@@ -237,7 +237,7 @@ const DealsKanban = ({
             { ...deal, deal_stage: stageID },
             () => {
               setStages((currentStages) => {
-                return currentStages.map((stage) => {
+                return currentStages?.map((stage) => {
                   if (stage.stageID === deal.deal_stage) {
                     return {
                       ...stage,

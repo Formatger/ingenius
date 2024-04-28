@@ -23,7 +23,7 @@ const TeamTable = ({ teamMembers }: TeamTableProps) => {
 
   return (
     <div className="team-table-wrap">
-  
+
       <table className="team-table">
         <thead>
           <tr className="team-table-header">
@@ -49,14 +49,15 @@ const TeamTable = ({ teamMembers }: TeamTableProps) => {
             </th>
           </tr>
         </thead>
-  
+
         <tbody className="team-table-body">
           {teamMembers?.map((member) => (
-            <tr className="table-row" 
-            key={member.id}
+            <tr
+              className="table-row"
+              key={member.id}
             >
               <td className="team-table-cell profile">
-                 <Image src={ProfilePic} alt="Icon" width={34} height={34} />
+                <Image src={ProfilePic} alt="Icon" width={34} height={34} />
               </td>
               <td className="team-table-cell name">{member.first_name}</td>
               <td className="team-table-cell lastname">{member.last_name}</td>
@@ -66,7 +67,7 @@ const TeamTable = ({ teamMembers }: TeamTableProps) => {
 
         </tbody>
       </table>
-  
+
     </div>
   );
 };

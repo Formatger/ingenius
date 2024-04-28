@@ -112,7 +112,8 @@ const DealDetails = ({ dealsData }: DealDetailsProps) => {
 };
 
 const DealInvoice = ({ dealsData }: DealInvoiceProps) => {
-  const [isFileModalOpen, setFileModalOpen] = useState(false);
+  const [isFileModalOpenContract, setFileModalOpenContract] = useState(false);
+  const [isFileModalOpenInvoice, setFileModalOpenInvoice] = useState(false);
 
   return (
     <div className="card-container">
@@ -163,15 +164,15 @@ const DealInvoice = ({ dealsData }: DealInvoiceProps) => {
             <button
               className="sec-button linen"
               onClick={() => {
-                setFileModalOpen(true);
+                setFileModalOpenContract(true);
               }}
             >
              <Image src={Link} alt="Icon" width={15} height={15} />
               <p>Upload Contract</p>
             </button>
             <UploadFileModal
-              isOpen={isFileModalOpen}
-              onClose={() => setFileModalOpen(false)}
+              isOpen={isFileModalOpenContract}
+              onClose={() => setFileModalOpenContract(false)}
               title="Upload Contract"
               message="Upload a Contract File in PDF format."
               button="Upload File"
@@ -199,6 +200,53 @@ const DealInvoice = ({ dealsData }: DealInvoiceProps) => {
               className="sec-button w-50 img-btn linen"
               href={dealsData?.contract_file}
               download="contract.pdf"
+            >
+              <Image src={Download} alt="Icon" width={18} height={18} />
+              <p>Download as PDF</p>
+            </a>
+          </div>
+        </div>
+
+        <div className="">
+          <p className="smallcaps mt-5">MANAGE INVOICE</p>
+          <div className="button-group">
+            <button
+              className="sec-button linen"
+              onClick={() => {
+                setFileModalOpenInvoice(true);
+              }}
+            >
+              <p>Upload Invoice</p>
+            </button>
+            <UploadFileModal
+              isOpen={isFileModalOpenInvoice}
+              onClose={() => setFileModalOpenInvoice(false)}
+              title="Upload Invoice"
+              message="Upload a Invoice File in PDF format."
+              button="Upload File"
+              id={dealsData?.id}
+              endpoint="deals"
+              type="invoice"
+            />
+            <a
+              target="_blank"
+              className="sec-button w-50 img-btn linen"
+              href={dealsData?.invoice_file}
+            >
+              <Image src={Folder} alt="Icon" width={15} height={15} />
+              <p>View Invoice</p>
+            </a>
+          </div>
+          <div className="button-group mt-3">
+            <button className="sec-button linen" onClick={undefined}>
+              <Image src={Send} alt="Icon" width={15} height={15} />
+              <p>Send Invoice</p>
+            </button>
+            <a
+              target="_blank"
+              className="sec-button w-50 img-btn linen"
+              href={dealsData?.invoice_file}
+              download="invoice.pdf"
             >
               <Image src={Download} alt="Icon" width={18} height={18} />
               <p>Download as PDF</p>

@@ -53,7 +53,7 @@ const ProjectsKanban = ({
     const storedColors = localStorage.getItem("stageColors");
     const colorsMap = storedColors ? JSON.parse(storedColors) : {};
 
-    const coloredStages = stages.map((stage) => {
+    const coloredStages = stages?.map((stage) => {
       if (!colorsMap[stage.stageID]) {
         colorsMap[stage.stageID] = `color-${colors[Math.floor(Math.random() * colors.length)]
           }`;
@@ -70,7 +70,7 @@ const ProjectsKanban = ({
   useEffect(() => {
     if (projectStage.length === 0) return; // Evitar procesamiento si projectStage está vacío
 
-    let stagesWithProjects = projectStage.map(
+    let stagesWithProjects = projectStage?.map(
       (stage: any) => {
         const stageProjects = projectsData.filter((project: any) => {
           return project.project_stage === stage.stageID;
@@ -122,7 +122,7 @@ const ProjectsKanban = ({
           const remainingStages = stages.filter(
             (stage) => stage.stageID !== deleteStageId
           );
-          const updatedStages = remainingStages.map((stage, index) => ({
+          const updatedStages = remainingStages?.map((stage, index) => ({
             ...stage,
             stageIndex: index + 1, // Reassign stageIndex starting from 1
           }));
@@ -183,7 +183,7 @@ const ProjectsKanban = ({
 
         // Actualizar el estado para reflejar el cambio sin recargar
         setStages((currentStages) => {
-          return currentStages.map((stage) => {
+          return currentStages?.map((stage) => {
             if (stage.stageID === oldColumn.stageID) {
               return {
                 ...stage,
@@ -238,7 +238,7 @@ const ProjectsKanban = ({
             () => {
               // Actualizar el estado para reflejar el cambio sin recargar
               setStages((currentStages) => {
-                return currentStages.map((stage) => {
+                return currentStages?.map((stage) => {
                   // Si la columna es la original, eliminar el proyecto
                   if (stage.stageID === project.project_stage) {
                     return {

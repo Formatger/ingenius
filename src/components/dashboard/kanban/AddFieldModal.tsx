@@ -27,7 +27,7 @@ const AddFieldModal: React.FC<AddFieldModalProps> = ({
         await getProjectStages(
           (response) => {
             const maxOrder = Math.max(
-              ...response.map((stage: any) => stage.order)
+              ...response?.map((stage: any) => stage.order)
             );
             setNewLabel((prevLabel) => ({ ...prevLabel, order: maxOrder + 1 }));
           },

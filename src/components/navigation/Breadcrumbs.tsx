@@ -20,7 +20,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
     <nav aria-label="Breadcrumb" className="breadcrumb-nav">
       <ol role="list" className="row-items-center">
         {items?.map((item, index) => (
-          <li key={index} className="row-items-center">
+          <li key={`ind-${index}`} className="row-items-center">
             {item?.current || index === items?.length - 1 ? (
               <span className="text-brown">
                 {item?.label}

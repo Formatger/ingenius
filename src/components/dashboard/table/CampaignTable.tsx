@@ -44,7 +44,7 @@ const CampaignTable = ({
 
   const handleSort = (type: string) => {
     sortBy(type);
-    const newSortDirection = sortDirection.map((item: any) => {
+    const newSortDirection = sortDirection?.map((item: any) => {
       if (item.name === type) {
         return { name: item.name, isSortAsc: !item.isSortAsc };
       }
