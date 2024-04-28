@@ -13,17 +13,11 @@ import ProfilePic from "@/components/assets/images/creator.png";
 
 interface FormData {
   id?: number;
-  name: string;
-  representative: string;
+  first_name: string;
+  last_name: string;
+  // profile_picture_url?: string;
+  // profile_picture?: File;
   email: string;
-  niche: string;
-  website?: string;
-  profile_picture_url?: string;
-  profile_picture?: File;
-  user?: string;
-  active_campaigns?: string;
-  active_campaigns_value?: string;
-  created_at?: Date;
 }
 
 interface UserProfileFormProps {
@@ -161,7 +155,7 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
             <div className="form-box">
               <span className="smallcaps">NAME</span>
               <input
-                {...register("name", {
+                {...register("first_name", {
                   required: "Name is required",
                   validate: (value) =>
                     value.trim() !== "" || "Name is required",
@@ -171,8 +165,8 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
                 placeholder="Enter name"
                 defaultValue={userData.first_name}
               />
-              {errors.name && (
-                <span className="error-message">{errors.name.message}</span>
+              {errors.first_name && (
+                <span className="error-message">{errors.first_name.message}</span>
               )}
             </div> 
             <div className="form-box">
@@ -183,7 +177,6 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
                 type="text"
                 defaultValue={userData.last_name}
                 placeholder="Enter last name"
-                // onChange={(e) => setValue("last_name", e.target.value)}
               />
             </div>
             <div className="form-box">

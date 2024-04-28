@@ -33,34 +33,8 @@ interface UserData {
   team_picture_url: string;
 }
 
-// interface FormData {
-//   id?: number;
-//   name: string;
-//   representative: string;
-//   email: string;
-//   niche: string;
-//   website?: string;
-//   profile_picture_url?: string;
-//   profile_picture?: File;
-//   user?: string;
-//   active_campaigns?: string;
-//   active_campaigns_value?: string;
-//   created_at?: Date;
-// }
-
-interface SettingsPageProps {
-}
-
-const SettingsPage: React.FC<SettingsPageProps> = ({
-}) => {
+const SettingsPage = () => {
   const router = useRouter();
-  // const {
-  //   register,
-  //   handleSubmit,
-  //   reset,
-  //   setValue,
-  //   formState: { errors },
-  // } = useForm<FormData>();
   const [loader, setLoader] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   // const [imageURL, setImageURL] = useState<string | null>(userData.profile_picture_url || null);
