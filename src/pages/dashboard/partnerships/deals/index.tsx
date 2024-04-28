@@ -213,11 +213,11 @@ const DealsPage = () => {
   /* CSV EXPORT */
   const handleExportCSV = async (e: any) => {
     const teamId = originalData[0].team;
-      try {
-        exportCSV("deals", teamId, "deals")
-      } catch (error) {
-        console.error("Error exporting file:", error);
-      }
+    try {
+      exportCSV("deals", teamId, "deals")
+    } catch (error) {
+      console.error("Error exporting file:", error);
+    }
   };
 
   /* SIDEPANEL */
@@ -251,9 +251,8 @@ const DealsPage = () => {
           <div className="page-container" id="dealsData">
             {openSidepanel && (
               <DealSidepanel
-                open={openSidepanel}
                 setOpenSidepanel={setOpenSidepanel}
-                dealsData={selectedDeal}
+                dealId={selectedDeal.id}
                 setSelectedDeal={setSelectedDeal}
                 updateDealData={updateDealData}
               />

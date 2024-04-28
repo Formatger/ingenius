@@ -62,8 +62,17 @@ const CreatorForm: React.FC<CreatorFormProps> = ({
   useEffect(() => {
     lockCreator(creatorsData.id);
 
+    const handleBeforeUnload = (event: any) => {
+      event.preventDefault();
+      unlockCreator(creatorsData.id);
+      event.returnValue = '';
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
     return () => {
       unlockCreator(creatorsData.id);
+      window.removeEventListener('beforeunload', handleBeforeUnload);
     };
   }, []);
 
@@ -83,7 +92,7 @@ const CreatorForm: React.FC<CreatorFormProps> = ({
     }
   };
 
-    /* RELOAD */
+  /* RELOAD */
 
   /* SUBMIT FORM - POST CREATOR API CALL  */
 
@@ -244,7 +253,7 @@ const CreatorForm: React.FC<CreatorFormProps> = ({
               {errors.niche && (
                 <span className="error-message">{errors.niche.message}</span>
               )}
-              </div>
+            </div>
             <div className="button-group">
               <button
                 className="sec-button stone"
@@ -318,7 +327,7 @@ const CreatorForm: React.FC<CreatorFormProps> = ({
               />
               {errors.name && (
                 <span className="error-message">{errors.name.message}</span>
-              )}             
+              )}
             </div>
             <div className="form-box">
               <span className="smallcaps">EMAIL*</span>
@@ -336,7 +345,7 @@ const CreatorForm: React.FC<CreatorFormProps> = ({
               {errors.email && (
                 <span className="error-message">{errors.email.message}</span>
               )}
-            </div>           
+            </div>
             <div className="form-box">
               <span className="smallcaps">NICHE*</span>
               <input
@@ -352,7 +361,7 @@ const CreatorForm: React.FC<CreatorFormProps> = ({
               {errors.niche && (
                 <span className="error-message">{errors.niche.message}</span>
               )}
-              </div>
+            </div>
 
             <button className="sec-button linen" type="submit">
               <p>SAVE</p>

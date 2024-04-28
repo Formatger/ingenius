@@ -89,12 +89,20 @@ const DealForm: React.FC<DealFormProps> = ({
   const startDate = watch("start_date");
 
   /* LOCK FORM */
-
   useEffect(() => {
     lockDeal(dealsData.id);
 
+    const handleBeforeUnload = (event: any) => {
+      event.preventDefault();
+      unlockDeal(dealsData.id);
+      event.returnValue = '';
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
     return () => {
       unlockDeal(dealsData.id);
+      window.removeEventListener('beforeunload', handleBeforeUnload);
     };
   }, []);
 
@@ -133,7 +141,7 @@ const DealForm: React.FC<DealFormProps> = ({
         console.error("Error fetching profile data:", error);
         setBrandsData([]);
       }
-    ).finally(() => {});
+    ).finally(() => { });
   };
 
   /* SUBMIT FORM - DEALS API */
@@ -187,7 +195,7 @@ const DealForm: React.FC<DealFormProps> = ({
       <div className="sidepanel-header">
         <p
           className="row-wrap-2 text-brown"
-          // href={{ pathname: "dashboard/partnerships/projects" }}
+        // href={{ pathname: "dashboard/partnerships/projects" }}
         >
           {/* <Arrow className="arrow-left orange-fill" /> */}
           {isEditing ? "Edit Deal" : "Add Deal"}
@@ -211,7 +219,7 @@ const DealForm: React.FC<DealFormProps> = ({
                   required: "Deal name is required",
                   validate: (value) =>
                     value.trim() !== "" || "Deal name is required",
-                })}     
+                })}
                 className="form-input"
                 type="text"
                 defaultValue={dealsData.name}
@@ -233,16 +241,16 @@ const DealForm: React.FC<DealFormProps> = ({
             <div className="form-box">
               <span className="smallcaps">SELECT PARTNER*</span>
               <SearchDropdown
-              // {...register("brand")}
-              data={brandsData}
-              onSelect={(selectedItem) => {
-                setValue("brand", selectedItem.id);
-                trigger("brand");
-              }}
-              handleSearch={handleSearchChange}
-              displayKey="name"
-              placeholder={dealsData.brand_name}
-            />
+                // {...register("brand")}
+                data={brandsData}
+                onSelect={(selectedItem) => {
+                  setValue("brand", selectedItem.id);
+                  trigger("brand");
+                }}
+                handleSearch={handleSearchChange}
+                displayKey="name"
+                placeholder={dealsData.brand_name}
+              />
               {errors.brand && (
                 <span className="error-message">Partner is required</span>
               )}
@@ -326,7 +334,7 @@ const DealForm: React.FC<DealFormProps> = ({
                   required: "Deal name is required",
                   validate: (value) =>
                     value.trim() !== "" || "Deal name is required",
-                })}  
+                })}
                 className="form-input"
                 type="text"
                 placeholder="Enter a name"

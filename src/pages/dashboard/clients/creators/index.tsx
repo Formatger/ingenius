@@ -201,11 +201,11 @@ const CreatorsPage = () => {
   /* CSV EXPORT */
   const handleExportCSV = async (e: any) => {
     const teamId = originalData[0].team;
-      try {
-        exportCSV("creators", teamId, "creators")
-      } catch (error) {
-        console.error("Error exporting file:", error);
-      }
+    try {
+      exportCSV("creators", teamId, "creators")
+    } catch (error) {
+      console.error("Error exporting file:", error);
+    }
   };
 
   /* SIDEPANEL */
@@ -244,9 +244,8 @@ const CreatorsPage = () => {
           <div className="page-container" id="creatorsData">
             {openSidepanel && (
               <CreatorSidepanel
-                open={openSidepanel}
                 setOpenSidepanel={setOpenSidepanel}
-                creatorsData={selectedCreator}
+                creatorId={selectedCreator.id}
                 setSelectedCreator={setSelectedCreator}
                 updateCreatorData={updateCreatorData}
               />

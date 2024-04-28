@@ -85,12 +85,20 @@ const CampaignForm: React.FC<CampaignFormProps> = ({
   const startDate = watch("start_date");
 
   /* LOCK FORM */
-
   useEffect(() => {
     lockCampaign(campaignsData.id);
 
+    const handleBeforeUnload = (event: any) => {
+      event.preventDefault();
+      unlockCampaign(campaignsData.id);
+      event.returnValue = '';
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
     return () => {
       unlockCampaign(campaignsData.id);
+      window.removeEventListener('beforeunload', handleBeforeUnload);
     };
   }, []);
 
@@ -129,7 +137,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({
         console.error("Error fetching profile data:", error);
         setDealsData([]);
       }
-    ).finally(() => {});
+    ).finally(() => { });
   };
 
   /* SUBMIT FORM - POST CAMPAIGNS API CALL */
@@ -182,7 +190,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({
       <div className="sidepanel-header">
         <p
           className="row-wrap-2 text-brown"
-          // href={{ pathname: "dashboard/partnerships/projects" }}
+        // href={{ pathname: "dashboard/partnerships/projects" }}
         >
           {/* <Arrow className="arrow-left orange-fill" /> */}
           {isEditing ? "Edit Campaign" : "Add Campaign"}
@@ -206,7 +214,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({
                   required: "Campaign name is required",
                   validate: (value) =>
                     value.trim() !== "" || "Campaign name is required",
-                })}               
+                })}
                 className="form-input"
                 type="text"
                 placeholder="Enter campaign name"
@@ -241,7 +249,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({
               {errors.deal && (
                 <span className="error-message">Deal is required</span>
               )}            </div>
-                        <div className="form-box">
+            <div className="form-box">
               <span className="smallcaps">CONTRACT VALUE*</span>
               <input
                 {...register("contract_value", {
@@ -329,7 +337,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({
                   required: "Campaign name is required",
                   validate: (value) =>
                     value.trim() !== "" || "Campaign name is required",
-                })}     
+                })}
                 className="form-input"
                 type="text"
                 placeholder="Enter a name"

@@ -57,8 +57,17 @@ const BrandForm: React.FC<BrandFormProps> = ({
   useEffect(() => {
     lockBrand(brandsData.id);
 
+    const handleBeforeUnload = (event: any) => {
+      event.preventDefault();
+      unlockBrand(brandsData.id);
+      event.returnValue = '';
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
     return () => {
       unlockBrand(brandsData.id);
+      window.removeEventListener('beforeunload', handleBeforeUnload);
     };
   }, []);
 
@@ -201,10 +210,10 @@ const BrandForm: React.FC<BrandFormProps> = ({
                 type="text"
                 placeholder="Enter a name"
                 defaultValue={brandsData.name}
-              />        
+              />
               {errors.name && (
                 <span className="error-message">{errors.name.message}</span>
-              )}    
+              )}
             </div>
             <div className="form-box">
               <span className="smallcaps">REPRESENTATIVE*</span>
@@ -213,7 +222,7 @@ const BrandForm: React.FC<BrandFormProps> = ({
                   required: "Representative name is required",
                   validate: (value) =>
                     value.trim() !== "" || "Representative name is required",
-                })}        
+                })}
                 className="form-input"
                 type="text"
                 placeholder="Enter representative name"
@@ -221,7 +230,7 @@ const BrandForm: React.FC<BrandFormProps> = ({
               />
               {errors.representative && (
                 <span className="error-message">{errors.representative.message}</span>
-              )}               
+              )}
             </div>
             <div className="form-box">
               <span className="smallcaps">EMAIL*</span>
@@ -275,7 +284,7 @@ const BrandForm: React.FC<BrandFormProps> = ({
               {errors.niche && (
                 <span className="error-message">{errors.niche.message}</span>
               )}
-              </div>
+            </div>
             <div className="button-group">
               <button
                 className="sec-button stone"
@@ -349,7 +358,7 @@ const BrandForm: React.FC<BrandFormProps> = ({
               />
               {errors.name && (
                 <span className="error-message">{errors.name.message}</span>
-              )}            
+              )}
             </div>
             <div className="form-box">
               <span className="smallcaps">REPRESENTATIVE*</span>
@@ -358,14 +367,14 @@ const BrandForm: React.FC<BrandFormProps> = ({
                   required: "Representative name is required",
                   validate: (value) =>
                     value.trim() !== "" || "Representative is required",
-                })}                
+                })}
                 className="form-input"
                 type="text"
                 placeholder="Enter representative name"
               />
               {errors.representative && (
                 <span className="error-message">{errors.representative.message}</span>
-              )}  
+              )}
             </div>
             <div className="form-box">
               <span className="smallcaps">EMAIL*</span>
@@ -413,11 +422,11 @@ const BrandForm: React.FC<BrandFormProps> = ({
                 type="text"
                 placeholder="Enter brand niche"
               />
-            
+
               {errors.niche && (
                 <span className="error-message">{errors.niche.message}</span>
               )}
-              </div>
+            </div>
             <button className="sec-button linen" type="submit">
               <p>SAVE</p>
             </button>

@@ -242,11 +242,11 @@ const CampaignsPage = () => {
   /* CSV EXPORT */
   const handleExportCSV = async (e: any) => {
     const teamId = originalData[0].team;
-      try {
-        exportCSV("campaigns", teamId, "campaigns")
-      } catch (error) {
-        console.error("Error exporting file:", error);
-      }
+    try {
+      exportCSV("campaigns", teamId, "campaigns")
+    } catch (error) {
+      console.error("Error exporting file:", error);
+    }
   };
 
   /* SIDEPANEL LOGIC */
@@ -280,8 +280,7 @@ const CampaignsPage = () => {
           <div className="page-container" id="CampaignData">
             {openSidepanel && (
               <CampaignSidepanel
-                campaignsData={selectedCampaign}
-                open={openSidepanel}
+                campaignId={selectedCampaign.id}
                 setSelectedCampaign={setSelectedCampaign}
                 setOpenSidepanel={setOpenSidepanel}
                 updateCampaignData={updateCampaignData}
@@ -295,8 +294,8 @@ const CampaignsPage = () => {
                 closeEdit={handleCloseFormSidepanel}
                 handleCloseFormSidepanel={handleCloseFormSidepanel}
                 updateCampaignData={updateCampaignData}
-                // brandsData={brandsData}
-                // dealsData={dealsData}
+              // brandsData={brandsData}
+              // dealsData={dealsData}
               />
             )}
             <div className="filtersContainer">

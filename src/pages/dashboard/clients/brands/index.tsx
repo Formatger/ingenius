@@ -236,9 +236,8 @@ const BrandsPage = () => {
           <div className="page-container" id="brandData">
             {openSidepanel && (
               <BrandSidepanel
-                open={openSidepanel}
                 setOpenSidepanel={setOpenSidepanel}
-                brandsData={selectedBrand}
+                brandId={selectedBrand.id}
                 setSelectedBrand={setSelectedBrand}
                 updateBrandData={updateBrandData}
               />

@@ -909,6 +909,33 @@ export const postUserProfile = async (
 /******************************  GET CALLS  ***************************/
 ////////////////////////////////////////////////////////////////////////
 
+// GET DATA BY ID
+export const getDataById = async (
+  endpoint: string,
+  id: any,
+  callback: (data: any) => void,
+  errorCallback?: (error: any) => void
+) => {
+  const url = DEPLOYED_API_BASE_URL + `${endpoint}/${id}/`;
+
+  try {
+    await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.access_token}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => callback(data))
+      .catch((error) => {
+        errorCallback && errorCallback(error);
+      });
+  } catch (error) {
+    errorCallback && errorCallback(error);
+  }
+};
+
 // GET STATS
 
 export const getStats = async (

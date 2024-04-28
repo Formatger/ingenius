@@ -78,12 +78,20 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
   const endDate = watch("deadline");
 
   /* LOCK FORM */
-
   useEffect(() => {
     lockProject(projectsData.id);
 
+    const handleBeforeUnload = (event: any) => {
+      event.preventDefault();
+      unlockProject(projectsData.id);
+      event.returnValue = '';
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
     return () => {
       unlockProject(projectsData.id);
+      window.removeEventListener('beforeunload', handleBeforeUnload);
     };
   }, []);
 
@@ -137,7 +145,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
         console.error("Error fetching profile data:", error);
         setCreatorsData([]);
       }
-    ).finally(() => {});
+    ).finally(() => { });
   };
 
   /* GET CAMPAIGNS API CALL */
@@ -155,7 +163,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
         console.error("Error fetching profile data:", error);
         setCampaignsData([]);
       }
-    ).finally(() => {});
+    ).finally(() => { });
   };
 
   /* SUBMIT FORM - POST PROJECTS API CALL  */
@@ -208,7 +216,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
       <div className="sidepanel-header">
         <p
           className="row-wrap-2 text-brown"
-          // href={{ pathname: "dashboard/partnerships/projects" }}
+        // href={{ pathname: "dashboard/partnerships/projects" }}
         >
           {/* <Arrow className="arrow-left orange-fill" /> */}
           {isEditing ? "Edit Project" : "Add Project"}
@@ -237,7 +245,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
                 type="text"
                 placeholder="Enter project name"
                 defaultValue={projectsData.name}
-                // onChange={(e) => setValue("name", e.target.value)}
+              // onChange={(e) => setValue("name", e.target.value)}
               />
               {errors.name && (
                 <span className="error-message">{errors.name.message}</span>
@@ -250,7 +258,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
                 className="form-textarea"
                 placeholder="Add a description"
                 defaultValue={projectsData.description}
-                // onChange={(e) => setValue("description", e.target.value)}
+              // onChange={(e) => setValue("description", e.target.value)}
               />
             </div>
             <div className="form-box">
@@ -416,7 +424,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
                 placeholder="Select Creator"
                 handleSearch={handleSearchChange}
                 displayKey="name"
-                
+
               />
               {errors.creator && (
                 <span className="error-message">Creator is required</span>
@@ -559,21 +567,21 @@ export default ProjectForm;
               {errors.project_stage && (<span className="error-message">Please select a project stage</span>)}
             </div> */
 }
-  // const handleSelectStage = (event: React.ChangeEvent<HTMLSelectElement>) => {
-  //   const selectedId = parseInt(event.target.value);
-  //   setSelectedStage(selectedId);
-  //   setValue("project_stage", selectedId);
-  //   console.log("Selected Project Stage ID:", selectedId);
-  //   trigger("project_stage");
-  // };
+// const handleSelectStage = (event: React.ChangeEvent<HTMLSelectElement>) => {
+//   const selectedId = parseInt(event.target.value);
+//   setSelectedStage(selectedId);
+//   setValue("project_stage", selectedId);
+//   console.log("Selected Project Stage ID:", selectedId);
+//   trigger("project_stage");
+// };
 
-  // const handleInvoiceChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-  //   const isPaid = event.target.value === "true";
-  //   setInvoicePaid(isPaid);
-  //   setValue("invoice_paid", isPaid);
-  // };
+// const handleInvoiceChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+//   const isPaid = event.target.value === "true";
+//   setInvoicePaid(isPaid);
+//   setValue("invoice_paid", isPaid);
+// };
 
-              {/* <div className="form-box">
+{/* <div className="form-box">
               <span className="smallcaps">INVOICE STATUS*</span>
               <div className="select-wrap">
                 <select

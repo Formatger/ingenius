@@ -52,10 +52,10 @@ export default function Login() {
   };
 
 
-  function handleGoogleLogin() {
+  /* function handleGoogleLogin() {
     // Redirect to the backend endpoint that starts the OAuth flow
     window.location.href = "https://ingenius-api-f948e80544f9.herokuapp.com/google/login/";
-  };
+  }; */
 
 
   return (
@@ -88,7 +88,7 @@ export default function Login() {
             {loading ? <div className='spinner-white' /> : 'Login'}
           </button>
         </form>
-        <button className="gsi-material-button" onClick={handleGoogleLogin}>
+        {/* <button className="gsi-material-button" onClick={handleGoogleLogin}>
           <div className="gsi-material-button-state"></div>
           <div className="gsi-material-button-content-wrapper">
             <div className="gsi-material-button-icon">
@@ -105,7 +105,7 @@ export default function Login() {
               display: "none"
             }}>Sign in with Google</span>
           </div>
-        </button>
+        </button> */}
       </aside>
     </div>
   );
