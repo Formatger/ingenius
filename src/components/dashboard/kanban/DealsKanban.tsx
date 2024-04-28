@@ -57,9 +57,8 @@ const DealsKanban = ({
 
     const coloredStages = stages.map((stage) => {
       if (!colorsMap[stage.stageID]) {
-        colorsMap[stage.stageID] = `color-${
-          colors[Math.floor(Math.random() * colors.length)]
-        }`;
+        colorsMap[stage.stageID] = `color-${colors[Math.floor(Math.random() * colors.length)]
+          }`;
       }
       return { ...stage, color: colorsMap[stage.stageID] };
     });
@@ -141,7 +140,7 @@ const DealsKanban = ({
             await putNewOrderDeal(
               stage.stageID,
               { name: stage.stageName, order: stage.stageIndex },
-              () => {},
+              () => { },
               (error) => console.error("Failed to update stage order:", error)
             );
           }
@@ -176,13 +175,13 @@ const DealsKanban = ({
           putNewOrderDeal(
             oldColumn.stageID,
             { name: oldColumn.stageName, order: newColumn.stageIndex },
-            () => {},
+            () => { },
             undefined
           ),
           putNewOrderDeal(
             newColumn.stageID,
             { name: newColumn.stageName, order: oldColumn.stageIndex },
-            () => {},
+            () => { },
             undefined
           ),
         ]);
@@ -229,48 +228,53 @@ const DealsKanban = ({
     try {
       const deal = JSON.parse(e.dataTransfer.getData("deals"));
       if (deal.deal_stage !== stageID) {
-        putDeal(
-          deal.id,
-          { ...deal, deal_stage: stageID },
-          () => {
-            setStages((currentStages) => {
-              return currentStages.map((stage) => {
-                if (stage.stageID === deal.deal_stage) {
-                  return {
-                    ...stage,
-                    deals: stage.deals.filter((p: any) => p.id !== deal.id),
-                  };
-                }
-                if (stage.stageID === stageID) {
-                  const existingDealIndex = stage.deals.findIndex(
-                    (p: any) => p.id === deal.id
-                  );
-                  if (existingDealIndex === -1) {
+        if (deal.is_locked) {
+          setShowLockModal(true);
+          return;
+        } else {
+          putDeal(
+            deal.id,
+            { ...deal, deal_stage: stageID },
+            () => {
+              setStages((currentStages) => {
+                return currentStages.map((stage) => {
+                  if (stage.stageID === deal.deal_stage) {
                     return {
                       ...stage,
-                      deals: [...stage.deals, { ...deal, deal_stage: stageID }],
-                    };
-                  } else {
-                    const updatedDeal = [...stage.deals];
-                    updatedDeal.splice(existingDealIndex, 1);
-                    updatedDeal.push({
-                      ...deal,
-                      deal_stage: stageID,
-                    });
-                    return {
-                      ...stage,
-                      deals: updatedDeal,
+                      deals: stage.deals.filter((p: any) => p.id !== deal.id),
                     };
                   }
-                }
-                return stage;
+                  if (stage.stageID === stageID) {
+                    const existingDealIndex = stage.deals.findIndex(
+                      (p: any) => p.id === deal.id
+                    );
+                    if (existingDealIndex === -1) {
+                      return {
+                        ...stage,
+                        deals: [...stage.deals, { ...deal, deal_stage: stageID }],
+                      };
+                    } else {
+                      const updatedDeal = [...stage.deals];
+                      updatedDeal.splice(existingDealIndex, 1);
+                      updatedDeal.push({
+                        ...deal,
+                        deal_stage: stageID,
+                      });
+                      return {
+                        ...stage,
+                        deals: updatedDeal,
+                      };
+                    }
+                  }
+                  return stage;
+                });
               });
-            });
-          },
-          (error) => {
-            console.error("Error al actualizar el proyecto:", error);
-          }
-        );
+            },
+            (error) => {
+              console.error("Error al actualizar el proyecto:", error);
+            }
+          );
+        }
       }
     } catch (error) {
       console.error("Error al procesar la solicitud PUT:", error);
@@ -287,7 +291,7 @@ const DealsKanban = ({
           isOpen={showLockModal}
           onClose={() => setShowLockModal(false)}
           title="Stages are locked"
-          message="A deal is currently being edited by another user. Please try again later."
+          message="Deal currently being edited by another user. Please try again later."
         />
       )}
       {stages
@@ -295,11 +299,10 @@ const DealsKanban = ({
         .map((dealCol) => {
           return (
             <div
-              className={`kanban-column ${
-                draggedOverStageIndex === dealCol.stageID
-                  ? "drag-over-column"
-                  : ""
-              }`}
+              className={`kanban-column ${draggedOverStageIndex === dealCol.stageID
+                ? "drag-over-column"
+                : ""
+                }`}
               onDrop={(e) => handleDrop(e, dealCol.stageID)}
               onDragOver={(e) => handleDragOver(e, dealCol.stageID)}
               onDragLeave={handleDragLeave}

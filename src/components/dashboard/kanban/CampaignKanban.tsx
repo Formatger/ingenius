@@ -53,9 +53,8 @@ const CampaignKanban = ({
 
     const coloredStages = stages.map((stage) => {
       if (!colorsMap[stage.stageID]) {
-        colorsMap[stage.stageID] = `color-${
-          colors[Math.floor(Math.random() * colors.length)]
-        }`;
+        colorsMap[stage.stageID] = `color-${colors[Math.floor(Math.random() * colors.length)]
+          }`;
       }
       return { ...stage, color: colorsMap[stage.stageID] };
     });
@@ -138,7 +137,7 @@ const CampaignKanban = ({
             await putNewOrderCampaign(
               stage.stageID,
               { name: stage.stageName, order: stage.stageIndex },
-              () => {},
+              () => { },
               (error) => console.error("Failed to update stage order:", error)
             );
           }
@@ -173,13 +172,13 @@ const CampaignKanban = ({
           putNewOrderCampaign(
             oldColumn.stageID,
             { name: oldColumn.stageName, order: newColumn.stageIndex },
-            () => {},
+            () => { },
             undefined
           ),
           putNewOrderCampaign(
             newColumn.stageID,
             { name: newColumn.stageName, order: oldColumn.stageIndex },
-            () => {},
+            () => { },
             undefined
           ),
         ]);
@@ -229,53 +228,58 @@ const CampaignKanban = ({
     try {
       const campaign = JSON.parse(e.dataTransfer.getData("campaigns"));
       if (campaign.campaign_stage !== stageID) {
-        putCampaign(
-          campaign.id,
-          { ...campaign, campaign_stage: stageID },
-          () => {
-            setStages((currentStages) => {
-              return currentStages.map((stage) => {
-                if (stage.stageID === campaign.campaign_stage) {
-                  return {
-                    ...stage,
-                    campaigns: stage.campaigns.filter(
-                      (p: any) => p.id !== campaign.id
-                    ),
-                  };
-                }
-                if (stage.stageID === stageID) {
-                  const existingProjectIndex = stage.campaigns.findIndex(
-                    (p: any) => p.id === campaign.id
-                  );
-                  if (existingProjectIndex === -1) {
+        if (campaign.is_locked) {
+          setShowLockModal(true);
+          return;
+        } else {
+          putCampaign(
+            campaign.id,
+            { ...campaign, campaign_stage: stageID },
+            () => {
+              setStages((currentStages) => {
+                return currentStages.map((stage) => {
+                  if (stage.stageID === campaign.campaign_stage) {
                     return {
                       ...stage,
-                      campaigns: [
-                        ...stage.campaigns,
-                        { ...campaign, campaign_stage: stageID },
-                      ],
-                    };
-                  } else {
-                    const updatedCampaign = [...stage.campaigns];
-                    updatedCampaign.splice(existingProjectIndex, 1);
-                    updatedCampaign.push({
-                      ...campaign,
-                      campaign_stage: stageID,
-                    });
-                    return {
-                      ...stage,
-                      campaigns: updatedCampaign,
+                      campaigns: stage.campaigns.filter(
+                        (p: any) => p.id !== campaign.id
+                      ),
                     };
                   }
-                }
-                return stage;
+                  if (stage.stageID === stageID) {
+                    const existingProjectIndex = stage.campaigns.findIndex(
+                      (p: any) => p.id === campaign.id
+                    );
+                    if (existingProjectIndex === -1) {
+                      return {
+                        ...stage,
+                        campaigns: [
+                          ...stage.campaigns,
+                          { ...campaign, campaign_stage: stageID },
+                        ],
+                      };
+                    } else {
+                      const updatedCampaign = [...stage.campaigns];
+                      updatedCampaign.splice(existingProjectIndex, 1);
+                      updatedCampaign.push({
+                        ...campaign,
+                        campaign_stage: stageID,
+                      });
+                      return {
+                        ...stage,
+                        campaigns: updatedCampaign,
+                      };
+                    }
+                  }
+                  return stage;
+                });
               });
-            });
-          },
-          (error) => {
-            console.error("Error al actualizar el proyecto:", error);
-          }
-        );
+            },
+            (error) => {
+              console.error("Error al actualizar el proyecto:", error);
+            }
+          );
+        }
       }
     } catch (error) {
       console.error("Error al procesar la solicitud PUT:", error);
@@ -292,7 +296,7 @@ const CampaignKanban = ({
           isOpen={showLockModal}
           onClose={() => setShowLockModal(false)}
           title="Stages are locked"
-          message="A campaign is currently being edited by another user. Please try again later."
+          message="Campaign currently being edited by another user. Please try again later."
         />
       )}
       {stages
@@ -300,11 +304,10 @@ const CampaignKanban = ({
         .map((campaignCol, stagesIndex) => {
           return (
             <div
-              className={`kanban-column ${
-                draggedOverStageIndex === campaignCol.stageID
-                  ? "drag-over-column"
-                  : ""
-              }`}
+              className={`kanban-column ${draggedOverStageIndex === campaignCol.stageID
+                ? "drag-over-column"
+                : ""
+                }`}
               onDrop={(e) => handleDrop(e, campaignCol.stageID)}
               onDragOver={(e) => handleDragOver(e, campaignCol.stageID)}
               onDragLeave={handleDragLeave}
