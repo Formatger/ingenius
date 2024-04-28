@@ -23,25 +23,40 @@ import { refreshToken } from "@/utils/httpCalls";
 
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!localStorage.access_token || !localStorage.refresh_token) {
-      router.push("/auth");
-    } else {
-      if (localStorage.refresh_token) {
-        refreshToken((error) => {
-          console.error("Error:", error);
-        });
-        setInterval(() => {
-          refreshToken((error) => {
+    const refreshTokenOnLoad = async () => {
+      if (!localStorage.access_token || !localStorage.refresh_token) {
+        router.push("/auth");
+      } else {
+        if (localStorage.refresh_token) {
+          await refreshToken((error) => {
             console.error("Error:", error);
           });
-        }, 1000 * 30);
-      } else {
-        router.push("/auth");
+          setInterval(async () => {
+            await refreshToken((error) => {
+              console.error("Error:", error);
+            });
+          }, 1000 * 30);
+        } else {
+          router.push("/auth");
+        }
       }
-    }
+      setLoading(false);
+    };
+
+    refreshTokenOnLoad();
   }, []);
+
+  if (loading) {
+    return (
+      <div className="spinner-container">
+        <div className="spinner" />
+      </div>
+    )
+  }
+
 
   return (
     <AppProvider>

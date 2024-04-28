@@ -55,9 +55,8 @@ const ProjectsKanban = ({
 
     const coloredStages = stages.map((stage) => {
       if (!colorsMap[stage.stageID]) {
-        colorsMap[stage.stageID] = `color-${
-          colors[Math.floor(Math.random() * colors.length)]
-        }`;
+        colorsMap[stage.stageID] = `color-${colors[Math.floor(Math.random() * colors.length)]
+          }`;
       }
       return { ...stage, color: colorsMap[stage.stageID] };
     });
@@ -134,7 +133,7 @@ const ProjectsKanban = ({
             await putNewOrderProject(
               stage.stageID,
               { name: stage.stageName, order: stage.stageIndex },
-              () => {},
+              () => { },
               (error) => console.error("Failed to update stage order:", error)
             );
           }
@@ -171,13 +170,13 @@ const ProjectsKanban = ({
           putNewOrderProject(
             oldColumn.stageID,
             { name: oldColumn.stageName, order: newColumn.stageIndex },
-            () => {},
+            () => { },
             undefined
           ),
           putNewOrderProject(
             newColumn.stageID,
             { name: newColumn.stageName, order: oldColumn.stageIndex },
-            () => {},
+            () => { },
             undefined
           ),
         ]);
@@ -229,59 +228,64 @@ const ProjectsKanban = ({
 
       // Verificar si project_stage es diferente a stageID
       if (project.project_stage !== stageID) {
-        putProject(
-          project.id,
-          { ...project, project_stage: stageID },
-          () => {
-            // Actualizar el estado para reflejar el cambio sin recargar
-            setStages((currentStages) => {
-              return currentStages.map((stage) => {
-                // Si la columna es la original, eliminar el proyecto
-                if (stage.stageID === project.project_stage) {
-                  return {
-                    ...stage,
-                    projects: stage.projects.filter(
-                      (p: any) => p.id !== project.id
-                    ),
-                  };
-                }
-                // Si la columna es la de destino, añadir el proyecto
-                if (stage.stageID === stageID) {
-                  // Verificar si el proyecto ya existe en la columna de destino
-                  const existingProjectIndex = stage.projects.findIndex(
-                    (p: any) => p.id === project.id
-                  );
-                  if (existingProjectIndex === -1) {
+        if (project.is_locked) {
+          setShowLockModal(true);
+          return;
+        } else {
+          putProject(
+            project.id,
+            { ...project, project_stage: stageID },
+            () => {
+              // Actualizar el estado para reflejar el cambio sin recargar
+              setStages((currentStages) => {
+                return currentStages.map((stage) => {
+                  // Si la columna es la original, eliminar el proyecto
+                  if (stage.stageID === project.project_stage) {
                     return {
                       ...stage,
-                      projects: [
-                        ...stage.projects,
-                        { ...project, project_stage: stageID },
-                      ],
-                    };
-                  } else {
-                    // Si el proyecto ya existe, solo actualizar su posición
-                    const updatedProjects = [...stage.projects];
-                    updatedProjects.splice(existingProjectIndex, 1);
-                    updatedProjects.push({
-                      ...project,
-                      project_stage: stageID,
-                    });
-                    return {
-                      ...stage,
-                      projects: updatedProjects,
+                      projects: stage.projects.filter(
+                        (p: any) => p.id !== project.id
+                      ),
                     };
                   }
-                }
-                // Para las columnas que no están involucradas, se retornan sin cambios
-                return stage;
+                  // Si la columna es la de destino, añadir el proyecto
+                  if (stage.stageID === stageID) {
+                    // Verificar si el proyecto ya existe en la columna de destino
+                    const existingProjectIndex = stage.projects.findIndex(
+                      (p: any) => p.id === project.id
+                    );
+                    if (existingProjectIndex === -1) {
+                      return {
+                        ...stage,
+                        projects: [
+                          ...stage.projects,
+                          { ...project, project_stage: stageID },
+                        ],
+                      };
+                    } else {
+                      // Si el proyecto ya existe, solo actualizar su posición
+                      const updatedProjects = [...stage.projects];
+                      updatedProjects.splice(existingProjectIndex, 1);
+                      updatedProjects.push({
+                        ...project,
+                        project_stage: stageID,
+                      });
+                      return {
+                        ...stage,
+                        projects: updatedProjects,
+                      };
+                    }
+                  }
+                  // Para las columnas que no están involucradas, se retornan sin cambios
+                  return stage;
+                });
               });
-            });
-          },
-          (error) => {
-            console.error("Error al actualizar el proyecto:", error);
-          }
-        );
+            },
+            (error) => {
+              console.error("Error al actualizar el proyecto:", error);
+            }
+          );
+        }
       }
     } catch (error) {
       console.error("Error al procesar la solicitud PUT:", error);
@@ -300,18 +304,17 @@ const ProjectsKanban = ({
           isOpen={showLockModal}
           onClose={() => setShowLockModal(false)}
           title="Stages are locked"
-          message="A project is currently being edited by another user. Please try again later."
+          message="Project currently being edited by another user. Please try again later."
         />
       )}
       {stages
         .sort((a, b) => a.stageIndex - b.stageIndex)
         .map((projectCol, stagesIndex) => (
           <div
-            className={`kanban-column ${
-              draggedOverStageIndex === projectCol.stageID
-                ? "drag-over-column"
-                : ""
-            }`}
+            className={`kanban-column ${draggedOverStageIndex === projectCol.stageID
+              ? "drag-over-column"
+              : ""
+              }`}
             onDrop={(e) => {
               handleDrop(e, projectCol.stageID);
             }}
