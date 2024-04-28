@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { postProjects, postTicket } from "@/utils/httpCalls";
+import { postProjectFiles, postProjects, postTicket } from "@/utils/httpCalls";
 import { useForm } from "react-hook-form";
 import Image from "next/image";
 import Link from "@/components/assets/icons/link.svg";
@@ -8,20 +8,20 @@ interface UploadFileModalProps {
   isOpen: boolean;
   onClose: () => void;
   title?: string;
-  // onConfirm: () => void;
   message: string;
   button: string;
 }
 
 interface FormData {
-  subject: string;
-  message: string;
-  screenshots: FileList;
-  email: string;
+  invoice_file?: File;
+  contract_file?: File;
 }
 
 const UploadFileModal: React.FC<UploadFileModalProps> = ({ 
   isOpen, onClose, title, message, button }) => {
+
+    if (!isOpen) return null;
+
   const {
     register,
     handleSubmit,
@@ -31,46 +31,44 @@ const UploadFileModal: React.FC<UploadFileModalProps> = ({
   } = useForm<FormData>();
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 
-  const uploadFile = async (data: FormData) => {
-    const formData = new FormData();
-    formData.append("subject", data.subject);
-    formData.append("message", data.message);
-    formData.append("email", data.email);
-    // Append each file to the 'screenshots' field
-    for (const file of selectedFiles) {
-      formData.append("screenshots", file);
-    }
-
-    try {
-      await postProjects(
-        formData,
-        (response) => {
-          reset();
-          setSelectedFiles([]);
-        },
-        (error) => {
-          console.error("Error creating ticket:", error);
-        }
-      );
-    } catch (error) {
-      console.error("ERROR", error);
-    }
-  };
-
   const handleFiles = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
-    if (files) {
-      const filesArray = Array.from(files);
-      setSelectedFiles((prevFiles) => [...prevFiles, ...filesArray]);
-
-      const fileList = filesArray.reduce((fileList, file) => {
-        fileList.items.add(file);
-        return fileList;
-      }, new DataTransfer());
-
-      setValue("screenshots", fileList.files);
+    if (files && files.length > 0) {
+        setSelectedFiles(Array.from(files)); 
+        setValue("invoice_file", files[0]); 
     }
-  };
+};
+
+const onSubmit = async (data: FormData) => {
+  const formData = new FormData();
+
+  if (selectedFiles.length > 0) {
+    formData.append('invoice_file', selectedFiles[0]);
+  }
+
+  // Object.entries(data).forEach(([key, value]) => {
+  //   if (value !== undefined && value !== null && key !== 'invoice_file') {
+  //       formData.append(key, value);
+  //   }
+  // });
+
+  try {
+    await postProjectFiles(
+      formData,
+      (response) => {
+        reset();
+        setSelectedFiles([]);
+        onClose();
+        // updateProjectData();
+      },
+      (error) => {
+        console.error("Error uploading file", error);
+      }
+    );
+  } catch (error) {
+    console.error("ERROR", error);
+  }
+};
 
   return (
     <div className="modal-overlay" onClick={onClose}>
@@ -83,16 +81,15 @@ const UploadFileModal: React.FC<UploadFileModalProps> = ({
         )}
         <div className="modal-content">
           {message}
-          <form className="sidepanel-form" onSubmit={handleSubmit(uploadFile)}>
+          <form className="sidepanel-form" onSubmit={handleSubmit(onSubmit)}>
             <div className="form-box">
               <span className="smallcaps">FILES</span>
               <input
                 id="fileInput"
                 style={{ display: "none" }}
                 type="file"
-                accept="image/jpeg, image/png, image/gif, image/jpg"
+                accept="application/pdf, image/jpg, image/jpeg"
                 onChange={handleFiles}
-                
               />
               <div className="upload-files-box">
                 <label htmlFor="fileInput" className="custom-file-upload">
@@ -107,7 +104,7 @@ const UploadFileModal: React.FC<UploadFileModalProps> = ({
                   </ul>
                 )}
               </div>
-              {selectedFiles.length > 0 && (
+              {/* {selectedFiles.length > 0 && (
                 <ul>
                   {selectedFiles.map((file, index) => (
                     <li className="ticket-files" key={index}>
@@ -116,7 +113,7 @@ const UploadFileModal: React.FC<UploadFileModalProps> = ({
                     </li>
                   ))}
                 </ul>
-              )}
+              )} */}
             </div>
             <div className="column-center">
               <button className="sec-button red" type="submit">

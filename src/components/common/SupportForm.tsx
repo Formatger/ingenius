@@ -25,23 +25,13 @@ const SupportForm: React.FC<SupportFormProps> = ({ title }) => {
   } = useForm<FormData>();
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 
-  // const handleFiles = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   const files = event.target.files;
-  //   if (files) {
-  //     const filesArray = Array.from(files);
-  //     setSelectedFiles(filesArray);  // Directly set the new array
-  
-  //     setValue("screenshots", files);  // Directly use the FileList from the input
-  //   }
-  // };
-  
   const handleFiles = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (files && files.length > 0) {
         setSelectedFiles(Array.from(files)); 
         setValue("screenshot", files[0]); 
     }
-};
+  };
 
   const onSubmit = async (data: FormData) => {
     const formData = new FormData();
@@ -140,7 +130,7 @@ const SupportForm: React.FC<SupportFormProps> = ({ title }) => {
                   </ul>
                 )}
               </div>
-              {selectedFiles.length > 0 && (
+              {/* {selectedFiles.length > 0 && (
                 <ul>
                   {selectedFiles.map((file, index) => (
                     <li className="ticket-files" key={index}>
@@ -149,7 +139,7 @@ const SupportForm: React.FC<SupportFormProps> = ({ title }) => {
                     </li>
                   ))}
                 </ul>
-              )}
+              )} */}
             </div>
             {/* <div className="form-box">
               <span className="smallcaps">FILES*</span>

@@ -147,15 +147,15 @@ const ProjectInvoice = ({ projectsData }: ProjectInvoiceProps) => {
   const [isFileModalOpen, setFileModalOpen] = useState(false);
   const [editData, setEditData] = useState(false);
 
-    /* LOCK FORM */
+    // /* LOCK FORM */
 
-    useEffect(() => {
-      lockProject(projectsData.id);
+    // useEffect(() => {
+    //   lockProject(projectsData.id);
   
-      return () => {
-        unlockProject(projectsData.id);
-      };
-    }, []);
+    //   return () => {
+    //     unlockProject(projectsData.id);
+    //   };
+    // }, []);
 
 
   const handleFileUpload = async (event: any) => {
@@ -274,7 +274,7 @@ const ProjectInvoice = ({ projectsData }: ProjectInvoiceProps) => {
               isOpen={isFileModalOpen}
               onClose={() => setFileModalOpen(false)}
               title="Upload Invoice"
-              message="Upload an Invoice File"
+              message="Upload an Invoice File in PDF format."
               button="Upload File" 
            />
             <button

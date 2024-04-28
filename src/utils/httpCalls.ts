@@ -668,6 +668,39 @@ export const postProjects = async (
   }
 };
 
+/* POST PROJECT FILES */
+
+export const postProjectFiles = async (
+  projectId: string,
+  requestData: FormData, // Ensure this is a FormData object
+  callback: (data: any) => void,
+  errorCallback?: (error: any) => void
+) => {
+  const url = DEPLOYED_API_BASE_URL + `projects/${projectId}/`;
+
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        // 'Content-Type': 'multipart/form-data' is not set because the browser will automatically set it
+        // along with the boundary parameter correctly when FormData is used.
+        'Authorization': `Bearer ${localStorage.access_token}`,
+      },
+      body: requestData, // Directly use FormData here
+    });
+
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+
+    const data = await response.json();
+    callback(data);
+  } catch (error) {
+    errorCallback && errorCallback(error);
+  }
+};
+
+
 /* POST DEAL-STAGE */
 
 export const postDealStage = async (
