@@ -68,16 +68,16 @@ const ProjectDetails = ({ projectsData }: ProjectDetailsProps) => {
       <div className="head-card mb-1">
         <div className="profile-info">
           <div className="profile-info-image">
-             <Image
-                src={projectsData?.creator_profile_picture}
-                alt="Creator"
-                width={160}
-                height={160}
-                layout="fixed"
-                className="profile-image"
-                loading="lazy"
-                quality={75}
-              /> 
+            <Image
+              src={projectsData?.creator_profile_picture}
+              alt="Creator"
+              width={160}
+              height={160}
+              layout="fixed"
+              className="profile-image"
+              loading="lazy"
+              quality={75}
+            />
             {/* <img
               src={projectsData?.creator_profile_picture}
               alt="Creator"
@@ -157,28 +157,31 @@ const ProjectDetails = ({ projectsData }: ProjectDetailsProps) => {
         <div className="sidepanel-hidden">
           <p className="smallcaps">MANAGE CREATOR</p>
           <div className="button-group">
-            <button className="sec-button linen" onClick={undefined}>
+            <button
+              className="sec-button linen"
+              onClick={() => window.location.href = `mailto:${projectsData?.creator_email}?subject=Subject&body=Body`}
+            >
               <Image src={Message} alt="Icon" width={15} height={15} />
               <p>Message</p>
             </button>
 
             <Link
-                  href={{
-                    pathname: '/dashboard/clients/creators/profile',
-                    query: { creatorId: creatorsData.id }
-                  }}
-                  passHref
-                >
-            <button className="sec-button linen" onClick={undefined}>
-              <Image
-                className=""
-                src={Export}
-                alt="Icon"
-                width={14}
-                height={14}
-              />
-              <p>View Profile</p>
-            </button>
+              href={{
+                pathname: '/dashboard/clients/creators/profile',
+                query: { creatorId: creatorsData.id }
+              }}
+              passHref
+            >
+              <button className="sec-button linen" onClick={undefined}>
+                <Image
+                  className=""
+                  src={Export}
+                  alt="Icon"
+                  width={14}
+                  height={14}
+                />
+                <p>View Profile</p>
+              </button>
             </Link>
           </div>
         </div>

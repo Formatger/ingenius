@@ -26,16 +26,16 @@ const DealDetails = ({ dealsData }: DealDetailsProps) => {
       <div className="head-card mb-1" >
         <div className="profile-info">
           <div className="profile-info-image">
-              <Image
-                src={dealsData?.brand_image_url}
-                alt="Creator"
-                width={160}
-                height={160}
-                layout="fixed"
-                className="profile-image"
-                loading="lazy"
-                quality={75}
-              /> 
+            <Image
+              src={dealsData?.brand_image_url}
+              alt="Creator"
+              width={160}
+              height={160}
+              layout="fixed"
+              className="profile-image"
+              loading="lazy"
+              quality={75}
+            />
             {/* <img src={dealsData?.brand_image_url} alt="Brand" className="profile-image" loading="lazy" /> */}
           </div>
         </div>
@@ -93,7 +93,10 @@ const DealDetails = ({ dealsData }: DealDetailsProps) => {
         <div className="sidepanel-hidden">
           <p className="smallcaps">MANAGE BRAND</p>
           <div className="button-group">
-            <button className="sec-button linen" onClick={undefined}>
+            <button
+              className="sec-button linen"
+              onClick={() => window.location.href = `mailto:${dealsData?.brand_email}?subject=Subject&body=Body`}
+            >
               <Image src={Message} alt="Icon" width={15} height={15} />
               <p>Message</p>
             </button>
@@ -167,7 +170,7 @@ const DealInvoice = ({ dealsData }: DealInvoiceProps) => {
                 setFileModalOpenContract(true);
               }}
             >
-             <Image src={Link} alt="Icon" width={15} height={15} />
+              <Image src={Link} alt="Icon" width={15} height={15} />
               <p>Upload Contract</p>
             </button>
             <UploadFileModal
