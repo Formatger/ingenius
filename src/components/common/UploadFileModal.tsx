@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { postProjectFiles, postProjects, postTicket } from "@/utils/httpCalls";
+import { uploadFiles, postProjects, postTicket } from "@/utils/httpCalls";
 import { useForm } from "react-hook-form";
 import Image from "next/image";
 import Link from "@/components/assets/icons/link.svg";
 
 interface UploadFileModalProps {
+  endpoint: string;
+  id: string;
   isOpen: boolean;
   onClose: () => void;
   title?: string;
   message: string;
   button: string;
+  type: string;
 }
 
 interface FormData {
@@ -17,10 +20,11 @@ interface FormData {
   contract_file?: File;
 }
 
-const UploadFileModal: React.FC<UploadFileModalProps> = ({ 
-  isOpen, onClose, title, message, button }) => {
+const UploadFileModal: React.FC<UploadFileModalProps> = ({
+  isOpen, onClose, title, message, button, endpoint, id, type
+}) => {
 
-    if (!isOpen) return null;
+  if (!isOpen) return null;
 
   const {
     register,
@@ -34,41 +38,51 @@ const UploadFileModal: React.FC<UploadFileModalProps> = ({
   const handleFiles = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (files && files.length > 0) {
-        setSelectedFiles(Array.from(files)); 
-        setValue("invoice_file", files[0]); 
-    }
-};
-
-const onSubmit = async (data: FormData) => {
-  const formData = new FormData();
-
-  if (selectedFiles.length > 0) {
-    formData.append('invoice_file', selectedFiles[0]);
-  }
-
-  // Object.entries(data).forEach(([key, value]) => {
-  //   if (value !== undefined && value !== null && key !== 'invoice_file') {
-  //       formData.append(key, value);
-  //   }
-  // });
-
-  try {
-    await postProjectFiles(
-      formData,
-      (response) => {
-        reset();
-        setSelectedFiles([]);
-        onClose();
-        // updateProjectData();
-      },
-      (error) => {
-        console.error("Error uploading file", error);
+      setSelectedFiles(Array.from(files));
+      if (type === 'invoice') {
+        setValue('invoice_file', files[0]);
+      } else {
+        setValue('contract_file', files[0]);
       }
-    );
-  } catch (error) {
-    console.error("ERROR", error);
-  }
-};
+    }
+  };
+
+  const onSubmit = async (data: FormData) => {
+    const formData = new FormData();
+
+    if (selectedFiles.length > 0) {
+      if (type === 'invoice') {
+        formData.append('invoice_file', selectedFiles[0]);
+      } else {
+        formData.append('contract_file', selectedFiles[0]);
+      }
+    }
+
+    // Object.entries(data).forEach(([key, value]) => {
+    //   if (value !== undefined && value !== null && key !== 'invoice_file') {
+    //       formData.append(key, value);
+    //   }
+    // });
+
+    try {
+      await uploadFiles(
+        endpoint,
+        id,
+        formData,
+        (response) => {
+          reset();
+          setSelectedFiles([]);
+          onClose();
+          // updateProjectData();
+        },
+        (error) => {
+          console.error("Error uploading file", error);
+        }
+      );
+    } catch (error) {
+      console.error("ERROR", error);
+    }
+  };
 
   return (
     <div className="modal-overlay" onClick={onClose}>

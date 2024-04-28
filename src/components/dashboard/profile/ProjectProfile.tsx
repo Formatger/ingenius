@@ -143,19 +143,18 @@ const ProjectInvoice = ({ projectsData }: ProjectInvoiceProps) => {
   const fileInputRef = useRef(null);
   const [loading, setLoading] = useState(false);
   const [showLockModal, setShowLockModal] = useState(false);
-  const { is_locked } = projectsData;
-  const [isFileModalOpen, setFileModalOpen] = useState(false);
-  const [editData, setEditData] = useState(false);
+  const [isFileModalOpenContract, setFileModalOpenContract] = useState(false);
+  const [isFileModalOpenInvoice, setFileModalOpenInvoice] = useState(false);
 
-    // /* LOCK FORM */
+  // /* LOCK FORM */
 
-    // useEffect(() => {
-    //   lockProject(projectsData.id);
-  
-    //   return () => {
-    //     unlockProject(projectsData.id);
-    //   };
-    // }, []);
+  // useEffect(() => {
+  //   lockProject(projectsData.id);
+
+  //   return () => {
+  //     unlockProject(projectsData.id);
+  //   };
+  // }, []);
 
 
   const handleFileUpload = async (event: any) => {
@@ -165,7 +164,7 @@ const ProjectInvoice = ({ projectsData }: ProjectInvoiceProps) => {
     setLoading(true);
     const formData = new FormData();
     formData.append("contract", file);
-    formData.append("projectId", projectsData.id);
+    formData.append("projectId", projectsData?.id);
 
     try {
       const response = await fetch("/api/contract/upload", {
@@ -185,12 +184,12 @@ const ProjectInvoice = ({ projectsData }: ProjectInvoiceProps) => {
   };
 
   const handleViewContract = () => {
-    const url = `/api/projects/${projectsData.id}/view`;
+    const url = `/api/projects/${projectsData?.id}/view`;
     window.open(url, "_blank");
   };
 
   const handleDownloadContract = () => {
-    const url = `/api/projects/${projectsData.id}/download`;
+    const url = `/api/projects/${projectsData?.id}/download`;
     const link = document.createElement("a");
     link.href = url;
     // link.setAttribute('download', 'Project_Contract.pdf');  // Optionally set a filename
@@ -257,33 +256,33 @@ const ProjectInvoice = ({ projectsData }: ProjectInvoiceProps) => {
           />
 
           <div className="button-group">
-              <button
-                className="sec-button linen"
-                onClick={() => {
-                  if (is_locked) {
-                    setShowLockModal(true);
-                  } else {
-                    setFileModalOpen(true); 
-                  }
-                }}
-              >
+            <button
+              className="sec-button linen"
+              onClick={() => {
+                setFileModalOpenContract(true);
+              }}
+            >
               <Image src={Link} alt="Icon" width={14} height={14} />
               <p>Upload Contract</p>
             </button>
             <UploadFileModal
-              isOpen={isFileModalOpen}
-              onClose={() => setFileModalOpen(false)}
-              title="Upload Invoice"
-              message="Upload an Invoice File in PDF format."
-              button="Upload File" 
-           />
-            <button
+              isOpen={isFileModalOpenContract}
+              onClose={() => setFileModalOpenContract(false)}
+              title="Upload Contract"
+              message="Upload a Contract File in PDF format."
+              button="Upload File"
+              id={projectsData?.id}
+              endpoint="projects"
+              type="contract"
+            />
+            <a
+              target="_blank"
               className="sec-button w-50 img-btn linen"
-              onClick={handleViewContract}
+              href={projectsData?.contract_file}
             >
               <Image src={Folder} alt="Icon" width={15} height={15} />
               <p>View Contract</p>
-            </button>
+            </a>
           </div>
 
           <div className="button-group mt-3">
@@ -291,43 +290,63 @@ const ProjectInvoice = ({ projectsData }: ProjectInvoiceProps) => {
               <Image src={Send} alt="Icon" width={15} height={15} />
               <p>Send Contract</p>
             </button> */}
-            <button
+            <a
+              target="_blank"
               className="sec-button w-50 img-btn linen"
-              onClick={handleDownloadContract}
+              href={projectsData?.contract_file}
+              download
             >
               <Image src={Download} alt="Icon" width={18} height={18} />
               <p>Download as PDF</p>
-            </button>
+            </a>
           </div>
         </div>
 
         <div className="">
           <p className="smallcaps mt-5">MANAGE INVOICE</p>
           <div className="button-group">
-            <button className="sec-button linen" onClick={undefined}>
+            <button
+              className="sec-button linen"
+              onClick={() => {
+                setFileModalOpenInvoice(true);
+              }}
+            >
               <Image src={Link} alt="Icon" width={14} height={14} />
               <p>Upload Invoice</p>
             </button>
-            <button
+            <UploadFileModal
+              isOpen={isFileModalOpenInvoice}
+              onClose={() => setFileModalOpenInvoice(false)}
+              title="Upload Invoice"
+              message="Upload an Invoice File in PDF format."
+              button="Upload File"
+              id={projectsData?.id}
+              endpoint="projects"
+              type="invoice"
+            />
+            <a
+              target="_blank"
               className="sec-button w-50 img-btn linen"
-              onClick={undefined}
+              href={projectsData?.invoice_file}
             >
               <Image src={Folder} alt="Icon" width={15} height={15} />
               <p>View Invoice</p>
-            </button>
+            </a>
           </div>
           <div className="button-group mt-3">
             {/* <button className="sec-button linen" onClick={undefined}>
               <Image src={Send} alt="Icon" width={15} height={15} />
               <p>Send Invoice</p>
             </button> */}
-            <button
+            <a
+              target="_blank"
               className="sec-button w-50 img-btn linen"
-              onClick={undefined}
+              href={projectsData?.invoice_file}
+              download="invoice.pdf"
             >
               <Image src={Download} alt="Icon" width={18} height={18} />
               <p>Download as PDF</p>
-            </button>
+            </a>
           </div>
         </div>
       </div>

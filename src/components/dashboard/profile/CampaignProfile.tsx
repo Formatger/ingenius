@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Folder from "@/components/assets/icons/folder.svg";
 import Download from "@/components/assets/icons/download.svg";
@@ -6,6 +6,7 @@ import Export from "@/components/assets/icons/export.svg";
 import Plus from "@/components/assets/icons/plus.svg";
 import Message from "@/components/assets/icons/message.svg";
 import Send from "@/components/assets/icons/send.svg";
+import UploadFileModal from "@/components/common/UploadFileModal";
 
 interface CampaignDetailsProps {
   campaignsData: any;
@@ -64,7 +65,7 @@ const CampaignDetails = ({ campaignsData }: CampaignDetailsProps) => {
           <p className="smallcaps mb-2">CAMPAIGN</p>
           <span className="sec-button gray1" onClick={undefined}>
             <p className="sec-tag">
-              {campaignsData.campaign_name || campaignsData.name}
+              {campaignsData?.campaign_name || campaignsData?.name}
             </p>
           </span>
         </div>
@@ -77,13 +78,13 @@ const CampaignDetails = ({ campaignsData }: CampaignDetailsProps) => {
         <div>
           <p className="smallcaps mb-2">DEAL</p>
           <span className="sec-button gray1" onClick={undefined}>
-            <p className="sec-tag">{campaignsData.deal_name}</p>
+            <p className="sec-tag">{campaignsData?.deal_name}</p>
           </span>
         </div>
         <div>
           <p className="smallcaps mb-2">CONTRACT VALUE</p>
           <span className="sec-button gray1" onClick={undefined}>
-            <p className="sec-tag">${campaignsData.contract_value}</p>
+            <p className="sec-tag">${campaignsData?.contract_value}</p>
           </span>
         </div>
         <div>
@@ -119,6 +120,9 @@ const CampaignDetails = ({ campaignsData }: CampaignDetailsProps) => {
 };
 
 const CampaignInvoice = ({ campaignsData }: CampaignInvoiceProps) => {
+  const [isFileModalOpenContract, setFileModalOpenContract] = useState(false);
+  const [isFileModalOpenInvoice, setFileModalOpenInvoice] = useState(false);
+
   return (
     <div className="card-container">
       <div className="agency-invoice">
@@ -127,20 +131,20 @@ const CampaignInvoice = ({ campaignsData }: CampaignInvoiceProps) => {
           <ul>
             {/* <li className="invoice-data-list">
               <p>Invoice number</p>
-              <span className="invoice-tag">{campaignsData.invoice_number}</span>
+              <span className="invoice-tag">{campaignsData?.invoice_number}</span>
             </li>
             <li className="invoice-data-list">
               <p>Invoice date</p>
-              <span className="invoice-tag">{campaignsData.invoice_date}</span>
+              <span className="invoice-tag">{campaignsData?.invoice_date}</span>
             </li> */}
             <li className="invoice-data-list">
               <p>Brand</p>
-              <span className="invoice-tag">{campaignsData.brand_name}</span>
+              <span className="invoice-tag">{campaignsData?.brand_name}</span>
             </li>
             <li className="invoice-data-list">
               <p>Representative</p>
               <span className="invoice-tag">
-                {campaignsData.representative}
+                {campaignsData?.representative}
               </span>
             </li>
             <li className="invoice-data-list">
@@ -150,7 +154,7 @@ const CampaignInvoice = ({ campaignsData }: CampaignInvoiceProps) => {
             <li className="invoice-data-list">
               <p>Campaign Duration</p>
               <span className="invoice-tag">
-                {campaignsData.campaign_duration}
+                {campaignsData?.campaign_duration}
               </span>
             </li>
             {/* <li className="invoice-data-list">
@@ -165,7 +169,7 @@ const CampaignInvoice = ({ campaignsData }: CampaignInvoiceProps) => {
             <li className="invoice-data-list">
               <p>Contract Value</p>
               <span className="invoice-tag">
-                ${campaignsData.contract_value}
+                ${campaignsData?.contract_value}
               </span>
             </li>
             <li className="invoice-data-list">
@@ -188,17 +192,32 @@ const CampaignInvoice = ({ campaignsData }: CampaignInvoiceProps) => {
           />
 
           <div className="button-group">
-            <button className="sec-button linen" onClick={undefined}>
-              {/* <Image src={Send} alt="Icon" width={15} height={15} /> */}
+            <button
+              className="sec-button linen"
+              onClick={() => {
+                setFileModalOpenContract(true);
+              }}
+            >
               <p>Upload Contract</p>
             </button>
-            <button
+            <UploadFileModal
+              isOpen={isFileModalOpenContract}
+              onClose={() => setFileModalOpenContract(false)}
+              title="Upload Contract"
+              message="Upload a Contract File in PDF format."
+              button="Upload File"
+              id={campaignsData?.id}
+              endpoint="campaigns"
+              type="contract"
+            />
+            <a
+              target="_blank"
               className="sec-button w-50 img-btn linen"
-              onClick={undefined}
+              href={campaignsData?.contract_file}
             >
               <Image src={Folder} alt="Icon" width={15} height={15} />
               <p>View Contract</p>
-            </button>
+            </a>
           </div>
 
           <div className="button-group mt-3">
@@ -206,43 +225,62 @@ const CampaignInvoice = ({ campaignsData }: CampaignInvoiceProps) => {
               <Image src={Send} alt="Icon" width={15} height={15} />
               <p>Send Contract</p>
             </button>
-            <button
+            <a
+              target="_blank"
               className="sec-button w-50 img-btn linen"
-              onClick={undefined}
+              href={campaignsData?.contract_file}
+              download="contract.pdf"
             >
               <Image src={Download} alt="Icon" width={18} height={18} />
               <p>Download as PDF</p>
-            </button>
+            </a>
           </div>
         </div>
 
         <div className="">
           <p className="smallcaps mt-5">MANAGE INVOICE</p>
           <div className="button-group">
-            <button className="sec-button linen" onClick={undefined}>
-              {/* <Image src={Send} alt="Icon" width={15} height={15} /> */}
+            <button
+              className="sec-button linen"
+              onClick={() => {
+                setFileModalOpenInvoice(true);
+              }}
+            >
               <p>Upload Invoice</p>
             </button>
-            <button
+            <UploadFileModal
+              isOpen={isFileModalOpenInvoice}
+              onClose={() => setFileModalOpenInvoice(false)}
+              title="Upload Invoice"
+              message="Upload a Invoice File in PDF format."
+              button="Upload File"
+              id={campaignsData?.id}
+              endpoint="campaigns"
+              type="invoice"
+            />
+            <a
+              target="_blank"
               className="sec-button w-50 img-btn linen"
-              onClick={undefined}
+              href={campaignsData?.invoice_file}
             >
               <Image src={Folder} alt="Icon" width={15} height={15} />
               <p>View Invoice</p>
-            </button>
+            </a>
           </div>
           <div className="button-group mt-3">
             <button className="sec-button linen" onClick={undefined}>
               <Image src={Send} alt="Icon" width={15} height={15} />
               <p>Send Invoice</p>
             </button>
-            <button
+            <a
+              target="_blank"
               className="sec-button w-50 img-btn linen"
-              onClick={undefined}
+              href={campaignsData?.invoice_file}
+              download="invoice.pdf"
             >
               <Image src={Download} alt="Icon" width={18} height={18} />
               <p>Download as PDF</p>
-            </button>
+            </a>
           </div>
         </div>
       </div>

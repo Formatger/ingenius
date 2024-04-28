@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Folder from "@/components/assets/icons/folder.svg";
 import Download from "@/components/assets/icons/download.svg";
@@ -7,6 +7,7 @@ import Plus from "@/components/assets/icons/plus.svg";
 import Message from "@/components/assets/icons/message.svg";
 import Send from "@/components/assets/icons/send.svg";
 import { DealInterface } from "@/interfaces/interfaces";
+import UploadFileModal from "@/components/common/UploadFileModal";
 
 interface DealDetailsProps {
   dealsData: any;
@@ -55,7 +56,7 @@ const DealDetails = ({ dealsData }: DealDetailsProps) => {
         <div>
           <p className="smallcaps mb-2">DEAL</p>
           <span className="sec-button gray1" onClick={undefined}>
-            <p className="sec-tag">{dealsData.name}</p>
+            <p className="sec-tag">{dealsData?.name}</p>
           </span>
         </div>
         <div>
@@ -67,7 +68,7 @@ const DealDetails = ({ dealsData }: DealDetailsProps) => {
         <div>
           <p className="smallcaps mb-2">CONTRACT VALUE</p>
           <span className="sec-button gray1" onClick={undefined}>
-            <p className="sec-tag">${dealsData.contract_value}</p>
+            <p className="sec-tag">${dealsData?.contract_value}</p>
           </span>
         </div>
         <div>
@@ -81,7 +82,7 @@ const DealDetails = ({ dealsData }: DealDetailsProps) => {
         <div className="sidepanel-hidden">
           <p className="smallcaps">MANAGE BRAND</p>
           <div className="button-group">
-          <button className="sec-button linen" onClick={undefined}>
+            <button className="sec-button linen" onClick={undefined}>
               <Image src={Message} alt="Icon" width={15} height={15} />
               <p>Message</p>
             </button>
@@ -100,6 +101,8 @@ const DealDetails = ({ dealsData }: DealDetailsProps) => {
 };
 
 const DealInvoice = ({ dealsData }: DealInvoiceProps) => {
+  const [isFileModalOpen, setFileModalOpen] = useState(false);
+
   return (
     <div className="card-container">
       <div className="agency-invoice">
@@ -110,19 +113,19 @@ const DealInvoice = ({ dealsData }: DealInvoiceProps) => {
           <ul>
             <li className="invoice-data-list">
               <p>Brand</p>
-              <span className="invoice-tag">{dealsData.brand_name}</span>
+              <span className="invoice-tag">{dealsData?.brand_name}</span>
             </li>
             <li className="invoice-data-list">
               <p>Representative</p>
-              <span className="invoice-tag">{dealsData.representative}</span>
+              <span className="invoice-tag">{dealsData?.representative}</span>
             </li>
             <li className="invoice-data-list">
               <p>Deal Duration</p>
-              <span className="invoice-tag">{dealsData.deal_duration}</span>
+              <span className="invoice-tag">{dealsData?.deal_duration}</span>
             </li>
             <li className="invoice-data-list">
               <p>Campaigns</p>
-              <span className="invoice-tag">{dealsData.total_campaigns}</span>
+              <span className="invoice-tag">{dealsData?.total_campaigns}</span>
             </li>
             {/* <li className="invoice-data-list">
               <p className="mr-8">Deliverables</p>
@@ -135,7 +138,7 @@ const DealInvoice = ({ dealsData }: DealInvoiceProps) => {
             </li> */}
             <li className="invoice-data-list">
               <p>Contract Value</p>
-              <span className="invoice-tag">${dealsData.contract_value}</span>
+              <span className="invoice-tag">${dealsData?.contract_value}</span>
             </li>
           </ul>
         </div>
@@ -146,14 +149,32 @@ const DealInvoice = ({ dealsData }: DealInvoiceProps) => {
           <input type="file" onChange={undefined} style={{ display: 'none' }} ref={undefined} />
 
           <div className="button-group">
-            <button className="sec-button linen" onClick={undefined}>
-              {/* <Image src={Send} alt="Icon" width={15} height={15} /> */}
+            <button
+              className="sec-button linen"
+              onClick={() => {
+                setFileModalOpen(true);
+              }}
+            >
               <p>Upload Contract</p>
             </button>
-            <button className="sec-button w-50 img-btn linen" onClick={undefined}>
+            <UploadFileModal
+              isOpen={isFileModalOpen}
+              onClose={() => setFileModalOpen(false)}
+              title="Upload Contract"
+              message="Upload a Contract File in PDF format."
+              button="Upload File"
+              id={dealsData?.id}
+              endpoint="deals"
+              type="contract"
+            />
+            <a
+              target="_blank"
+              className="sec-button w-50 img-btn linen"
+              href={dealsData?.contract_file}
+            >
               <Image src={Folder} alt="Icon" width={15} height={15} />
               <p>View Contract</p>
-            </button>      
+            </a>
           </div>
 
           <div className="button-group mt-3">
@@ -161,10 +182,15 @@ const DealInvoice = ({ dealsData }: DealInvoiceProps) => {
               <Image src={Send} alt="Icon" width={15} height={15} />
               <p>Send Contract</p>
             </button>
-            <button className="sec-button w-50 img-btn linen" onClick={undefined}>
-            <Image src={Download} alt="Icon" width={18} height={18} />
+            <a
+              target="_blank"
+              className="sec-button w-50 img-btn linen"
+              href={dealsData?.contract_file}
+              download="contract.pdf"
+            >
+              <Image src={Download} alt="Icon" width={18} height={18} />
               <p>Download as PDF</p>
-            </button>
+            </a>
           </div>
         </div>
 
