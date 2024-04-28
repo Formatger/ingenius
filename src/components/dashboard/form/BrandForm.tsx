@@ -93,7 +93,6 @@ const BrandForm: React.FC<BrandFormProps> = ({
   /* SUBMIT FORM - POST BRANDS API CALL  */
 
   const onSubmit = async (data: FormData) => {
-    console.log("Form Data:", data);
     setSubmitting(true);
     const formData = new FormData();
 
@@ -112,7 +111,6 @@ const BrandForm: React.FC<BrandFormProps> = ({
           brandId,
           formData,
           (response) => {
-            console.log("Item updated successfully:", response);
             reset();
             closeEdit();
             updateBrandData();
@@ -122,12 +120,10 @@ const BrandForm: React.FC<BrandFormProps> = ({
           }
         ).finally(() => setSubmitting(false));
       } else {
-        console.log("Data for POST:", formData);
 
         await postBrands(
           formData,
           (response) => {
-            console.log("Item updated successfully:", response);
             reset();
             handleClose();
             updateBrandData();

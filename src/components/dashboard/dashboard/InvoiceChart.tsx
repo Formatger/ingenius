@@ -16,8 +16,6 @@ const PieChartComponent = ({ pieChartData }: PieChartProps) => {
     { name: 'Unpaid Invoices', value: pieChartData.campaigns.total_unpaid_value, fillColor: '#ffa584' },
   ];
 
-  console.log(dataCampaigns)
-
   // const dataProjects = [
   //   { name: 'Paid Invoices', value: pieChartData.paidInvoices, fillColor: '#82ca9d' },
   //   { name: 'Unpaid Invoices', value: pieChartData.unpaidInvoices, fillColor: '#ff8e84' },

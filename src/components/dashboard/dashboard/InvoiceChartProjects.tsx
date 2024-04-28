@@ -16,8 +16,6 @@ const PieChartComponent = ({ pieChartData }: PieChartProps) => {
     { name: 'Unpaid Invoices', value: pieChartData.projects.total_unpaid_value, fillColor: '#ffa584' },
   ];
 
-  console.log(dataProjects)
-
   return (
     <div className="dashboard-box piechart">
       <div className="chart-header">

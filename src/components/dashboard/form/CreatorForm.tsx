@@ -98,7 +98,6 @@ const CreatorForm: React.FC<CreatorFormProps> = ({
   /* SUBMIT FORM - POST CREATOR API CALL  */
 
   const onSubmit = async (data: FormData) => {
-    console.log("Form Data:", data);
     const formData = new FormData();
     setSubmitting(true);
     Object.entries(data).forEach(([key, value]) => {
@@ -124,7 +123,6 @@ const CreatorForm: React.FC<CreatorFormProps> = ({
           }
         ).finally(() => setSubmitting(false));
       } else {
-        console.log("Data for POST:", formData);
 
         await postCreators(
           formData,

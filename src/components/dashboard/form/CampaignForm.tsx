@@ -144,7 +144,6 @@ const CampaignForm: React.FC<CampaignFormProps> = ({
   /* SUBMIT FORM - POST CAMPAIGNS API CALL */
 
   const onSubmit = async (data: FormData) => {
-    console.log("Form Data:", data);
     setSubmitting(true);
     try {
       if (isEditing) {
@@ -159,7 +158,6 @@ const CampaignForm: React.FC<CampaignFormProps> = ({
           campaignId,
           updatedData,
           (response) => {
-            console.log("Project updated successfully:", response);
             reset();
             closeEdit();
             updateCampaignData();
@@ -172,7 +170,6 @@ const CampaignForm: React.FC<CampaignFormProps> = ({
         await postCampaigns(
           data,
           (response) => {
-            console.log("Project updated successfully:", response);
             reset();
             handleClose();
             updateCampaignData();

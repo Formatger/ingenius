@@ -149,7 +149,6 @@ const DealForm: React.FC<DealFormProps> = ({
   /* SUBMIT FORM - DEALS API */
 
   const onSubmit = async (data: FormData) => {
-    console.log("Form Data:", data);
     setSubmitting(true);
 
     try {
@@ -165,7 +164,6 @@ const DealForm: React.FC<DealFormProps> = ({
           dealId,
           updatedData,
           (response) => {
-            console.log("Project updated successfully:", response);
             reset();
             closeEdit();
             updateDealData();
@@ -179,7 +177,6 @@ const DealForm: React.FC<DealFormProps> = ({
         await postDeals(
           data,
           (response) => {
-            console.log("Deal created successfully:", response);
             reset();
             handleClose();
             updateDealData();

@@ -58,7 +58,6 @@ const CreatorsPage = () => {
   }, [updateCreator]);
 
   const updateCreatorData = () => {
-    console.log("Reloading creator data...");
     setUpdateCreator((prevState) => !prevState);
   };
 

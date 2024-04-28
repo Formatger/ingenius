@@ -68,7 +68,6 @@ const Sidebar: React.FC<SidebarProps> = ({ layout }) => {
   const fetchUserProfile = () => {
     getUserProfile(
       (response: any) => {
-        console.log("User profile data:", response);
         setUserData(response[0] || []);
       },
       (error: any) => {

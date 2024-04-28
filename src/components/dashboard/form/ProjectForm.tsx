@@ -170,7 +170,6 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
   /* SUBMIT FORM - POST PROJECTS API CALL  */
 
   const onSubmit = async (data: FormData) => {
-    console.log("Form Data:", data);
     setSubmitting(true);
     try {
       if (isEditing) {
@@ -185,7 +184,6 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
           projectId,
           updatedData,
           (response) => {
-            console.log("Project updated successfully:", response);
             reset();
             closeEdit();
             updateProjectData();
@@ -198,7 +196,6 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
         await postProjects(
           data,
           (response) => {
-            console.log("Project updated successfully:", response);
             reset();
             handleClose();
             updateProjectData();
@@ -570,7 +567,6 @@ export default ProjectForm;
                   <option value="">Select Stage</option>
                   {Array.isArray(projectStage) &&
                     projectStage.map((stage) => {
-                      console.log("Stage Name:", stage.name);
                       return (
                         <option key={stage.stageID} value={stage.stageID}>
                           {stage.stageName}
@@ -586,7 +582,6 @@ export default ProjectForm;
 //   const selectedId = parseInt(event.target.value);
 //   setSelectedStage(selectedId);
 //   setValue("project_stage", selectedId);
-//   console.log("Selected Project Stage ID:", selectedId);
 //   trigger("project_stage");
 // };
 

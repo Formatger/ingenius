@@ -54,7 +54,6 @@ const DealSidepanel: React.FC<SidepanelProps> = ({
     deleteDeal(
       dealsData.id,
       () => {
-        console.log("Deal deleted successfully");
         setModalOpen(false);
         if (handleClose) {
           handleClose();

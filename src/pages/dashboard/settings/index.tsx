@@ -95,7 +95,6 @@ const SettingsPage = () => {
   const fetchUserProfile = () => {
     getUserProfile(
       (response: any) => {
-        console.log("User profile data:", response);
         setUserData(response[0] || null);
       },
       (error: any) => {
@@ -111,7 +110,6 @@ const SettingsPage = () => {
   //       // Check if the response is an array and has at least one element
   //       if (Array.isArray(response) && response.length > 0) {
   //         // Assuming the response is an array of UserData objects
-  //         console.log("User profile data:", response[0]);
   //         setUserData(response[0]);
   //       } else {
   //         // Handle cases where the data is not in the expected format

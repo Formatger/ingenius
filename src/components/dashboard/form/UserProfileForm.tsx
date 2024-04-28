@@ -59,7 +59,6 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
   /* SUBMIT FORM - POST CREATOR API CALL  */
 
   const onSubmit = async (data: FormData) => {
-    console.log("Form Data:", data);
 
     const formData = new FormData();
 
@@ -86,7 +85,6 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
           }
         );
       } else {
-        console.log("Data for POST:", formData);
 
         await postUserProfile(
           formData,

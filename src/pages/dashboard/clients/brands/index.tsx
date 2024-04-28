@@ -48,7 +48,6 @@ const BrandsPage = () => {
 
   useEffect(() => {
     const originalDataCopy = [...originalData];
-    console.log("originalDataCopy:", originalDataCopy);
     setFilteredData(originalDataCopy);
     setDataToDisplay(
       originalDataCopy.slice(
@@ -59,7 +58,6 @@ const BrandsPage = () => {
   }, [updateBrand]);
 
   const updateBrandData = () => {
-    console.log("Reloading brand data...");
     setUpdateBrand((prevState) => !prevState);
   };
 

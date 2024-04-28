@@ -34,7 +34,6 @@ const BrandSidepanel: React.FC<SidepanelProps> = ({
   useEffect(() => {
     setIsLoading(true)
     getDataById("brands", brandId, (data) => {
-      console.log(data)
       setBrandsData(data);
       setIsLocked(data.is_locked);
     }, (error) => {
