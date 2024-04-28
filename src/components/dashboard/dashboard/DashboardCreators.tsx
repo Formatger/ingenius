@@ -79,13 +79,23 @@ const DashboardCreators = ({ projectsData }: DashboardCreatorsProps) => {
                   <div className="row-wrap-3">
 
                     <div className="">
-                      <img
+                    <Image
+                      src={project.creator_profile_picture}
+                      alt={project.creator_name}
+                      width={40}
+                      height={40}
+                      layout="fixed"
+                      className="partner-image"
+                      loading="lazy"
+                      quality={75}
+                    /> 
+                      {/* <img
                         src={project.creator_profile_picture}
                         alt={project.creator_name}
                         className="partner-image"
                         width={40}
                         height={40}
-                      />
+                      /> */}
                     </div>
                     <div>
                       <p className="track-title">{project.creator_name}</p>

@@ -90,11 +90,11 @@ const Sidebar: React.FC<SidebarProps> = ({ layout }) => {
       >
         <div className="logo-box">
           <Image src={LogoText} alt="logo" className="main-logo" />
-          <div className="dots-button" onClick={toggleSidebar}>
+          {/* <div className="dots-button" onClick={toggleSidebar}>
             <span className="text-2xl">
               <Image src={Dots} alt="logo" className="dots-icon" />
             </span>
-          </div>
+          </div> */}
         </div>
 
         <div className="nav-box">
