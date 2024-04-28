@@ -6,12 +6,15 @@ interface AppContextProps {
   toggleNavSidebar: (id: string) => void;
   isNavSidebarOpen: (id: string) => boolean;
   setNavSidebarOpen: (id: string, value: boolean) => void;
+  updateUserData: boolean;
+  setUpdateUserData: (value: boolean) => void;
 }
 
 const AppContext = createContext<AppContextProps | undefined>(undefined);
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [navSidebars, setNavSidebars] = useState<{ [key: string]: boolean }>({});
+  const [updateUserData, setUpdateUserData] = useState(false);
 
   const toggleNavSidebar = (id: string) => {
     setNavSidebars(prevState => {
@@ -42,6 +45,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     toggleNavSidebar,
     isNavSidebarOpen,
     setNavSidebarOpen,
+    updateUserData,
+    setUpdateUserData
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
