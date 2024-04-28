@@ -69,10 +69,13 @@ const BrandDetails = ({ brandsData, updateBrandData }: BrandDetailsProps) => {
         <div className="sidepanel-hidden">
           <p className="smallcaps">CONTACT BRAND</p>
           <div className="button-group">
-            <button className="sec-button linen" onClick={undefined}>
-              <Image src={Message} alt="Icon" width={15} height={15} />
-              <p>Message</p>
-            </button>
+          <button
+            className="sec-button linen"
+            onClick={() => window.location.href = `mailto:${brandsData?.email}?subject=Subject&body=Body`}
+          >
+            <Image className="" src={Message} alt="Icon" width={15} height={15} />
+            <p>Message</p>
+          </button>
           </div>
         </div>
       </div>
