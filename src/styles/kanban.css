@@ -78,9 +78,9 @@
   font-family: "DMSansRegular", sans-serif;
 }
 
-.campaignName {
+.kanbancard-name {
   font-family: "DMSansBold", sans-serif;
-  font-size: 18px;
+  font-size: 17px;
 }
 
 .campaignDescription {

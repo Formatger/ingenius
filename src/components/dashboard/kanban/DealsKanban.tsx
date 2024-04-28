@@ -401,8 +401,8 @@ const DealsKanban = ({
                       />
                       <p className="brandTitle">{dealCard.brand_name}</p>
                     </div>
-                    <p className="dealName">{dealCard.name}</p>
-                    <p className="dealDescription">{dealCard.description}</p>
+                    <p className="kanbancard-name">{dealCard.name}</p>
+                    <p className="campaignDescription">{dealCard.description}</p>
                     <div className="card-tags mt-4">
                       <span className="square-tag green">
                         Due: {dealCard.deadline}

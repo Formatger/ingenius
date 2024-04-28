@@ -421,7 +421,7 @@ const ProjectsKanban = ({
                   />
                   <p className="brandTitle">{projectCard.creator_name}</p>
                 </div>
-                <p className="campaignName">{projectCard.name}</p>
+                <p className="kanbancard-name">{projectCard.name}</p>
                 <p className="campaignDescription">{projectCard.description}</p>
                 <div className="card-tags mt-4">
                   <span className="square-tag green">

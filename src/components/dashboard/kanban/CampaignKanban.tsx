@@ -409,7 +409,7 @@ const CampaignKanban = ({
                       />
                       <p className="brandTitle">{campaignCard.brand_name}</p>
                     </div>
-                    <p className="campaignName">{campaignCard.name}</p>
+                    <p className="kanbancard-name">{campaignCard.name}</p>
                     <p className="campaignDescription">
                       {campaignCard.description}
                     </p>
