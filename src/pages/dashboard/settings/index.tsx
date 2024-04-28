@@ -39,7 +39,9 @@ const SettingsPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   // const [imageURL, setImageURL] = useState<string | null>(userData.profile_picture_url || null);
   const [imageURL, setImageURL] = useState<any[]>([]);
+  // const [userData, setUserData] = useState<any[]>([]);
   const [userData, setUserData] = useState({});
+  // const [userData, setUserData] = useState<UserData | null>(null);
   const [editData, setEditData] = useState(false);
   const [updateUser, setUpdateUser] = useState(false);
 
@@ -56,6 +58,23 @@ const SettingsPage = () => {
   
   /* GET USER API CALL */
 
+
+  // useEffect(() => {
+  //   fetchUserProfile();
+  // }, [router]);
+
+  // const fetchUserProfile = () => {
+  //   getUserProfile(
+  //     (response: any) => {
+  //       setUserData(response[0] || []);
+  //     },
+  //     (error: any) => {
+  //       console.error("Error fetching profile data:", error);
+  //       setUserData([]);
+  //     }
+  //   ).finally(() => { });
+  // };
+
     useEffect(() => {
       fetchUserProfile();
     }, [router]);
@@ -70,8 +89,32 @@ const SettingsPage = () => {
           console.error("Error fetching profile data:", error);
           setUserData({});
         }
-      ).finally(() => {});
+      ).finally(() => { });
     };
+
+    // const fetchUserProfile = () => {
+    //   getUserProfile(
+    //     (response: any) => {
+    //       // Check if the response is an array and has at least one element
+    //       if (Array.isArray(response) && response.length > 0) {
+    //         // Assuming the response is an array of UserData objects
+    //         console.log("User profile data:", response[0]);
+    //         setUserData(response[0]);
+    //       } else {
+    //         // Handle cases where the data is not in the expected format
+    //         console.error("Unexpected format for user profile data:", response);
+    //         setUserData(null);  // Use null to indicate no data received
+    //       }
+    //     },
+    //     (error: any) => {
+    //       console.error("Error fetching profile data:", error);
+    //       setUserData(null);  // Use null to indicate an error occurred
+    //     }
+    //   ).finally(() => {
+    //     // You might want to handle any post-loading logic here
+    //   });
+    // };
+    
 
   return (
     <div className="main-container">
@@ -82,6 +125,7 @@ const SettingsPage = () => {
         <MainLoader />
       ) : (
         <>
+         {userData ? (
           <div className="page-container" id="dashboard">
             <div className="settings-box">
               <div className="section-title">
@@ -179,6 +223,9 @@ const SettingsPage = () => {
               </div>
             </div>
           </div>
+          ) : (
+          <p>No user data available.</p>
+          )}
         </>
       )}
     </div>

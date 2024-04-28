@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import Link from "next/link";
@@ -13,18 +13,67 @@ import Support from "../assets/icons/supportAndHelp.svg";
 import ClientDropdown from "./ClientDropdown";
 import PartDropdown from "./PartDropdown";
 import Logout from "../assets/icons/logout.svg";
+import { getUserProfile } from "@/utils/httpCalls";
 
 interface SidebarProps {
   layout: React.ReactNode;
 }
 
+interface Member {
+  id: number;
+  first_name: string;
+  last_name: string;
+  email: string;
+}
+
+interface TeamInfo {
+  name: string;
+  members: Member[];
+}
+
+interface UserData {
+  id: number;
+  first_name: string;
+  last_name: string;
+  email: string;
+  team_info: TeamInfo;
+  team_picture_url: string;
+}
+
 const Sidebar: React.FC<SidebarProps> = ({ layout }) => {
   const [mSidebar, setMSidebar] = useState<boolean>(false);
   const router = useRouter();
+  const [userData, setUserData] = useState({});
+  const [updateUser, setUpdateUser] = useState(false);
 
   const toggleSidebar = () => {
     setMSidebar(!mSidebar);
   };
+
+    /* UPDATE USER API CALL */
+
+    const updateUserData = () => {
+      setUpdateUser((prevState) => !prevState);
+    };
+    
+    /* GET USER API CALL */
+  
+      useEffect(() => {
+        fetchUserProfile();
+      }, [router]);
+    
+      const fetchUserProfile = () => {
+        getUserProfile(
+          (response: any) => {
+            console.log("User profile data:", response); 
+            setUserData(response[0] || []);
+          },
+          (error: any) => {
+            console.error("Error fetching profile data:", error);
+            setUserData({});
+          }
+        );
+      };
 
   return (
     <div className="opacity-100">
@@ -110,11 +159,16 @@ const Sidebar: React.FC<SidebarProps> = ({ layout }) => {
           <div className="">
             <div className="row-wrap-3">
               <div>
-                <Image src={Profile} alt="Profile" width={30} height={30} className="image" />
+                <img
+                  src={userData?.team_picture_url}
+                  alt="Uploaded"
+                  style={{ width: "30px", height: "30px" }}
+                />
+                {/* <Image src={userData?.team_picture_url} alt="Profile" width={30} height={30} className="image" /> */}
               </div>
               <div>
-                <p>LaTecia Johnson</p>
-                <p className="account-subtitle">Ingenius</p>
+                <p>{userData?.first_name}{" "}{userData?.last_name}</p>
+                <p className="account-subtitle">{userData?.team_info?.name}</p>
               </div>
             </div>
 
