@@ -228,10 +228,10 @@ const CampaignInvoice = ({ campaignsData }: CampaignInvoiceProps) => {
           </div>
 
           <div className="button-group mt-3">
-            <button className="sec-button linen" onClick={undefined}>
+            {/* <button className="sec-button linen" onClick={undefined}>
               <Image src={Send} alt="Icon" width={15} height={15} />
               <p>Send Contract</p>
-            </button>
+            </button> */}
             <a
               target="_blank"
               className="sec-button w-50 img-btn linen"
@@ -276,10 +276,10 @@ const CampaignInvoice = ({ campaignsData }: CampaignInvoiceProps) => {
             </a>
           </div>
           <div className="button-group mt-3">
-            <button className="sec-button linen" onClick={undefined}>
+            {/* <button className="sec-button linen" onClick={undefined}>
               <Image src={Send} alt="Icon" width={15} height={15} />
               <p>Send Invoice</p>
-            </button>
+            </button> */}
             <a
               target="_blank"
               className="sec-button w-50 img-btn linen"
