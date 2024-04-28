@@ -7,6 +7,7 @@ import Plus from "@/components/assets/icons/plus.svg";
 import Message from "@/components/assets/icons/message.svg";
 import Send from "@/components/assets/icons/send.svg";
 import { DealInterface } from "@/interfaces/interfaces";
+import Link from "@/components/assets/icons/link.svg";
 
 interface DealDetailsProps {
   dealsData: any;
@@ -147,7 +148,7 @@ const DealInvoice = ({ dealsData }: DealInvoiceProps) => {
 
           <div className="button-group">
             <button className="sec-button linen" onClick={undefined}>
-              {/* <Image src={Send} alt="Icon" width={15} height={15} /> */}
+              <Image src={Link} alt="Icon" width={15} height={15} />
               <p>Upload Contract</p>
             </button>
             <button className="sec-button w-50 img-btn linen" onClick={undefined}>
@@ -163,6 +164,36 @@ const DealInvoice = ({ dealsData }: DealInvoiceProps) => {
             </button>
             <button className="sec-button w-50 img-btn linen" onClick={undefined}>
             <Image src={Download} alt="Icon" width={18} height={18} />
+              <p>Download as PDF</p>
+            </button>
+          </div>
+        </div>
+
+        <div className="">
+          <p className="smallcaps mt-5">MANAGE INVOICE</p>
+          <div className="button-group">
+            <button className="sec-button linen" onClick={undefined}>
+              <Image src={Link} alt="Icon" width={14} height={14} />
+              <p>Upload Invoice</p>
+            </button>
+            <button
+              className="sec-button w-50 img-btn linen"
+              onClick={undefined}
+            >
+              <Image src={Folder} alt="Icon" width={15} height={15} />
+              <p>View Invoice</p>
+            </button>
+          </div>
+          <div className="button-group mt-3">
+            {/* <button className="sec-button linen" onClick={undefined}>
+              <Image src={Send} alt="Icon" width={15} height={15} />
+              <p>Send Invoice</p>
+            </button> */}
+            <button
+              className="sec-button w-50 img-btn linen"
+              onClick={undefined}
+            >
+              <Image src={Download} alt="Icon" width={18} height={18} />
               <p>Download as PDF</p>
             </button>
           </div>

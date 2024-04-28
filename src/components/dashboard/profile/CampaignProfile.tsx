@@ -6,6 +6,7 @@ import Export from "@/components/assets/icons/export.svg";
 import Plus from "@/components/assets/icons/plus.svg";
 import Message from "@/components/assets/icons/message.svg";
 import Send from "@/components/assets/icons/send.svg";
+import Link from "@/components/assets/icons/link.svg";
 
 interface CampaignDetailsProps {
   campaignsData: any;
@@ -179,17 +180,9 @@ const CampaignInvoice = ({ campaignsData }: CampaignInvoiceProps) => {
 
         <div className="mt-5">
           <p className="smallcaps">MANAGE CONTRACT</p>
-
-          <input
-            type="file"
-            onChange={undefined}
-            style={{ display: "none" }}
-            ref={undefined}
-          />
-
           <div className="button-group">
             <button className="sec-button linen" onClick={undefined}>
-              {/* <Image src={Send} alt="Icon" width={15} height={15} /> */}
+            <Image src={Link} alt="Icon" width={14} height={14} />
               <p>Upload Contract</p>
             </button>
             <button
@@ -202,10 +195,10 @@ const CampaignInvoice = ({ campaignsData }: CampaignInvoiceProps) => {
           </div>
 
           <div className="button-group mt-3">
-            <button className="sec-button linen" onClick={undefined}>
+            {/* <button className="sec-button linen" onClick={undefined}>
               <Image src={Send} alt="Icon" width={15} height={15} />
               <p>Send Contract</p>
-            </button>
+            </button> */}
             <button
               className="sec-button w-50 img-btn linen"
               onClick={undefined}
@@ -220,7 +213,7 @@ const CampaignInvoice = ({ campaignsData }: CampaignInvoiceProps) => {
           <p className="smallcaps mt-5">MANAGE INVOICE</p>
           <div className="button-group">
             <button className="sec-button linen" onClick={undefined}>
-              {/* <Image src={Send} alt="Icon" width={15} height={15} /> */}
+              <Image src={Link} alt="Icon" width={15} height={15} />
               <p>Upload Invoice</p>
             </button>
             <button
@@ -232,10 +225,10 @@ const CampaignInvoice = ({ campaignsData }: CampaignInvoiceProps) => {
             </button>
           </div>
           <div className="button-group mt-3">
-            <button className="sec-button linen" onClick={undefined}>
+            {/* <button className="sec-button linen" onClick={undefined}>
               <Image src={Send} alt="Icon" width={15} height={15} />
               <p>Send Invoice</p>
-            </button>
+            </button> */}
             <button
               className="sec-button w-50 img-btn linen"
               onClick={undefined}
