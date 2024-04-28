@@ -54,15 +54,7 @@ const CreatorsPage = () => {
   ];
 
   useEffect(() => {
-    const originalDataCopy = [...originalData];
-    console.log("originalDataCopy:", originalDataCopy);
-    setFilteredData(originalDataCopy);
-    setDataToDisplay(
-      originalDataCopy.slice(
-        (currentPage - 1) * itemsPerPage,
-        currentPage * itemsPerPage
-      )
-    );
+    fetchCreators();
   }, [updateCreator]);
 
   const updateCreatorData = () => {

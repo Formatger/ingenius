@@ -106,7 +106,7 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
   };
 
   return (
-    
+
     <div>
       {isEditing ? (
         <div className="">
@@ -168,7 +168,7 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
               {errors.first_name && (
                 <span className="error-message">{errors.first_name.message}</span>
               )}
-            </div> 
+            </div>
             <div className="form-box">
               <span className="smallcaps">LAST NAME</span>
               <input
@@ -230,20 +230,20 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
                 <span className="sec-button gray1 ">
                   <p className="sec-tag">{userData.first_name}</p>
                 </span>
-              </div> 
+              </div>
               <div>
                 <p className="smallcaps">LAST NAME</p>
                 <span className="sec-button gray1">
                   <p className="sec-tag">{userData.last_name}</p>
                 </span>
-              </div> 
+              </div>
               <div>
                 <p className="smallcaps">EMAIL</p>
                 <span className="sec-button gray1">
                   <p className="sec-tag">{userData.email}</p>
                 </span>
-              </div> 
-            </div> 
+              </div>
+            </div>
           </div>
         </div>
       )}

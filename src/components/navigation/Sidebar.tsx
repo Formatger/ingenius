@@ -14,6 +14,7 @@ import ClientDropdown from "./ClientDropdown";
 import PartDropdown from "./PartDropdown";
 import Logout from "../assets/icons/logout.svg";
 import { getUserProfile } from "@/utils/httpCalls";
+import { useAppContext } from "../context/AppContext";
 
 interface SidebarProps {
   layout: React.ReactNode;
@@ -41,39 +42,41 @@ interface UserData {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ layout }) => {
+  const { updateUserData, setUpdateUserData } = useAppContext();
+
   const [mSidebar, setMSidebar] = useState<boolean>(false);
   const router = useRouter();
-  const [userData, setUserData] = useState({});
-  const [updateUser, setUpdateUser] = useState(false);
+  const [userData, setUserData] = useState<UserData>();
 
   const toggleSidebar = () => {
     setMSidebar(!mSidebar);
   };
 
-    /* UPDATE USER API CALL */
+  /* GET USER API CALL */
 
-    const updateUserData = () => {
-      setUpdateUser((prevState) => !prevState);
-    };
-    
-    /* GET USER API CALL */
-  
-      useEffect(() => {
-        fetchUserProfile();
-      }, [router]);
-    
-      const fetchUserProfile = () => {
-        getUserProfile(
-          (response: any) => {
-            console.log("User profile data:", response); 
-            setUserData(response[0] || []);
-          },
-          (error: any) => {
-            console.error("Error fetching profile data:", error);
-            setUserData({});
-          }
-        );
-      };
+  useEffect(() => {
+    fetchUserProfile();
+  }, [router]);
+
+  useEffect(() => {
+    if (updateUserData) {
+      fetchUserProfile();
+      setUpdateUserData(false);
+    }
+  }, [updateUserData]);
+
+  const fetchUserProfile = () => {
+    getUserProfile(
+      (response: any) => {
+        console.log("User profile data:", response);
+        setUserData(response[0] || []);
+      },
+      (error: any) => {
+        console.error("Error fetching profile data:", error);
+        setUserData(undefined);
+      }
+    );
+  };
 
   return (
     <div className="opacity-100">
@@ -118,7 +121,7 @@ const Sidebar: React.FC<SidebarProps> = ({ layout }) => {
               <div className="nav-title">
                 <p className="smallcaps-dark">manage</p>
               </div>
-  
+
               <div className="nav-group">
 
                 <ClientDropdown />
@@ -188,7 +191,7 @@ const Sidebar: React.FC<SidebarProps> = ({ layout }) => {
             */}
 
           </div>
-          
+
 
 
         </div>
