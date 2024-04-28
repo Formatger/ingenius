@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import HelpIcon from "@/components/assets/svg/Help";
 import SearchDropdown from "./SearchDropdown";
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
 import FormSidepanel from "@/components/common/Sidepanel";
 import {
   CampaignInterface,
@@ -83,6 +83,8 @@ const DealForm: React.FC<DealFormProps> = ({
   } = useForm<FormData>();
   const [selectedStage, setSelectedStage] = useState("");
   const [brandsData, setBrandsData] = useState<any>([]);
+  const [submitting, setSubmitting] = useState<boolean>(false);
+
   // const [invoiceStatus, setInvoiceStatus] = useState(
   //   dealsData?.invoice_paid ? "Paid" : "Unpaid"
   // );
@@ -148,6 +150,8 @@ const DealForm: React.FC<DealFormProps> = ({
 
   const onSubmit = async (data: FormData) => {
     console.log("Form Data:", data);
+    setSubmitting(true);
+
     try {
       if (isEditing) {
         const dealId = dealsData.id;
@@ -169,7 +173,7 @@ const DealForm: React.FC<DealFormProps> = ({
           (error) => {
             console.error("Error updating project:", error);
           }
-        );
+        ).finally(() => setSubmitting(false));
       } else {
         // Si no se está editando, realizamos una solicitud POST
         await postDeals(
@@ -183,10 +187,11 @@ const DealForm: React.FC<DealFormProps> = ({
           (error) => {
             console.error("Error creating deal:", error);
           }
-        );
+        ).finally(() => setSubmitting(false));
       }
     } catch (error) {
       console.error("ERROR", error);
+      setSubmitting(false);
     }
   };
 
@@ -319,7 +324,13 @@ const DealForm: React.FC<DealFormProps> = ({
                 <p>Cancel</p>
               </button>
               <button className="sec-button linen" type="submit">
-                <p>Save</p>
+                {submitting ? (
+                  <div className="spinner-container">
+                    <div className="spinner-linen" />
+                  </div>
+                ) : (
+                  <p>Save</p>
+                )}
               </button>
             </div>
           </form>
@@ -445,7 +456,13 @@ const DealForm: React.FC<DealFormProps> = ({
             </div>
 
             <button className="sec-button linen" type="submit">
-              <p>SAVE</p>
+              {submitting ? (
+                <div className="spinner-container">
+                  <div className="spinner-linen" />
+                </div>
+              ) : (
+                <p>SAVE</p>
+              )}
             </button>
           </form>
         </div>

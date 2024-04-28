@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import HelpIcon from "@/components/assets/svg/Help";
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
 import FormSidepanel from "@/components/common/Sidepanel";
 import {
   lockBrand,
@@ -53,6 +53,7 @@ const BrandForm: React.FC<BrandFormProps> = ({
     trigger,
   } = useForm<FormData>();
   const [imageURL, setImageURL] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState<boolean>(false);
 
   useEffect(() => {
     lockBrand(brandsData.id);
@@ -91,7 +92,7 @@ const BrandForm: React.FC<BrandFormProps> = ({
 
   const onSubmit = async (data: FormData) => {
     console.log("Form Data:", data);
-
+    setSubmitting(true);
     const formData = new FormData();
 
     // Append all form data fields to the FormData object
@@ -117,7 +118,7 @@ const BrandForm: React.FC<BrandFormProps> = ({
           (error) => {
             console.error("Error updating brand:", error);
           }
-        );
+        ).finally(() => setSubmitting(false));
       } else {
         console.log("Data for POST:", formData);
 
@@ -132,10 +133,11 @@ const BrandForm: React.FC<BrandFormProps> = ({
           (error) => {
             console.error("Error creating brand:", error);
           }
-        );
+        ).finally(() => setSubmitting(false));
       }
     } catch (error) {
       console.error("ERROR", error);
+      setSubmitting(false);
     }
   };
 
@@ -294,7 +296,13 @@ const BrandForm: React.FC<BrandFormProps> = ({
                 <p>Cancel</p>
               </button>
               <button className="sec-button linen" type="submit">
-                <p>Save</p>
+                {submitting ? (
+                  <div className="spinner-container">
+                    <div className="spinner-linen" />
+                  </div>
+                ) : (
+                  <p>Save</p>
+                )}
               </button>
             </div>
           </form>
@@ -428,7 +436,13 @@ const BrandForm: React.FC<BrandFormProps> = ({
               )}
             </div>
             <button className="sec-button linen" type="submit">
-              <p>SAVE</p>
+              {submitting ? (
+                <div className="spinner-container">
+                  <div className="spinner-linen" />
+                </div>
+              ) : (
+                <p>SAVE</p>
+              )}
             </button>
           </form>
         </div>

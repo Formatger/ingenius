@@ -58,6 +58,7 @@ const CreatorForm: React.FC<CreatorFormProps> = ({
   const [imageURL, setImageURL] = useState<string | null>(
     creatorsData.profile_picture_url || null
   );
+  const [submitting, setSubmitting] = useState<boolean>(false);
 
   useEffect(() => {
     lockCreator(creatorsData.id);
@@ -98,9 +99,8 @@ const CreatorForm: React.FC<CreatorFormProps> = ({
 
   const onSubmit = async (data: FormData) => {
     console.log("Form Data:", data);
-
     const formData = new FormData();
-
+    setSubmitting(true);
     Object.entries(data).forEach(([key, value]) => {
       if (value !== undefined && value !== null) {
         formData.append(key, value);
@@ -122,7 +122,7 @@ const CreatorForm: React.FC<CreatorFormProps> = ({
           (error) => {
             console.error("Error updating creator:", error);
           }
-        );
+        ).finally(() => setSubmitting(false));
       } else {
         console.log("Data for POST:", formData);
 
@@ -136,10 +136,11 @@ const CreatorForm: React.FC<CreatorFormProps> = ({
           (error) => {
             console.error("Error creating creator:", error);
           }
-        );
+        ).finally(() => setSubmitting(false));
       }
     } catch (error) {
       console.error("ERROR", error);
+      setSubmitting(false);
     }
   };
 
@@ -263,7 +264,13 @@ const CreatorForm: React.FC<CreatorFormProps> = ({
                 <p>Cancel</p>
               </button>
               <button className="sec-button linen" type="submit">
-                <p>Save</p>
+                {submitting ? (
+                  <div className="spinner-container">
+                    <div className="spinner-linen" />
+                  </div>
+                ) : (
+                  <p>Save</p>
+                )}
               </button>
             </div>
           </form>
@@ -364,7 +371,13 @@ const CreatorForm: React.FC<CreatorFormProps> = ({
             </div>
 
             <button className="sec-button linen" type="submit">
-              <p>SAVE</p>
+              {submitting ? (
+                <div className="spinner-container">
+                  <div className="spinner-linen" />
+                </div>
+              ) : (
+                <p>SAVE</p>
+              )}
             </button>
           </form>
         </div>

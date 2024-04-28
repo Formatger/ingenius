@@ -74,6 +74,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
   const [invoiceStatus, setInvoiceStatus] = useState(
     projectsData.invoice_paid ? "Paid" : "Unpaid"
   );
+  const [submitting, setSubmitting] = useState<boolean>(false);
   const startDate = watch("start_date");
   const endDate = watch("deadline");
 
@@ -170,6 +171,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
 
   const onSubmit = async (data: FormData) => {
     console.log("Form Data:", data);
+    setSubmitting(true);
     try {
       if (isEditing) {
         const projectId = projectsData.id;
@@ -191,7 +193,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
           (error) => {
             console.error("Error updating project:", error);
           }
-        );
+        ).finally(() => setSubmitting(false));
       } else {
         await postProjects(
           data,
@@ -204,10 +206,11 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
           (error) => {
             console.error("Error creating project:", error);
           }
-        );
+        ).finally(() => setSubmitting(false));
       }
     } catch (error) {
       console.error("ERROR", error);
+      setSubmitting(false);
     }
   };
 
@@ -363,7 +366,13 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
                 <p>Cancel</p>
               </button>
               <button className="sec-button linen" type="submit">
-                <p>Save</p>
+                {submitting ? (
+                  <div className="spinner-container">
+                    <div className="spinner-linen" />
+                  </div>
+                ) : (
+                  <p>Save</p>
+                )}
               </button>
             </div>
           </form>
@@ -513,7 +522,13 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
             </div>
 
             <button className="sec-button linen" type="submit">
-              <p>SAVE</p>
+              {submitting ? (
+                <div className="spinner-container">
+                  <div className="spinner-linen" />
+                </div>
+              ) : (
+                <p>SAVE</p>
+              )}
             </button>
           </form>
         </div>
