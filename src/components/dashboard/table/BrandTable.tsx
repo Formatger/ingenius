@@ -158,7 +158,7 @@ const BrandTable = ({
                   onClick={() => handleOpenSidepanel(brand)}
                 >
                   <td className="table-brand-cell">
-                    <Image
+                    {/* <Image
                       src={brand.profile_picture_url}
                       alt={brand.name}
                       width={40}
@@ -167,12 +167,13 @@ const BrandTable = ({
                       className="partner-image"
                       loading="lazy"
                       quality={75}
-                    /> 
-                    {/* <img
+                    />  */}
+                    <img
                       src={brand.profile_picture_url}
                       alt={brand.name}
                       className="partner-image"
-                    /> */}
+                      loading="lazy"
+                    />
                     {brand.name}
                   </td>
                   <td className="table-cell-center">{brand.website}</td>

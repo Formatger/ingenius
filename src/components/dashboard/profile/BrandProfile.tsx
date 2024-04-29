@@ -17,7 +17,7 @@ const BrandDetails = ({ brandsData, updateBrandData }: BrandDetailsProps) => {
       <div className="head-card mb-1" >
         <div className="profile-info">
           <div className="profile-info-image">
-            <Image
+            {/* <Image
               src={brandsData?.profile_picture_url}
               alt="Brand"
               width={160}
@@ -26,7 +26,13 @@ const BrandDetails = ({ brandsData, updateBrandData }: BrandDetailsProps) => {
               className="profile-image"
               loading="lazy"
               quality={75}
-            />          
+            />    */}
+            <img
+              src={brandsData?.profile_picture_url}
+              alt="Brand"
+              className="profile-image"
+              loading="lazy"
+            />       
           </div>
         </div>
         <div className="profile-info">

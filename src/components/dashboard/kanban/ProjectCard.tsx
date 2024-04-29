@@ -51,6 +51,7 @@ const ProjectsCard: React.FC<ProjectsCardProps> = ({
           alt="Creator"
           width={70}
           height={70}
+          loading="lazy"
         />
         <p>{generateCard.creator?.name}</p>
       </div>

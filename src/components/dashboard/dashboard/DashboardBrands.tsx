@@ -74,7 +74,7 @@ const DashboardBrands = ({ campaignsData }: DashboardBrandsProps) => {
                   <div className="row-wrap-3">
 
                     <div className="">
-                    <Image
+                    {/* <Image
                       src={campaign.brand_image_url}
                       alt={campaign.brand_name}
                       width={40}
@@ -83,14 +83,15 @@ const DashboardBrands = ({ campaignsData }: DashboardBrandsProps) => {
                       className="partner-image"
                       loading="lazy"
                       quality={75}
-                    /> 
-                      {/* <img
+                    />  */}
+                      <img
                         src={campaign.brand_image_url}
                         alt={campaign.brand_name}
                         className="partner-image"
                         width={40}
                         height={40}
-                      /> */}
+                        loading="lazy"
+                      />
                     </div>
                     <div>
                       <p className="track-title">{campaign.brand_name}</p>

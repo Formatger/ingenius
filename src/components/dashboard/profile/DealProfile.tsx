@@ -30,7 +30,7 @@ const DealDetails = ({ dealsData }: DealDetailsProps) => {
       <div className="head-card mb-1" >
         <div className="profile-info">
           <div className="profile-info-image">
-            <Image
+            {/* <Image
               src={dealsData?.brand_image_url}
               alt="Creator"
               width={160}
@@ -39,8 +39,8 @@ const DealDetails = ({ dealsData }: DealDetailsProps) => {
               className="profile-image"
               loading="lazy"
               quality={75}
-            />
-            {/* <img src={dealsData?.brand_image_url} alt="Brand" className="profile-image" loading="lazy" /> */}
+            /> */}
+            <img src={dealsData?.brand_image_url} alt="Brand" className="profile-image" loading="lazy" />
           </div>
         </div>
         <div className="profile-info">

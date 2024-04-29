@@ -51,6 +51,7 @@ const DealCard: React.FC<DealCardProps> = ({
           alt="Creator"
           width={70}
           height={70}
+          loading="lazy"
         />
         <p>{generateCard.creator?.name}</p>
       </div>

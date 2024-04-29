@@ -171,7 +171,7 @@ const DealTable = ({
                   onClick={() => handleOpenSidepanel(deal)}
                 >
                   <td className="table-brand-cell">
-                  <Image
+                  {/* <Image
                       src={deal.brand_image_url}
                       alt={deal.brand_name}
                       width={40}
@@ -180,14 +180,15 @@ const DealTable = ({
                       className="partner-image"
                       loading="lazy"
                       quality={75}
-                    /> 
-                    {/* <img
+                    />  */}
+                    <img
                       src={deal.brand_image_url}
                       alt={deal.brand_name}
                       className="partner-image"
                       width={40}
                       height={40}
-                    /> */}
+                      loading="lazy"
+                    />
                     {deal.brand_name}
                   </td>
 

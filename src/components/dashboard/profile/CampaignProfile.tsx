@@ -29,7 +29,7 @@ const CampaignDetails = ({ campaignsData }: CampaignDetailsProps) => {
       <div className="head-card mb-1">
         <div className="profile-info">
           <div className="profile-info-image">
-            <Image
+            {/* <Image
               src={campaignsData?.brand_image_url}
               alt="Creator"
               width={160}
@@ -38,13 +38,13 @@ const CampaignDetails = ({ campaignsData }: CampaignDetailsProps) => {
               className="profile-image"
               loading="lazy"
               quality={75}
-            />
-            {/* <img
+            /> */}
+            <img
               src={campaignsData?.brand_image_url}
               alt="Brand"
               className="profile-image"
               loading="lazy"
-            /> */}
+            />
           </div>
         </div>
         <div className="profile-info">

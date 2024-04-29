@@ -158,7 +158,7 @@ const CreatorTable = ({
                   onClick={() => handleOpenSidepanel(creator)}
                 >
                   <td className="table-brand-cell">
-                    <Image
+                    {/* <Image
                       src={creator.profile_picture_url}
                       alt={creator.name}
                       width={40}
@@ -167,13 +167,13 @@ const CreatorTable = ({
                       className="partner-image"
                       loading="lazy"
                       quality={75}
-                    /> 
-                    {/* <img
+                    />  */}
+                    <img
                       src={creator.profile_picture_url}
                       alt={creator.name}
                       className="partner-image"
                       loading="lazy"
-                    /> */}
+                    />
                     {creator.name}
                   </td>
                   <td className="table-cell-center">{creator.email}</td>

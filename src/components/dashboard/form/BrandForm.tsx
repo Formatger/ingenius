@@ -173,21 +173,22 @@ const BrandForm: React.FC<BrandFormProps> = ({
               <div className="upload-image-box">
                 <div className="upload-image">
                   {imageURL ? (
-                      <Image
-                      src={imageURL}
-                      alt="image"
-                      width={120}
-                      height={120}
-                      layout="fixed"
-                      className="partner-image"
-                      loading="lazy"
-                      quality={75}
-                    /> 
-                    // <img
+                    //   <Image
                     //   src={imageURL}
-                    //   alt="Uploaded"
-                    //   style={{ width: "120px", height: "120px" }}
-                    // />
+                    //   alt="image"
+                    //   width={120}
+                    //   height={120}
+                    //   layout="fixed"
+                    //   className="partner-image"
+                    //   loading="lazy"
+                    //   quality={75}
+                    // /> 
+                    <img
+                      src={imageURL}
+                      alt="Uploaded"
+                      style={{ width: "120px", height: "120px" }}
+                      loading="lazy"
+                    />
                   ) : (
                     <Image
                       src={ProfilePic}
@@ -338,6 +339,7 @@ const BrandForm: React.FC<BrandFormProps> = ({
                       src={imageURL}
                       alt="Uploaded"
                       style={{ width: "120px", height: "120px" }}
+                      loading="lazy"
                     />
                   ) : (
                     <Image

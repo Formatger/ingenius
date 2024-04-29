@@ -402,12 +402,13 @@ const CampaignKanban = ({
                     onClick={() => handleOpenSidepanel(campaignCard)}
                   >
                     <div className="kanban-card-header">
-                      {/* <img
+                      <img
                         src={campaignCard.brand_image_url}
                         alt={campaignCard.brand_name}
                         className="brandImage"
-                      /> */}
-                    <Image
+                        loading="lazy"
+                      />
+                    {/* <Image
                       src={campaignCard.brand_image_url}
                       alt={campaignCard.brand_name}
                       width={30}
@@ -416,7 +417,7 @@ const CampaignKanban = ({
                       className="brandImage"
                       loading="lazy"
                       quality={75}
-                    /> 
+                    />  */}
                       <p className="brandTitle">{campaignCard.brand_name}</p>
                     </div>
                     <p className="kanbancard-name">{campaignCard.name}</p>

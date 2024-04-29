@@ -414,12 +414,13 @@ const ProjectsKanban = ({
                 onClick={() => handleOpenSidepanel(projectCard)}
               >
                 <div className="kanban-card-header">
-                  {/* <img
+                  <img
                     src={projectCard.creator_profile_picture}
                     alt={projectCard.creator_name}
                     className="brandImage"
-                  /> */}
-                  <Image
+                    loading="lazy"
+                  />
+                  {/* <Image
                       src={projectCard.creator_profile_picture}
                       alt={projectCard.creator_name}
                       width={30}
@@ -428,7 +429,7 @@ const ProjectsKanban = ({
                       className="brandImage"
                       loading="lazy"
                       quality={75}
-                    /> 
+                    />  */}
                   <p className="brandTitle">{projectCard.creator_name}</p>
                 </div>
                 <p className="kanbancard-name">{projectCard.name}</p>

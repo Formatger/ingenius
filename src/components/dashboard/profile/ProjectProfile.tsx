@@ -69,7 +69,7 @@ const ProjectDetails = ({ projectsData }: ProjectDetailsProps) => {
       <div className="head-card mb-1">
         <div className="profile-info">
           <div className="profile-info-image">
-            <Image
+            {/* <Image
               src={projectsData?.creator_profile_picture}
               alt="Creator"
               width={160}
@@ -78,13 +78,13 @@ const ProjectDetails = ({ projectsData }: ProjectDetailsProps) => {
               className="profile-image"
               loading="lazy"
               quality={75}
-            />
-            {/* <img
+            /> */}
+            <img
               src={projectsData?.creator_profile_picture}
               alt="Creator"
               className="profile-image"
               loading="lazy"
-            /> */}
+            />
           </div>
         </div>
         <div className="profile-info">

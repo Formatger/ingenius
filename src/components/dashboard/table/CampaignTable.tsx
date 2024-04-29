@@ -160,7 +160,7 @@ const CampaignTable = ({
                   onClick={() => handleOpenSidepanel(campaign)}
                 >
                   <td className="table-brand-cell">
-                    <Image
+                    {/* <Image
                       src={campaign.brand_image_url}
                       alt={campaign.brand_name}
                       width={40}
@@ -169,12 +169,13 @@ const CampaignTable = ({
                       className="partner-image"
                       loading="lazy"
                       quality={75}
-                    /> 
-                    {/* <img
+                    />  */}
+                    <img
                       src={campaign.brand_image_url}
                       alt={campaign.brand_name}
                       className="partner-image"
-                    /> */}
+                      loading="lazy"
+                    />
                     {campaign.brand_name}
                   </td>
                   <td className="table-cell">

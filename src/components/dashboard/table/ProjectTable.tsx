@@ -181,7 +181,7 @@ const ProjectTable = ({
                   onClick={() => handleOpenSidepanel(project)}
                 >
                   <td className="table-brand-cell">
-                    <Image
+                    {/* <Image
                       src={project.creator_profile_picture}
                       alt={project.creator_name}
                       width={40}
@@ -190,14 +190,15 @@ const ProjectTable = ({
                       className="partner-image"
                       loading="lazy"
                       quality={75}
-                    /> 
-                    {/* <img
+                    />  */}
+                    <img
                       src={project.creator_profile_picture}
                       alt={project.creator_name}
                       className="partner-image"
                       width={40}
                       height={40}
-                    /> */}
+                      loading="lazy"
+                    />
                     {project.creator_name}
                   </td>
                   <td className="table-cell">
@@ -209,7 +210,7 @@ const ProjectTable = ({
                     </span>{" "}
                   </td>
                   <td className="table-brand-cell">
-                    <Image
+                    {/* <Image
                         src={project.brand_image_url}
                         alt={project.brand_name}
                         width={40}
@@ -218,12 +219,13 @@ const ProjectTable = ({
                         className="partner-image"
                         loading="lazy"
                         quality={75}
-                      /> 
-                    {/* <img
+                      />  */}
+                    <img
                       src={project.brand_image_url}
                       alt={project.brand_name}
                       className="partner-image"
-                    /> */}
+                      loading="lazy"
+                    />
                     {project.brand_name}
                   </td>
                   <td className="table-cell-center">{`$${project.contract_value}`}</td>
