@@ -165,7 +165,7 @@ const Sidebar: React.FC<SidebarProps> = ({ layout }) => {
               <div className="sidebar-image-wrap">
                 <img
                   src={userData?.team_picture_url}
-                  alt="Uploaded"
+                  alt=""
                   className="sidebar-profile"
                 />
               </div>
