@@ -43,29 +43,40 @@ export default function App({ Component, pageProps }: AppProps) {
           router.push("/auth");
         }
       }
-      setLoading(false);
     };
 
-    refreshTokenOnLoad();
+    refreshTokenOnLoad().finally(() => {
+      setTimeout(() => {
+        setLoading(false);
+      }, 1000)
+    });
   }, []);
 
   if (loading) {
     return (
-      <div className="spinner-container">
+      <div
+        className="spinner-container"
+        style={{
+          width: "100vw",
+          height: "100vh",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center"
+        }}
+      >
         <div className="spinner" />
       </div>
     )
+  } else {
+    return (
+      <AppProvider>
+        <Head>
+          <title>Ingenius</title>
+        </Head>
+        <div className="root">
+          <Component {...pageProps} />
+        </div>
+      </AppProvider>
+    );
   }
-
-
-  return (
-    <AppProvider>
-      <Head>
-        <title>Ingenius</title>
-      </Head>
-      <div className="root">
-        <Component {...pageProps} />
-      </div>
-    </AppProvider>
-  );
 }
