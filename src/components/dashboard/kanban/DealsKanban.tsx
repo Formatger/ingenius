@@ -394,11 +394,21 @@ const DealsKanban = ({
                     onClick={() => handleOpenSidepanel(dealCard)}
                   >
                     <div className="kanban-card-header">
-                      <img
+                      {/* <img
                         src={dealCard.brand_image_url}
                         alt={dealCard.brand_name}
                         className="brandImage"
-                      />
+                      /> */}
+                    <Image
+                      src={dealCard.brand_image_url}
+                      alt={dealCard.brand_name}
+                      width={30}
+                      height={30}
+                      layout="fixed"
+                      className="brandImage"
+                      loading="lazy"
+                      quality={75}
+                    /> 
                       <p className="brandTitle">{dealCard.brand_name}</p>
                     </div>
                     <p className="kanbancard-name">{dealCard.name}</p>

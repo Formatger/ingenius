@@ -296,7 +296,7 @@ const CampaignKanban = ({
           isOpen={showLockModal}
           onClose={() => setShowLockModal(false)}
           title="Stages are locked"
-          message="Campaign currently being edited by another user. Please try again later."
+          message="Campaign currently being edited by another user. Please refresh to see changes when the other user has finished editing."
         />
       )}
       {stages
@@ -402,11 +402,21 @@ const CampaignKanban = ({
                     onClick={() => handleOpenSidepanel(campaignCard)}
                   >
                     <div className="kanban-card-header">
-                      <img
+                      {/* <img
                         src={campaignCard.brand_image_url}
                         alt={campaignCard.brand_name}
                         className="brandImage"
-                      />
+                      /> */}
+                    <Image
+                      src={campaignCard.brand_image_url}
+                      alt={campaignCard.brand_name}
+                      width={30}
+                      height={30}
+                      layout="fixed"
+                      className="brandImage"
+                      loading="lazy"
+                      quality={75}
+                    /> 
                       <p className="brandTitle">{campaignCard.brand_name}</p>
                     </div>
                     <p className="kanbancard-name">{campaignCard.name}</p>

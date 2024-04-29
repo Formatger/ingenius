@@ -70,6 +70,9 @@
   width: 30px;
   height: 30px;
   border-radius: 50%;
+  object-fit: cover;
+  margin-right: 10px;
+  background-color: var(--gray1);
 }
 
 .brandTitle {
@@ -178,3 +181,4 @@
 .kanban-card:active {
   cursor: grabbing; 
 }
+
