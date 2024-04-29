@@ -234,6 +234,7 @@ const DealInvoice = ({ dealsData, setRefreshData }: DealInvoiceProps) => {
                 setFileModalOpenInvoice(true);
               }}
             >
+              <Image src={Link} alt="Icon" width={15} height={15} />
               <p>Upload Invoice</p>
             </button>
             <UploadFileModal

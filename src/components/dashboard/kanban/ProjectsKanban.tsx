@@ -304,7 +304,7 @@ const ProjectsKanban = ({
           isOpen={showLockModal}
           onClose={() => setShowLockModal(false)}
           title="Stages are locked"
-          message="Project currently being edited by another user. Please try again later."
+          message="Project currently being edited by another user. Please refresh to see changes when the other user has finished editing."
         />
       )}
       {stages

@@ -291,7 +291,7 @@ const DealsKanban = ({
           isOpen={showLockModal}
           onClose={() => setShowLockModal(false)}
           title="Stages are locked"
-          message="Deal currently being edited by another user. Please try again later."
+          message="Deal currently being edited by another user. Please refresh to see changes when the other user has finished editing."
         />
       )}
       {stages
