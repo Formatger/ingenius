@@ -17,8 +17,15 @@ const ProjectProfilePage = () => {
   const [loader, setLoader] = useState<boolean>(false);
   const [projectsData, setProjectsData] = useState({});
   const [activeTab, setActiveTab] = useState('invoice');
+  const [refreshData, setRefreshData] = useState(false);
 
   useEffect(() => { fetchData() }, [router]);
+  useEffect(() => {
+    if (refreshData) {
+      fetchData();
+      setRefreshData(false);
+    }
+  }, [refreshData]);
 
   const fetchData = () => {
     setLoader(true);
@@ -52,7 +59,7 @@ const ProjectProfilePage = () => {
             <div className="profile-container">
               <div>
                 <ProjectDetails projectsData={projectsData} />
-              {/* <div className="card-container tab-buttons">
+                {/* <div className="card-container tab-buttons">
                 <p className="smallcaps">VIEW DOCUMENTS</p>
                 <div className="button-group">
                 <button className={`sec-button ${activeTab === 'contract' ? 'active-button' : 'linen'}`}
@@ -67,17 +74,17 @@ const ProjectProfilePage = () => {
                   </button>
                 </div>
               </div> */}
-            </div>
-        
-            <div>
-              {/* {activeTab === 'invoice' ? ( */}
-                <ProjectInvoice projectsData={projectsData} />
-              {/* ) : (
+              </div>
+
+              <div>
+                {/* {activeTab === 'invoice' ? ( */}
+                <ProjectInvoice projectsData={projectsData} setRefreshData={setRefreshData} />
+                {/* ) : (
                 <ProjectContract projectsData={projectsData} />
               )} */}
+              </div>
             </div>
-           </div>
-          
+
           </div>
         </>
       )}

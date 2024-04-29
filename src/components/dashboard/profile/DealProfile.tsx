@@ -19,6 +19,7 @@ interface DealDetailsProps {
 
 interface DealInvoiceProps {
   dealsData: any;
+  setRefreshData: (value: boolean) => void;
 }
 
 const DealDetails = ({ dealsData }: DealDetailsProps) => {
@@ -119,7 +120,7 @@ const DealDetails = ({ dealsData }: DealDetailsProps) => {
   );
 };
 
-const DealInvoice = ({ dealsData }: DealInvoiceProps) => {
+const DealInvoice = ({ dealsData, setRefreshData }: DealInvoiceProps) => {
   const [isFileModalOpenContract, setFileModalOpenContract] = useState(false);
   const [isFileModalOpenInvoice, setFileModalOpenInvoice] = useState(false);
 
@@ -186,7 +187,10 @@ const DealInvoice = ({ dealsData }: DealInvoiceProps) => {
             </button>
             <UploadFileModal
               isOpen={isFileModalOpenContract}
-              onClose={() => setFileModalOpenContract(false)}
+              onClose={() => {
+                setFileModalOpenContract(false)
+                setRefreshData(true);
+              }}
               title="Upload Contract"
               message="Upload a Contract File in PDF format."
               button="Upload File"
@@ -234,7 +238,10 @@ const DealInvoice = ({ dealsData }: DealInvoiceProps) => {
             </button>
             <UploadFileModal
               isOpen={isFileModalOpenInvoice}
-              onClose={() => setFileModalOpenInvoice(false)}
+              onClose={() => {
+                setFileModalOpenInvoice(false);
+                setRefreshData(true);
+              }}
               title="Upload Invoice"
               message="Upload a Invoice File in PDF format."
               button="Upload File"

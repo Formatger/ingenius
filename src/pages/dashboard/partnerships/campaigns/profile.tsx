@@ -15,8 +15,15 @@ const CampaignProfilePage = () => {
   const [loader, setLoader] = useState<boolean>(false);
   // const [invoiceData, setInvoiceData] = useState(null);
   const [campaignsData, setCampaignsData] = useState({});
+  const [refreshData, setRefreshData] = useState(false);
 
   useEffect(() => { fetchCampaignsData() }, [router]);
+  useEffect(() => {
+    if (refreshData) {
+      fetchCampaignsData();
+      setRefreshData(false);
+    }
+  }, [refreshData]);
 
   const fetchCampaignsData = () => {
     setLoader(true);
@@ -52,7 +59,7 @@ const CampaignProfilePage = () => {
                 <CampaignDetails campaignsData={campaignsData} />
               </div>
               <div>
-                <CampaignInvoice campaignsData={campaignsData} />
+                <CampaignInvoice campaignsData={campaignsData} setRefreshData={setRefreshData} />
               </div>
             </div>
           </div>

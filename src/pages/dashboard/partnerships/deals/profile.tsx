@@ -15,8 +15,15 @@ const DealProfilePage = () => {
   const [loader, setLoader] = useState<boolean>(false);
   // const [invoiceData, setInvoiceData] = useState(null);
   const [dealsData, setDealsData] = useState({});
+  const [refreshData, setRefreshData] = useState(false);
 
   useEffect(() => { fetchDealsData() }, [router]);
+  useEffect(() => {
+    if (refreshData) {
+      fetchDealsData();
+      setRefreshData(false);
+    }
+  }, [refreshData]);
 
   const fetchDealsData = () => {
     setLoader(true);
@@ -52,7 +59,7 @@ const DealProfilePage = () => {
                 <DealDetails dealsData={dealsData} />
               </div>
               <div>
-                <DealInvoice dealsData={dealsData} />
+                <DealInvoice dealsData={dealsData} setRefreshData={setRefreshData} />
               </div>
             </div>
           </div>

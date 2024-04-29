@@ -33,6 +33,7 @@ export default function App({ Component, pageProps }: AppProps) {
         if (localStorage.refresh_token) {
           await refreshToken((error) => {
             console.error("Error:", error);
+            window.location.href = "/auth";
           });
           setInterval(async () => {
             await refreshToken((error) => {
