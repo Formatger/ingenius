@@ -18,6 +18,7 @@ interface CampaignDetailsProps {
 
 interface CampaignInvoiceProps {
   campaignsData: any;
+  setRefreshData: (value: boolean) => void;
 }
 
 const CampaignDetails = ({ campaignsData }: CampaignDetailsProps) => {
@@ -120,7 +121,7 @@ const CampaignDetails = ({ campaignsData }: CampaignDetailsProps) => {
               <p>Message</p>
             </button>
             <button className="sec-button linen" onClick={() => {
-              router.push(`/dashboard/partnerships/deals/profile?dealId=${campaignsData?.deal}`)
+              router.push(`/dashboard/clients/brands/profile?brandId=${campaignsData?.brand}`)
             }}>
               <Image
                 className=""
@@ -138,7 +139,7 @@ const CampaignDetails = ({ campaignsData }: CampaignDetailsProps) => {
   );
 };
 
-const CampaignInvoice = ({ campaignsData }: CampaignInvoiceProps) => {
+const CampaignInvoice = ({ campaignsData, setRefreshData }: CampaignInvoiceProps) => {
   const [isFileModalOpenContract, setFileModalOpenContract] = useState(false);
   const [isFileModalOpenInvoice, setFileModalOpenInvoice] = useState(false);
 
@@ -214,7 +215,10 @@ const CampaignInvoice = ({ campaignsData }: CampaignInvoiceProps) => {
             </button>
             <UploadFileModal
               isOpen={isFileModalOpenContract}
-              onClose={() => setFileModalOpenContract(false)}
+              onClose={() => {
+                setFileModalOpenContract(false)
+                setRefreshData(true)
+              }}
               title="Upload Contract"
               message="Upload a Contract File in PDF format."
               button="Upload File"
@@ -263,7 +267,10 @@ const CampaignInvoice = ({ campaignsData }: CampaignInvoiceProps) => {
             </button>
             <UploadFileModal
               isOpen={isFileModalOpenInvoice}
-              onClose={() => setFileModalOpenInvoice(false)}
+              onClose={() => {
+                setFileModalOpenInvoice(false)
+                setRefreshData(true)
+              }}
               title="Upload Invoice"
               message="Upload a Invoice File in PDF format."
               button="Upload File"

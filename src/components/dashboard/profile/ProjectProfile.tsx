@@ -34,6 +34,7 @@ interface ProjectDetailsProps {
 
 interface ProjectInvoiceProps {
   projectsData: any;
+  setRefreshData: (value: boolean) => void;
 }
 
 // interface ProjectContractProps {
@@ -192,7 +193,7 @@ const ProjectDetails = ({ projectsData }: ProjectDetailsProps) => {
   );
 };
 
-const ProjectInvoice = ({ projectsData }: ProjectInvoiceProps) => {
+const ProjectInvoice = ({ projectsData, setRefreshData }: ProjectInvoiceProps) => {
   const fileInputRef = useRef(null);
   const [loading, setLoading] = useState(false);
   const [showLockModal, setShowLockModal] = useState(false);
@@ -320,7 +321,10 @@ const ProjectInvoice = ({ projectsData }: ProjectInvoiceProps) => {
             </button>
             <UploadFileModal
               isOpen={isFileModalOpenContract}
-              onClose={() => setFileModalOpenContract(false)}
+              onClose={() => {
+                setFileModalOpenContract(false)
+                setRefreshData(true)
+              }}
               title="Upload Contract"
               message="Upload a Contract File in PDF format."
               button="Upload File"
@@ -369,7 +373,10 @@ const ProjectInvoice = ({ projectsData }: ProjectInvoiceProps) => {
             </button>
             <UploadFileModal
               isOpen={isFileModalOpenInvoice}
-              onClose={() => setFileModalOpenInvoice(false)}
+              onClose={() => {
+                setFileModalOpenInvoice(false)
+                setRefreshData(true)
+              }}
               title="Upload Invoice"
               message="Upload an Invoice File in PDF format."
               button="Upload File"
