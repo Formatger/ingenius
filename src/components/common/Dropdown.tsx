@@ -326,6 +326,25 @@ function Dropdown({
     );
   };
 
+  const handleSelectFilterAdditive = (value: string) => {
+    setCurrentPage(1);
+    handleSelectTimeframe(timeframes[0]);
+    searchValue.current = "";
+    setShowSuggestionDropdown(false);
+    selectedFiltersRef.current = [...selectedFiltersRef.current, value];
+
+    const filteredData = originalData.filter((item: any) => {
+      const { brand_name, creator_name, name } = item;
+      // Check if the item's brand, creator, or name matches any of the selected filters
+      return selectedFiltersRef.current.some(
+        (filter) =>
+          filter === brand_name || filter === creator_name || filter === name
+      );
+    });
+
+    setFilteredData(filteredData);
+  }
+
   // When searching for a partner, campaign or else and selecting it, we add it to the selected filters
   const handleSelectFilter = (value: string) => {
     setCurrentPage(1);
@@ -382,12 +401,11 @@ function Dropdown({
       ...selectedNicheFiltersRef.current,
       value,
     ];
-    selectedFiltersRef.current = [];
 
     const filteredData = originalData.filter((item: any) => {
       const { brand_niche, creator_niche } = item;
-      // Check if the item's brand, creator, or name matches all of the selected filters
-      return selectedNicheFiltersRef.current.every(
+      // Check if the item's brand, creator, or name matches any of the selected filters
+      return selectedNicheFiltersRef.current.some(
         (filter) => filter === brand_niche || filter === creator_niche
       );
     });
@@ -551,7 +569,10 @@ function Dropdown({
                       <li className="dropdownSearchRow" key={option}>
                         <button
                           className="dropdownSearchItem"
-                          onClick={() => handleSelectFilter(option)} // Replace handleSelectPartner with handleSelectFilter
+                          onClick={() => {
+                            if (origin === "projects") handleSelectFilter(option)
+                            else handleSelectFilterAdditive(option)
+                          }}
                         >
                           {option}
                         </button>
@@ -562,8 +583,9 @@ function Dropdown({
               </div>
             </div>
           </div>
-        )}
-      </div>
+        )
+        }
+      </div >
     );
   };
 
