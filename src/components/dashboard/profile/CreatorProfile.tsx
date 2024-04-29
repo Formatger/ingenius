@@ -35,7 +35,8 @@ const CreatorDetails = ({ creatorsData, handleClose, updateCreatorData }: Creato
               loading="lazy"
               quality={75}
             /> */}
-            <img src={creatorsData?.profile_picture_url} alt="Creator" 
+            <img src={creatorsData?.profile_picture_url} 
+            alt="Creator" 
             className="profile-image" loading="lazy" />
           </div>
         </div>

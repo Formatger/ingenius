@@ -185,6 +185,14 @@ link {
   outline: none;
 }
 
+img:not([src]) {
+  color: transparent;
+}
+/* img:not([src]),
+img:invalid {
+  display: none;
+} */
+
 /* main {
   background: var(--white); 
   scrollbar-width: auto;
