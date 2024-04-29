@@ -25,7 +25,7 @@ const CreatorDetails = ({ creatorsData, handleClose, updateCreatorData }: Creato
       <div className="head-card mb-1" >
         <div className="profile-info">
           <div className="profile-info-image">
-            <Image
+            {/* <Image
               src={creatorsData?.profile_picture_url}
               alt="Creator"
               width={160}
@@ -34,8 +34,9 @@ const CreatorDetails = ({ creatorsData, handleClose, updateCreatorData }: Creato
               className="profile-image"
               loading="lazy"
               quality={75}
-            />
-            {/* <img src={creatorsData?.profile_picture_url} alt="Creator" className="profile-image" loading="lazy" /> */}
+            /> */}
+            <img src={creatorsData?.profile_picture_url} alt="Creator" 
+            className="profile-image" loading="lazy" />
           </div>
         </div>
         <div className="profile-info">
