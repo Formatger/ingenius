@@ -3,6 +3,7 @@ import MainLoader from "@/components/common/Loader";
 import Sidebar from "@/components/navigation/Sidebar";
 import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import Image from "next/image";
+import Link from "next/link";
 import withAuth from "@/components/common/WithAuth";
 import { useRouter } from "next/router";
 import { getUserProfile, postUserProfile, putUserProfile } from "@/utils/httpCalls";
@@ -215,12 +216,13 @@ const SettingsPage = () => {
                       <p className="smallcaps">MANAGE ACCOUNT</p>
                       <p className="settings-text">If you need to manage your account username, email or password or you want to close your account, please contact support.</p>
                       <div className="button-group mt-6">
-                        <button className="app-button orange" onClick={() => {
-                          localStorage.clear();
-                          router.push('/auth');
-                        }} aria-label="Close" type="button">
+
+                      <Link href="/dashboard/support">
+                        <button className="app-button orange">
                           Contact Support
                         </button>
+                      </Link>
+
                         <button className="app-button" onClick={() => {
                           localStorage.clear();
                           router.push('/auth');

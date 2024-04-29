@@ -180,6 +180,39 @@ button[disabled] {
   padding: 0 10px;
 }
 
+/* Switch Button */
+
+.switch-box {
+  display: flex;
+  gap: var(--m2);
+}
+.switch-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+  width: 32px;
+  border: 1px solid var(--gray2);
+  border-radius: 8px;
+  box-shadow: var(--neoButtonThin);
+}
+
+.active-switch {
+  border: 0.5px solid var(--gray3);
+  background-color: var(--gray1);
+}
+
+.switch-button:hover {
+  border: 0.5px solid var(--gray3);
+  background-color: var(--gray);
+}
+
+.switch-button:hover {
+  background-color: var(--gray1);
+}
+
+
+
 /* Submit Button */
 
 /* 
