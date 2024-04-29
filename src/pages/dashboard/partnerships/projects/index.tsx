@@ -294,14 +294,20 @@ const ProjectsPage = () => {
                 <button className="reload-button" onClick={handleReloadData}>
                   <Image src={Reload} alt="Icon" width={18} height={18} />
                 </button>
-              </div>
-              <div className="row-wrap">
-                <button onClick={() => setTableRows(false)}>
-                  <Image src={Kanban} alt="Icon" width={16} height={16} />
-                </button>
-                <button onClick={() => setTableRows(true)}>
-                  <Image src={Table} alt="Icon" width={16} height={16} />
-                </button>
+                <div className="switch-box">
+                  <button
+                      className={`switch-button ${!tableRows ? 'active-switch' : ''}`}
+                      onClick={() => setTableRows(false)}
+                    >
+                      <Image src={Kanban} alt="Kanban Icon" width={15} height={15} />
+                    </button>
+                    <button
+                      className={`switch-button ${tableRows ? 'active-switch' : ''}`}
+                      onClick={() => setTableRows(true)}
+                    >
+                      <Image src={Table} alt="Table Icon" width={15} height={15} />
+                    </button>
+                  </div>
               </div>
             </div>
 
