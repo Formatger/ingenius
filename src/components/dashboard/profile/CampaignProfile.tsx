@@ -8,6 +8,7 @@ import Message from "@/components/assets/icons/message.svg";
 import Send from "@/components/assets/icons/send.svg";
 import UploadFileModal from "@/components/common/UploadFileModal";
 import Link from "@/components/assets/icons/link.svg";
+import { useRouter } from "next/router";
 
 interface CampaignDetailsProps {
   campaignsData: any;
@@ -20,6 +21,8 @@ interface CampaignInvoiceProps {
 }
 
 const CampaignDetails = ({ campaignsData }: CampaignDetailsProps) => {
+  const router = useRouter();
+
   return (
     <div className="card-container">
       <div className="head-card mb-1">
@@ -116,7 +119,9 @@ const CampaignDetails = ({ campaignsData }: CampaignDetailsProps) => {
               <Image src={Message} alt="Icon" width={15} height={15} />
               <p>Message</p>
             </button>
-            <button className="sec-button linen" onClick={undefined}>
+            <button className="sec-button linen" onClick={() => {
+              router.push(`/dashboard/partnerships/deals/profile?dealId=${campaignsData?.deal}`)
+            }}>
               <Image
                 className=""
                 src={Export}

@@ -172,7 +172,9 @@ const ProjectDetails = ({ projectsData }: ProjectDetailsProps) => {
                   }}
                   passHref
                 > */}
-            <button className="sec-button linen" onClick={undefined}>
+            <button className="sec-button linen" onClick={() => {
+              router.push(`/dashboard/clients/creators/profile?creatorId=${projectsData?.creator}`)
+            }}>
               <Image
                 className=""
                 src={Export}

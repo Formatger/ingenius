@@ -9,6 +9,7 @@ import Send from "@/components/assets/icons/send.svg";
 import { DealInterface } from "@/interfaces/interfaces";
 import UploadFileModal from "@/components/common/UploadFileModal";
 import Link from "@/components/assets/icons/link.svg";
+import { useRouter } from "next/router";
 
 interface DealDetailsProps {
   dealsData: any;
@@ -21,6 +22,8 @@ interface DealInvoiceProps {
 }
 
 const DealDetails = ({ dealsData }: DealDetailsProps) => {
+  const router = useRouter();
+
   return (
     <div className="card-container">
       <div className="head-card mb-1" >
@@ -100,7 +103,9 @@ const DealDetails = ({ dealsData }: DealDetailsProps) => {
               <Image src={Message} alt="Icon" width={15} height={15} />
               <p>Message</p>
             </button>
-            <button className="sec-button linen" onClick={undefined}>
+            <button className="sec-button linen" onClick={() => {
+              router.push(`/dashboard/clients/brands/profile?brandId=${dealsData?.brand}`)
+            }}>
               <Image className="" src={Export} alt="Icon" width={14} height={14} />
               <p>View Profile</p>
             </button>
