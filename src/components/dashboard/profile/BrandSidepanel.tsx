@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import HelpIcon from "@/components/assets/svg/Help";
 import { Arrow } from "@/components/assets/svg/Arrow";
@@ -9,7 +8,6 @@ import ConfirmModal from "./ConfirmModal";
 import { BrandDetails } from "./BrandProfile";
 import BrandForm from "@/components/dashboard/form/BrandForm";
 import ErrorModal from "@/components/common/ErrorModal";
-import { set } from "react-hook-form";
 
 type SidepanelProps = {
   brandId: any;
@@ -101,7 +99,7 @@ const BrandSidepanel: React.FC<SidepanelProps> = ({
             </Link>
             <div className="button-group">
               <Link href="/dashboard/support" passHref>
-                <button className="sidepanel-button-style">
+                <button className="sidepanel-top-button">
                   <HelpIcon />
                   Get help
                 </button>
@@ -110,7 +108,6 @@ const BrandSidepanel: React.FC<SidepanelProps> = ({
           </div>
 
           {editData ? (
-            //BrandForm no existeix - sha de crear quan acabem el CreatorForm amb el upload i tot
             <BrandForm
               brandsData={brandsData}
               closeEdit={closeEdit}

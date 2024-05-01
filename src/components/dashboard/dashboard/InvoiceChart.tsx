@@ -3,23 +3,16 @@ import { PieChart, Pie, Cell, Tooltip } from 'recharts';
 import CustomTooltip from '../../common/CustomTooltip';
 
 interface PieChartProps {
-  pieChartData: any; // Estructura de datos de la API para el gráfico de pastel
+  pieChartData: any;
 }
 
 const PieChartComponent = ({ pieChartData }: PieChartProps) => {
-  // Verifica si pieChartData está definido antes de usarlo
   if (!pieChartData) return null;
 
-  // Estructura de datos para el gráfico de pastel
   const dataCampaigns = [
     { name: 'Paid Invoices', value: pieChartData.campaigns.total_paid_value, fillColor: '#82ca9d' },
     { name: 'Unpaid Invoices', value: pieChartData.campaigns.total_unpaid_value, fillColor: '#ffa584' },
   ];
-
-  // const dataProjects = [
-  //   { name: 'Paid Invoices', value: pieChartData.paidInvoices, fillColor: '#82ca9d' },
-  //   { name: 'Unpaid Invoices', value: pieChartData.unpaidInvoices, fillColor: '#ff8e84' },
-  // ];
 
   return (
     <div className="dashboard-box piechart">

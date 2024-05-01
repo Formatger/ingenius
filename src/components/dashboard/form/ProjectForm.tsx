@@ -16,7 +16,6 @@ import {
   unlockCampaign,
   unlockProject,
 } from "@/utils/httpCalls";
-import DateInput from "@/components/common/DateInput";
 import { useRouter } from "next/router";
 import InvoiceDropdown from "@/components/common/InvoiceDropdown";
 
@@ -68,7 +67,6 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
     watch,
     formState: { errors },
   } = useForm<FormData>();
-  const [selectedStage, setSelectedStage] = useState<any>([]);
   const [creatorsData, setCreatorsData] = useState<Creators[]>([]);
   const [campaignsData, setCampaignsData] = useState<any>([]);
   const [invoiceStatus, setInvoiceStatus] = useState(
@@ -110,21 +108,6 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
   const handleSearchChange = (term: any) => {
     setSearchTerm(term);
   };
-
-  // const filteredCreatorsData = creatorsData.filter((creator) =>
-  //   creator.name.toLowerCase().includes(searchTerm.toLowerCase())
-  // );
-  // const filteredCampaignsData = campaignsData.filter(
-  //   (campaign: { name: string }) =>
-  //     campaign.name.toLowerCase().includes(searchTerm.toLowerCase())
-  // );
-
-  /* DATE INPUT CALENDAR  */
-  // const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-
-  // const handleDateChange = (newDate: Date) => {
-  //   setSelectedDate(newDate);
-  // };
 
   /* SIDEPANEL STATE */
   const handleClose = () => {
@@ -216,14 +199,12 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
       <div className="sidepanel-header">
         <p
           className="row-wrap-2 text-brown"
-        // href={{ pathname: "dashboard/partnerships/projects" }}
         >
-          {/* <Arrow className="arrow-left orange-fill" /> */}
           {isEditing ? "Edit Project" : "Add Project"}
         </p>
         <div className="sidepanel-button">
           <Link href="/dashboard/support" passHref>
-            <button className="sidepanel-button-style">
+            <button className="sidepanel-top-button">
               <HelpIcon />
               Get help
             </button>
@@ -245,7 +226,6 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
                 type="text"
                 placeholder="Enter project name"
                 defaultValue={projectsData.name}
-              // onChange={(e) => setValue("name", e.target.value)}
               />
               {errors.name && (
                 <span className="error-message">{errors.name.message}</span>
@@ -258,7 +238,6 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
                 className="form-textarea"
                 placeholder="Add a description"
                 defaultValue={projectsData.description}
-              // onChange={(e) => setValue("description", e.target.value)}
               />
             </div>
             <div className="form-box">
@@ -535,72 +514,3 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
 };
 
 export default ProjectForm;
-
-{
-  /* <div className="form-box">
-              <span className="smallcaps">INVOICE STATUS*</span>
-              <div className="select-wrap">
-                <select
-                  {...register("invoice_paid", { required: true })}
-                  onChange={handleInvoiceChange}
-                  value={invoicePaid.toString()}
-                  className="select-input"
-                >
-                  <option value="false">Unpaid</option>
-                  <option value="true">Paid</option>
-                </select>
-              </div>
-              {errors.invoice_paid && (<span className="error-message">Please select invoice status</span>)}
-            </div> */
-}
-
-{
-  /* <div className="form-box">
-              <span className="smallcaps">SELECT STAGE*</span>
-              <div className="select-wrap">
-                <select
-                  {...register("project_stage", { required: true })}
-                  onChange={handleSelectStage}
-                  value={selectedStage}
-                  className="select-input"
-                >
-                  <option value="">Select Stage</option>
-                  {Array.isArray(projectStage) &&
-                    projectStage.map((stage) => {
-                      return (
-                        <option key={stage.stageID} value={stage.stageID}>
-                          {stage.stageName}
-                        </option>
-                      );
-                    })}
-                </select>
-              </div>
-              {errors.project_stage && (<span className="error-message">Please select a project stage</span>)}
-            </div> */
-}
-// const handleSelectStage = (event: React.ChangeEvent<HTMLSelectElement>) => {
-//   const selectedId = parseInt(event.target.value);
-//   setSelectedStage(selectedId);
-//   setValue("project_stage", selectedId);
-//   trigger("project_stage");
-// };
-
-// const handleInvoiceChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-//   const isPaid = event.target.value === "true";
-//   setInvoicePaid(isPaid);
-//   setValue("invoice_paid", isPaid);
-// };
-
-{/* <div className="form-box">
-              <span className="smallcaps">INVOICE STATUS*</span>
-              <div className="select-wrap">
-                <select
-                  {...register("invoice_paid", { required: true })}
-                  className="select-input"
-                  defaultValue={projectsData.invoice_paid}
-                >
-                  <option value="false">Unpaid</option>
-                  <option value="true">Paid</option>
-                </select>
-              </div>
-            </div> */}

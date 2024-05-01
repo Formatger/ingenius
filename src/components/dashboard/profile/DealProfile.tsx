@@ -113,10 +113,9 @@ const DealDetails = ({ dealsData }: DealDetailsProps) => {
           </div>
         </div>
 
-
       </div>
 
-    </div >
+    </div>
   );
 };
 
@@ -148,15 +147,6 @@ const DealInvoice = ({ dealsData, setRefreshData }: DealInvoiceProps) => {
               <p>Campaigns</p>
               <span className="invoice-tag">{dealsData?.total_campaigns}</span>
             </li>
-            {/* <li className="invoice-data-list">
-              <p className="mr-8">Deliverables</p>
-              <div className="invoice-tag">
-                <p className="invoice-tag-small">Drive Folder</p>
-                <button className="center-btn ml-3" onClick={undefined}>
-                  <Image src={Plus} alt="Icon" width={15} height={15} />
-                </button>
-              </div>
-            </li> */}
             <li className="invoice-data-list">
               <p>Contract Value</p>
               <span className="invoice-tag">${dealsData?.contract_value}</span>
@@ -172,8 +162,6 @@ const DealInvoice = ({ dealsData, setRefreshData }: DealInvoiceProps) => {
 
         <div className="mt-5">
           <p className="smallcaps" >MANAGE CONTRACT</p>
-
-          <input type="file" onChange={undefined} style={{ display: 'none' }} ref={undefined} />
 
           <div className="button-group">
             <button

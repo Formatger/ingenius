@@ -130,28 +130,7 @@ const SupportForm: React.FC<SupportFormProps> = ({ title }) => {
                   </ul>
                 )}
               </div>
-              {/* {selectedFiles.length > 0 && (
-                <ul>
-                  {selectedFiles.map((file, index) => (
-                    <li className="ticket-files" key={index}>
-                      <Image src={Link} alt="Icon" width={15} height={15} />
-                      {file.name}
-                    </li>
-                  ))}
-                </ul>
-              )} */}
             </div>
-            {/* <div className="form-box">
-              <span className="smallcaps">FILES*</span>
-              <input
-                className="form-input"
-                type="file"
-                accept="image/jpeg"
-                onChange={handleFiles}
-                multiple
-              />
-
-            </div> */}
             <div className="column-center">
               <button className="sec-button red" type="submit">
                 Submit

@@ -99,7 +99,7 @@ const CampaignSidepanel: React.FC<ProfileSidepanelProps> = ({
             </Link>
             <div className="button-group">
               <Link href="/dashboard/support" passHref>
-                <button className="sidepanel-button-style">
+                <button className="sidepanel-top-button">
                   <HelpIcon />
                   Get help
                 </button>
@@ -112,7 +112,6 @@ const CampaignSidepanel: React.FC<ProfileSidepanelProps> = ({
               closeEdit={closeEdit}
               isEditing={editData}
               handleCloseFormSidepanel={handleClose}
-              // updateProjectData={updateProjectData}
               campaignStage={[]}
               updateCampaignData={() => { }}
             />

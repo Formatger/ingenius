@@ -7,8 +7,6 @@ import Revenue from "../assets/icons/revenue.svg";
 import { useAppContext } from '../context/AppContext';
 
 export const PartDropdown = () => {
-  // const { getNavSidebarOpen, toggleNavSidebar, setNavSidebarOpen } = useAppContext();
-  // const dropDownOpen = getNavSidebarOpen();
   const { toggleNavSidebar, isNavSidebarOpen } = useAppContext();
   const dropDownOpen = isNavSidebarOpen("partDropdown");
   const router = useRouter();
@@ -18,12 +16,6 @@ export const PartDropdown = () => {
     "/dashboard/partnerships/campaigns",
     "/dashboard/partnerships/projects",
   ];
-
-    // useEffect(() => {
-  //   if (!pathnames.includes(router.pathname)) {
-  //     setNavSidebarOpen(false)
-  //   }
-  // }, [router.pathname])
 
   useEffect(() => {
     const shouldKeepOpen = pathnames.some(path => router.pathname.startsWith(path));

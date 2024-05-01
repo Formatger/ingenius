@@ -14,18 +14,18 @@ import { useRouter } from "next/router";
 import ProfilePic from "@/components/assets/images/creator.png";
 
 interface FormData {
-  id?: number; // Opcional porque es de sólo lectura
+  id?: number; 
   name: string;
   representative: string;
   email: string;
   niche: string;
-  website?: string; // Opcional, no es requerido
-  profile_picture_url?: string; // Opcional porque es de sólo lectura
-  profile_picture?: File; // Opcional, no es requerido
-  user?: string; // Opcional porque es de sólo lectura
-  active_campaigns?: string; // Opcional porque es de sólo lectura
-  active_campaigns_value?: string; // Opcional porque es de sólo lectura
-  created_at?: Date; // Opcional porque es de sólo lectura
+  website?: string; 
+  profile_picture_url?: string;
+  profile_picture?: File; 
+  user?: string; 
+  active_campaigns?: string;
+  active_campaigns_value?: string;
+  created_at?: Date;
 }
 
 interface BrandFormProps {
@@ -82,11 +82,11 @@ const BrandForm: React.FC<BrandFormProps> = ({
   /* UPLOAD PROFILE PICTURE */
 
   const handleUploadImage = (event: any) => {
-    const file = event.target.files[0]; // Get the first file
+    const file = event.target.files[0]; 
     if (file) {
       setValue("profile_picture", file);
-      const url = URL.createObjectURL(file); // Create a URL for the file
-      setImageURL(url); // Update the imageURL state
+      const url = URL.createObjectURL(file); 
+      setImageURL(url); 
     }
   };
 
@@ -96,7 +96,6 @@ const BrandForm: React.FC<BrandFormProps> = ({
     setSubmitting(true);
     const formData = new FormData();
 
-    // Append all form data fields to the FormData object
     Object.entries(data).forEach(([key, value]) => {
       if (value !== undefined && value !== null) {
         formData.append(key, value);
@@ -147,7 +146,7 @@ const BrandForm: React.FC<BrandFormProps> = ({
         </p>
         <div className="sidepanel-button">
           <Link href="/dashboard/support" passHref>
-            <button className="sidepanel-button-style">
+            <button className="sidepanel-top-button">
               <HelpIcon />
               Get help
             </button>

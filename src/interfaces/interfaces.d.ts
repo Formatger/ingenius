@@ -57,20 +57,20 @@ export interface DealInterface {
   brand_image_url: string;
   representative: string;
 
-  id?: number; // optional
-  user?: string; // optional, read-only
-  brand_image_url?: string; // optional, read-only
-  brand_name?: string; // optional, read-only
-  brand_email?: string; // optional, read-only
-  brand_website?: string; // optional, read-only
-  representative?: string; // optional, read-only
-  total_campaigns?: number; // optional, read-only
-  invoice_number?: string; // optional, read-only
-  invoice_date?: Date | null; // optional, read-only, expecting Date or null if not set
-  deal_duration?: string; // optional, read-only
-  deal_stage_name?: string; // optional, read-only
-  deal_stage_order?: number; // optional, read-only
-  created_at?: Date; // optional, read-only
+  id?: number;
+  user?: string;
+  brand_image_url?: string;
+  brand_name?: string;
+  brand_email?: string;
+  brand_website?: string;
+  representative?: string;
+  total_campaigns?: number;
+  invoice_number?: string; 
+  invoice_date?: Date | null;
+  deal_duration?: string; 
+  deal_stage_name?: string; 
+  deal_stage_order?: number; 
+  created_at?: Date; 
 }
 
 export interface BrandInterface {

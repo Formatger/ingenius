@@ -4,11 +4,11 @@ import SearchIcon from "../../assets/icons/search.svg";
 import Arrow from "@/components/assets/svg/Arrow";
 
 interface SearchDropdownProps {
-    data: any[];  // Generic data array
-    onSelect: (selectedItem: any) => void;  // Generic selection handler
+    data: any[];
+    onSelect: (selectedItem: any) => void;
     placeholder?: string;
-    handleSearch: (search: string) => void;  // Function to handle search input changes
-    displayKey: string;  // Key to display and search in data objects
+    handleSearch: (search: string) => void; 
+    displayKey: string; 
 }
 
 const SearchDropdown: React.ForwardRefRenderFunction<HTMLDivElement, SearchDropdownProps> = ({
@@ -24,14 +24,6 @@ const SearchDropdown: React.ForwardRefRenderFunction<HTMLDivElement, SearchDropd
     const [filteredData, setFilteredData] = useState<any[]>([]);
     const dropdownRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
-
-    // useEffect(() => {
-    //     if (inputTerm === '') {
-    //         setFilteredData(data.slice(0, 5)); // Show default items or some other logic
-    //     } else {
-    //         setFilteredData(data.filter(item => item[displayKey]?.toLowerCase().includes(inputTerm.toLowerCase())));
-    //     }
-    // }, [inputTerm, data, displayKey]);
 
     useEffect(() => {
         setFilteredData(data.filter(item => item[displayKey]?.toLowerCase().includes(inputTerm.toLowerCase())));

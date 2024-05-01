@@ -16,8 +16,8 @@ import { useRouter } from "next/router";
 
 const DashboardPage = () => {
   const [loader, setLoader] = useState<boolean>(false);
-  const [stats, setStats] = useState<any>(null); // Inicializa stats como null
-  const [pieChartData, setPieChartData] = useState<any>(null); // Inicializa pieChartData como null
+  const [stats, setStats] = useState<any>(null);
+  const [pieChartData, setPieChartData] = useState<any>(null);
   const [updateStats, setUpdateStats] = useState(false);
   const router = useRouter();
   const [campaignsData, setCampaignsData] = useState<any[]>([]);
@@ -51,11 +51,11 @@ const DashboardPage = () => {
           projects: response.pie_charts.projects,
         });
         setUpdateStats(false);
-        setLoader(false); // Establece loader en false después de recibir los datos
+        setLoader(false);
       },
       (error: any) => {
         console.error("Error fetching profile data:", error);
-        setLoader(false); // Establece loader en false en caso de error
+        setLoader(false);
       }
     );
   };
@@ -105,7 +105,7 @@ const DashboardPage = () => {
       </div>
       {loader ? (
         <MainLoader />
-      ) : stats && pieChartData ? ( // Verifica si stats y pieChartData tienen valores
+      ) : stats && pieChartData ? ( 
         <div className="page-container">
           <div className="dashboard-container">
             <div className="summary-wrap">
@@ -121,7 +121,6 @@ const DashboardPage = () => {
               <div className="invoice-stats">
                 <InvoiceChart 
                 pieChartData={pieChartData}/>
-                {/* <PendingInvoices/> */}
               </div>
             </div>
             <div className="brands-clients">

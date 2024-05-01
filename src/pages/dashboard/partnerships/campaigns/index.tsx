@@ -294,8 +294,6 @@ const CampaignsPage = () => {
                 closeEdit={handleCloseFormSidepanel}
                 handleCloseFormSidepanel={handleCloseFormSidepanel}
                 updateCampaignData={updateCampaignData}
-              // brandsData={brandsData}
-              // dealsData={dealsData}
               />
             )}
             <div className="filtersContainer">
@@ -305,7 +303,7 @@ const CampaignsPage = () => {
                 setCurrentPage={setCurrentPage}
                 origin="campaigns"
               />
-              <div className="button-group">
+              <div className="action-buttons-wrap">
                 <label htmlFor="file-upload" className="app-button cream">
                   CSV Export
                 </label>
@@ -383,56 +381,3 @@ const Campaigns = () => {
 };
 
 export default withAuth(Campaigns);
-
-// const handleOpenFormSidepanel = () => {
-//   if (openSidepanel) setOpenSidepanel(false);
-//   setOpenSidepanelForm(true);
-// };
-
-// const handleOpenSidepanel = (campaign: any) => {
-//   if (openSidepanelForm) setOpenSidepanelForm(false);
-//   setSelectedCampaign(campaign);
-//   setOpenSidepanel(true);
-// };
-
-// const handleOpenSidepanel = (campaign: CampaignInterface): void => {
-//   setSelectedCampaign(campaign);
-//   setOpenSidepanel(true);
-// };
-
-{
-  /* {savedDataList.map((item) => (
-                <ProjectCard 
-                key={item.id} 
-                generateCard={item} 
-                creatorSavedData={creatorSavedData} 
-                createdDate={new Date()} />
-            ))} */
-}
-
-// SAVE FORM & GENERATE CARD
-
-//  const [savedData, setSavedData] = useState<FormData | null>(null);
-//  const [savedDataList, setSavedDataList] = useState<FormData[]>([]);
-// //  const [creatorSavedData, setCreatorSavedData] = useState<profileData | null>(null);
-//  const [cardId, setCardId] = useState<string>(uuidv4());
-
-//  // Save Form Data
-//  const handleSaveFormData = (data: FormData) => {
-//     setSavedData(data);
-//     setOpenSidepanel(false);
-//     setSavedDataList(currentList => [...currentList, data]);
-//   };
-//   // Save Creator Data
-//  const handleSaveCreatorData = (profile: any) => {
-//     //  setCreatorSavedData(profile)
-//   };
-//  // Generate Card
-//   const generateCardId = () => {
-//     setCardId(uuidv4());
-//   };
-
-// const handleSaveFormData = (newCard: FormData) => {
-//   setCards(prevCards => [...prevCards, newCard]);
-//   setOpenFormSidepanel(false); // Close the form side panel after saving the data
-// };

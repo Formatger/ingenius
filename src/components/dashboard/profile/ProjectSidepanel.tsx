@@ -3,7 +3,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { ProjectDetails } from "@/components/dashboard/profile/ProjectProfile";
 import HelpIcon from "@/components/assets/svg/Help";
-import Edit from "@/components/assets/icons/edit.svg";
 import { Arrow } from "@/components/assets/svg/Arrow";
 import ProfileSidepanel from "../../common/Sidepanel";
 import ProjectForm from "@/components/dashboard/form/ProjectForm";
@@ -101,7 +100,7 @@ const ProjectSidepanel: React.FC<SidepanelProps> = ({
             </Link>
             <div className="button-group">
               <Link href="/dashboard/support" passHref>
-                <button className="sidepanel-button-style">
+                <button className="sidepanel-top-button">
                   <HelpIcon />
                   Get help
                 </button>
@@ -114,7 +113,6 @@ const ProjectSidepanel: React.FC<SidepanelProps> = ({
               closeEdit={closeEdit}
               isEditing={editData}
               handleCloseFormSidepanel={handleClose}
-              // updateProjectData={updateProjectData}
               projectStage={[]}
               updateProjectData={() => { }}
             />
@@ -138,7 +136,6 @@ const ProjectSidepanel: React.FC<SidepanelProps> = ({
                       }
                     }}
                   >
-                    {/* <Image src={Edit} alt="Icon" width={15} height={15} /> */}
                     <p>Edit</p>
                   </button>
                   <button

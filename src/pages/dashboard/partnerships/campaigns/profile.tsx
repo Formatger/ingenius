@@ -13,7 +13,6 @@ const CampaignProfilePage = () => {
   const { campaignId } = router.query;
 
   const [loader, setLoader] = useState<boolean>(false);
-  // const [invoiceData, setInvoiceData] = useState(null);
   const [campaignsData, setCampaignsData] = useState({});
   const [refreshData, setRefreshData] = useState(false);
 

@@ -8,8 +8,6 @@ import withAuth from "@/components/common/WithAuth";
 import { useRouter } from "next/router";
 import { getUserProfile, postUserProfile, putUserProfile } from "@/utils/httpCalls";
 import ProfilePic from "@/components/assets/images/creator.png";
-import { useForm } from "react-hook-form";
-import { UserProfile } from "@clerk/nextjs";
 import UserProfileForm from "@/components/dashboard/form/UserProfileForm";
 import TeamTable from "@/components/dashboard/dashboard/TeamTable";
 import { useAppContext } from "@/components/context/AppContext";
@@ -41,11 +39,8 @@ const SettingsPage = () => {
   const router = useRouter();
   const [loader, setLoader] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  // const [imageURL, setImageURL] = useState<string | null>(userData.profile_picture_url || null);
   const [imageURL, setImageURL] = useState<any[]>([]);
-  // const [userData, setUserData] = useState<any[]>([]);
   const [userData, setUserData] = useState<UserData | null>(null);
-  // const [userData, setUserData] = useState<UserData | null>(null);
   const [editData, setEditData] = useState(false);
   const [updateUser, setUpdateUser] = useState(false);
 
@@ -63,23 +58,6 @@ const SettingsPage = () => {
   };
 
   /* GET USER API CALL */
-
-
-  // useEffect(() => {
-  //   fetchUserProfile();
-  // }, [router]);
-
-  // const fetchUserProfile = () => {
-  //   getUserProfile(
-  //     (response: any) => {
-  //       setUserData(response[0] || []);
-  //     },
-  //     (error: any) => {
-  //       console.error("Error fetching profile data:", error);
-  //       setUserData([]);
-  //     }
-  //   ).finally(() => { });
-  // };
 
   useEffect(() => {
     fetchUserProfile();
@@ -104,29 +82,6 @@ const SettingsPage = () => {
       }
     ).finally(() => { });
   };
-
-  // const fetchUserProfile = () => {
-  //   getUserProfile(
-  //     (response: any) => {
-  //       // Check if the response is an array and has at least one element
-  //       if (Array.isArray(response) && response.length > 0) {
-  //         // Assuming the response is an array of UserData objects
-  //         setUserData(response[0]);
-  //       } else {
-  //         // Handle cases where the data is not in the expected format
-  //         console.error("Unexpected format for user profile data:", response);
-  //         setUserData(null);  // Use null to indicate no data received
-  //       }
-  //     },
-  //     (error: any) => {
-  //       console.error("Error fetching profile data:", error);
-  //       setUserData(null);  // Use null to indicate an error occurred
-  //     }
-  //   ).finally(() => {
-  //     // You might want to handle any post-loading logic here
-  //   });
-  // };
-
 
   return (
     <div className="main-container">

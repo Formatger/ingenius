@@ -21,8 +21,6 @@ import SupportForm from "@/components/common/SupportForm";
 const SettingsPage = () => {
   const router = useRouter();
   const [loader, setLoader] = useState<boolean>(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isAddModalOpen, setAddModalOpen] = useState(false);
   
   const breadcrumbLinks = [
     { label: "Settings", link: "/dashboard/support"  },

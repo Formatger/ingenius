@@ -9,7 +9,6 @@ const Header = () => {
       <div
         className="header" >
         <div className="">
-          {/* {businessName ? businessName : "Business Name"} */}
         </div>
         <div>
           <div className="user-wrap">

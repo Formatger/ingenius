@@ -58,12 +58,6 @@ const UploadFileModal: React.FC<UploadFileModalProps> = ({
       }
     }
 
-    // Object.entries(data).forEach(([key, value]) => {
-    //   if (value !== undefined && value !== null && key !== 'invoice_file') {
-    //       formData.append(key, value);
-    //   }
-    // });
-
     try {
       await uploadFiles(
         endpoint,
@@ -73,7 +67,6 @@ const UploadFileModal: React.FC<UploadFileModalProps> = ({
           reset();
           setSelectedFiles([]);
           onClose();
-          // updateProjectData();
         },
         (error) => {
           console.error("Error uploading file", error);
@@ -118,16 +111,6 @@ const UploadFileModal: React.FC<UploadFileModalProps> = ({
                   </ul>
                 )}
               </div>
-              {/* {selectedFiles.length > 0 && (
-                <ul>
-                  {selectedFiles.map((file, index) => (
-                    <li className="ticket-files" key={index}>
-                      <Image src={Link} alt="Icon" width={15} height={15} />
-                      {file.name}
-                    </li>
-                  ))}
-                </ul>
-              )} */}
             </div>
             <div className="column-center">
               <button className="sec-button red" type="submit">

@@ -5,26 +5,12 @@ import Insta from "@/components/assets/images/insta.png";
 import Tiktok from "@/components/assets/images/tiktok.png";
 import Folder from "@/components/assets/icons/folder.svg";
 import Download from "@/components/assets/icons/download.svg";
-import Plus from "@/components/assets/icons/plus.svg";
 import Link from "@/components/assets/icons/link.svg";
 import Message from "@/components/assets/icons/message.svg";
-import Send from "@/components/assets/icons/send.svg";
-import { deleteProject, getCreators } from "@/utils/httpCalls";
 import Export from "@/components/assets/icons/export.svg";
 import ErrorModal from "@/components/common/ErrorModal";
-import {
-  lockProject,
-  unlockProject,
-} from "@/utils/httpCalls";
 import UploadFileModal from "@/components/common/UploadFileModal";
 import { useRouter } from "next/router";
-
-// interface Creators {
-//   id: string;
-//   name: string;
-//   profile_picture_url: string;
-//   email: string;
-// }
 
 interface ProjectDetailsProps {
   projectsData: any;
@@ -37,32 +23,8 @@ interface ProjectInvoiceProps {
   setRefreshData: (value: boolean) => void;
 }
 
-// interface ProjectContractProps {
-//   projectsData: any;
-// }
-
 const ProjectDetails = ({ projectsData }: ProjectDetailsProps) => {
   const router = useRouter();
-  // const [creatorsData, setCreatorsData] = useState<Creators[]>([]);
-
-
-  // /* GET CREATORS API CALL */
-
-  // useEffect(() => {
-  //   fetchCreators();
-  // }, [router]);
-
-  // const fetchCreators = () => {
-  //   getCreators(
-  //     (response: any) => {
-  //       setCreatorsData(response || []);
-  //     },
-  //     (error: any) => {
-  //       console.error("Error fetching profile data:", error);
-  //       setCreatorsData([]);
-  //     }
-  //   ).finally(() => { });
-  // };
 
   return (
     <div className="card-container">
@@ -135,12 +97,6 @@ const ProjectDetails = ({ projectsData }: ProjectDetailsProps) => {
             <p className="description">{projectsData?.description}</p>
           </span>
         </div>
-        {/* <div>
-          <p className="smallcaps">deliverables</p>
-          <span className="sec-button gray1" onClick={undefined}>
-            <p className="description">2 youtube videos and 1 Instragram reel</p>
-          </span>
-        </div> */}
         <div>
           <p className="smallcaps">CONTRACT VALUE</p>
           <span className="sec-button gray1">
@@ -166,13 +122,6 @@ const ProjectDetails = ({ projectsData }: ProjectDetailsProps) => {
               <p>Message</p>
             </button>
 
-            {/* <Link
-                  href={{
-                    pathname: '/dashboard/clients/creators/profile',
-                    query: { creatorId: creatorsData.id }
-                  }}
-                  passHref
-                > */}
             <button className="sec-button linen" onClick={() => {
               router.push(`/dashboard/clients/creators/profile?creatorId=${projectsData?.creator}`)
             }}>
@@ -185,7 +134,6 @@ const ProjectDetails = ({ projectsData }: ProjectDetailsProps) => {
               />
               <p>View Profile</p>
             </button>
-            {/* </Link> */}
           </div>
         </div>
       </div>
@@ -194,82 +142,15 @@ const ProjectDetails = ({ projectsData }: ProjectDetailsProps) => {
 };
 
 const ProjectInvoice = ({ projectsData, setRefreshData }: ProjectInvoiceProps) => {
-  const fileInputRef = useRef(null);
-  const [loading, setLoading] = useState(false);
-  const [showLockModal, setShowLockModal] = useState(false);
   const [isFileModalOpenContract, setFileModalOpenContract] = useState(false);
   const [isFileModalOpenInvoice, setFileModalOpenInvoice] = useState(false);
 
-  // /* LOCK FORM */
-
-  // useEffect(() => {
-  //   lockProject(projectsData.id);
-
-  //   return () => {
-  //     unlockProject(projectsData.id);
-  //   };
-  // }, []);
-
-
-  const handleFileUpload = async (event: any) => {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    setLoading(true);
-    const formData = new FormData();
-    formData.append("contract", file);
-    formData.append("projectId", projectsData?.id);
-
-    try {
-      const response = await fetch("/api/contract/upload", {
-        method: "POST",
-        body: formData,
-      });
-      setLoading(false);
-      if (response.ok) {
-        // Optionally refresh or update parent component data
-      } else {
-        throw new Error("Failed to upload file");
-      }
-    } catch (error) {
-      setLoading(false);
-      console.error("Error uploading file:", error);
-    }
-  };
-
-  const handleViewContract = () => {
-    const url = `/api/projects/${projectsData?.id}/view`;
-    window.open(url, "_blank");
-  };
-
-  const handleDownloadContract = () => {
-    const url = `/api/projects/${projectsData?.id}/download`;
-    const link = document.createElement("a");
-    link.href = url;
-    // link.setAttribute('download', 'Project_Contract.pdf');  // Optionally set a filename
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-
   return (
     <div className="card-container">
-      {showLockModal && (
-        <ErrorModal
-          isOpen={showLockModal}
-          onClose={() => setShowLockModal(false)}
-          title="Project is locked"
-          message="This project is currently being edited by another user. Please try again later."
-        />
-      )}
       <div className="agency-invoice">
         <p className="smallcaps">CONTRACT DETAILS</p>
         <div className="invoice-data">
           <ul>
-            {/* <li className="invoice-data-list">
-              <p>Company</p>
-              <span className="invoice-tag">company_name</span>
-            </li> */}
             <li className="invoice-data-list">
               <p>Creator</p>
               <span className="invoice-tag">{projectsData?.creator_name}</span>
@@ -301,13 +182,6 @@ const ProjectInvoice = ({ projectsData, setRefreshData }: ProjectInvoiceProps) =
 
         <div className="mt-5">
           <p className="smallcaps">MANAGE CONTRACT</p>
-
-          <input
-            type="file"
-            onChange={handleFileUpload}
-            style={{ display: "none" }}
-            ref={fileInputRef}
-          />
 
           <div className="button-group">
             <button

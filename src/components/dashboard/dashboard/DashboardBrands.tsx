@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from "react";
-import icon from '@/components/assets/icons/icon.svg';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Arrow } from "@/components/assets/svg/Arrow";
 import HelpIcon from '../../assets/svg/Help';
-import Add from "@/components/assets/icons/add.svg";
-import BrandSidepanel from "@/components/dashboard/profile/BrandSidepanel";
 
 interface DashboardBrandsProps {
   campaignsData: any;
@@ -13,13 +10,10 @@ interface DashboardBrandsProps {
 
 const DashboardBrands = ({ campaignsData }: DashboardBrandsProps) => {
 
-  const [selectedCampaign, setSelectedCampaign] = useState(null);
-
   return (
     <div className="dashboard-box tables">
       <div className="row-between">
         <h2 className="dashboard-title">Client Invoices</h2>
-        {/* <HelpIcon /> */}
       </div>
 
       <table className="app-table" id="dashboard-table">
@@ -99,17 +93,6 @@ const DashboardBrands = ({ campaignsData }: DashboardBrandsProps) => {
                     </div>
                   </div>
                 </Link>
-                {/* <div className='row-wrap-1'>
-                  <Link
-                    href={{
-                      pathname: '/dashboard/partnerships/campaigns/profile',
-                      query: { campaignId: campaign.id }
-                    }}
-                    passHref
-                  >
-                    <p>{campaign.name}</p>
-                  </Link>
-                </div> */}
               </td>
               <td className="table-cell-center">
               <Link href={{ pathname: '/dashboard/partnerships/campaigns/profile', query: { campaignId: campaign.id }}} passHref>
@@ -132,13 +115,6 @@ const DashboardBrands = ({ campaignsData }: DashboardBrandsProps) => {
           ))}
         </tbody>
       </table>
-
-      {/* Renderiza el componente de detalles del creador si hay uno seleccionado */}
-      {/* {selectedCreator && (
-        <BrandSidepanel brandsData={selectedCreator} 
-        
-        />
-      )} */}
     </div>
   );
 };

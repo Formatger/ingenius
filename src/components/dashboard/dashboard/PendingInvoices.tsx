@@ -1,6 +1,4 @@
 import React from "react";
-import Image from "next/image";
-import StatsUp from "@/components/assets/icons/stats-up.svg";
 
 const PendingInvoices = ({ sections }: any) => {
   return (

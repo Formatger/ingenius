@@ -21,16 +21,8 @@ import {
   BrandInterface,
   DealInterface,
 } from "@/interfaces/interfaces";
-import DateInput from "@/components/common/DateInput";
 import { useRouter } from "next/router";
 import InvoiceDropdown from "@/components/common/InvoiceDropdown";
-
-// interface Stages {
-//   id: number;
-//   name: string;
-//   order: number;
-//   user: string;
-// }
 
 interface FormData {
   id?: number;
@@ -77,7 +69,6 @@ const CampaignForm: React.FC<CampaignFormProps> = ({
   const router = useRouter();
   const { register, handleSubmit, reset, setValue, trigger, watch, formState: { errors }, } =
     useForm<FormData>();
-  const [selectedStage, setSelectedStage] = useState("");
   const [dealsData, setDealsData] = useState<any>([]);
   const [invoiceStatus, setInvoiceStatus] = useState(
     campaignsData?.invoice_paid ? "Paid" : "Unpaid"
@@ -86,6 +77,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({
   const startDate = watch("start_date");
 
   /* LOCK FORM */
+
   useEffect(() => {
     lockCampaign(campaignsData.id);
 
@@ -112,6 +104,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({
   };
 
   /* SEARCH DROPDOWN */
+
   const [searchTerm, setSearchTerm] = useState("");
 
   const handleSearchChange = (term: any) => {
@@ -189,15 +182,12 @@ const CampaignForm: React.FC<CampaignFormProps> = ({
     <FormSidepanel handleClose={handleClose}>
       <div className="sidepanel-header">
         <p
-          className="row-wrap-2 text-brown"
-        // href={{ pathname: "dashboard/partnerships/projects" }}
-        >
-          {/* <Arrow className="arrow-left orange-fill" /> */}
+          className="row-wrap-2 text-brown">
           {isEditing ? "Edit Campaign" : "Add Campaign"}
         </p>
         <div className="sidepanel-button">
           <Link href="/dashboard/support" passHref>
-            <button className="sidepanel-button-style">
+            <button className="sidepanel-top-button">
               <HelpIcon />
               Get help
             </button>

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Plus from "@/components/assets/icons/plus.svg";
-import PlusWhite from "@/components/assets/icons/plus-white.svg";
 import Edit from "@/components/assets/icons/edit.svg";
 import AddFieldModal from "@/components/dashboard/kanban/AddFieldModal";
 import {
@@ -31,7 +30,7 @@ const ProjectsKanban = ({
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [draggedOverStageIndex, setDraggedOverStageIndex] = useState<
     string | null
-  >(null); // Estado para almacenar el ID de la columna sobre la que se arrastra
+  >(null);
   const [stages, setStages] = useState<any[]>([]);
   const [deleteStageId, setDeleteStageId] = useState<string | null>(null);
   const [changeStage, setChangeStage] = useState<string | null>(null);
@@ -68,7 +67,7 @@ const ProjectsKanban = ({
   /* FETCH STAGE COLUMNS */
 
   useEffect(() => {
-    if (projectStage.length === 0) return; // Evitar procesamiento si projectStage está vacío
+    if (projectStage.length === 0) return; 
 
     let stagesWithProjects = projectStage?.map(
       (stage: any) => {
@@ -124,11 +123,10 @@ const ProjectsKanban = ({
           );
           const updatedStages = remainingStages?.map((stage, index) => ({
             ...stage,
-            stageIndex: index + 1, // Reassign stageIndex starting from 1
+            stageIndex: index + 1, 
           }));
-          setStages(updatedStages); // Update the local state
+          setStages(updatedStages);
 
-          // Update the backend about the new order
           for (const stage of updatedStages) {
             await putNewOrderProject(
               stage.stageID,
@@ -138,9 +136,9 @@ const ProjectsKanban = ({
             );
           }
 
-          updateProjectData(); // Additional updates if necessary
+          updateProjectData();
           setIsModalOpen(false);
-          setDeleteStageId(null); // Reset deletion target ID
+          setDeleteStageId(null); 
         },
         (error) => {
           console.error("Failed to delete stage:", error);
@@ -153,7 +151,7 @@ const ProjectsKanban = ({
   /* DRAG DROP COLUMNS */
 
   const handleDragStartColumn = (e: React.DragEvent, stage: any) => {
-    e.dataTransfer.setData("text/plain", stage.stageIndex); // Guardar el índice de la columna basado en `stageIndex`
+    e.dataTransfer.setData("text/plain", stage.stageIndex);
     e.dataTransfer.setData("stage", JSON.stringify({ stage }));
   };
 
@@ -162,10 +160,8 @@ const ProjectsKanban = ({
     const oldColumnData = JSON.parse(e.dataTransfer.getData("stage"));
     const oldColumn = oldColumnData.stage;
 
-    // Verificar si hay un cambio en el orden de las columnas
     if (oldColumn.stageIndex !== newColumn.stageIndex) {
       try {
-        // Llamar a la función para actualizar el orden en la base de datos
         await Promise.all([
           putNewOrderProject(
             oldColumn.stageID,
@@ -181,7 +177,6 @@ const ProjectsKanban = ({
           ),
         ]);
 
-        // Actualizar el estado para reflejar el cambio sin recargar
         setStages((currentStages) => {
           return currentStages?.map((stage) => {
             if (stage.stageID === oldColumn.stageID) {
@@ -212,13 +207,13 @@ const ProjectsKanban = ({
   };
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>, stageID: any) => {
-    e.preventDefault(); // Prevenir el comportamiento predeterminado del navegador
-    setDraggedOverStageIndex(stageID); // Actualizar el estado para iluminar la columna
+    e.preventDefault();
+    setDraggedOverStageIndex(stageID);
     setDraggedOverStageIndex(stageID);
   };
 
   const handleDragLeave = () => {
-    setDraggedOverStageIndex(null); // Resetea el estado cuando el drag sale de la columna
+    setDraggedOverStageIndex(null);
   };
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>, stageID: any) => {
@@ -226,7 +221,6 @@ const ProjectsKanban = ({
     try {
       const project = JSON.parse(e.dataTransfer.getData("projects"));
 
-      // Verificar si project_stage es diferente a stageID
       if (project.project_stage !== stageID) {
         if (project.is_locked) {
           setShowLockModal(true);
@@ -236,10 +230,8 @@ const ProjectsKanban = ({
             project.id,
             { ...project, project_stage: stageID },
             () => {
-              // Actualizar el estado para reflejar el cambio sin recargar
               setStages((currentStages) => {
                 return currentStages?.map((stage) => {
-                  // Si la columna es la original, eliminar el proyecto
                   if (stage.stageID === project.project_stage) {
                     return {
                       ...stage,
@@ -248,9 +240,7 @@ const ProjectsKanban = ({
                       ),
                     };
                   }
-                  // Si la columna es la de destino, añadir el proyecto
                   if (stage.stageID === stageID) {
-                    // Verificar si el proyecto ya existe en la columna de destino
                     const existingProjectIndex = stage.projects.findIndex(
                       (p: any) => p.id === project.id
                     );
@@ -263,7 +253,6 @@ const ProjectsKanban = ({
                         ],
                       };
                     } else {
-                      // Si el proyecto ya existe, solo actualizar su posición
                       const updatedProjects = [...stage.projects];
                       updatedProjects.splice(existingProjectIndex, 1);
                       updatedProjects.push({
@@ -276,7 +265,6 @@ const ProjectsKanban = ({
                       };
                     }
                   }
-                  // Para las columnas que no están involucradas, se retornan sin cambios
                   return stage;
                 });
               });
@@ -339,7 +327,6 @@ const ProjectsKanban = ({
               >
                 {projectCol.stageName}
               </span>
-              {/* {stagesIndex === stages.length - 1 && ( */}
               <div className="addtags-wrap">
                 <div className="row-wrap-2">
                   <button
@@ -372,7 +359,6 @@ const ProjectsKanban = ({
                   </button>
                 </div>
 
-                {/* Add Modal */}
                 <AddFieldModal
                   isOpen={isAddModalOpen}
                   onClose={() => setAddModalOpen(false)}
@@ -380,7 +366,6 @@ const ProjectsKanban = ({
                   updateProjectData={updateProjectData}
                 />
 
-                {/* Edit Modal */}
                 <ChangeProjectColumn
                   isOpen={isEditModalOpen}
                   onClose={() => setEditModalOpen(false)}
@@ -390,7 +375,6 @@ const ProjectsKanban = ({
                   updateProjectData={updateProjectData}
                 />
 
-                {/* Delete Stage Modal */}
                 <ConfirmModal
                   isOpen={isModalOpen && deleteStageId === projectCol.stageID}
                   onClose={() => setIsModalOpen(false)}
@@ -400,7 +384,6 @@ const ProjectsKanban = ({
                   button="Yes, delete this stage"
                 />
               </div>
-              {/* )} */}
             </div>
 
             {projectCol.projects?.map((projectCard: any) => (
@@ -433,7 +416,7 @@ const ProjectsKanban = ({
                   <p className="brandTitle">{projectCard.creator_name}</p>
                 </div>
                 <p className="kanbancard-name">{projectCard.name}</p>
-                <p className="campaignDescription">{projectCard.description}</p>
+                <p className="kanbancard-description">{projectCard.description}</p>
                 <div className="card-tags mt-4">
                   <span className="square-tag green">
                     Due: {projectCard.deadline}
@@ -444,7 +427,6 @@ const ProjectsKanban = ({
           </div>
         ))}
 
-      {/* ADD STAGE BUTTON */}
       <div className="addstage-wrap">
         <button className="add-stage-btn" onClick={() => setAddModalOpen(true)}>
           <Image src={Plus} alt="Icon" width={12} height={12} />

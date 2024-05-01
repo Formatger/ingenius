@@ -16,10 +16,8 @@ const ChangeCampaignColumn: React.FC<ChangeCampaignColumnProps> = ({ isOpen, cha
 
   const handleChangeCampaign = async () => {
     try {
-      // Llamar a la función para actualizar el nombre en la base de datos
       await putNewOrderCampaign(changeStage.stageID, { name: newName, order: changeStage.stageIndex }, () => {});
       
-      // Aquí llamamos a la función updateCampaignData para actualizar el estado después de la actualización
       updateCampaignData();
       onClose();
     } catch (error) {
@@ -37,12 +35,16 @@ const ChangeCampaignColumn: React.FC<ChangeCampaignColumnProps> = ({ isOpen, cha
           <button type="button" onClick={onClose} className="close-button">×</button>
         </div>
         <div className="modal-content">
+        <p className='text'>
+          Change the name of your stage.
+          </p>
+          <p className="smallcaps mt-5">stage label</p>
           <input className="form-input" 
             type="text" value={newName} 
             onChange={(e) => setNewName(e.target.value)} 
-            // placeholder={campaignStage.name}
+            placeholder={"Enter new name"}
           />
-          <div className='button-group row-between mt-5'>
+          <div className='button-group row-between mt-1'>
             <button className="app-button cream mt-4" type="button" onClick={onClose}>
               Cancel
             </button>

@@ -15,8 +15,6 @@ import Searchbox from "@/components/dashboard/table/Search";
 import CreatorForm from "@/components/dashboard/form/CreatorForm";
 import Reload from "@/components/assets/icons/reload.svg";
 
-// import BrandForm from "@/components/dashboard/form/BrandForm";
-
 interface Creators {
   id: string;
   name: string;
@@ -219,10 +217,6 @@ const CreatorsPage = () => {
     setOpenFormSidepanel(false);
   };
 
-  // function filterByDate(type: string): void {
-  //   throw new Error("Function not implemented.");
-  // }
-
   return (
     <div className="main-container">
       <div className="breadcrumb-nav">
@@ -251,11 +245,6 @@ const CreatorsPage = () => {
               />
             )}
             <div className="filtersSearchContainer">
-              <div>
-                {/* <Dropdown /> */}
-                {/* <EasyFilters filterByDate={filterByDate} handleSearch={handleSearch} /> */}
-              </div>
-
               <div className="button-group">
                 <Searchbox handleSearch={handleSearch} />
                 <label htmlFor="file-upload" className="app-button cream">

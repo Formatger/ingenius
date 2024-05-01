@@ -16,7 +16,7 @@ const ProjectProfilePage = () => {
 
   const [loader, setLoader] = useState<boolean>(false);
   const [projectsData, setProjectsData] = useState({});
-  const [activeTab, setActiveTab] = useState('invoice');
+  // const [activeTab, setActiveTab] = useState('invoice');
   const [refreshData, setRefreshData] = useState(false);
 
   useEffect(() => { fetchData() }, [router]);

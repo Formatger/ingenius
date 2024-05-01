@@ -9,22 +9,15 @@ import CreatorSidepanel from "@/components/dashboard/profile/CreatorSidepanel";
 import ProfilePic from "@/components/assets/images/creator.png";
 
 interface DashboardCreatorsProps {
-  projectsData: any; // Estructura de datos de la API para los creadores
+  projectsData: any;
 }
 
 const DashboardCreators = ({ projectsData }: DashboardCreatorsProps) => {
-  const [selectedProject, setSelectedProject] = useState(null);
-
-  // Función para manejar el clic en una fila
-  const openProjectDetail = (project: any) => {
-    setSelectedProject(project); // Establece el creador seleccionado
-  };
-
+  
   return (
     <div className="dashboard-box tables">
       <div className="row-between">
         <h2 className="dashboard-title">Contractor Invoices</h2>
-        {/* <HelpIcon /> */}
       </div>
 
       <table className="app-table" id="dashboard-table">
@@ -104,17 +97,6 @@ const DashboardCreators = ({ projectsData }: DashboardCreatorsProps) => {
                     </div>
                   </div>
                 </Link>
-                {/* <div className='row-wrap-1'>
-                  <Link
-                    href={{
-                      pathname: '/dashboard/partnerships/projects/profile',
-                      query: { projectId: project.id }
-                    }}
-                    passHref
-                  >
-                    <p>{project.name}</p>
-                  </Link>
-                </div> */}
               </td>
               <td className="table-cell-center">
               <Link href={{ pathname: '/dashboard/partnerships/projects/profile', query: { projectId: project.id }}} passHref>
@@ -138,10 +120,6 @@ const DashboardCreators = ({ projectsData }: DashboardCreatorsProps) => {
         </tbody>
       </table>
 
-      {/* Renderiza el componente de detalles del creador si hay uno seleccionado */}
-      {/* {selectedCreator && (
-        <CreatorSidepanel creatorsData={selectedCreator} />
-      )} */}
     </div>
   );
 };

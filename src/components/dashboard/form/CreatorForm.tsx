@@ -56,8 +56,7 @@ const CreatorForm: React.FC<CreatorFormProps> = ({
     formState: { errors },
   } = useForm<FormData>();
   const [imageURL, setImageURL] = useState<string | null>(
-    creatorsData.profile_picture_url || null
-  );
+    creatorsData.profile_picture_url || null);
   const [submitting, setSubmitting] = useState<boolean>(false);
 
   useEffect(() => {
@@ -150,7 +149,7 @@ const CreatorForm: React.FC<CreatorFormProps> = ({
         </p>
         <div className="sidepanel-button">
           <Link href="/dashboard/support" passHref>
-            <button className="sidepanel-button-style">
+            <button className="sidepanel-top-button">
               <HelpIcon />
               Get help
             </button>

@@ -4,19 +4,13 @@ import withAuth from "@/components/common/WithAuth";
 import MainLoader from "@/components/common/Loader";
 import Sidebar from "@/components/navigation/Sidebar";
 import Breadcrumbs from "@/components/navigation/Breadcrumbs";
-
 import Image from "next/image";
 import PlusWhite from "@/components/assets/icons/plus-white.svg";
 import Kanban from "@/components/assets/icons/kanban.svg";
 import Table from "@/components/assets/icons/table.svg";
 import Reload from "@/components/assets/icons/reload.svg";
-
 import Dropdown from "@/components/common/Dropdown";
 import Pagination from "@/components/dashboard/table/Pagination";
-import { useWindowSize } from "@/utils/hooks/useWindowSize";
-import { transformDate } from "@/utils/dateManager";
-
-import { DealInterface } from "@/interfaces/interfaces";
 import { exportCSV, getDealStages, getDeals, getDealsDetail } from "@/utils/httpCalls";
 import DealTable from "@/components/dashboard/table/DealTable";
 import DealSidepanel from "@/components/dashboard/profile/DealSidepanel";
@@ -274,7 +268,7 @@ const DealsPage = () => {
                 setCurrentPage={setCurrentPage}
                 origin="deals"
               />
-              <div className="button-group">
+              <div className="action-buttons-wrap">
                 <label htmlFor="file-upload" className="app-button cream">
                   CSV Export
                 </label>

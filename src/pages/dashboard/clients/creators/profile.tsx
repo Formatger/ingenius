@@ -6,7 +6,6 @@ import withAuth from "@/components/common/WithAuth";
 import Sidebar from "@/components/navigation/Sidebar";
 import { Arrow } from "@/components/assets/svg/Arrow";
 import { getCreatorsDetail } from "@/utils/httpCalls";
-import Folder from "@/components/assets/icons/folder.svg";
 import { CreatorDetails } from "@/components/dashboard/profile/CreatorProfile";
 import MainLoader from "@/components/common/Loader";
 

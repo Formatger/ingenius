@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import Image from "next/image";
-import Insta from "@/components/assets/images/insta.png";
-import Tiktok from "@/components/assets/images/tiktok.png";
 import Message from "@/components/assets/icons/message.svg";
 
 interface BrandDetailsProps {

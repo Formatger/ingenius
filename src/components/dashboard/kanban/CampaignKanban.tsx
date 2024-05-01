@@ -421,7 +421,7 @@ const CampaignKanban = ({
                       <p className="brandTitle">{campaignCard.brand_name}</p>
                     </div>
                     <p className="kanbancard-name">{campaignCard.name}</p>
-                    <p className="campaignDescription">
+                    <p className="kanbancard-description">
                       {campaignCard.description}
                     </p>
                     <div className="card-tags mt-4">
@@ -436,7 +436,6 @@ const CampaignKanban = ({
           );
         })}
 
-      {/* ADD STAGE BUTTON */}
       <div className="addstage-wrap">
         <button className="add-stage-btn" onClick={() => setAddModalOpen(true)}>
           <Image src={Plus} alt="Icon" width={12} height={12} />

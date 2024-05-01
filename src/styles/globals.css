@@ -13,7 +13,6 @@
   width: 100%;
   height: 100%;
   padding: var(--m7) var(--m9);
-  /* border: 1px solid red; */
   overflow-y: auto;
 }
 
@@ -433,13 +432,6 @@
   width: 30%;
 }
 
-/* .team-table td {
-  border-bottom: 1px solid var(--gray2);
-} */
-/* .team-table td:last-child {
-  border: none;
-} */
-
 .team-table-header {
   background-color: var(--gray1);
   border-radius: 0 0 12px 12px;
@@ -449,7 +441,6 @@
 .team-table th,
 .team-table td {
   border: none;
-  /* Removes all borders inside the table */
 }
 
 .team-table-body {

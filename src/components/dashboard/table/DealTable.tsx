@@ -79,7 +79,7 @@ const DealTable = ({
                       }
                     />
                   </button>
-                  <p>Brand</p>
+                  <p>Partner</p>
                 </div>
               </th>
               <th>
@@ -94,7 +94,7 @@ const DealTable = ({
                       }
                     />
                   </button>
-                  <p>Deal Name</p>
+                  <p>Deal</p>
                 </div>
               </th>
               <th>
@@ -111,20 +111,20 @@ const DealTable = ({
                       }
                     />
                   </button>
-                  <p>Campaigns</p>
+                  <p>Total Campaigns</p>
                 </div>
               </th>
-              <th>
+              {/* <th>
                 <div className="table-header-content">
                   <button
                     className="header-button"
-                  // onClick={() => handleSort("total_campaigns")}
+                  onClick={() => handleSort("total_projects")}
                   >
                     <Arrow className={"arrow-down"} />
                   </button>
                   <p>Projects</p>
                 </div>
-              </th>
+              </th> */}
               <th>
                 <div className="table-header-content-center">
                   <button
@@ -193,11 +193,8 @@ const DealTable = ({
                   </td>
 
                   <td className="table-cell-center">{deal.name}</td>
-                  {/* canviar per total campaigns dins del deal */}
                   <td className="table-cell-center">{deal.total_campaigns}</td>
-                  {/* canviar per total projects dins del deal */}
-                  <td className="table-cell-center">0</td>
-                  {/* canviar per deal contract value */}
+                  {/* <td className="table-cell-center">0</td> */}
                   <td className="table-cell-center">{`$${deal.contract_value}`}</td>
                   <td className="table-cell-center">
                     <span className="stage-tag green">
@@ -214,25 +211,3 @@ const DealTable = ({
 };
 
 export default DealTable;
-
-{
-  /* <tr key={project.id} className="table-row" onClick={() => handleOpenSidepanel(project)}>
-                  <td className="table-brand-cell">
-                    {creatorsData && creatorsData.length > 0 &&
-                      <img
-                        src={creatorsData.find((creator: { name: any; }) => creator.name === project.creator_name)?.profile_picture_url}
-                        alt={project.creator_name}
-                        className="partner-image"
-                        width={40} height={40}
-                      />
-                    }
-                    <img
-                      src={project.creator_profile_picture}
-                      alt={project.creator_name}
-                      className="partner-image"
-                      width={40} height={40}
-                    />
-                    {project.creator_name}
-                  </td>
-                  <td className="table-cell-center"></td> */
-}

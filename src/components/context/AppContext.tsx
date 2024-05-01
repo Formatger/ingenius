@@ -19,13 +19,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const toggleNavSidebar = (id: string) => {
     setNavSidebars(prevState => {
       const isCurrentlyOpen = !!prevState[id];
-      // Close all dropdowns initially
       const newState = Object.keys(prevState).reduce((state, key) => {
-        state[key] = false; // Set all to false (closed)
+        state[key] = false; 
         return state;
       }, {} as { [key: string]: boolean });
 
-      // Toggle the state of the clicked dropdown
       newState[id] = !isCurrentlyOpen;
 
       return newState;
@@ -37,7 +35,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const setNavSidebarOpen = (id: string, value: boolean) => {
-    // This can remain unchanged, but you may choose to enforce single dropdown logic here as well.
     setNavSidebars(prevState => ({ ...prevState, [id]: value }));
   };
 
@@ -59,53 +56,3 @@ export const useAppContext = () => {
   }
   return context;
 };
-
-
-// FIRST USE CONTEXT TO HANDLE 1 DROPDOWN
-
-// import React, { createContext, useState, useContext, useEffect } from 'react';
-
-// interface AppContextProps {
-//   toggleNavSidebar: () => void;
-//   getNavSidebarOpen: () => boolean;
-//   setNavSidebarOpen: (value: boolean) => void;
-//   children: React.ReactNode;
-// }
-
-// const AppContext = createContext<AppContextProps | undefined>(undefined);
-
-// export const AppProvider = ({ children }: { children: React.ReactNode }) => {
-//   const [navSidebarOpen, setNavSidebarOpen] = useState(false);
-
-//   const toggleNavSidebar = () => {
-//     setNavSidebarOpen(prevState => !prevState);
-//   };
-
-//   const getNavSidebarOpen = () => { return navSidebarOpen }
-
-//   const value = {
-//     getNavSidebarOpen,
-//     toggleNavSidebar,
-//     setNavSidebarOpen,
-//     children
-//   };
-
-//   return (
-//     <AppContext.Provider value={value}>
-//       {children}
-//     </AppContext.Provider>
-//   );
-// };
-
-// export const useAppContext = () => {
-//   const context = useContext(AppContext);
-//   if (context === undefined) {
-//     throw new Error('useAppContext must be used within a UserProvider');
-//   }
-//   return context;
-// };
-
-
-
-
-

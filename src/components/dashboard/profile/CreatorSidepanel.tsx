@@ -101,7 +101,7 @@ const CreatorSidepanel: React.FC<SidepanelProps> = ({
             </Link>
             <div className="button-group">
               <Link href="/dashboard/support" passHref>
-                <button className="sidepanel-button-style">
+                <button className="sidepanel-top-button">
                   <HelpIcon />
                   Get help
                 </button>
@@ -134,7 +134,6 @@ const CreatorSidepanel: React.FC<SidepanelProps> = ({
                       }
                     }}
                   >
-                    {/* <Image src={Message} alt="Icon" width={15} height={15} /> */}
                     <p>Edit</p>
                   </button>
                   <button

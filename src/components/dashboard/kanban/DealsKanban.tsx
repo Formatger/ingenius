@@ -8,23 +8,16 @@ import ConfirmModal from "../profile/ConfirmModal";
 import ChangeDealColumn from "@/components/dashboard/kanban/ChangeDealColumn";
 import ErrorModal from "@/components/common/ErrorModal";
 
-// interface Stages2 {
-//   id: number;
-//   name: string;
-//   order: number;
-//   user?: string;
-// }
-
 interface DealsKanbanProps {
   httpError: {
     hasError: boolean;
     status: number;
     message: string;
   };
-  data: any[]; // Considera definir tipos más específicos si es posible
-  DealData: any; // Considera definir tipos más específicos si es posible
+  data: any[];
+  DealData: any;
   handleOpenSidepanel: (project: object) => void;
-  Dealstage: any; // Considera definir un tipo más específico si es posible
+  Dealstage: any;
   updateDealData: () => void;
 }
 
@@ -41,7 +34,7 @@ const DealsKanban = ({
   const [isAddModalOpen, setAddModalOpen] = useState(false);
   const [draggedOverStageIndex, setDraggedOverStageIndex] = useState<
     string | null
-  >(null); // Estado para almacenar el ID de la columna sobre la que se arrastra
+  >(null);
   const [stages, setStages] = useState<any[]>([]);
   const [deleteStageId, setDeleteStageId] = useState<string | null>(null);
   const colors = ["pink", "linen", "green", "blue", "yellow", "orange", "red"];
@@ -412,7 +405,7 @@ const DealsKanban = ({
                       <p className="brandTitle">{dealCard.brand_name}</p>
                     </div>
                     <p className="kanbancard-name">{dealCard.name}</p>
-                    <p className="campaignDescription">{dealCard.description}</p>
+                    <p className="kanbancard-description">{dealCard.description}</p>
                     <div className="card-tags mt-4">
                       <span className="square-tag green">
                         Due: {dealCard.deadline}
@@ -425,7 +418,6 @@ const DealsKanban = ({
           );
         })}
 
-      {/* ADD STAGE BUTTON */}
       <div className="addstage-wrap">
         <button className="add-stage-btn" onClick={() => setAddModalOpen(true)}>
           <Image src={Plus} alt="Icon" width={12} height={12} />

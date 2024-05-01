@@ -76,10 +76,10 @@ const AddFieldModalCampaign: React.FC<AddFieldModalCampaignProps> = ({
           </div>
         )}
         <div className="modal-content">
-          {/* <p className='text'>
-            Add a new field to your kanban board here
-          </p> */}
-          <p className="smallcaps">Add Label</p>
+          <p className='text'>
+            Add a new stage column to your kanban board.
+          </p>
+          <p className="smallcaps mt-5">stage label</p>
           <input
             type="text"
             placeholder="Label (eg. Prospective)"
@@ -89,7 +89,7 @@ const AddFieldModalCampaign: React.FC<AddFieldModalCampaignProps> = ({
           />
           <div className="column-center">
             <button
-              className="app-button mt-4"
+              className="app-button mt-5"
               type="submit"
               onClick={addCampaignStage}
             >

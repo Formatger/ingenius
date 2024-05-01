@@ -17,16 +17,8 @@ import {
   putDeal,
   unlockDeal,
 } from "@/utils/httpCalls";
-import DateInput from "@/components/common/DateInput";
 import { useRouter } from "next/router";
 import InvoiceDropdown from "@/components/common/InvoiceDropdown";
-
-// interface Stages {
-//   id: number;
-//   name: string;
-//   order: number;
-//   user: string;
-// }
 
 interface FormData {
   id?: number;
@@ -81,7 +73,6 @@ const DealForm: React.FC<DealFormProps> = ({
     watch,
     formState: { errors },
   } = useForm<FormData>();
-  const [selectedStage, setSelectedStage] = useState("");
   const [brandsData, setBrandsData] = useState<any>([]);
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [invoiceStatus, setInvoiceStatus] = useState(
@@ -203,7 +194,7 @@ const DealForm: React.FC<DealFormProps> = ({
         </p>
         <div className="sidepanel-button">
           <Link href="/dashboard/support" passHref>
-            <button className="sidepanel-button-style">
+            <button className="sidepanel-top-button">
               <HelpIcon />
               Get help
             </button>

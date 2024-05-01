@@ -312,41 +312,6 @@ export const putUserProfile = async (
 };
 
 ////////////////////////////////////////////////////////////////////////
-/***************************  CHANGE CALLS  ***************************/
-////////////////////////////////////////////////////////////////////////
-
-/* CHANGE PROJECT-STAGE NAME ------------------>   ES IDENTICO A putNewOrderProject */
-
-// export const changeProjectStageName = async (
-//   projectId: number,
-//   updatedData: any,
-//   callback: (data: any) => void,
-//   errorCallback?: (error: any) => void
-// ) => {
-//   const url = `${DEPLOYED_API_BASE_URL}project-stages/${projectId}/`;
-
-//   try {
-//     const response = await fetch(url, {
-//       method: 'PUT',
-//       headers: {
-//         'Content-Type': 'application/json',
-//         'Authorization': `Bearer ${localStorage.access_token}`,
-//       },
-//       body: JSON.stringify(updatedData),
-//     });
-
-//     if (!response.ok) {
-//       throw new Error('Network response was not ok');
-//     }
-
-//     const data = await response.json();
-//     callback(data);
-//   } catch (error) {
-//     errorCallback && errorCallback(error);
-//   }
-// };
-
-////////////////////////////////////////////////////////////////////////
 /***************************  DELETE CALLS  ***************************/
 ////////////////////////////////////////////////////////////////////////
 
@@ -385,7 +350,7 @@ export const deleteProjectStage = async (
   callback: () => void,
   errorCallback: (error: any) => void
 ) => {
-  const url = `${DEPLOYED_API_BASE_URL}project-stages/${stageId}/`; // Adjusted endpoint to 'project-stages'
+  const url = `${DEPLOYED_API_BASE_URL}project-stages/${stageId}/`;
 
   try {
     const response = await fetch(url, {
@@ -441,7 +406,7 @@ export const deleteCampaignStage = async (
   callback: () => void,
   errorCallback: (error: any) => void
 ) => {
-  const url = `${DEPLOYED_API_BASE_URL}campaign-stages/${stageId}/`; // Adjusted endpoint to 'project-stages'
+  const url = `${DEPLOYED_API_BASE_URL}campaign-stages/${stageId}/`;
 
   try {
     const response = await fetch(url, {
@@ -578,40 +543,10 @@ export const deleteBrand = async (
 /******************************  POST CALLS  ***************************/
 ////////////////////////////////////////////////////////////////////////
 
-/* POST TICKET*/
-
-// export const postTicket = async (
-//   requestData: any,
-//   callback: (data: any) => void,
-//   errorCallback?: (error: any) => void
-// ) => {
-//   const url = DEPLOYED_API_BASE_URL + 'tickets/';
-
-//   try {
-//     const response = await fetch(url, {
-//       method: 'POST',
-//       headers: {
-//         // 'Content-Type': 'application/json',
-//         'Authorization': `Bearer ${localStorage.access_token}`,
-//       },
-//       body: JSON.stringify(requestData),
-//     });
-
-//     if (!response.ok) {
-//       throw new Error('Network response was not ok');
-//     }
-
-//     const data = await response.json();
-//     callback(data);
-//   } catch (error) {
-//     errorCallback && errorCallback(error);
-//   }
-// };
-
 /* POST TICKET */
 
 export const postTicket = async (
-  requestData: FormData, // Assuming requestData is a FormData object for file handling
+  requestData: FormData, 
   callback: (data: any) => void,
   errorCallback?: (error: any) => void
 ) => {
@@ -621,10 +556,9 @@ export const postTicket = async (
     const response = await fetch(url, {
       method: "POST",
       headers: {
-        // 'Content-Type': 'multipart/form-data' is not set because browsers will automatically set it correctly along with the boundary when using FormData
         Authorization: `Bearer ${localStorage.access_token}`,
       },
-      body: requestData, // Directly using FormData here
+      body: requestData, 
     });
 
     if (!response.ok) {
@@ -1328,50 +1262,6 @@ export const getUserProfile = async (
 };
 
 ////////////////////////////////////////////////////////////////////////
-/********************  PROFILE BUTTON CALLS  *************************/
-////////////////////////////////////////////////////////////////////////
-
-// PROJECT PROFILE BUTTONS
-
-export const uploadContract = async (
-  projectId: string,
-  file: Blob,
-  callback: (data: any) => void,
-  errorCallback: (error: any) => void
-) => {
-  const url = `${DEPLOYED_API_BASE_URL}projects/${projectId}/upload-contract/`;
-  const formData = new FormData();
-  formData.append("file", file);
-
-  try {
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-      },
-      body: formData,
-    });
-
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
-    }
-
-    const data = await response.json();
-    callback(data);
-  } catch (error) {
-    errorCallback(error);
-  }
-};
-
-export const viewContract = (projectId: string) => {
-  return `${DEPLOYED_API_BASE_URL}projects/${projectId}/view-contract/`; // Assuming this endpoint streams the file back to the client
-};
-
-export const downloadContract = (projectId: string) => {
-  return `${DEPLOYED_API_BASE_URL}projects/${projectId}/download-contract/`; // Assuming this endpoint sets 'Content-Disposition' to attachment in headers
-};
-
-////////////////////////////////////////////////////////////////////////
 /********************  LOCK CALLS  *************************/
 ////////////////////////////////////////////////////////////////////////
 
@@ -1623,12 +1513,12 @@ export const exportCSV = async (category: string, teamId: any, filename: string)
 /************************  PATCH HTTP CALLS  **************************/
 ////////////////////////////////////////////////////////////////////////
 
-/* POST PROJECT FILES */
+/* POST FILES */
 
 export const uploadFiles = async (
   endpoint: string,
   id: string,
-  requestData: FormData, // Ensure this is a FormData object
+  requestData: FormData,
   callback: (data: any) => void,
   errorCallback?: (error: any) => void
 ) => {
@@ -1638,11 +1528,9 @@ export const uploadFiles = async (
     const response = await fetch(url, {
       method: "PATCH",
       headers: {
-        // 'Content-Type': 'multipart/form-data' is not set because the browser will automatically set it
-        // along with the boundary parameter correctly when FormData is used.
         'Authorization': `Bearer ${localStorage.access_token}`,
       },
-      body: requestData, // Directly use FormData here
+      body: requestData,
     });
 
     if (!response.ok) {

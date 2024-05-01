@@ -3,9 +3,7 @@ import Image from "next/image";
 import Folder from "@/components/assets/icons/folder.svg";
 import Download from "@/components/assets/icons/download.svg";
 import Export from "@/components/assets/icons/export.svg";
-import Plus from "@/components/assets/icons/plus.svg";
 import Message from "@/components/assets/icons/message.svg";
-import Send from "@/components/assets/icons/send.svg";
 import UploadFileModal from "@/components/common/UploadFileModal";
 import Link from "@/components/assets/icons/link.svg";
 import { useRouter } from "next/router";
@@ -149,14 +147,6 @@ const CampaignInvoice = ({ campaignsData, setRefreshData }: CampaignInvoiceProps
         <p className="smallcaps mb-2">CONTRACT DETAILS</p>
         <div className="invoice-data">
           <ul>
-            {/* <li className="invoice-data-list">
-              <p>Invoice number</p>
-              <span className="invoice-tag">{campaignsData?.invoice_number}</span>
-            </li>
-            <li className="invoice-data-list">
-              <p>Invoice date</p>
-              <span className="invoice-tag">{campaignsData?.invoice_date}</span>
-            </li> */}
             <li className="invoice-data-list">
               <p>Brand</p>
               <span className="invoice-tag">{campaignsData?.brand_name}</span>
@@ -177,15 +167,6 @@ const CampaignInvoice = ({ campaignsData, setRefreshData }: CampaignInvoiceProps
                 {campaignsData?.campaign_duration}
               </span>
             </li>
-            {/* <li className="invoice-data-list">
-              <p className="mr-8">Deliverables</p>
-              <div className="invoice-tag">
-                <p className="invoice-tag-small">Drive Folder</p>
-                <button className="center-btn ml-3" onClick={undefined}>
-                  <Image src={Plus} alt="Icon" width={15} height={15} />
-                </button>
-              </div>
-            </li> */}
             <li className="invoice-data-list">
               <p>Contract Value</p>
               <span className="invoice-tag">

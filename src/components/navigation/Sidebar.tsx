@@ -138,7 +138,6 @@ const Sidebar: React.FC<SidebarProps> = ({ layout }) => {
                 <Link href="/dashboard/support"
                   className={`navlink-wrap ${router.pathname == "/dashboard/support" ? "active-link" : ""}`}>
                   <div>
-                    {/* <Image src={Support} alt="Icon" width={20} height={20} className="image" />*/}
                     <Image src={Support} alt="Icon" width={20} height={20} className="image" />
                   </div>
                   <div>Help & Support</div>
@@ -176,22 +175,6 @@ const Sidebar: React.FC<SidebarProps> = ({ layout }) => {
               
             </div>
             </Link>
-
-            {/* <button className="" onClick={() => {
-              localStorage.clear();
-              router.push('/auth');
-              }} aria-label="Close" type="button"
-            >
-              <Link href="/dashboard/support"
-                className={`navlink-wrap ${router.pathname == "/dashboard/support" ? "active-link" : ""}`}>
-                <div>
-                  <Image src={Logout} alt="Icon" width={20} height={20} className="image" />
-                </div>
-                <div>Logout</div>
-              </Link>
-            </button> 
-            */}
-
           </div>
         </div>
       </aside>
@@ -204,37 +187,3 @@ const Sidebar: React.FC<SidebarProps> = ({ layout }) => {
 };
 
 export default Sidebar;
-
-// const navLinks = [
-//   /* Dashboard */
-//   { title: "Dashboard", url: "/dashboard/dashboard" },
-//   /* Revenue */
-//   { title: "Revenue Campaigns", url: "/dashboard/revenue/campaigns" },
-//   { title: "Revenue Projects", url: "/dashboard/revenue/projects" },    
-//   // { title: "Brand Profile", url: "/dashboard/revenue/projects/brand-profile" },    
-//   /* Clients */
-//   { title: "Clients Brands", url: "/dashboard/clients/brands" },
-//   { title: "Clients Creators", url: "/dashboard/clients/creators" },
-//   /* Partnerships */
-//   { title: "Partner Deals", url: "/dashboard/partnerships/deals" },
-//   { title: "Partner Campaigns", url: "/dashboard/partnerships/campaigns" },
-//   { title: "Partner Projects", url: "/dashboard/partnerships/projects" },
-//   // { title: "Project Profile", url: "/dashboard/revenue/projects/project-profile" },    
-//   /* Settings */
-//   { title: "Settings", url: "/dashboard/settings" },
-// ];
-
-
-{/* <ul>
-  {navLinks.map((link, index) => (
-      <li key={index}>
-        <Link href={link.url}>
-          <div className="navlink-wrap">
-            <Image src={Icon} alt="" width={20} height={20} />
-            <span>{link.title}</span>
-          </div>
-        </Link>
-      </li>
-    ))}
-  </ul> */}
-

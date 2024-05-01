@@ -13,7 +13,6 @@ const DealProfilePage = () => {
   const { dealId } = router.query;
 
   const [loader, setLoader] = useState<boolean>(false);
-  // const [invoiceData, setInvoiceData] = useState(null);
   const [dealsData, setDealsData] = useState({});
   const [refreshData, setRefreshData] = useState(false);
 

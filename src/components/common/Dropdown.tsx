@@ -8,7 +8,6 @@ const timeframes = [
   { id: "tf-2", value: "Last 7 Days" },
   { id: "tf-3", value: "This Month" },
   { id: "tf-4", value: "This Year" },
-  // { id: "tf-4", value: "Custom" },
 ];
 
 interface DropdownProps {
@@ -45,7 +44,6 @@ function Dropdown({
   const timeframeRef = useRef(null);
   const nicheRef = useRef(null);
 
-  // Handle click filter when clicking outside of it
   useEffect(() => {
     const handleClickOutside = (event: any) => {
       if (
@@ -84,7 +82,6 @@ function Dropdown({
     };
   }, []);
 
-  // Load filter options based on the origin of the data
   useEffect(() => {
     if (
       originalData &&
@@ -137,7 +134,6 @@ function Dropdown({
     }
   }, [originalData]);
 
-  // Filter by date
   const handleSelectTimeframe = (tf: any) => {
     if (isTimeframeOpen) selectedFiltersRef.current = [];
     setSelectedTimeframe(tf);
@@ -187,7 +183,6 @@ function Dropdown({
     }
   };
 
-  // Set searchable options depending on radial button value
   useEffect(() => {
     defineSearchableFields();
     setPartnerSearchFilter([]);
@@ -335,7 +330,6 @@ function Dropdown({
 
     const filteredData = originalData.filter((item: any) => {
       const { brand_name, creator_name, name } = item;
-      // Check if the item's brand, creator, or name matches any of the selected filters
       return selectedFiltersRef.current.some(
         (filter) =>
           filter === brand_name || filter === creator_name || filter === name
@@ -345,7 +339,6 @@ function Dropdown({
     setFilteredData(filteredData);
   }
 
-  // When searching for a partner, campaign or else and selecting it, we add it to the selected filters
   const handleSelectFilter = (value: string) => {
     setCurrentPage(1);
     handleSelectTimeframe(timeframes[0]);
@@ -356,7 +349,6 @@ function Dropdown({
 
     const filteredData = originalData.filter((item: any) => {
       const { brand_name, creator_name, name } = item;
-      // Check if the item's brand, creator, or name matches all of the selected filters
       return selectedFiltersRef.current.every(
         (filter) =>
           filter === brand_name || filter === creator_name || filter === name
@@ -366,9 +358,8 @@ function Dropdown({
     setFilteredData(filteredData);
   };
 
-  // When removing a filter, we remove it from the selected filters
   const handleRemoveFilter = (value: string) => {
-    // TODO
+
     setCurrentPage(1);
     handleSelectTimeframe(timeframes[0]);
     selectedFiltersRef.current = selectedFiltersRef.current.filter(
@@ -404,7 +395,6 @@ function Dropdown({
 
     const filteredData = originalData.filter((item: any) => {
       const { brand_niche, creator_niche } = item;
-      // Check if the item's brand, creator, or name matches any of the selected filters
       return selectedNicheFiltersRef.current.some(
         (filter) => filter === brand_niche || filter === creator_niche
       );
@@ -662,7 +652,7 @@ function Dropdown({
                       <li className="dropdownSearchRow" key={option}>
                         <button
                           className="dropdownSearchItem"
-                          onClick={() => handleSelectNicheFilter(option)} // Replace handleSelectPartner with handleSelectFilter
+                          onClick={() => handleSelectNicheFilter(option)} 
                         >
                           {option}
                         </button>

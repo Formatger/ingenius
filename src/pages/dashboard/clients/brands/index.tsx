@@ -18,8 +18,6 @@ import Reload from "@/components/assets/icons/reload.svg";
 
 const BrandsPage = () => {
   const router = useRouter();
-  // const { profileID } = router.query;
-  // const [invoiceData, setInvoiceData] = useState(null);
   const [loader, setLoader] = useState<boolean>(false);
   const [httpError, setHttpError] = useState({
     hasError: false,
@@ -39,12 +37,11 @@ const BrandsPage = () => {
 
   const totalPages = Math.ceil(originalData.length / itemsPerPage);
   const breadcrumbLinks = [
-    // { label: "Home", link: "/" },
     { label: "Clients", link: "/dashboard/clients/brands" },
     { label: "Brands", link: "/dashboard/clients/brands", current: true },
   ];
 
-  /* ACTUALIZAR EL RENDERIZADO API */
+  /* UPDATE BRAND API CALL */
 
   useEffect(() => {
     const originalDataCopy = [...originalData];
@@ -138,7 +135,8 @@ const BrandsPage = () => {
   const handleNext = () =>
     setCurrentPage((oldPage) => Math.min(oldPage + 1, totalPages));
 
-  /* TABLE SORT LOGIC - modify to brands data */
+  /* TABLE SORT LOGIC */
+
   const sortBy = (field: keyof (typeof originalData)[0]) => {
     const sortedData = [...filteredData];
     if (field === "active_projects_value") {
@@ -169,7 +167,7 @@ const BrandsPage = () => {
     setFilteredData(sortedDataFinal);
   };
 
-  /* SEARCH LOGIC - modify to brands data */
+  /* SEARCH LOGIC */
 
   const handleSearch = (search: string) => {
     const filtered = originalData.filter((brand: any) => {
@@ -207,10 +205,6 @@ const BrandsPage = () => {
   const handleCloseFormSidepanel = (): void => {
     setOpenFormSidepanel(false);
   };
-
-  // function filterByDate(type: string): void {
-  //   throw new Error("Function not implemented.");
-  // }
 
   /* CSV EXPORT */
   const handleExportCSV = async (e: any) => {
@@ -250,12 +244,6 @@ const BrandsPage = () => {
               />
             )}
             <div className="filtersSearchContainer">
-              {/*  <Dropdown
-                setFilteredData={setFilteredData}
-                originalData={originalData}
-                setCurrentPage={setCurrentPage}
-                origin="brands"
-              /> */}
               <div className="button-group">
                 <Searchbox handleSearch={handleSearch} />
                 <label htmlFor="file-upload" className="app-button cream">

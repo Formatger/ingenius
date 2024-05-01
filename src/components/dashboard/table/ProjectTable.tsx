@@ -201,10 +201,10 @@ const ProjectTable = ({
                     />
                     {project.creator_name}
                   </td>
-                  <td className="table-cell">
+                  <td className="table-cell-project">
                     <span>{project.name}</span>
                   </td>
-                  <td className="table-cell">
+                  <td className="table-cell-center">
                     <span className="round-tag linen">
                       {project.campaign_name}
                     </span>{" "}

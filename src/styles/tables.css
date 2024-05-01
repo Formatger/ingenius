@@ -86,6 +86,12 @@
   font-size: 14px;
 }
 
+.table-cell-project {
+  text-align: left;
+  font-family: "DMSansRegular", sans-serif;
+  font-size: 14px;
+}
+
 /* Table Pagination */
 
 .pagination {

@@ -1,10 +1,9 @@
 import React from 'react';
-import { TooltipProps } from 'recharts';
 
 interface CustomTooltipProps {
   active?: boolean;
   payload?: any[];
-  pieChartData: any; // Estructura de datos de la API para el gráfico de pastel
+  pieChartData: any;
 }
 
 const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload, pieChartData }) => {

@@ -11,9 +11,7 @@ interface DashboardStatsProps {
   updateStatsData:() => void;
 }
 
-
 const DashboardStats =  ({ stats,  updateStatsData }: DashboardStatsProps)=> {
-
 
   return (
     <div className="dash-stats">

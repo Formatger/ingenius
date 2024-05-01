@@ -25,8 +25,6 @@ import { useRouter } from "next/router";
 
 const ProjectsPage = () => {
   const router = useRouter();
-  // const { profileID } = router.query;
-  // const [invoiceData, setInvoiceData] = useState(null);
   const [loader, setLoader] = useState<boolean>(false);
   const [httpError, setHttpError] = useState({
     hasError: false,
@@ -274,7 +272,7 @@ const ProjectsPage = () => {
                 setCurrentPage={setCurrentPage}
                 origin="projects"
               />
-              <div className="button-group">
+              <div className="action-buttons-wrap">
                 <label htmlFor="file-upload" className="app-button cream">
                   CSV Export
                 </label>
@@ -296,18 +294,18 @@ const ProjectsPage = () => {
                 </button>
                 <div className="switch-box">
                   <button
-                      className={`switch-button ${!tableRows ? 'active-switch' : ''}`}
-                      onClick={() => setTableRows(false)}
-                    >
-                      <Image src={Kanban} alt="Kanban Icon" width={15} height={15} />
-                    </button>
-                    <button
-                      className={`switch-button ${tableRows ? 'active-switch' : ''}`}
-                      onClick={() => setTableRows(true)}
-                    >
-                      <Image src={Table} alt="Table Icon" width={15} height={15} />
-                    </button>
-                  </div>
+                    className={`switch-button ${!tableRows ? 'active-switch' : ''}`}
+                    onClick={() => setTableRows(false)}
+                  >
+                    <Image src={Kanban} alt="Kanban Icon" width={15} height={15} />
+                  </button>
+                  <button
+                    className={`switch-button ${tableRows ? 'active-switch' : ''}`}
+                    onClick={() => setTableRows(true)}
+                  >
+                    <Image src={Table} alt="Table Icon" width={15} height={15} />
+                  </button>
+                </div>
               </div>
             </div>
 

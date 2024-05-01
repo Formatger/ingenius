@@ -1,15 +1,8 @@
 import React, { useState } from "react";
-import ConfirmModal from "./ConfirmModal";
 import Image from "next/image";
 import Insta from "@/components/assets/images/insta.png";
 import Tiktok from "@/components/assets/images/tiktok.png";
-import Folder from "@/components/assets/icons/folder.svg";
-import Download from "@/components/assets/icons/download.svg";
-import Plus from "@/components/assets/icons/plus.svg";
 import Message from "@/components/assets/icons/message.svg";
-import Send from "@/components/assets/icons/send.svg";
-import { deleteCreator } from "@/utils/httpCalls";
-import Export from "@/components/assets/icons/export.svg";
 
 
 interface CreatorDetailsProps {
