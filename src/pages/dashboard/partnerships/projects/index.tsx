@@ -22,6 +22,7 @@ import ProjectsKanban from "@/components/dashboard/kanban/ProjectsKanban";
 
 import ProjectForm from "@/components/dashboard/form/ProjectForm";
 import { useRouter } from "next/router";
+import ErrorModal from "@/components/common/ErrorModal";
 
 const ProjectsPage = () => {
   const router = useRouter();
@@ -39,7 +40,8 @@ const ProjectsPage = () => {
   const [selectedProject, setSelectedProject] = useState({} as any);
   const [projectStage, setProjectStage] = useState<any>([]);
   const [updateProject, setUpdateProject] = useState(false);
-
+  const [noStageModal, setNoStageModal] = useState(false);
+  const [noDataModal, setNoDataModal] = useState(false);
   const [originalData, setOriginalData] = useState<any[]>([]);
   const [filteredData, setFilteredData] = useState<any[]>([]);
   const [dataToDisplay, setDataToDisplay] = useState<any[]>([]);
@@ -209,11 +211,15 @@ const ProjectsPage = () => {
 
   /* CSV EXPORT */
   const handleExportCSV = async (e: any) => {
-    const teamId = originalData[0].team;
-    try {
-      exportCSV("projects", teamId, "projects")
-    } catch (error) {
-      console.error("Error exporting file:", error);
+    if (originalData.length === 0) {
+      setNoDataModal(true);
+    } else {
+      const teamId = originalData[0].team;
+      try {
+        exportCSV("projects", teamId, "projects")
+      } catch (error) {
+        console.error("Error exporting file:", error);
+      }
     }
   };
 
@@ -230,7 +236,11 @@ const ProjectsPage = () => {
   };
 
   const handleOpenFormSidepanel = (): void => {
-    setOpenFormSidepanel(true);
+    if (projectStage.length === 0) {
+      setNoStageModal(true);
+    } else {
+      setOpenFormSidepanel(true);
+    }
   };
 
   const handleCloseFormSidepanel = (): void => {
@@ -246,6 +256,18 @@ const ProjectsPage = () => {
         <MainLoader />
       ) : (
         <>
+          <ErrorModal
+            title="No Project Stages"
+            message="Please add a project stage before creating a project."
+            isOpen={noStageModal}
+            onClose={() => setNoStageModal(false)}
+          />
+          <ErrorModal
+            isOpen={noDataModal}
+            title="No Data"
+            message="No data to export."
+            onClose={() => setNoDataModal(false)}
+          />
           <div className="page-container" id="projectsData">
             {openSidepanel && (
               <ProjectSidepanel

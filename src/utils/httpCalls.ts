@@ -1,4 +1,5 @@
 import { DEPLOYED_API_BASE_URL } from "./apiConfig";
+import { jwtDecode } from "jwt-decode";
 
 ////////////////////////////////////////////////////////////////////////
 /****************************  AUTH CALLS  ****************************/
@@ -11,22 +12,39 @@ export const refreshToken = async (errorCallback?: (error: any) => void) => {
     const url = DEPLOYED_API_BASE_URL + "token/refresh/";
 
     try {
-      fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ refresh: localStorage.refresh_token }),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          localStorage.setItem("access_token", data.access);
+      // Decode the refresh token
+      const decodedToken: any = jwtDecode(localStorage.refresh_token);
+
+      // Check if the token is expired
+      const currentTime = Date.now() / 1000;
+      if (decodedToken.exp < currentTime) {
+        // Token is expired, handle accordingly
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('refresh_token');
+        window.location.href = '/auth';
+      } else {
+        // Token is not expired, proceed with the API call
+        await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ refresh: localStorage.refresh_token }),
         })
-        .catch((error) => {
-          errorCallback && errorCallback(error);
-        });
+          .then((response) => response.json())
+          .then((data) => {
+            localStorage.setItem('access_token', data.access);
+          })
+          .catch((error) => {
+            localStorage.removeItem('access_token');
+            localStorage.removeItem('refresh_token');
+            window.location.href = '/auth';
+          });
+      }
     } catch (error) {
-      errorCallback && errorCallback(error);
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('refresh_token');
+      window.location.href = '/auth';
     }
   }
 };
@@ -546,7 +564,7 @@ export const deleteBrand = async (
 /* POST TICKET */
 
 export const postTicket = async (
-  requestData: FormData, 
+  requestData: FormData,
   callback: (data: any) => void,
   errorCallback?: (error: any) => void
 ) => {
@@ -558,7 +576,7 @@ export const postTicket = async (
       headers: {
         Authorization: `Bearer ${localStorage.access_token}`,
       },
-      body: requestData, 
+      body: requestData,
     });
 
     if (!response.ok) {

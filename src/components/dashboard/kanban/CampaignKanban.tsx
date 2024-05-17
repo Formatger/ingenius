@@ -299,6 +299,12 @@ const CampaignKanban = ({
           message="Campaign currently being edited by another user. Please refresh to see changes when the other user has finished editing."
         />
       )}
+      <AddFieldModalCampaign
+        isOpen={isAddModalOpen}
+        onClose={() => setAddModalOpen(false)}
+        title="Add Campaign Stage"
+        updateCampaignData={updateCampaignData}
+      />
       {stages
         .sort((a, b) => a.stageIndex - b.stageIndex)
         .map((campaignCol, stagesIndex) => {
@@ -361,13 +367,6 @@ const CampaignKanban = ({
                     </button>
                   </div>
 
-                  <AddFieldModalCampaign
-                    isOpen={isAddModalOpen}
-                    onClose={() => setAddModalOpen(false)}
-                    title="Add Campaign Stage"
-                    updateCampaignData={updateCampaignData}
-                  />
-
                   <ChangeCampaignColumn
                     isOpen={isEditModalOpen}
                     onClose={() => setEditModalOpen(false)}
@@ -408,7 +407,7 @@ const CampaignKanban = ({
                         className="brandImage"
                         loading="lazy"
                       />
-                    {/* <Image
+                      {/* <Image
                       src={campaignCard.brand_image_url}
                       alt={campaignCard.brand_name}
                       width={30}

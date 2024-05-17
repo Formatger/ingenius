@@ -22,10 +22,13 @@ export default function withAuth(WrappedComponent: React.FunctionComponent) {
         if (decodedToken && decodedToken?.exp < currentTime) {
           if (localStorage.refresh_token) {
             refreshTokenCall();
+            setIsLoading(false);
           } else {
             router.push('/auth');
+            setIsLoading(false);
           }
         } else {
+          refreshTokenCall();
           setIsLoading(false);
         }
       }

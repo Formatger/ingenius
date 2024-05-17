@@ -19,16 +19,16 @@ const AddFieldModal: React.FC<AddFieldModalProps> = ({
   const [newLabel, setNewLabel] = useState<{
     name: string;
     order: number;
-  }>({ name: "", order: -1 });
+  }>({ name: "", order: 0 });
 
   useEffect(() => {
     const fetchMaxOrder = async () => {
       try {
         await getProjectStages(
           (response) => {
-            const maxOrder = Math.max(
+            const maxOrder = response.length > 0 ? Math.max(
               ...response?.map((stage: any) => stage.order)
-            );
+            ) : 0;
             setNewLabel((prevLabel) => ({ ...prevLabel, order: maxOrder + 1 }));
           },
           (error) => {
@@ -77,7 +77,7 @@ const AddFieldModal: React.FC<AddFieldModalProps> = ({
         )}
         <div className="modal-content">
           <p className='text'>
-          Add a new stage column to your kanban board.
+            Add a new stage column to your kanban board.
           </p>
           <p className="smallcaps mt-5">stage Label</p>
           <input

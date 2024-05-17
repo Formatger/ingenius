@@ -67,7 +67,7 @@ const ProjectsKanban = ({
   /* FETCH STAGE COLUMNS */
 
   useEffect(() => {
-    if (projectStage.length === 0) return; 
+    if (projectStage.length === 0) return;
 
     let stagesWithProjects = projectStage?.map(
       (stage: any) => {
@@ -123,7 +123,7 @@ const ProjectsKanban = ({
           );
           const updatedStages = remainingStages?.map((stage, index) => ({
             ...stage,
-            stageIndex: index + 1, 
+            stageIndex: index + 1,
           }));
           setStages(updatedStages);
 
@@ -138,7 +138,7 @@ const ProjectsKanban = ({
 
           updateProjectData();
           setIsModalOpen(false);
-          setDeleteStageId(null); 
+          setDeleteStageId(null);
         },
         (error) => {
           console.error("Failed to delete stage:", error);
@@ -295,6 +295,12 @@ const ProjectsKanban = ({
           message="Project currently being edited by another user. Please refresh to see changes when the other user has finished editing."
         />
       )}
+      <AddFieldModal
+        isOpen={isAddModalOpen}
+        onClose={() => setAddModalOpen(false)}
+        title="Add Project Stage"
+        updateProjectData={updateProjectData}
+      />
       {stages
         .sort((a, b) => a.stageIndex - b.stageIndex)
         .map((projectCol, stagesIndex) => (
@@ -358,13 +364,6 @@ const ProjectsKanban = ({
                     />
                   </button>
                 </div>
-
-                <AddFieldModal
-                  isOpen={isAddModalOpen}
-                  onClose={() => setAddModalOpen(false)}
-                  title="Add Project Stage"
-                  updateProjectData={updateProjectData}
-                />
 
                 <ChangeProjectColumn
                   isOpen={isEditModalOpen}

@@ -23,6 +23,7 @@ import CampaignKanban from "@/components/dashboard/kanban/CampaignKanban";
 import CampaignSidepanel from "@/components/dashboard/profile/CampaignSidepanel";
 import CampaignForm from "@/components/dashboard/form/CampaignForm";
 import { useRouter } from "next/router";
+import ErrorModal from "@/components/common/ErrorModal";
 
 interface profileData {
   id: string;
@@ -59,7 +60,8 @@ const CampaignsPage = () => {
   const [updateCampaign, setUpdateCampaign] = useState(false);
   const [openSidepanel, setOpenSidepanel] = useState(false);
   const [openFormSidepanel, setOpenFormSidepanel] = useState(false);
-
+  const [noStageModal, setNoStageModal] = useState(false);
+  const [noDataModal, setNoDataModal] = useState(false);
   const [originalData, setOriginalData] = useState<any[]>([]);
   const [filteredData, setFilteredData] = useState<any[]>([]);
   const [dataToDisplay, setDataToDisplay] = useState<any[]>([]);
@@ -241,11 +243,15 @@ const CampaignsPage = () => {
 
   /* CSV EXPORT */
   const handleExportCSV = async (e: any) => {
-    const teamId = originalData[0].team;
-    try {
-      exportCSV("campaigns", teamId, "campaigns")
-    } catch (error) {
-      console.error("Error exporting file:", error);
+    if (originalData.length === 0) {
+      setNoDataModal(true);
+    } else {
+      const teamId = originalData[0].team;
+      try {
+        exportCSV("campaigns", teamId, "campaigns")
+      } catch (error) {
+        console.error("Error exporting file:", error);
+      }
     }
   };
 
@@ -261,7 +267,11 @@ const CampaignsPage = () => {
   };
 
   const handleOpenFormSidepanel = (): void => {
-    setOpenFormSidepanel(true);
+    if (campaignStage.length === 0) {
+      setNoStageModal(true)
+    } else {
+      setOpenFormSidepanel(true);
+    }
   };
 
   const handleCloseFormSidepanel = (): void => {
@@ -277,6 +287,18 @@ const CampaignsPage = () => {
         <MainLoader />
       ) : (
         <>
+          <ErrorModal
+            isOpen={noStageModal}
+            title="No Campaign Stages"
+            onClose={() => setNoStageModal(false)}
+            message="Please add a campaign stage before creating a campaign."
+          />
+          <ErrorModal
+            isOpen={noDataModal}
+            title="No Data"
+            message="No data to export."
+            onClose={() => setNoDataModal(false)}
+          />
           <div className="page-container" id="CampaignData">
             {openSidepanel && (
               <CampaignSidepanel
@@ -325,20 +347,20 @@ const CampaignsPage = () => {
                 </button>
                 <div className="switch-box">
                   <button
-                      className={`switch-button ${!tableRows ? 'active-switch' : ''}`}
-                      onClick={() => setTableRows(false)}
-                    >
-                      <Image src={Kanban} alt="Kanban Icon" width={15} height={15} />
-                    </button>
-                    <button
-                      className={`switch-button ${tableRows ? 'active-switch' : ''}`}
-                      onClick={() => setTableRows(true)}
-                    >
-                      <Image src={Table} alt="Table Icon" width={15} height={15} />
-                    </button>
-                  </div>
+                    className={`switch-button ${!tableRows ? 'active-switch' : ''}`}
+                    onClick={() => setTableRows(false)}
+                  >
+                    <Image src={Kanban} alt="Kanban Icon" width={15} height={15} />
+                  </button>
+                  <button
+                    className={`switch-button ${tableRows ? 'active-switch' : ''}`}
+                    onClick={() => setTableRows(true)}
+                  >
+                    <Image src={Table} alt="Table Icon" width={15} height={15} />
+                  </button>
+                </div>
               </div>
-              
+
 
             </div>
             {tableRows ? (

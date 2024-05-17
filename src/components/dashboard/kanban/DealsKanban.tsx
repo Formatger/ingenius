@@ -287,6 +287,12 @@ const DealsKanban = ({
           message="Deal currently being edited by another user. Please refresh to see changes when the other user has finished editing."
         />
       )}
+      <AddFieldModalDeal
+        isOpen={isAddModalOpen}
+        onClose={() => setAddModalOpen(false)}
+        title="Add Deal Stage"
+        updateDealData={updateDealData}
+      />
       {stages
         .sort((a, b) => a.stageIndex - b.stageIndex)
         .map((dealCol) => {
@@ -349,13 +355,6 @@ const DealsKanban = ({
                     </button>
                   </div>
 
-                  <AddFieldModalDeal
-                    isOpen={isAddModalOpen}
-                    onClose={() => setAddModalOpen(false)}
-                    title="Add Deal Stage"
-                    updateDealData={updateDealData}
-                  />
-
                   <ChangeDealColumn
                     isOpen={isEditModalOpen}
                     onClose={() => setEditModalOpen(false)}
@@ -392,7 +391,7 @@ const DealsKanban = ({
                         alt={dealCard.brand_name}
                         className="brandImage"
                       />
-                    {/* <Image
+                      {/* <Image
                       src={dealCard.brand_image_url}
                       alt={dealCard.brand_name}
                       width={30}

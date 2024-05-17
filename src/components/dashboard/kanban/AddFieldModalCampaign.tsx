@@ -19,16 +19,16 @@ const AddFieldModalCampaign: React.FC<AddFieldModalCampaignProps> = ({
   const [newLabel, setNewLabel] = useState<{
     name: string;
     order: number;
-  }>({ name: "", order: -1 });
+  }>({ name: "", order: 0 });
 
   useEffect(() => {
     const fetchMaxOrderCampaign = async () => {
       try {
         await getCampaignStages(
           (response) => {
-            const maxOrder = Math.max(
+            const maxOrder = response.length > 0 ? Math.max(
               ...response?.map((stage: any) => stage.order)
-            );
+            ) : 0;
             setNewLabel((prevLabel) => ({ ...prevLabel, order: maxOrder + 1 }));
           },
           (error) => {

@@ -16,6 +16,7 @@ import DealTable from "@/components/dashboard/table/DealTable";
 import DealSidepanel from "@/components/dashboard/profile/DealSidepanel";
 import DealsKanban from "@/components/dashboard/kanban/DealsKanban";
 import DealForm from "@/components/dashboard/form/DealForm";
+import ErrorModal from "@/components/common/ErrorModal";
 
 const DealsPage = () => {
   const router = useRouter();
@@ -34,7 +35,8 @@ const DealsPage = () => {
   const [selectedDeal, setSelectedDeal] = useState({} as any);
   const [dealStage, setDealStage] = useState<any>([]);
   const [updateDeal, setUpdateDeal] = useState(false);
-
+  const [noStageModal, setNoStageModal] = useState(false);
+  const [noDataModal, setNoDataModal] = useState(false);
   const [originalData, setOriginalData] = useState<any[]>([]);
   const [filteredData, setFilteredData] = useState<any[]>([]);
   const [dataToDisplay, setDataToDisplay] = useState<any[]>([]);
@@ -206,11 +208,15 @@ const DealsPage = () => {
 
   /* CSV EXPORT */
   const handleExportCSV = async (e: any) => {
-    const teamId = originalData[0].team;
-    try {
-      exportCSV("deals", teamId, "deals")
-    } catch (error) {
-      console.error("Error exporting file:", error);
+    if (originalData.length === 0) {
+      setNoDataModal(true);
+    } else {
+      const teamId = originalData[0].team;
+      try {
+        exportCSV("deals", teamId, "deals")
+      } catch (error) {
+        console.error("Error exporting file:", error);
+      }
     }
   };
 
@@ -226,8 +232,12 @@ const DealsPage = () => {
   };
 
   const handleOpenFormSidepanel = (): void => {
-    setOpenFormSidepanel(true);
-  };
+    if (dealStage.length === 0) {
+      setNoStageModal(true)
+    } else {
+      setOpenFormSidepanel(true);
+    }
+  }
 
   const handleCloseFormSidepanel = (): void => {
     setOpenFormSidepanel(false);
@@ -242,6 +252,18 @@ const DealsPage = () => {
         <MainLoader />
       ) : (
         <>
+          <ErrorModal
+            isOpen={noStageModal}
+            title="No Deal Stages"
+            message="Please add a deal stage before creating a deal."
+            onClose={() => setNoStageModal(false)}
+          />
+          <ErrorModal
+            isOpen={noDataModal}
+            title="No Data"
+            message="No data to export."
+            onClose={() => setNoDataModal(false)}
+          />
           <div className="page-container" id="dealsData">
             {openSidepanel && (
               <DealSidepanel
@@ -290,18 +312,18 @@ const DealsPage = () => {
                 </button>
                 <div className="switch-box">
                   <button
-                      className={`switch-button ${!tableRows ? 'active-switch' : ''}`}
-                      onClick={() => setTableRows(false)}
-                    >
-                      <Image src={Kanban} alt="Kanban Icon" width={15} height={15} />
-                    </button>
-                    <button
-                      className={`switch-button ${tableRows ? 'active-switch' : ''}`}
-                      onClick={() => setTableRows(true)}
-                    >
-                      <Image src={Table} alt="Table Icon" width={15} height={15} />
-                    </button>
-                  </div>
+                    className={`switch-button ${!tableRows ? 'active-switch' : ''}`}
+                    onClick={() => setTableRows(false)}
+                  >
+                    <Image src={Kanban} alt="Kanban Icon" width={15} height={15} />
+                  </button>
+                  <button
+                    className={`switch-button ${tableRows ? 'active-switch' : ''}`}
+                    onClick={() => setTableRows(true)}
+                  >
+                    <Image src={Table} alt="Table Icon" width={15} height={15} />
+                  </button>
+                </div>
               </div>
             </div>
             {tableRows ? (
